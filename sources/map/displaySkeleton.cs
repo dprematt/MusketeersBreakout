@@ -16,7 +16,11 @@ public class DisplaySkeleton : MonoBehaviour
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                colorMap[i * width + j] = Color.Lerp(Color.black, Color.white, skeleton[j, i]);
+                if (j % 16 == 0 && i % 16 == 0) {
+                    colorMap[i * width + j] = Color.Lerp(Color.red, Color.red, skeleton[j, i]);
+                } else {
+                    colorMap[i * width + j] = Color.Lerp(Color.black, Color.white, skeleton[j, i]);
+                }
             }
         }
         texture.SetPixels(colorMap);
