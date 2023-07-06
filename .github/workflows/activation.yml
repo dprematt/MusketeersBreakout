@@ -1,4 +1,4 @@
-ame: Acquire activation file
+name: Acquire activation file
 on:
   workflow_dispatch: {}
 jobs:
