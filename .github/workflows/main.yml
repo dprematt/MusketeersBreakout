@@ -16,6 +16,9 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
+      - uses: game-ci/unity-builder@v2
+        with:
+          customImage: 'unityci/editor:2020.1.14f1-base-0'
       - uses: actions/cache@v2
         with:
           path: Library
