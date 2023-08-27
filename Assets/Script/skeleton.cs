@@ -4,31 +4,70 @@ using UnityEngine;
 
 public static class Skeleton
 {
-    //
-    // This function generates the map's skeleton
-    // param width : map's width
-    // param height : map's height
-    // param scale : float which will determine the level of relief
-    // return : float array representing the map
-    //
-    public static float[,] GenerateSkeleton(int width, int height, float scale)
+    public static float[,] GenerateSkeleton(int mapWidth, int mapHeight, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset)
     {
-        float[,] skeleton = new float[width, height];
-        
-        if (scale <= 0) {
-            scale = 0.0001f; //default value
+        float[,] skeleton = new float[mapWidth, mapHeight];
+
+        System.Random prng = new System.Random(seed);
+        Vector2[] octaveOffsets = new Vector2[octaves];
+        for (int i = 0; i < octaves; i++)
+        {
+            float offsetX = prng.Next(-100000, 100000) + offset.x;
+            float offsetY = prng.Next(-100000, 100000) + offset.y;
+            octaveOffsets[i] = new Vector2(offsetX, offsetY);
         }
 
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        if(scale <= 0)
+        {
+            scale = 0.0001f;
+        }
 
-                float j_ = j / scale;
-                float i_ = i / scale;
+        float maxNoiseHeight = float.MinValue;
+        float minNoiseHeight = float.MaxValue;
 
-                float perlin = Mathf.PerlinNoise(j_, i_); // generate the pixel relief
-                skeleton[j, i] = perlin;
+        float halfWidth = mapWidth / 2f;
+        float halfHeight = mapHeight / 2f;
+
+        for (int y = 0; y < mapHeight; y++)
+        {
+            for (int x = 0; x < mapWidth; x++)
+            {
+                float amplitude = 1;
+                float frequency = 1;
+                float noiseHeight = 0;
+
+                for (int i = 0; i < octaves; i++)
+                {
+                    float sampleX = (x - halfWidth) / scale * frequency + octaveOffsets[i].x;
+                    float sampleY = (y - halfHeight) / scale * frequency + octaveOffsets[i].y;
+
+                    float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1;
+                    noiseHeight += perlinValue * amplitude;
+                    amplitude *= persistance;
+                    frequency *= lacunarity;
+                }
+
+                if (noiseHeight > maxNoiseHeight)
+                {
+                    maxNoiseHeight = noiseHeight;
+                }
+                else if (noiseHeight < minNoiseHeight)
+                {
+                    minNoiseHeight = noiseHeight;
+                }
+
+                skeleton[x, y] = noiseHeight;
             }
         }
+
+        for (int y = 0; y < mapHeight; y++)
+        {
+            for (int x = 0; x < mapWidth; x++)
+            {
+                skeleton[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, skeleton[x, y]);
+            }
+        }
+
         return skeleton;
     }
 }
