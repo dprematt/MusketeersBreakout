@@ -10,12 +10,15 @@ jobs:
             fail-fast: false
             matrix:
                 targetPlatform:
-                    - StandaloneWindows64 # Build a Windows 64-bit standalone.
+                    - StandaloneLinux64 # Build a Linux 64-bit standalone.
         steps:
             - uses: actions/checkout@v2
               with:
                   fetch-depth: 0
                   lfs: true
+            - uses: game-ci/unity-builder@v3
+                with:
+                    customImage: 'unityci/editor:2020.1.14f1-base-0'
             - uses: actions/cache@v2
               with:
                   path: Library
