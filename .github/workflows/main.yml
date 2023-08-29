@@ -31,6 +31,7 @@ jobs:
         with:
           targetPlatform: WebGL
           customImage: 'unityci/editor:2020.1.14f1-base-0'
+          allowDirtyBuild: true
       - uses: actions/upload-artifact@v3
         with:
           name: Build-${{ matrix.targetPlatform }}
