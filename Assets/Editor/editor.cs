@@ -9,8 +9,14 @@ public class editor : Editor
 {
     public override void OnInspectorGUI() {
         generator gen = (generator)target;
-        DrawDefaultInspector();
-
+        
+        if (DrawDefaultInspector())
+        {
+            if (gen.autoUpdate)
+            {
+                gen.SkeletonGenerator();
+            }
+        }
         if (GUILayout.Button("Generate")) {
             gen.SkeletonGenerator();
         }
