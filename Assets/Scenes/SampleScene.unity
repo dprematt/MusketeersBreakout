@@ -260,9 +260,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe077deb76840215880af3030c3176de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drawMode: 0
   width: 100
   height: 100
   scale: 2
+  octaves: 6
+  persistance: 0
+  lacunarity: 1
+  autoUpdate: 0
+  seed: 35
+  offSet: {x: 0, y: 0}
+  regions: []
 --- !u!4 &797710328
 Transform:
   m_ObjectHideFlags: 0

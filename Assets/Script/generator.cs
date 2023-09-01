@@ -16,12 +16,12 @@ public class generator : MonoBehaviour
     public float persistance;
     public float lacunarity;
     public bool autoUpdate;
-    public int seed;
+
     public Vector2 offSet;
 
     public TerrainType[] regions;
     public void SkeletonGenerator() {
-        float[,] map = Skeleton.GenerateSkeleton(width, height, seed, scale, octaves, persistance, lacunarity, offSet); 
+        float[,] map = Skeleton.GenerateSkeleton(width, height, scale, octaves, persistance, lacunarity, offSet); 
 
         Color[] colorMap = new Color[width * height];
 
