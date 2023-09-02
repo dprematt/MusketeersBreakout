@@ -49,7 +49,6 @@ public class generator : MonoBehaviour
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(map));
 
         } else if (drawMode == DrawMode.colorMap) {
-
             display.DrawTexture(TextureGenerator.TextureFromColorMap(colorMap, width, height));
         }
     }
