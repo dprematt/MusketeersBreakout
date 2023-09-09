@@ -5,9 +5,9 @@ using UnityEngine;
 public class generator : MonoBehaviour
 {
 
-    public enum DrawMode {map, colorMap}
+    public enum DrawMode {map, colorMap, mesh}
     public DrawMode drawMode;
-
+    const int mapChunckSize;
     public int width;
     public int height;
     public float scale;
@@ -18,6 +18,9 @@ public class generator : MonoBehaviour
     public bool autoUpdate;
     public int seed;
     public Vector2 offSet;
+
+    public float meshHeightMult;
+    public AnimationCurve meshHeightCurve;
 
     public TerrainType[] regions;
     public void SkeletonGenerator() {
@@ -51,6 +54,9 @@ public class generator : MonoBehaviour
         } else if (drawMode == DrawMode.colorMap) {
 
             display.DrawTexture(TextureGenerator.TextureFromColorMap(colorMap, width, height));
+        } else if (drawMode == DrawMode.mesh) {
+
+            display.DrawMesh(MeshGenerator.generateTerrainMesh(map, meshHeightMult, meshHeightCurve), TextureGenerator.TextureFromColorMap(colorMap, width, height));
         }
     }
      private void OnValidate()
