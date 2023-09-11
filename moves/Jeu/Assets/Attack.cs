@@ -20,7 +20,7 @@ public class Attack : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L)) {
             g.SpawnBullet();
-            //g.updateLifeTime(g.Lifetime--);
+            g.updateLifeTime(g.Lifetime--);
         }
     }
 }
