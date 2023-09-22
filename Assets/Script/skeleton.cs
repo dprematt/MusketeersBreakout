@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
 public static class Skeleton
 {
     public static float[,] GenerateSkeleton(int mapWidth, int mapHeight, float scale, int octaves, float persistance, float lacunarity, Vector2 offset)
@@ -11,8 +10,8 @@ public static class Skeleton
 
         System.Random random = new System.Random();
         int seed = random.Next(1,36);
-    
         System.Random prng = new System.Random(seed);
+
         Vector2[] octaveOffsets = new Vector2[octaves];
         for (int i = 0; i < octaves; i++)
         {

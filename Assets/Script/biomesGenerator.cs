@@ -15,27 +15,35 @@ public class BiomesGenerator
         Color[] biomeColors = new Color[]
         {
             Color.yellow,
+            Color.yellow,
+            Color.yellow,
+            Color.yellow,
             Color.green,
             Color.black,
             Color.magenta,
             Color.red
         };
 
-        int numSquares = biomeColors.Length;
-
-        for (int i = 0; i < numSquares; i++)
+        Dictionary<Color, List<Vector2Int>> placedSquares = new Dictionary<Color, List<Vector2Int>>();
+        foreach (Color color in biomeColors)
         {
-            Vector2Int squarePosition = GetValidSquarePosition(width, height, squareSize, squarePositions, random);
+            placedSquares[color] = new List<Vector2Int>();
+        }
+
+        for (int i = 0; i < biomeColors.Length; i++)
+        {
+            Color currentColor = biomeColors[i];
+
+            Vector2Int squarePosition = GetValidSquarePosition(width, height, squareSize, squarePositions, random, currentColor, placedSquares);
             squarePositions.Add(squarePosition);
+            placedSquares[currentColor].Add(squarePosition);
 
             for (int y = squarePosition.y; y < squarePosition.y + squareSize; y++)
             {
                 for (int x = squarePosition.x; x < squarePosition.x + squareSize; x++)
                 {
                     float perlinValue = Mathf.PerlinNoise(x, y);
-
-                    int biomeIndex = i % biomeColors.Length;
-                    colorMap[y * width + x] = biomeColors[biomeIndex];
+                    colorMap[y * width + x] = currentColor;
                 }
             }
         }
@@ -43,8 +51,8 @@ public class BiomesGenerator
         return TextureFromBiomes(colorMap, width, height);
     }
 
-    private static Vector2Int GetValidSquarePosition(int width, int height, int squareSize, List<Vector2Int> existingPositions, System.Random random)
-    {
+   private static Vector2Int GetValidSquarePosition(int width, int height, int squareSize, List<Vector2Int> existingPositions, System.Random random, Color currentColor, Dictionary<Color, List<Vector2Int>> placedSquares)
+        {
         int maxAttempts = 100; 
         int currentAttempt = 0;
 
@@ -59,10 +67,18 @@ public class BiomesGenerator
             Vector2Int squarePosition = new Vector2Int(x, y);
 
             bool overlaps = false;
-
             foreach (Vector2Int existingPosition in existingPositions)
             {
                 if (IsOverlap(squarePosition, squareSize, existingPosition, squareSize))
+                {
+                    overlaps = true;
+                    break;
+                }
+            }
+
+            foreach (Vector2Int existingPosition in placedSquares[currentColor])
+            {
+                if (Vector2Int.Distance(squarePosition, existingPosition) < squareSize * 2)
                 {
                     overlaps = true;
                     break;
@@ -75,7 +91,8 @@ public class BiomesGenerator
             currentAttempt++;
         }
         return new Vector2Int(0, 0);
-    }
+        }
+
 
     private static bool IsOverlap(Vector2Int position1, int size1, Vector2Int position2, int size2)
     {
