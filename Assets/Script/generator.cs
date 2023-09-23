@@ -7,7 +7,11 @@ public class generator : MonoBehaviour
 
     public enum DrawMode {map, colorMap, mesh}
     public DrawMode drawMode;
+<<<<<<< HEAD
     const int mapChunckSize;
+=======
+    public int mapChunckSize;
+>>>>>>> origin/Mattéo
     public int width;
     public int height;
     public float scale;
@@ -24,7 +28,7 @@ public class generator : MonoBehaviour
 
     public TerrainType[] regions;
     public void SkeletonGenerator() {
-        float[,] map = Skeleton.GenerateSkeleton(width, height, seed, scale, octaves, persistance, lacunarity, offSet); 
+        float[,] map = Skeleton.GenerateSkeleton(width, height, scale, octaves, persistance, lacunarity, offSet); 
 
         Color[] colorMap = new Color[width * height];
 

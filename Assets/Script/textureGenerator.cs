@@ -31,7 +31,7 @@ public static class TextureGenerator{
                 }
             }
         }
- 
+        BiomesGenerator.GenerateBiomes(colorMap, width, height);
         return TextureFromColorMap(colorMap, width, height);
     }   
 
