@@ -7,7 +7,7 @@ public class EndlessMap : MonoBehaviour {
     public const float viewDistance = 500;
     public Transform viewer;
 
-    public Material mapMaterial;
+    public Material material;
     static generator _generator;
 
     public static Vector2 viewerPosition;
@@ -52,7 +52,7 @@ public class EndlessMap : MonoBehaviour {
                         chuncksLastUpdate.Add(chunckDic[chunckCoords]);
                     }
                 } else {
-                    chunckDic.Add(chunckCoords, new Chunck(chunckCoords, chunckSize, transform, mapMaterial));
+                    chunckDic.Add(chunckCoords, new Chunck(chunckCoords, chunckSize, transform, material));
                 }
             }
         }
@@ -74,11 +74,11 @@ public class EndlessMap : MonoBehaviour {
 
 
             meshObject = new GameObject("Chunk");
-            meshRenderer = meshObject.AddComponent<MeshRenderer>();
+            meshRenderer = meshObject.AddComponent<MeshRenderer >();
             meshFilter = meshObject.AddComponent<MeshFilter>();
+            meshRenderer.material = material;
             meshObject.transform.position = positionV3;
             meshObject.transform.parent = parent;
-            meshRenderer.material = material;
             setVisible(false);
             _generator.requestMapData(onMapDataReceived);
 

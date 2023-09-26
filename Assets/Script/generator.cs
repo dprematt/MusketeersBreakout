@@ -60,10 +60,8 @@ public class generator : MonoBehaviour
                     if (curHeight <= regions[k].height) {
 
                         colorMap[i * mapChunckSize + j]  = regions[k].colour;
-                    } else {
                         break;
                     }
-
                 }
             }
         }
@@ -151,7 +149,7 @@ public struct MapData {
 }
 
 
- [System.Serializable]
+[System.Serializable]
 public struct TerrainType {
     public string name;
     public float height;
