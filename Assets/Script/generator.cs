@@ -7,11 +7,7 @@ public class generator : MonoBehaviour
 
     public enum DrawMode {map, colorMap, mesh}
     public DrawMode drawMode;
-<<<<<<< HEAD
-    const int mapChunckSize;
-=======
-    public int mapChunckSize;
->>>>>>> origin/Mattéo
+    // const int mapChunckSize;
     public int width;
     public int height;
     public float scale;
