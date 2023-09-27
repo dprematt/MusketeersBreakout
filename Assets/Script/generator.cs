@@ -27,18 +27,8 @@ public class generator : MonoBehaviour
     float[,] fallOfMap;
 
     public TerrainType[] regions;
-
-    // public void SkeletonGenerator() {
-       // float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, offSet); 
-
-        // Color[] colorMap = new Color[mapChunckSize * mapChunckSize];
-
-        // for (int i = 0; i < mapChunckSize; i++) {
-
-
     Queue<MapThreadInfo<MapData>> mapDataThreadQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<meshData>> meshDataThreadQueue = new Queue<MapThreadInfo<meshData>>();
-
 
     public void displayMapInEditor() {
 
@@ -47,11 +37,9 @@ public class generator : MonoBehaviour
         DisplaySkeleton display = FindObjectOfType<DisplaySkeleton>();
         if (drawMode == DrawMode.map) {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(mapdata.heightMap));
-
         } else if (drawMode == DrawMode.colorMap) {
             display.DrawTexture(TextureGenerator.TextureFromColorMap(mapdata.colorMap, mapChunckSize, mapChunckSize));
         } else if (drawMode == DrawMode.mesh) {
-
             display.DrawMesh(MeshGenerator.generateTerrainMesh(mapdata.heightMap, meshHeightMult, meshHeightCurve, levelOfDetail), TextureGenerator.TextureFromColorMap(mapdata.colorMap, mapChunckSize, mapChunckSize));
         }
 
@@ -72,9 +60,8 @@ public class generator : MonoBehaviour
                     if (curHeight <= regions[k].height) {
 
                         colorMap[i * mapChunckSize + j]  = regions[k].colour;
-                    } else {
                         break;
-                    }
+                    }   
 
                 }
             }
