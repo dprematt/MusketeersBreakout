@@ -14,11 +14,11 @@ public class editor : Editor
         {
             if (gen.autoUpdate)
             {
-                gen.displayMapInEditor();
+                gen.DrawMap();
             }
         }
         if (GUILayout.Button("Generate")) {
-            gen.displayMapInEditor();
+            gen.DrawMap();
         }
     }
 }

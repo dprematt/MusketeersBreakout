@@ -24,10 +24,10 @@ public static class TextureGenerator{
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                    colorMap[i * width + j] = Color.Lerp(Color.black, Color.white, heightMap[j, i]);
-                }
+                colorMap[i * width + j] = Color.Lerp(Color.black, Color.white, heightMap[j, i]);
             }
-        // BiomesGenerator.GenerateBiomes(colorMap, width, height);
+        }
+        BiomesGenerator.GenerateBiomes(colorMap, width, height);
         return TextureFromColorMap(colorMap, width, height);
     }   
 
