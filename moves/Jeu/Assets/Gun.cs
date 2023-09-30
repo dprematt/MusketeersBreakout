@@ -7,8 +7,7 @@ public class Gun : WeaponsRange
     public Transform bulletSpawnPoint;
     public GameObject bulletPrefab;
     public float bulletSpeed = 10;
-    public int posInit = 0;
-    public int posActual = 0;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -19,10 +18,10 @@ public class Gun : WeaponsRange
 
     public void SpawnBullet()
     {
-       //Debug.Log(Lifetime);
         if (Lifetime > 0) {
             var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
             bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
+            bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
         }
     }
 }
