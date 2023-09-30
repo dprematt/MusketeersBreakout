@@ -10,12 +10,15 @@ public class PlayerMove : MonoBehaviour
     public float jumpForce = 2.0f;
     public float heightModifier = 0.5f;
     public float minHeight = 0.5f;
+    public int xp;
     /// <summary>
     /// private 
     /// </summary>
     private float originalHeight;
     private Transform cylinderTransform;
     private Rigidbody rb;
+
+    [SerializeField] float health, maxHealth = 10f;
 
     void Start()
     {
@@ -24,6 +27,24 @@ public class PlayerMove : MonoBehaviour
         jump = new Vector3(0.0f, 2.0f, 0.0f);
         cylinderTransform = transform;
         originalHeight = cylinderTransform.localScale.y;
+        health = maxHealth;
+        xp = 0;
+    }
+
+    public void TakeDamage(float damageAmount)
+    {
+        health -= damageAmount;
+
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public int UpdateXp(int new_xp)
+    {
+        xp += new_xp;
+        return xp;
     }
 
     void OnCollisionStay()

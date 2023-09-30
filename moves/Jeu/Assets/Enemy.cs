@@ -39,13 +39,17 @@ public class Enemy : MonoBehaviour
         target = newTarget;
     }
 
-    public void TakeDamage(float damageAmount) 
+    public int TakeDamage(float damageAmount)
     {
         health -= damageAmount;
 
-        if(health <= 0)
+        if (health <= 0)
         {
+            PlayerMove player = GameObject.FindObjectOfType<PlayerMove>();
+            player.UpdateXp(10);
             Destroy(gameObject);
+            return 1;
         }
+        return 0;
     }
 }
