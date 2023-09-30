@@ -1,26 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
-public class CrossBowAttack : MonoBehaviour
+public class HalberdAttack : MonoBehaviour
 {
-    public CrossBow c;
 
+    public Halberd h;
     // Start is called before the first frame update
-    public void Start()
+    void Start()
     {
-        c = new CrossBow();
+        h = new Halberd();
     }
 
-
     // Update is called once per frame
-    public void Update()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            c.SpawnBullet();
-            c.updateLifeTime(c.Lifetime--);
-         }
+            h.SpawnWeaponProx();
+        }
     }
 }

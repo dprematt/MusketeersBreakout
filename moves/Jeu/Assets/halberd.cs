@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 
-public class Knife : WeaponsProx
+public class Halberd : WeaponsProx
 {
     public Transform weaponSpawnPoint;
     public GameObject weaponPrefab;
@@ -19,9 +19,9 @@ public class Knife : WeaponsProx
     }
 
     public void SpawnWeaponProx()
-    { 
-        var knife = Instantiate(weaponPrefab, weaponSpawnPoint.position, weaponSpawnPoint.rotation);
+    {
+        var halberd = Instantiate(weaponPrefab, weaponSpawnPoint.position, weaponSpawnPoint.rotation);
         //knife.GetComponent<Rigidbody>();
-        knife.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 1, 2);
+        halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4);
     }
 }

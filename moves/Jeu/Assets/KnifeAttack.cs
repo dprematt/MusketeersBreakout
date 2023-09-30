@@ -1,26 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
-public class CrossBowAttack : MonoBehaviour
+public class KnifeAttack : MonoBehaviour
 {
-    public CrossBow c;
 
+    public Knife k;
     // Start is called before the first frame update
-    public void Start()
+    void Start()
     {
-        c = new CrossBow();
+        k = new Knife();
     }
 
-
     // Update is called once per frame
-    public void Update()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            c.SpawnBullet();
-            c.updateLifeTime(c.Lifetime--);
-         }
+           k.SpawnWeaponProx();
+        }
     }
 }

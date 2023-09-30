@@ -13,7 +13,6 @@ public class Spear : WeaponsRange
         Damage = 3;
         Range = 5;
         Lifetime = 27;
-        bulletSpawnPoint = gameObject.transform;
     }
 
     public void SpawnBullet()
@@ -23,11 +22,7 @@ public class Spear : WeaponsRange
         {
             var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
             bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
+            bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
         }
-    }
-
-    void Update()
-    {
-        //bulletSpawnPoint.position = gameObject.transform.position;
     }
 }

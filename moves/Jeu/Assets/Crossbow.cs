@@ -7,8 +7,6 @@ public class CrossBow : WeaponsRange
     public Transform bulletSpawnPoint;
     public GameObject bulletPrefab;
     public float bulletSpeed = 5;
-    public int posInit = 0;
-    public int posActual = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +22,7 @@ public class CrossBow : WeaponsRange
         {
             var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
             bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
+            bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
         }
     }
 }
