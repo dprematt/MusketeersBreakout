@@ -14,11 +14,11 @@ public class editor : Editor
         {
             if (gen.autoUpdate)
             {
-                gen.SkeletonGenerator();
+                gen.DrawMap();
             }
         }
         if (GUILayout.Button("Generate")) {
-            gen.SkeletonGenerator();
+            gen.DrawMap();
         }
     }
 }
