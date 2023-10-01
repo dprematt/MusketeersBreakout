@@ -18,7 +18,7 @@ public class Endless : MonoBehaviour {
     int chunkSize;
     int chunkVisibleViewDist;
     Dictionary<Vector2, Chunk> chunkDict = new Dictionary<Vector2, Chunk>();
-    List<Chunk> chunkVisibleLastUpdate = new List<Chunk>();
+    static List<Chunk> chunkVisibleLastUpdate = new List<Chunk>();
     private void Start() {
         _generator = FindObjectOfType<generator>();
         maxViewDist = detailsLevel[detailsLevel.Length - 1].visibleDstThreshold;
@@ -30,7 +30,7 @@ public class Endless : MonoBehaviour {
     }
 
     private void Update() {
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
+        viewerPosition = new Vector2(viewer.position.x, viewer.position.z) / 2f;
         if ((oldViewerPosition - viewerPosition).sqrMagnitude > sqrViewerMoveThresholdForChunkUpdate) {
             oldViewerPosition = viewerPosition;
             UpdateVisibleChunk();
@@ -53,9 +53,6 @@ public class Endless : MonoBehaviour {
   
                 if (chunkDict.ContainsKey(viewedChunkCoord)) {
                     chunkDict[viewedChunkCoord].UpdateChunk();
-                    if (chunkDict[viewedChunkCoord].isVisible()) {
-                        chunkVisibleLastUpdate.Add(chunkDict[viewedChunkCoord]);
-                    }
                 } else {
                     chunkDict.Add(viewedChunkCoord, new Chunk(viewedChunkCoord, chunkSize, detailsLevel, transform, mapMaterial));
                 }
@@ -133,6 +130,7 @@ public class Endless : MonoBehaviour {
                             lodMesh.RequestMesh(mapdata);
                         }
                     }
+                    chunkVisibleLastUpdate.Add(this);
                 }
                 SetVisible(visible);
             }

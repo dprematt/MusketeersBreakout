@@ -11,6 +11,7 @@ public class generator : MonoBehaviour
     public const int mapChunckSize = 241;
     [Range(0,6)]
     public int levelOfDetail;
+    public Skeleton.NormalizeMode normalizeMode;
     public float scale;
     public int octaves;
     [Range(0,1)]
@@ -32,10 +33,6 @@ public class generator : MonoBehaviour
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<meshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<meshData>>();
 
-    //private void awake() {
-      //  fallOfMap = FallOfMapGenerator.GenerateFallOfMap(mapChunckSize);
-    //}
-
     public void DrawMap() {
         MapData mapdata = SkeletonGenerator(Vector2.zero);
 
@@ -52,7 +49,7 @@ public class generator : MonoBehaviour
         }
     }
     MapData SkeletonGenerator(Vector2 center) {
-        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet); 
+        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode); 
 
         Color[] colorMap = new Color[mapChunckSize * mapChunckSize];
 
