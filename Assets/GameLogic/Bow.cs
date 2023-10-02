@@ -12,14 +12,17 @@ public class Bow : WeaponsRange
     void Start()
     {
         Damage = 4;
-        Range = 18;
+        Range = 10;
         Lifetime = 15;
     }
 
     public void SpawnBullet()
     {
         if (Lifetime > 0) {
-            var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+            var NewPos = bulletSpawnPoint.position;
+            NewPos.z += 1;
+            NewPos.y += 1;
+            var bullet = Instantiate(bulletPrefab, NewPos, bulletSpawnPoint.rotation);
             bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
             bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
         }

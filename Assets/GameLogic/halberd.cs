@@ -11,17 +11,12 @@ public class Halberd : WeaponsProx
     private float Range;
     private float Damage;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //Damage = 2; ca marche pas de mettre la valeur ici
-        //Range = 25; ca marche pas de mettre la valeur ici
-    }
-
     public void SpawnWeaponProx()
     {
-        var halberd = Instantiate(weaponPrefab, weaponSpawnPoint.position, weaponSpawnPoint.rotation);
-        //knife.GetComponent<Rigidbody>();
+        var NewPos = weaponSpawnPoint.position;
+        NewPos.z += 4/2;
+        NewPos.y += 1;
+        var halberd = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
         halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4);
     }
 }

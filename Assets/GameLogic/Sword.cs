@@ -11,7 +11,10 @@ public class Sword : MonoBehaviour
 
     public void SpawnWeaponProx()
     { 
-        var sword = Instantiate(weaponPrefab, weaponSpawnPoint.position, weaponSpawnPoint.rotation);
+        var NewPos = weaponSpawnPoint.position;
+        NewPos.z += 3/2;
+        NewPos.y += 1;
+        var sword = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
         sword.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 3, 5);
     }
 }

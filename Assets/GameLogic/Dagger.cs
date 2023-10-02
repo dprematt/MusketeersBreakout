@@ -11,7 +11,10 @@ public class Dagger : MonoBehaviour
 
     public void SpawnWeaponProx()
     { 
-        var dagger = Instantiate(weaponPrefab, weaponSpawnPoint.position, weaponSpawnPoint.rotation);
+        var NewPos = weaponSpawnPoint.position;
+        NewPos.z += 1/2;
+        NewPos.y += 1;
+        var dagger = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
         dagger.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 1, 3);
     }
 }
