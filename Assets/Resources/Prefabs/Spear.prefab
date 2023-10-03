@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1356332979306255762
+--- !u!1 &954474420991633718
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,49 +8,49 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4832894609427263993}
-  - component: {fileID: 1790062384313748492}
-  - component: {fileID: 5959047820862470653}
-  - component: {fileID: 1640232077926909850}
-  - component: {fileID: 3903981109638537291}
-  - component: {fileID: 2101936678010332269}
+  - component: {fileID: 3947834151510000669}
+  - component: {fileID: 8279782138001885199}
+  - component: {fileID: 8915040802342595878}
+  - component: {fileID: 8834182562448561936}
+  - component: {fileID: 1479097748553156475}
+  - component: {fileID: 7075128247752341029}
   m_Layer: 0
-  m_Name: CrossBow
-  m_TagString: WeaponCrossBow
+  m_Name: Spear
+  m_TagString: WeaponSpear
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4832894609427263993
+--- !u!4 &3947834151510000669
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1356332979306255762}
+  m_GameObject: {fileID: 954474420991633718}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.379643, y: 0, z: 21.69667}
+  m_LocalPosition: {x: 11.306267, y: 0, z: 22.868073}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &1790062384313748492
+--- !u!33 &8279782138001885199
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1356332979306255762}
+  m_GameObject: {fileID: 954474420991633718}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &5959047820862470653
+--- !u!23 &8915040802342595878
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1356332979306255762}
+  m_GameObject: {fileID: 954474420991633718}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -86,44 +86,44 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1640232077926909850
+--- !u!65 &8834182562448561936
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1356332979306255762}
+  m_GameObject: {fileID: 954474420991633718}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3903981109638537291
+--- !u!114 &1479097748553156475
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1356332979306255762}
+  m_GameObject: {fileID: 954474420991633718}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 827ecbd8310a4482ebff5cc4d094c985, type: 3}
+  m_Script: {fileID: 11500000, guid: e546c7fa5396442d0a5d2c55a7ae8dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bulletSpawnPoint: {fileID: 0}
   bulletPrefab: {fileID: 1227652172285325768, guid: ac1e8113cfb984757a078f3596ce4212, type: 3}
-  bulletSpeed: 5
---- !u!114 &2101936678010332269
+  bulletSpeed: 20
+--- !u!114 &7075128247752341029
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1356332979306255762}
+  m_GameObject: {fileID: 954474420991633718}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b2fde0746f114f3b886a1412ca97c51, type: 3}
+  m_Script: {fileID: 11500000, guid: 3230b0fc6be9b4264be5b3866a38f7f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  c: {fileID: 3903981109638537291}
+  s: {fileID: 1479097748553156475}

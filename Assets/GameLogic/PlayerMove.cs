@@ -69,7 +69,7 @@ public class PlayerMove : MonoBehaviour
         {       CrossBow weapon_script = gameObject.AddComponent<CrossBow>();
                 CrossBowAttack weapon_attack_script = gameObject.AddComponent<CrossBowAttack>();
                 weapon_script.bulletSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/CrossBow");
+                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
                 weapon_script.bulletPrefab = bulletPrefab;
                 weapon_attack_script.c = weapon_script;
                 Destroy(col.gameObject);
@@ -81,7 +81,7 @@ public class PlayerMove : MonoBehaviour
                 Spear weapon_script = gameObject.AddComponent<Spear>();
                 SpearAttack weapon_attack_script = gameObject.AddComponent<SpearAttack>();
                 weapon_script.bulletSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Spear");
+                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
                 weapon_script.bulletPrefab = bulletPrefab;
                 weapon_attack_script.s = weapon_script;
                 Destroy(col.gameObject);
@@ -93,7 +93,7 @@ public class PlayerMove : MonoBehaviour
                 Gun weapon_script = gameObject.AddComponent<Gun>();
                 Attack weapon_attack_script = gameObject.AddComponent<Attack>();
                 weapon_script.bulletSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Gun");
+                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
                 weapon_script.bulletPrefab = bulletPrefab;
                 weapon_attack_script.g = weapon_script;
                 Destroy(col.gameObject);
@@ -104,7 +104,7 @@ public class PlayerMove : MonoBehaviour
                 Knife weapon_script = gameObject.AddComponent<Knife>();
                 KnifeAttack weapon_attack_script = gameObject.AddComponent<KnifeAttack>();
                 weapon_script.weaponSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Knife");
+                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/WeaponProx");
                 weapon_script.weaponPrefab = bulletPrefab;
                 weapon_attack_script.k = weapon_script;
                 Destroy(col.gameObject);
@@ -115,7 +115,7 @@ public class PlayerMove : MonoBehaviour
                 Dagger weapon_script = gameObject.AddComponent<Dagger>();
                 DaggerAttack weapon_attack_script = gameObject.AddComponent<DaggerAttack>();
                 weapon_script.weaponSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Dagger");
+                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/WeaponProx");
                 weapon_script.weaponPrefab = bulletPrefab;
                 weapon_attack_script.d = weapon_script;
                 Destroy(col.gameObject);
@@ -126,7 +126,7 @@ public class PlayerMove : MonoBehaviour
                 Sword weapon_script = gameObject.AddComponent<Sword>();
                 SwordAttack weapon_attack_script = gameObject.AddComponent<SwordAttack>();
                 weapon_script.weaponSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Sword");
+                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/WeaponProx");
                 weapon_script.weaponPrefab = bulletPrefab;
                 weapon_attack_script.s = weapon_script;
                 Destroy(col.gameObject);
@@ -137,7 +137,7 @@ public class PlayerMove : MonoBehaviour
                 Halberd weapon_script = gameObject.AddComponent<Halberd>();
                 HalberdAttack weapon_attack_script = gameObject.AddComponent<HalberdAttack>();
                 weapon_script.weaponSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Halberd");
+                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/WeaponProx");
                 weapon_script.weaponPrefab = bulletPrefab;
                 weapon_attack_script.h = weapon_script;
                 Destroy(col.gameObject);
