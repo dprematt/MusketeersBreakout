@@ -11,7 +11,6 @@ public class Attack : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     { 
-        g = new Gun();
     }
 
     

@@ -11,7 +11,6 @@ public class SpearAttack : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     {
-        s = new Spear();
     }
 
 

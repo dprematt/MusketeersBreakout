@@ -9,7 +9,6 @@ public class HalberdAttack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        h = new Halberd();
     }
 
     // Update is called once per frame

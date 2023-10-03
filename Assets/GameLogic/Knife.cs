@@ -19,5 +19,6 @@ public class Knife : WeaponsProx
         NewPos.y += 1;
         var knife = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
         knife.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 1, 2);
+        Debug.Log("knife stab launched");
     }
 }

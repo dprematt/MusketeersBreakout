@@ -10,7 +10,6 @@ public class CrossBowAttack : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     {
-        c = new CrossBow();
     }
 
 

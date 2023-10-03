@@ -9,7 +9,6 @@ public class KnifeAttack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        k = new Knife();
     }
 
     // Update is called once per frame
