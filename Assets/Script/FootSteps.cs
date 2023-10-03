@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class footSteps : MonoBehaviour
+public class FootSteps : MonoBehaviour
 {
     public List<AudioClip> grassSound, woodSound;
     public AudioClip curSound;
