@@ -56,8 +56,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (col.gameObject.tag == "WeaponBow")
         {
-            if (Input.GetKeyDown(KeyCode.X))
-            {
+        
                 Bow weapon_script = gameObject.AddComponent<Bow>();
                 AttackBow weapon_attack_script = gameObject.AddComponent<AttackBow>();
                 weapon_script.bulletSpawnPoint = gameObject.transform;
@@ -65,25 +64,20 @@ public class PlayerMove : MonoBehaviour
                 weapon_script.bulletPrefab = bulletPrefab;
                 weapon_attack_script.b = weapon_script;
                 Destroy(col.gameObject);
-            }
         }
         if (col.gameObject.tag == "WeaponCrossBow")
-        {
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                CrossBow weapon_script = gameObject.AddComponent<CrossBow>();
+        {       CrossBow weapon_script = gameObject.AddComponent<CrossBow>();
                 CrossBowAttack weapon_attack_script = gameObject.AddComponent<CrossBowAttack>();
                 weapon_script.bulletSpawnPoint = gameObject.transform;
                 GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/CrossBow");
                 weapon_script.bulletPrefab = bulletPrefab;
                 weapon_attack_script.c = weapon_script;
                 Destroy(col.gameObject);
-            }
+        
         }
         if (col.gameObject.tag == "WeaponSpear")
         {
-            if (Input.GetKeyDown(KeyCode.X))
-            {
+        
                 Spear weapon_script = gameObject.AddComponent<Spear>();
                 SpearAttack weapon_attack_script = gameObject.AddComponent<SpearAttack>();
                 weapon_script.bulletSpawnPoint = gameObject.transform;
@@ -91,12 +85,11 @@ public class PlayerMove : MonoBehaviour
                 weapon_script.bulletPrefab = bulletPrefab;
                 weapon_attack_script.s = weapon_script;
                 Destroy(col.gameObject);
-            }
+       
         }
         if (col.gameObject.tag == "WeaponGun")
         {
-            if (Input.GetKeyDown(KeyCode.X))
-            {
+       
                 Gun weapon_script = gameObject.AddComponent<Gun>();
                 Attack weapon_attack_script = gameObject.AddComponent<Attack>();
                 weapon_script.bulletSpawnPoint = gameObject.transform;
@@ -104,12 +97,10 @@ public class PlayerMove : MonoBehaviour
                 weapon_script.bulletPrefab = bulletPrefab;
                 weapon_attack_script.g = weapon_script;
                 Destroy(col.gameObject);
-            }
+      
         }
         if (col.gameObject.tag == "WeaponKnife")
         {
-            if (Input.GetKeyDown(KeyCode.X))
-            {
                 Knife weapon_script = gameObject.AddComponent<Knife>();
                 KnifeAttack weapon_attack_script = gameObject.AddComponent<KnifeAttack>();
                 weapon_script.weaponSpawnPoint = gameObject.transform;
@@ -117,12 +108,10 @@ public class PlayerMove : MonoBehaviour
                 weapon_script.weaponPrefab = bulletPrefab;
                 weapon_attack_script.k = weapon_script;
                 Destroy(col.gameObject);
-            }
+      
         }
         if (col.gameObject.tag == "WeaponDagger")
         {
-            if (Input.GetKeyDown(KeyCode.X))
-            {
                 Dagger weapon_script = gameObject.AddComponent<Dagger>();
                 DaggerAttack weapon_attack_script = gameObject.AddComponent<DaggerAttack>();
                 weapon_script.weaponSpawnPoint = gameObject.transform;
@@ -130,12 +119,10 @@ public class PlayerMove : MonoBehaviour
                 weapon_script.weaponPrefab = bulletPrefab;
                 weapon_attack_script.d = weapon_script;
                 Destroy(col.gameObject);
-            }
+      
         }
         if (col.gameObject.tag == "WeaponSword")
         {
-            if (Input.GetKeyDown(KeyCode.X))
-            {
                 Sword weapon_script = gameObject.AddComponent<Sword>();
                 SwordAttack weapon_attack_script = gameObject.AddComponent<SwordAttack>();
                 weapon_script.weaponSpawnPoint = gameObject.transform;
@@ -143,12 +130,10 @@ public class PlayerMove : MonoBehaviour
                 weapon_script.weaponPrefab = bulletPrefab;
                 weapon_attack_script.s = weapon_script;
                 Destroy(col.gameObject);
-            }
+      
         }
         if (col.gameObject.tag == "WeaponHalberd")
         {
-            if (Input.GetKeyDown(KeyCode.X))
-            {
                 Halberd weapon_script = gameObject.AddComponent<Halberd>();
                 HalberdAttack weapon_attack_script = gameObject.AddComponent<HalberdAttack>();
                 weapon_script.weaponSpawnPoint = gameObject.transform;
@@ -156,7 +141,7 @@ public class PlayerMove : MonoBehaviour
                 weapon_script.weaponPrefab = bulletPrefab;
                 weapon_attack_script.h = weapon_script;
                 Destroy(col.gameObject);
-            }
+      
         }
     }
 
