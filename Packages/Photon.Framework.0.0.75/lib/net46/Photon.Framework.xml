@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Photon.Framework</name>
+    </assembly>
+    <members>
+        <member name="T:Photon.Framework.AnsiWriter">
+            <summary>
+            Supports writing strings and ANSI color codes to a <see cref="T:System.IO.TextWriter"/>.
+            </summary>
+        </member>
+        <member name="P:Photon.Framework.AnsiWriter.AnsiEnabled">
+            <summary>
+            When enabled, ANSI color codes are written to the console.
+            Otherwise the default color-buffers are used.
+            </summary>
+        </member>
+        <member name="P:Photon.Framework.AnsiWriter.Writer">
+            <summary>
+            The underlying <see cref="T:System.IO.TextWriter"/>.
+            </summary>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.#ctor(System.IO.TextWriter,System.Boolean)">
+            <summary>
+            Creates a new instance of <see cref="T:Photon.Framework.AnsiWriter"/>
+            using the specified <paramref name="writer"/>.
+            </summary>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.Write(System.Char)">
+            <summary>
+            Writes a character to the text string or stream.
+            </summary>
+            <param name="value">The character to write to the text stream.</param>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.Write(System.String)">
+            <summary>
+            Writes a string to the text string or stream.
+            </summary>
+            <param name="value">The string to write.</param>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.Write(System.Object)">
+            <summary>
+            Writes the text representation of an object to the text string
+            or stream by calling the ToString method on that object.
+            </summary>
+            <param name="value">The object to write.</param>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.WriteLine">
+            <summary>
+            Writes a line terminator to the text string or stream.
+            </summary>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.WriteLine(System.String)">
+            <summary>
+            Writes a string followed by a line terminator to the text string or stream.
+            </summary>
+            <param name="value">The string to write.</param>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.WriteLine(System.Object)">
+            <summary>
+            Writes the text representation of an object by calling the ToString method
+            on that object, followed by a line terminator to the text string or stream.
+            </summary>
+            <param name="value">The object to write.</param>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.Write(System.Char,System.ConsoleColor)">
+            <summary>
+            Writes a character to the text string or stream using
+            the specified <paramref name="color"/>.
+            </summary>
+            <param name="value">The character to write to the text stream.</param>
+            <param name="color">The color set before writing the string.</param>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.Write(System.String,System.ConsoleColor)">
+            <summary>
+            Writes a string to the text string or stream using
+            the specified <paramref name="color"/>.
+            </summary>
+            <param name="value">The string to write.</param>
+            <param name="color">The color set before writing the string.</param>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.Write(System.Object,System.ConsoleColor)">
+            <summary>
+            Writes the text representation of an object to the text
+            string or stream using the specified <paramref name="color"/>
+            by calling the ToString method on that object.
+            </summary>
+            <param name="value">The object to write.</param>
+            <param name="color">The color set before writing the string.</param>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.WriteLine(System.String,System.ConsoleColor)">
+            <summary>
+            Writes a string followed by a line terminator to the text
+            string or stream using the specified <paramref name="color"/>.
+            </summary>
+            <param name="value">The string to write.</param>
+            <param name="color">The color set before writing the string.</param>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.WriteLine(System.Object,System.ConsoleColor)">
+            <summary>
+            Writes the text representation of an object by calling the ToString method
+            on that object using the specified <paramref name="color"/>, followed by
+            a line terminator to the text string or stream.
+            </summary>
+            <param name="value">The object to write.</param>
+            <param name="color">The color set before writing the string.</param>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.SetForegroundColor(System.ConsoleColor)">
+            <summary>
+            Sets the foreground color of the console.
+            </summary>
+        </member>
+        <member name="M:Photon.Framework.AnsiWriter.ResetColor">
+            <summary>
+            Sets the foreground and background console colors to their defaults.
+            </summary>
+        </member>
+        <member name="M:Photon.Framework.Packages.ProjectPackageUtility.Publish(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Creates an Project Package using the specified
+            definition file and pushes it to the server.
+            </summary>
+            <param name="definitionFilename">The file name of the package definition.</param>
+            <param name="version">The version of the package to create.</param>
+        </member>
+        <member name="M:Photon.Framework.Packages.ApplicationPackageUtility.Publish(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Creates an Application Package using the specified
+            definition file and pushes it to the server.
+            </summary>
+            <param name="definitionFilename">The file name of the package definition.</param>
+            <param name="version">The version of the package to create.</param>
+        </member>
+        <member name="M:Photon.Framework.Packages.ApplicationPackageTools.CreatePackage(Photon.Framework.Packages.ApplicationPackageDefinition,System.String,System.String,System.String)">
+            <summary>
+            Creates an Application Package using the specified
+            definition file.
+            </summary>
+            <param name="version">The version of the package to create.</param>
+            <param name="outputFilename">The file name of the output package.</param>
+        </member>
+        <member name="M:Photon.Framework.Packages.ProjectPackageTools.CreatePackage(Photon.Framework.Packages.ProjectPackageDefinition,System.String,System.String,System.String)">
+            <summary>
+            Creates a Project Package using the specified
+            definition file.
+            </summary>
+            <param name="definition">The project-package definition.</param>
+            <param name="rootPath">The root path of the package source.</param>
+            <param name="version">The version of the package to create.</param>
+            <param name="outputFilename">The filename of the package to create.</param>
+        </member>
+        <member name="P:Photon.Framework.Pooling.ReferencePool`1.PruneInterval">
+            <summary>
+            Gets or sets the amount of time in milliseconds between task pruning checks.
+            </summary>
+        </member>
+        <member name="P:Photon.Framework.Process.ProcessWrapperBase.Exe">
+            <summary>
+            Gets or sets the executable to use when running MSBuild.
+            </summary>
+        </member>
+        <member name="P:Photon.Framework.Process.ProcessWrapperBase.WorkingDirectory">
+            <summary>
+            Gets or sets the optional working directory for executing MSBuild.
+            </summary>
+        </member>
+        <member name="P:Photon.Framework.Process.ProcessWrapperBase.Output">
+            <summary>
+            Gets or sets the writer to print to process output to.
+            </summary>
+        </member>
+        <member name="P:Photon.Framework.Process.ProcessWrapperBase.EchoCommand">
+            <summary>
+            Gets or sets whether the command run is echoed to the task output stream.
+            </summary>
+        </member>
+        <member name="M:Photon.Framework.Tools.PathEx.CreateFilePath(System.String)">
+            <summary>
+            Creates the directory portion of the filename if it does not exist.
+            </summary>
+        </member>
+        <member name="M:Photon.Framework.Tools.PathEx.CreatePath(System.String)">
+            <summary>
+            Creates a directory if it does not exist.
+            </summary>
+        </member>
+        <member name="M:Photon.Framework.Tools.PathEx.Delete(System.String)">
+            <summary>
+            Deletes a file if it exists.
+            </summary>
+        </member>
+        <member name="M:Photon.Framework.Tools.PathEx.DestoryDirectory(System.String)">
+            <summary>
+            Deletes a directory if it exists, and all of its contents recursively.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -4,12 +4,18 @@ using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine.UI;
+using Photon.Realtime;
 using Photon.Pun;
 
 public class PlayFabManager : MonoBehaviourPunCallbacks
 {
 
-    public InputField Email_, Username_, Password_;
+    public InputField Email_, Username_, Password_, RoomName_;
+    public Text Room_;
+    public GameObject LobbyPanel_, RoomPanel_;
+    public RoomItem roomItemPrefab;
+    List<RoomItem> roomItemList = new List<RoomItem>();
+    public Transform contentObject;
 
 
     // Start de la classe
@@ -42,19 +48,6 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         });
     }
 
-    public void create()
-    {
-        
-        PhotonNetwork.CreateRoom("ok");
-        Debug.Log("Create room");
-    }
-
-    public void join()
-    {
-        PhotonNetwork.JoinRoom("ok");
-        Debug.Log("Join room");
-    }
-
     //Fonction qui permet de login un user
     public void Login()
     {
@@ -76,22 +69,50 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("ConnectedToMaster Photon");
         PhotonNetwork.JoinLobby();
-        //
-        //PhotonNetwork.JoinRoom("ok");
-    }
-    public override void OnJoinedLobby()
-    {
-        Debug.Log("Lobby joined");
+        LobbyPanel_.SetActive(true);
     }
 
-    public override void OnCreatedRoom()
+
+
+    public void OnClickCreate()
     {
-        Debug.Log("Room Created !");
+        if (RoomName_.text.Length >= 1)
+        {
+            PhotonNetwork.CreateRoom(RoomName_.text);
+        }
     }
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.LoadLevel("Delivery");
-        Debug.Log("Load level");
+        LobbyPanel_.SetActive(false);
+        RoomPanel_.SetActive(true);
+        Room_.text = "Room name : " + PhotonNetwork.CurrentRoom.Name;
+        //PhotonNetwork.LoadLevel("Delivery");
+        Debug.Log(PhotonNetwork.CurrentRoom.Name);
     }
+
+
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomlist)
+    {
+        foreach (RoomItem item in roomItemList)
+        {
+            Destroy(item.gameObject);
+        }
+        roomItemList.Clear();
+        foreach (RoomInfo room in roomlist)
+        {
+            RoomItem newroom = Instantiate(roomItemPrefab, contentObject);
+            newroom.SetRoomName(room.Name); // Utilisez la propriété Name pour obtenir le nom de la salle.
+            roomItemList.Add(newroom);
+        }
+    }
+
+
+
+
+
+
+
+
 }
