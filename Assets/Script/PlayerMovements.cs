@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class PlayerMovements : MonoBehaviour
 {
@@ -29,74 +30,94 @@ public class PlayerMovements : MonoBehaviour
     Vector3 moveDirection;
 
     Rigidbody rb;
+    PhotonView view;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        view = GetComponent<PhotonView>();
         rb.freezeRotation = true;
     }
 
     private void Update()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight / 2 + 0.1f);
-
-        MyInput();
-        ControlDrag();
-
-        if (Input.GetKeyDown(jumpKey) && isGrounded)
+        if (view.IsMine)
         {
-            Jump();
+            isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight / 2 + 0.1f);
+
+            MyInput();
+            ControlDrag();
+
+            if (Input.GetKeyDown(jumpKey) && isGrounded)
+            {
+                Jump();
+            }
         }
     }
 
     void MyInput()
     {
-        horizontalMovement = Input.GetAxisRaw("Horizontal");
-        verticalMovement = Input.GetAxisRaw("Vertical");
+        if (view.IsMine)
+        {
+            horizontalMovement = Input.GetAxisRaw("Horizontal");
+            verticalMovement = Input.GetAxisRaw("Vertical");
 
-        Vector3 cameraForward = Camera.main.transform.forward;
-        Vector3 cameraRight = Camera.main.transform.right;
+            Vector3 cameraForward = Camera.main.transform.forward;
+            Vector3 cameraRight = Camera.main.transform.right;
 
-        cameraForward.y = 0;
-        cameraRight.y = 0;
+            cameraForward.y = 0;
+            cameraRight.y = 0;
 
-        cameraForward.Normalize();
-        cameraRight.Normalize();
+            cameraForward.Normalize();
+            cameraRight.Normalize();
 
-        moveDirection = cameraForward * verticalMovement + cameraRight * horizontalMovement;
+            moveDirection = cameraForward * verticalMovement + cameraRight * horizontalMovement;
+        }
     }
 
     void Jump()
     {
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        if (view.IsMine)
+        {
+            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        }
     }
 
     void ControlDrag()
     {
-        if (isGrounded)
+        if (view.IsMine)
         {
-            rb.drag = groundDrag;
-        }
-        else
-        {
-            rb.drag = airDrag;
+            if (isGrounded)
+            {
+                rb.drag = groundDrag;
+            }
+            else
+            {
+                rb.drag = airDrag;
+            }
         }
     }
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        if (view.IsMine)
+        {
+            MovePlayer();
+        }
     }
 
     void MovePlayer()
     {
-        if (isGrounded)
+        if (view.IsMine)
         {
-            rb.AddForce(moveDirection.normalized * moveSpeed * movementMultiplier, ForceMode.Acceleration);
-        }
-        else if (!isGrounded)
-        {
-            rb.AddForce(moveDirection.normalized * moveSpeed * movementMultiplier * airMultiplier, ForceMode.Acceleration);
+            if (isGrounded)
+            {
+                rb.AddForce(moveDirection.normalized * moveSpeed * movementMultiplier, ForceMode.Acceleration);
+            }
+            else if (!isGrounded)
+            {
+                rb.AddForce(moveDirection.normalized * moveSpeed * movementMultiplier * airMultiplier, ForceMode.Acceleration);
+            }
         }
     }
 }
