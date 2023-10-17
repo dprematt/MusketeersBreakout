@@ -16,6 +16,8 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
     public RoomItem roomItemPrefab;
     List<RoomItem> roomItemList = new List<RoomItem>();
     public Transform contentObject;
+    public float TimeUpdate = 1.5f;
+    float NextUpdateTime;
 
 
     // Start de la classe
@@ -95,20 +97,37 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomlist)
     {
-        foreach (RoomItem item in roomItemList)
-        {
-            Destroy(item.gameObject);
-        }
-        roomItemList.Clear();
-        foreach (RoomInfo room in roomlist)
-        {
-            RoomItem newroom = Instantiate(roomItemPrefab, contentObject);
-            newroom.SetRoomName(room.Name); // Utilisez la propriété Name pour obtenir le nom de la salle.
-            roomItemList.Add(newroom);
+        if (Time.time >= NextUpdateTime) {
+            foreach (RoomItem item in roomItemList)
+            {
+                Destroy(item.gameObject);
+            }
+            roomItemList.Clear();
+            foreach (RoomInfo room in roomlist)
+            {
+                RoomItem newroom = Instantiate(roomItemPrefab, contentObject);
+                newroom.SetRoomName(room.Name); // Utilisez la propriété Name pour obtenir le nom de la salle.
+                roomItemList.Add(newroom);
+            }
+            NextUpdateTime = Time.time + TimeUpdate;
         }
     }
 
+    public void JoinRoom(string name)
+    {
+        PhotonNetwork.JoinRoom(name);
+    }
 
+    public void OnClickLeave()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnLeftRoom()
+    {
+        RoomPanel_.SetActive(false);
+        LobbyPanel_.SetActive(true);
+    }
 
 
 

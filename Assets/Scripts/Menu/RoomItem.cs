@@ -6,10 +6,21 @@ using UnityEngine.UI;
 public class RoomItem : MonoBehaviour
 {
 
-    public Text room;
+    public Text Rooom;
+    PlayFabManager manager;
+
+    private void Start()
+    {
+        manager = FindObjectOfType<PlayFabManager>();
+    }
 
     public void SetRoomName(string roomname)
     {
-        room.text = roomname;
+        Rooom.text = roomname;
+    }
+
+    public void OnClickItem()
+    {
+        manager.JoinRoom(Rooom.text);
     }
 }
