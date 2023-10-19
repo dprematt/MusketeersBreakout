@@ -31,6 +31,7 @@ public class PlayerMovements : MonoBehaviour
 
     Rigidbody rb;
     PhotonView view;
+    public GameObject Camera_;
 
     private void Start()
     {
@@ -43,6 +44,7 @@ public class PlayerMovements : MonoBehaviour
     {
         if (view.IsMine)
         {
+            Camera_.SetActive(true);
             isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight / 2 + 0.1f);
 
             MyInput();
@@ -52,6 +54,9 @@ public class PlayerMovements : MonoBehaviour
             {
                 Jump();
             }
+        } else
+        {
+            Camera_.SetActive(false);
         }
     }
 
@@ -59,6 +64,7 @@ public class PlayerMovements : MonoBehaviour
     {
         if (view.IsMine)
         {
+            Camera_.SetActive(true);
             horizontalMovement = Input.GetAxisRaw("Horizontal");
             verticalMovement = Input.GetAxisRaw("Vertical");
 
@@ -72,6 +78,9 @@ public class PlayerMovements : MonoBehaviour
             cameraRight.Normalize();
 
             moveDirection = cameraForward * verticalMovement + cameraRight * horizontalMovement;
+        } else
+        {
+            Camera_.SetActive(false);
         }
     }
 

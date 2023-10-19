@@ -89,7 +89,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         LobbyPanel_.SetActive(false);
         RoomPanel_.SetActive(true);
         Room_.text = "Room name : " + PhotonNetwork.CurrentRoom.Name;
-        //PhotonNetwork.LoadLevel("Delivery");
+        PhotonNetwork.LoadLevel("Delivery");
         Debug.Log(PhotonNetwork.CurrentRoom.Name);
     }
 
@@ -116,6 +116,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
     public void JoinRoom(string name)
     {
         PhotonNetwork.JoinRoom(name);
+
     }
 
     public void OnClickLeave()
