@@ -24,6 +24,10 @@ public interface IInventoryItem
     int UpdateXp(float xp);
     bool UpdateLifeTime(float lifetime);
     void OnPickup();
+
+    void SelectItem(bool state);
+
+    void Attack();
 }
 public class InventoryEventArgs : EventArgs
 {

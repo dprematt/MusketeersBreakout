@@ -26,6 +26,11 @@ public class Gun : Weapons
     {
         get { return "Gun"; }
     }
+
+    public override void Attack()
+    {
+        SpawnBullet();
+    }
     public void SpawnBullet()
     {
         if (LifeTime > 0) {
@@ -39,11 +44,11 @@ public class Gun : Weapons
     }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        /*if (Input.GetKeyDown(KeyCode.L))
         {
             SpawnBullet();
             if (UpdateLifeTime(LifeTime--))
                 Destroy(gameObject); // destruction de l'arc si la durabilité atteint 0;
-        }
+        }*/
     }
 }

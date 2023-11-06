@@ -36,13 +36,18 @@ public class Halberd : Weapons
         halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4);
     }
 
+    public override void Attack()
+    {
+        SpawnWeaponProx();
+    }
+
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+       /* if (Input.GetKeyDown(KeyCode.L))
         {
             SpawnWeaponProx();
             if (UpdateLifeTime(LifeTime--))
                 Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
-        }
+        }*/
     }
 }

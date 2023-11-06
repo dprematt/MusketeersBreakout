@@ -30,6 +30,7 @@ public class HUD : MonoBehaviour
         {
             Debug.Log("event item loop");
             Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
+            Button button = slot.GetChild(0).GetComponent<Button>();
             Debug.Log(e.Item.Image);
             Debug.Log(image.enabled);
 
@@ -39,6 +40,8 @@ public class HUD : MonoBehaviour
                 image.enabled = true;
                 image.sprite = e.Item.Image;
                 Debug.Log("event item enabled");
+                button.onClick.AddListener(e.Item.Attack);
+                Debug.Log("onclick button event listener item enabled");
                 break;
             }
         }
@@ -46,5 +49,11 @@ public class HUD : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-    }
+        /*Transform inventoryPanel = transform.Find("Inventory");
+        foreach (Transform slot in inventoryPanel)
+        {
+            Debug.Log("update item loop");
+            Button button = slot.GetChild(0).GetComponent<Button>();
+            button.onClick.AddListener()
+        */}
 }

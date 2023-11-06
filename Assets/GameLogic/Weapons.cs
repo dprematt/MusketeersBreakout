@@ -16,12 +16,22 @@ public abstract class Weapons : MonoBehaviour, IInventoryItem
     public virtual int Mag { get; protected set; }
     public virtual bool Echo { get; protected set; }
     public virtual int Range { get; protected set; }
+
+    public virtual void Attack()
+    {
+        Debug.Log("in attack virtual");
+    }
     public virtual int UpgradeLevel(int levels)
     {
         Level += levels;
         return Level;
     }
 
+    public virtual void SelectItem(bool state)
+    {
+        Debug.Log("in Select Item callback");
+        gameObject.SetActive(state);
+    }
     public virtual int UpdateMag(int mag)
     {
         Mag -= mag;

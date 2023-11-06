@@ -38,13 +38,17 @@ public class Spear : Weapons
             bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
         }
     }
+    public override void Attack()
+    {
+        SpawnBullet();
+    }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+       /* if (Input.GetKeyDown(KeyCode.L))
         {
             SpawnBullet();
             if (UpdateLifeTime(LifeTime--))
                 Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
-        }
+        }*/
     }
 }

@@ -33,13 +33,18 @@ public class Sword : Weapons
         var sword = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
         sword.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 3, 5);
     }
+
+    public override void Attack()
+    {
+        SpawnWeaponProx();
+    }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+      /*  if (Input.GetKeyDown(KeyCode.L))
         {
             SpawnWeaponProx();
             if (UpdateLifeTime(LifeTime--))
                 Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
-        }
+        }*/
     }
 }

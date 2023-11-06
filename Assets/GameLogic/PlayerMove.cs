@@ -216,6 +216,9 @@ public class PlayerMove : MonoBehaviour
                 HUD.SetActive(true);
             }
         }
+        /*if (Input.GetKeyDown(KeyCode.L))
+        {
+        }*/
         if (Input.GetKeyDown(KeyCode.V))
         {
             Vector3 player_pos = gameObject.transform.position;

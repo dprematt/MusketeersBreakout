@@ -37,13 +37,18 @@ public class Knife : Weapons
         var knife = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
         knife.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 1, 2);
     }
+
+    public override void Attack()
+    {
+        SpawnWeaponProx();
+    }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+       /* if (Input.GetKeyDown(KeyCode.L))
         {
             SpawnWeaponProx();
             if (UpdateLifeTime(LifeTime--))
                 Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
-        }
+        }*/
     }
 }

@@ -563,6 +563,10 @@ PrefabInstance:
       propertyPath: _Image
       value: 
       objectReference: {fileID: 21300000, guid: 6360a69cc794d9548b549a0b0f3aa7ae, type: 3}
+    - target: {fileID: 448539800182589440, guid: 984e18c4054cb2d41a173b7f87bc3665, type: 3}
+      propertyPath: weaponSpawnPoint
+      value: 
+      objectReference: {fileID: 1496169909}
     - target: {fileID: 627527009284424991, guid: 984e18c4054cb2d41a173b7f87bc3665, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -607,7 +611,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2803009739966303781, guid: 984e18c4054cb2d41a173b7f87bc3665, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -864,11 +869,16 @@ PrefabInstance:
       propertyPath: _Image
       value: 
       objectReference: {fileID: 21300000, guid: d8550dacd5445ec4992ed8bf2c38d269, type: 3}
+    - target: {fileID: 7369656691890905415, guid: 55f802eb99f8d09488ec58a1375a9dbf, type: 3}
+      propertyPath: weaponSpawnPoint
+      value: 
+      objectReference: {fileID: 1496169909}
     - target: {fileID: 9208269171727442931, guid: 55f802eb99f8d09488ec58a1375a9dbf, type: 3}
       propertyPath: m_Name
       value: Halberd
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4598323500359160502, guid: 55f802eb99f8d09488ec58a1375a9dbf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1240,7 +1250,12 @@ PrefabInstance:
       propertyPath: _Image
       value: 
       objectReference: {fileID: 21300000, guid: 3b6b7a7651800be41b15d4182df100ce, type: 3}
-    m_RemovedComponents: []
+    - target: {fileID: 8667248906193663685, guid: a000c71b20351b240a5097c21a13fa6b, type: 3}
+      propertyPath: weaponSpawnPoint
+      value: 
+      objectReference: {fileID: 1496169909}
+    m_RemovedComponents:
+    - {fileID: 1889083780627768033, guid: a000c71b20351b240a5097c21a13fa6b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1804,7 +1819,12 @@ PrefabInstance:
       propertyPath: _Image
       value: 
       objectReference: {fileID: 21300000, guid: a48e38fd1099fb14aa960aaaed42dec5, type: 3}
-    m_RemovedComponents: []
+    - target: {fileID: 3833354309212275397, guid: 80d1d07b6d784594f80cb6815d13f1c5, type: 3}
+      propertyPath: bulletSpawnPoint
+      value: 
+      objectReference: {fileID: 1496169909}
+    m_RemovedComponents:
+    - {fileID: 718813430374592259, guid: 80d1d07b6d784594f80cb6815d13f1c5, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2068,6 +2088,10 @@ PrefabInstance:
       propertyPath: _Image
       value: 
       objectReference: {fileID: 21300000, guid: abdbbcafbe9a3004dbc62d3beca996d3, type: 3}
+    - target: {fileID: 3903981109638537291, guid: 2828ddbb0f32890429e28b16f23511c7, type: 3}
+      propertyPath: bulletSpawnPoint
+      value: 
+      objectReference: {fileID: 1496169909}
     - target: {fileID: 4832894609427263993, guid: 2828ddbb0f32890429e28b16f23511c7, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -2112,7 +2136,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2101936678010332269, guid: 2828ddbb0f32890429e28b16f23511c7, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2755,11 +2780,16 @@ PrefabInstance:
       propertyPath: _Image
       value: 
       objectReference: {fileID: 21300000, guid: c25b740dcc83e7349b03620206651999, type: 3}
+    - target: {fileID: 3235510962922934785, guid: 8814046a5ebaeda418cd7617acae08c5, type: 3}
+      propertyPath: bulletSpawnPoint
+      value: 
+      objectReference: {fileID: 1496169909}
     - target: {fileID: 6879412021008930514, guid: 8814046a5ebaeda418cd7617acae08c5, type: 3}
       propertyPath: m_Name
       value: Gun
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4070298007915700990, guid: 8814046a5ebaeda418cd7617acae08c5, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2781,6 +2811,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31be4b8a123cd4844ba4e559e4cc774d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1496169909 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5888563430398097947, guid: c7d24d4c7658dfb49a41650a89a1707d, type: 3}
+  m_PrefabInstance: {fileID: 1853023944}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1503751739
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2797,6 +2832,10 @@ PrefabInstance:
       propertyPath: _Image
       value: 
       objectReference: {fileID: 21300000, guid: 9d2c3027606e02e438b4c28b5209dcde, type: 3}
+    - target: {fileID: 1479097748553156475, guid: bb82626df95c30a46a13533c390794be, type: 3}
+      propertyPath: bulletSpawnPoint
+      value: 
+      objectReference: {fileID: 1496169909}
     - target: {fileID: 3947834151510000669, guid: bb82626df95c30a46a13533c390794be, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -2841,7 +2880,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7075128247752341029, guid: bb82626df95c30a46a13533c390794be, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2906,7 +2946,12 @@ PrefabInstance:
       propertyPath: _Image
       value: 
       objectReference: {fileID: 21300000, guid: 82d97e49c2e517c4a8be1597869dd457, type: 3}
-    m_RemovedComponents: []
+    - target: {fileID: 5695259428487688763, guid: 2a4e5e52af4a28841995de27da3ff324, type: 3}
+      propertyPath: weaponSpawnPoint
+      value: 
+      objectReference: {fileID: 1496169909}
+    m_RemovedComponents:
+    - {fileID: 5147343942248874085, guid: 2a4e5e52af4a28841995de27da3ff324, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -33,13 +33,18 @@ public class Dagger : Weapons
         var dagger = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
         dagger.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 1, 3);
     }
+
+    public override void Attack()
+    {
+        SpawnWeaponProx();
+    }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+       /* if (Input.GetKeyDown(KeyCode.L))
         {
             SpawnWeaponProx();
             if (UpdateLifeTime(LifeTime--))
                 Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
-        }
+        }*/
     }
 }

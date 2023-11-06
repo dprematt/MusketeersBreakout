@@ -27,6 +27,12 @@ public class Bow : Weapons
     {
         get { return "Bow"; }
     }
+
+    public override void Attack()
+    {
+        Debug.Log("in attack bow");
+        SpawnBullet();
+    }
     public void SpawnBullet()
     {
         if (LifeTime > 0) {
@@ -36,15 +42,16 @@ public class Bow : Weapons
             var bullet = Instantiate(bulletPrefab, NewPos, bulletSpawnPoint.rotation);
             bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
             bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
+            Debug.Log("spawn bullet end");
         }
     }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        /*if (Input.GetKeyDown(KeyCode.L))
         {
             SpawnBullet();
             if (UpdateLifeTime(LifeTime--))
                 Destroy(gameObject); // destruction de l'arc si la durabilité atteint 0;
-        }
+        }*/
     }
 }

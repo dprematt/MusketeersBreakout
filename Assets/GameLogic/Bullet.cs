@@ -24,12 +24,13 @@ public class Bullet : MonoBehaviour
     
     void checkRange()
     {
-        PosInit = bulletSpawnPoint.transform.position.z;
+        Debug.Log("Check bullet range");
+        /*PosInit = bulletSpawnPoint.transform.position.z;
         PosActual = gameObject.transform.position.z;
         if (PosActual <= PosInit + Range) {
                 return;
             } else
-                Destroy(gameObject);
+                Destroy(gameObject);*/
     }
     void OnCollisionEnter(Collision col) 
     {
