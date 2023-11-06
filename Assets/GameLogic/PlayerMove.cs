@@ -167,12 +167,30 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float h = Input.GetAxis("Horizontal") * 5;
-        float v = Input.GetAxis("Vertical") * 5;
-        Vector3 vel = rb.velocity;
-        vel.x = h;
-        vel.z = v;
-        rb.velocity = vel;
+        float moveSpeed = 3f;
+        float rotationAngle = 90f;
+
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        if (Input.GetKeyDown(KeyCode.T) && isGrounded)
+        {
+            cylinderTransform.Rotate(Vector3.up * rotationAngle);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Y) && isGrounded)
+        {
+            cylinderTransform.Rotate(Vector3.up * -rotationAngle);
+        }
+
+        Vector3 forward = cylinderTransform.forward;
+        Vector3 right = cylinderTransform.right;
+
+        forward.y = 0f;
+        right.y = 0f;
+
+        Vector3 desiredMoveDirection = forward * v + right * h;
+        rb.velocity = desiredMoveDirection.normalized * moveSpeed;
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
