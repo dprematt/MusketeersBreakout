@@ -25,7 +25,9 @@ public class Enemy : MonoBehaviour
         Halberd halberd = new Halberd();
         halberd._Image = Resources.Load("Sprites/halberd") as Sprite;
         Debug.Log("is inventory still alive" + inventory);
-        inventory.AddItem(new Halberd());
+        halberd.weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
+        halberd.weaponSpawnPoint = gameObject.transform;
+        inventory.AddItem(halberd);
     }
 
     void Update() 
@@ -37,7 +39,8 @@ public class Enemy : MonoBehaviour
         float distance = Vector3.Distance(transform.position,target.position);
 
         if (distance > minDist && distance < maxDist)	
-            transform.position += transform.forward * speed * Time.deltaTime;	
+            transform.position += transform.forward * speed * Time.deltaTime;
+            inventory.mItems[0].Attack();
     }
 
     public void SetTarget(Transform newTarget)
