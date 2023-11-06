@@ -17,6 +17,7 @@ public class Bullet : MonoBehaviour
         Range = range;
         Damage = damage;
     }
+
     void Update()
     {
         checkRange();

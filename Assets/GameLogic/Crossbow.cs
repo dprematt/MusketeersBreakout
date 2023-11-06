@@ -34,6 +34,7 @@ public class CrossBow : Weapons
             var NewPos = bulletSpawnPoint.position;
             NewPos.z += 1;
             NewPos.y += 1;
+            Damage = 3;
             var bullet = Instantiate(bulletPrefab, NewPos, bulletSpawnPoint.rotation);
             bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
             bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);

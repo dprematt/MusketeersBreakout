@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     public float maxDist = 10f;
     public Transform target;
     // Start is called before the first frame update
+    public Inventory inventory;
     private void Start()
     {
         health = maxHealth;
@@ -20,6 +21,11 @@ public class Enemy : MonoBehaviour
                 target = GameObject.FindWithTag("Player").GetComponent<Transform>();
             }
         }
+        inventory = new Inventory(9, new List<IInventoryItem>(), false);
+        Halberd halberd = new Halberd();
+        halberd._Image = Resources.Load("Sprites/halberd") as Sprite;
+        Debug.Log("is inventory still alive" + inventory);
+        inventory.AddItem(new Halberd());
     }
 
     void Update() 
@@ -47,6 +53,9 @@ public class Enemy : MonoBehaviour
         {
             PlayerMove player = GameObject.FindObjectOfType<PlayerMove>();
             player.UpdateXp(10);
+            GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
+            var loot = Instantiate(LootPrefab, target.position, target.rotation);
+            loot.GetComponent<Inventory>().Initialize(9, inventory.mItems, true);
             Destroy(gameObject);
             return 1;
         }

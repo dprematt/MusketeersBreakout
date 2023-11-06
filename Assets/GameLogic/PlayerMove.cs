@@ -72,14 +72,14 @@ public class PlayerMove : MonoBehaviour
     }*/
     void OnCollisionEnter(Collision col)
     {
-        Debug.Log("in controller collider");
+       // Debug.Log("in controller collider");
         IInventoryItem item = col.collider.GetComponent<IInventoryItem>();
         if (item != null)
         {
-            Debug.Log("in controller collider -> item found");
+           // Debug.Log("in controller collider -> item found");
             Debug.Log(inventory);
             inventory.AddItem(item);
-            Debug.Log("in controller collider -> item added");
+           // Debug.Log("in controller collider -> item added");
         }
         /*if (col.gameObject.CompareTag("WeaponBow"))
         {
@@ -208,11 +208,11 @@ public class PlayerMove : MonoBehaviour
             if (HUD.activeSelf)
             {
                 HUD.SetActive(false);
-                Debug.Log("close hud");
+               // Debug.Log("close hud");
             }
             else
             {
-                Debug.Log("activate hud");
+              //  Debug.Log("activate hud");
                 HUD.SetActive(true);
             }
         }
