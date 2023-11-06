@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour
     {
         PosInit = bulletSpawnPoint.transform.position.z;
         PosActual = gameObject.transform.position.z;
-        if (PosActual <= PosInit + Range){
+        if (PosActual <= PosInit + Range) {
                 return;
             } else
                 Destroy(gameObject);
@@ -40,4 +40,5 @@ public class Bullet : MonoBehaviour
                 Destroy(gameObject);
             }
     }
+
 }

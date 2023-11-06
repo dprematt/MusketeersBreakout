@@ -15,7 +15,7 @@ public class WeaponProx : MonoBehaviour
         Range = range;
         Damage = damage;
         gameObject.transform.localScale += new Vector3(0, 0, range);
-        Debug.Log("weap prox init");
+        Debug.Log("weap prox init");    
     }
 
     void OnCollisionEnter(Collision col)

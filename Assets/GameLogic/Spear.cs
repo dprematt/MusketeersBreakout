@@ -2,23 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spear : WeaponsRange
+public class Spear : Weapons
 {
     public Transform bulletSpawnPoint;
     public GameObject bulletPrefab;
     public float bulletSpeed = 20;
-    // Start is called before the first frame update
-    void Start()
-    {
-        Damage = 3;
-        Range = 5;
-        Lifetime = 27;
-    }
+    public Sprite _Image = null;
 
+    public override Sprite Image
+    {
+        get { return _Image; }
+    }
+    private void Start()
+    {
+        LifeTime = 10;
+    }
+    public override void OnPickup()
+    {
+        gameObject.SetActive(false);
+    }
+    public override string Name
+    {
+        get { return "Spear"; }
+    }
     public void SpawnBullet()
     {
         //Debug.Log(Lifetime);
-        if (Lifetime > 0)
+        if (LifeTime > 0)
         {
             var NewPos = bulletSpawnPoint.position;
             NewPos.z += 1;
@@ -26,6 +36,15 @@ public class Spear : WeaponsRange
             var bullet = Instantiate(bulletPrefab, NewPos, bulletSpawnPoint.rotation);
             bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
             bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
+        }
+    }
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            SpawnBullet();
+            if (UpdateLifeTime(LifeTime--))
+                Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
         }
     }
 }

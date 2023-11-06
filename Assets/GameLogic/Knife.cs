@@ -4,13 +4,30 @@ using UnityEngine;
 using System;
 
 
-public class Knife : WeaponsProx
+public class Knife : Weapons
 {
     public Transform weaponSpawnPoint;
     public GameObject weaponPrefab;
-    private float Range;
-    private float Damage;
+    public Sprite _Image = null;
 
+    public override Sprite Image
+    {
+        get { return _Image; }
+    }
+
+    private void Start()
+    {
+        LifeTime = 10;
+    }
+
+    public override void OnPickup()
+    {
+        gameObject.SetActive(false);
+    }
+    public override string Name
+    {
+        get { return "Knife"; }
+    }
 
     public void SpawnWeaponProx()
     { 
@@ -19,6 +36,14 @@ public class Knife : WeaponsProx
         NewPos.y += 1;
         var knife = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
         knife.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 1, 2);
-        Debug.Log("knife stab launched");
+    }
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            SpawnWeaponProx();
+            if (UpdateLifeTime(LifeTime--))
+                Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
+        }
     }
 }

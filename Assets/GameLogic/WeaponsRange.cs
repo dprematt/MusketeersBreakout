@@ -2,108 +2,66 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponsRange : MonoBehaviour
+public abstract class Weapons : MonoBehaviour, IInventoryItem
 {
-    private float xpLimit = 10000.0f;
-    private float damage;
-    public float Damage{
-            get
-            {
-                return damage;
-            }
-            set
-            {
-                damage = value;
-            }
-        }
-    private float reloadingTime;
-    private float xp;
-    private int level;
-    public int Level{
-            get
-            {
-                return level;
-            }
-            set
-            {
-                level = value;
-            }
-        }
-    private int lifetime;
-    public int Lifetime{
-            get
-            {
-                return lifetime;
-            }
-            set
-            {
-                lifetime = value;
-            }
-        }
-    private Vector3 impactZone;
-    private int mag; //optional
-    private bool echo; // optional
-    private int range;
-    public int Range
+    public virtual string Name { get; protected set; }
+    public virtual Sprite Image { get; protected set; }
+    public virtual float Damage { get; protected set; }
+    public virtual float ReloadingTime { get; protected set; }
+    public virtual float XpLimit { get; protected set; }
+    public virtual float Xp { get; protected set; }
+    public virtual int Level { get; protected set; }
+    public virtual float LifeTime { get; protected set; }
+    public virtual Vector3 ImpactZone { get; protected set; }
+    public virtual int Mag { get; protected set; }
+    public virtual bool Echo { get; protected set; }
+    public virtual int Range { get; protected set; }
+    public virtual int UpgradeLevel(int levels)
+    {
+        Level += levels;
+        return Level;
+    }
+
+    public virtual int UpdateMag(int mag)
+    {
+        Mag -= mag;
+        return Mag;
+    }
+
+    public virtual int UpdateXp(float new_xp)
+    {
+        if (Level < 100)
         {
-            get
+            float buffer = Xp + new_xp;
+            if (buffer >= XpLimit)
             {
-                return range;
+                UpgradeLevel(1);
+                if (new_xp - XpLimit >= XpLimit)
+                {
+                    Xp = 0;
+                    UpdateXp(new_xp - XpLimit);
+                }
+                else
+                {
+                    Xp = buffer - XpLimit;
+                }
             }
-            set
+            else
             {
-                range = value;
+                Xp += new_xp;
             }
         }
-
-    // Start is called before the first frame update
-
-    int upgradeLevel(float damageBuff = 1)
-    {
-        if (level < 100)
-        {
-            damage += damageBuff;
-            level += 1;
-        }
-        return level;
+        return Level;
     }
 
-    public int updateLifeTime(int newLifeTime)
+    public virtual bool UpdateLifeTime(float lifetime)
     {
-        lifetime = newLifeTime;
-        return lifetime;
+        LifeTime -= lifetime;
+        return LifeTime < 0;
     }
-
-    int updateMag()
+    public virtual void OnPickup()
     {
-        mag -= 1;
-        return mag;
-    }
 
-    int updateXp(float newXp)
-    {
-        if (xp + newXp >= xpLimit)
-        {
-            if (level < 100)
-            {
-                level += 1;
-                xp = xpLimit - (xp + newXp);
-                return upgradeLevel();
-            }
-            return level;
-        }
-        xp += newXp;
-        return level;
-    }
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
+

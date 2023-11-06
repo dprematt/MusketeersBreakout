@@ -17,7 +17,10 @@ public class PlayerMove : MonoBehaviour
     private float originalHeight;
     private Transform cylinderTransform;
     private Rigidbody rb;
-
+    //private int inventory_size = 20;
+    public Inventory inventory;
+    public GameObject HUD;
+    
     [SerializeField] float health, maxHealth = 10f;
 
     void Start()
@@ -29,6 +32,10 @@ public class PlayerMove : MonoBehaviour
         originalHeight = cylinderTransform.localScale.y;
         health = maxHealth;
         xp = 0;
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        inventory = player.GetComponent<Inventory>();
+        Debug.Log(inventory);
+        HUD = GameObject.FindGameObjectWithTag("InventoryHUD");
     }
 
     public void TakeDamage(float damageAmount)
@@ -52,97 +59,109 @@ public class PlayerMove : MonoBehaviour
         isGrounded = true;
     }
 
+   /*private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Debug.Log("in controller collider");
+        IInventoryItem item = hit.collider.GetComponent<IInventoryItem>();
+        if (item != null)
+        {
+            Debug.Log("in controller collider -> item found");
+            inventory.AddItem(item);
+            Debug.Log("in controller collider -> item added");
+        }
+    }*/
     void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.tag == "WeaponBow")
+        Debug.Log("in controller collider");
+        IInventoryItem item = col.collider.GetComponent<IInventoryItem>();
+        if (item != null)
+        {
+            Debug.Log("in controller collider -> item found");
+            Debug.Log(inventory);
+            inventory.AddItem(item);
+            Debug.Log("in controller collider -> item added");
+        }
+        /*if (col.gameObject.CompareTag("WeaponBow"))
         {
         
                 Bow weapon_script = gameObject.AddComponent<Bow>();
-                AttackBow weapon_attack_script = gameObject.AddComponent<AttackBow>();
                 weapon_script.bulletSpawnPoint = gameObject.transform;
                 GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
                 weapon_script.bulletPrefab = bulletPrefab;
-                weapon_attack_script.b = weapon_script;
+                inventory.AddItem(weapon_script);
                 Destroy(col.gameObject);
         }
-        if (col.gameObject.tag == "WeaponCrossBow")
+        if (col.gameObject.CompareTag("WeaponCrossBow"))
         {       CrossBow weapon_script = gameObject.AddComponent<CrossBow>();
-                CrossBowAttack weapon_attack_script = gameObject.AddComponent<CrossBowAttack>();
                 weapon_script.bulletSpawnPoint = gameObject.transform;
                 GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
                 weapon_script.bulletPrefab = bulletPrefab;
-                weapon_attack_script.c = weapon_script;
+                inventory.AddItem(weapon_script);
                 Destroy(col.gameObject);
         
         }
-        if (col.gameObject.tag == "WeaponSpear")
+        if (col.gameObject.CompareTag("WeaponSpear"))
         {
         
                 Spear weapon_script = gameObject.AddComponent<Spear>();
-                SpearAttack weapon_attack_script = gameObject.AddComponent<SpearAttack>();
                 weapon_script.bulletSpawnPoint = gameObject.transform;
                 GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
                 weapon_script.bulletPrefab = bulletPrefab;
-                weapon_attack_script.s = weapon_script;
+                inventory.AddItem(weapon_script);
                 Destroy(col.gameObject);
        
         }
-        if (col.gameObject.tag == "WeaponGun")
+        if (col.gameObject.CompareTag("WeaponGun"))
         {
        
                 Gun weapon_script = gameObject.AddComponent<Gun>();
-                Attack weapon_attack_script = gameObject.AddComponent<Attack>();
                 weapon_script.bulletSpawnPoint = gameObject.transform;
                 GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
                 weapon_script.bulletPrefab = bulletPrefab;
-                weapon_attack_script.g = weapon_script;
+                inventory.AddItem(weapon_script);
                 Destroy(col.gameObject);
       
         }
-        if (col.gameObject.tag == "WeaponKnife")
+        if (col.gameObject.CompareTag("WeaponKnife"))
         {
                 Knife weapon_script = gameObject.AddComponent<Knife>();
-                KnifeAttack weapon_attack_script = gameObject.AddComponent<KnifeAttack>();
                 weapon_script.weaponSpawnPoint = gameObject.transform;
                 GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/WeaponProx");
                 weapon_script.weaponPrefab = bulletPrefab;
-                weapon_attack_script.k = weapon_script;
+                inventory.AddItem(weapon_script);
                 Destroy(col.gameObject);
       
         }
-        if (col.gameObject.tag == "WeaponDagger")
+        if (col.gameObject.CompareTag("WeaponDagger"))
         {
                 Dagger weapon_script = gameObject.AddComponent<Dagger>();
-                DaggerAttack weapon_attack_script = gameObject.AddComponent<DaggerAttack>();
                 weapon_script.weaponSpawnPoint = gameObject.transform;
                 GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/WeaponProx");
                 weapon_script.weaponPrefab = bulletPrefab;
-                weapon_attack_script.d = weapon_script;
+                inventory.AddItem(weapon_script);
                 Destroy(col.gameObject);
       
         }
-        if (col.gameObject.tag == "WeaponSword")
+        if (col.gameObject.CompareTag("WeaponSword"))
         {
                 Sword weapon_script = gameObject.AddComponent<Sword>();
-                SwordAttack weapon_attack_script = gameObject.AddComponent<SwordAttack>();
                 weapon_script.weaponSpawnPoint = gameObject.transform;
                 GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/WeaponProx");
                 weapon_script.weaponPrefab = bulletPrefab;
-                weapon_attack_script.s = weapon_script;
+                inventory.AddItem(weapon_script);
                 Destroy(col.gameObject);
       
         }
-        if (col.gameObject.tag == "WeaponHalberd")
+        if (col.gameObject.CompareTag("WeaponHalberd"))
         {
                 Halberd weapon_script = gameObject.AddComponent<Halberd>();
-                HalberdAttack weapon_attack_script = gameObject.AddComponent<HalberdAttack>();
                 weapon_script.weaponSpawnPoint = gameObject.transform;
                 GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/WeaponProx");
                 weapon_script.weaponPrefab = bulletPrefab;
-                weapon_attack_script.h = weapon_script;
+                inventory.AddItem(weapon_script);
                 Destroy(col.gameObject);
       
-        }
+        }*/
     }
 
     // Update is called once per frame
@@ -150,7 +169,6 @@ public class PlayerMove : MonoBehaviour
     {
         float h = Input.GetAxis("Horizontal") * 5;
         float v = Input.GetAxis("Vertical") * 5;
-
         Vector3 vel = rb.velocity;
         vel.x = h;
         vel.z = v;
@@ -184,6 +202,20 @@ public class PlayerMove : MonoBehaviour
             newPos.z -= 1;
             cylinderTransform.localPosition = newPos;
         }
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            Debug.Log(HUD);
+            if (HUD.activeSelf)
+            {
+                HUD.SetActive(false);
+                Debug.Log("close hud");
+            }
+            else
+            {
+                Debug.Log("activate hud");
+                HUD.SetActive(true);
+            }
+        }
         if (Input.GetKeyDown(KeyCode.V))
         {
             Vector3 player_pos = gameObject.transform.position;
@@ -194,7 +226,6 @@ public class PlayerMove : MonoBehaviour
                 bowPrefab.transform.position = player_pos;
                 Instantiate(bowPrefab);
                 Destroy(GetComponent<Bow>());
-                Destroy(GetComponent<AttackBow>());
             }
             else if (GetComponent<Knife>() != null)
             {
@@ -202,7 +233,6 @@ public class PlayerMove : MonoBehaviour
                 knifePrefab.transform.position = player_pos;
                 Instantiate(knifePrefab);
                 Destroy(GetComponent<Knife>());
-                Destroy(GetComponent<KnifeAttack>());
             }
             else if (GetComponent<CrossBow>() != null)
             {
@@ -210,7 +240,6 @@ public class PlayerMove : MonoBehaviour
                 CrossBowPrefab.transform.position = player_pos;
                 Instantiate(CrossBowPrefab);
                 Destroy(GetComponent<CrossBow>());
-                Destroy(GetComponent<CrossBowAttack>());
             }
             else if (GetComponent<Gun>() != null)
             {
@@ -218,7 +247,6 @@ public class PlayerMove : MonoBehaviour
                 GunPrefab.transform.position = player_pos;
                 Instantiate(GunPrefab);
                 Destroy(GetComponent<Gun>());
-                Destroy(GetComponent<Attack>());
             }
             else if (GetComponent<Spear>() != null)
             {
@@ -226,7 +254,6 @@ public class PlayerMove : MonoBehaviour
                 SpearPrefab.transform.position = player_pos;
                 Instantiate(SpearPrefab);
                 Destroy(GetComponent<Spear>());
-                Destroy(GetComponent<SpearAttack>());
             }
             else if (GetComponent<Dagger>() != null)
             {
@@ -234,7 +261,6 @@ public class PlayerMove : MonoBehaviour
                 DaggerPrefab.transform.position = player_pos;
                 Instantiate(DaggerPrefab);
                 Destroy(GetComponent<Dagger>());
-                Destroy(GetComponent<DaggerAttack>());
             }
             else if (GetComponent<Halberd>() != null)
             {
@@ -242,7 +268,6 @@ public class PlayerMove : MonoBehaviour
                 HalberdPrefab.transform.position = player_pos;
                 Instantiate(HalberdPrefab);
                 Destroy(GetComponent<Halberd>());
-                Destroy(GetComponent<HalberdAttack>());
             }
             else if (GetComponent<Sword>() != null)
             {
@@ -250,7 +275,6 @@ public class PlayerMove : MonoBehaviour
                 SwordPrefab.transform.position = player_pos;
                 Instantiate(SwordPrefab);
                 Destroy(GetComponent<Sword>());
-                Destroy(GetComponent<SwordAttack>());
             }
         }
     }
