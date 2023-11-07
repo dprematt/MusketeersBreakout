@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
- public class Enemy : MonoBehaviour
+ public class EnemyShape : MonoBehaviour
 {
      [SerializeField] float health, maxHealth = 10f;
     public float speed = 1f;
@@ -47,7 +47,17 @@ using UnityEngine;
         {
             transform.position += transform.forward * speed * Time.deltaTime;
             //inventory.mItems[0].Attack();
-        }
+        } else {
+            if (transform.position != points[current].position)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, points[current].position, speed * Time.deltaTime);
+            }
+            else 
+            {
+                current=(current+1)%points.Length;
+            }
+           }
+           
     }
 
     public void SetTarget(Transform newTarget)
