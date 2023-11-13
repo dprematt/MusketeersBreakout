@@ -16,7 +16,13 @@ public abstract class Weapons : MonoBehaviour, IInventoryItem
     public virtual int Mag { get; protected set; }
     public virtual bool Echo { get; protected set; }
     public virtual int Range { get; protected set; }
+    public virtual bool IsPlayer { get; set; }
 
+    public virtual bool SetIsPlayer(bool type)
+    {
+        IsPlayer = type;
+        return IsPlayer;
+    }
     public virtual void Attack()
     {
         Debug.Log("in attack virtual");

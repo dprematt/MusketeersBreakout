@@ -1,4 +1,4 @@
-using System.Collections;
+    using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,20 +8,22 @@ public class WeaponProx : MonoBehaviour
     private float Range;
     private float Damage;
     private Rigidbody rb;
+    public bool isEnnemy;
 
-    public void Initialize(Transform spawnPoint, float range, float damage)
+    public void Initialize(Transform spawnPoint, float range, float damage, bool type = false)
     {
         weaponSpawnPoint = spawnPoint;
         Range = range;
         Damage = damage;
         gameObject.transform.localScale += new Vector3(0, 0, range);
-        Debug.Log("weap prox init");    
+        isEnnemy = type;
+        Debug.Log("weap prox init");
     }
 
     void OnCollisionEnter(Collision col)
     {
         Debug.Log("in weapon prox colision");
-        if (col.gameObject.TryGetComponent<Enemy>(out Enemy enemyComponent))
+        if (col.gameObject.TryGetComponent(out Enemy enemyComponent) && isEnnemy != true)
         {
             enemyComponent.TakeDamage(Damage);
             Destroy(gameObject);

@@ -19,6 +19,9 @@ public interface IInventoryItem
     int Mag { get; } // nombre de munitions dans le chargeur
     bool Echo { get; } // echo actif ou non de l'arme
     int Range { get; } // range de l'arme
+    bool IsPlayer { get; }
+
+    bool SetIsPlayer(bool type = true);
     int UpgradeLevel(int levels);
     int UpdateMag(int bullet = 1);
     int UpdateXp(float xp);
@@ -37,4 +40,4 @@ public class InventoryEventArgs : EventArgs
     }
 
     public IInventoryItem Item;
- }
+}

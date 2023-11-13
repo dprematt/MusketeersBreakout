@@ -30,10 +30,15 @@ public class Halberd : Weapons
     public void SpawnWeaponProx()
     {
         var NewPos = weaponSpawnPoint.position;
-        NewPos.z += 4/2;
+        NewPos.z += 4 / 2;
         NewPos.y += 1;
         var halberd = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
-        halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4);
+        if (IsPlayer == true)
+            halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4);
+        else
+        {
+            halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4, true);
+        }
     }
 
     public override void Attack()
@@ -43,11 +48,11 @@ public class Halberd : Weapons
 
     public void Update()
     {
-       /* if (Input.GetKeyDown(KeyCode.L))
-        {
-            SpawnWeaponProx();
-            if (UpdateLifeTime(LifeTime--))
-                Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
-        }*/
+        /* if (Input.GetKeyDown(KeyCode.L))
+         {
+             SpawnWeaponProx();
+             if (UpdateLifeTime(LifeTime--))
+                 Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
+         }*/
     }
 }

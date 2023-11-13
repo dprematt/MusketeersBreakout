@@ -36,11 +36,21 @@ public class Bullet : MonoBehaviour
     void OnCollisionEnter(Collision col) 
     {
             
-        if (col.gameObject.TryGetComponent<Enemy>(out Enemy enemyComponent))
+        if (col.gameObject.TryGetComponent(out Enemy enemyComponent))
             {
                 enemyComponent.TakeDamage(Damage);
                 Destroy(gameObject);
             }
+        else if (col.gameObject.TryGetComponent(out EnemySquare enemyComponentSquare))
+            {
+                enemyComponentSquare.TakeDamage(Damage);
+                Destroy(gameObject);
+        }
+        else if (col.gameObject.TryGetComponent(out EnemyShape enemyComponentCircle))
+            {
+                enemyComponentCircle.TakeDamage(Damage);
+                Destroy(gameObject);
+        }
     }
 
 }

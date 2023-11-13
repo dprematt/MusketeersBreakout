@@ -10,6 +10,7 @@ using UnityEngine;
     public float maxDist = 10f;
     public Transform target;
     public Inventory inventory;
+    public bool WeaponChoice = false;
 
 
     public Transform[] points;
@@ -24,13 +25,22 @@ using UnityEngine;
                 target = GameObject.FindWithTag("Player").GetComponent<Transform>();
             }
         }
-        inventory = new Inventory(9, new List<IInventoryItem>(), false);
+        List<IInventoryItem> items = new List<IInventoryItem>();
         Halberd halberd = new Halberd();
         halberd._Image = Resources.Load("Sprites/halberd") as Sprite;
-        Debug.Log("is inventory still alive" + inventory);
         halberd.weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
         halberd.weaponSpawnPoint = gameObject.transform;
-        inventory.AddItem(halberd);
+        Debug.Log("is inventory still alive" + inventory);
+        halberd.IsPlayer = false;
+        items.Add(halberd);
+        Sword sword = new Sword();
+        // sword._Image = Resources.Load("Sprites/sword") as Sprite;
+        sword.weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
+        sword.weaponSpawnPoint = gameObject.transform;
+        sword.IsPlayer = false;
+        items.Add(sword);
+        inventory = new Inventory(9, items, false);
+        Debug.Log("in start enemy weapons count = " + inventory.mItems.Count);
 
         current = 0;
     }
@@ -46,7 +56,16 @@ using UnityEngine;
         if (distance > minDist && distance < maxDist)	
         {
             transform.position += transform.forward * speed * Time.deltaTime;
-            //inventory.mItems[0].Attack();
+            if (WeaponChoice == false)
+            {
+                inventory.mItems[0].Attack();
+                WeaponChoice = true;
+            }
+            else
+            {
+                inventory.mItems[inventory.mItems.Count - 1].Attack();
+                WeaponChoice = false;
+            }
         } else {
             if (transform.position != points[current].position)
             {
