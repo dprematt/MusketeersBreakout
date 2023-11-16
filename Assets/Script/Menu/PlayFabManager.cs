@@ -12,6 +12,10 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
 
     public InputField Email_, Username_, Password_;
 
+    public GameObject BoutonPlay_, BoutonInscription_, BoutonConnexion_, ObjectBienvenue_;
+
+    public Text Bienvenue_;
+
     //Fonction qui permet de register un user
     public void Register()
     {
@@ -28,7 +32,10 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
             PhotonNetwork.NickName = Username_.text;
             PhotonNetwork.ConnectUsingSettings();
             Debug.Log("Register success");
-
+            BoutonConnexion_.SetActive(false);
+            BoutonInscription_.SetActive(false);
+            BoutonPlay_.SetActive(true);
+            GetPlayerUsername(result.PlayFabId);
         }, error =>
         {
             Debug.Log("Error while registering : " + error.ErrorMessage);
@@ -44,21 +51,6 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
             Email = Email_.text,
             Password = Password_.text
         }, OnLoginSuccess, OnLoginFailure);
-        //var request = new LoginWithEmailAddressRequest
-        //{
-        //    Email = Email_.text,
-        //    Password = Password_.text,
-        //};
-
-        //PlayFabClientAPI.LoginWithEmailAddress(request, result =>
-        //{
-        //    //PhotonNetwork.NickName = Username_.text;
-        //    //PhotonNetwork.ConnectUsingSettings();
-        //    Debug.Log("Login success");
-        //}, error =>
-        //{
-        //    Debug.Log("Error while Loging : " + error.ErrorMessage);
-        //});
     }
 
     public void OnLoginSuccess(LoginResult result)
@@ -66,7 +58,10 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         // Access the PlayFabID from the authentication result
         string playFabId = result.PlayFabId;
         Debug.Log("PlayFab ID: " + playFabId);
-
+        BoutonConnexion_.SetActive(false);
+        BoutonInscription_.SetActive(false);
+        BoutonPlay_.SetActive(true);
+        ObjectBienvenue_.SetActive(true);
         // After getting the PlayFab ID, you can proceed to get the player's username
         GetPlayerUsername(playFabId);
     }
@@ -92,6 +87,8 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         if (result.AccountInfo != null && result.AccountInfo.Username != null)
         {
             string username = result.AccountInfo.Username;
+            ObjectBienvenue_.SetActive(true);
+            Bienvenue_.text = "Bienvenue " + username + " !!!";
             Debug.Log("Username: " + username);
         }
     }
@@ -100,5 +97,6 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
     {
         Debug.LogError("GetAccountInfo request failed: " + error.GenerateErrorReport());
     }
+
 }
 
