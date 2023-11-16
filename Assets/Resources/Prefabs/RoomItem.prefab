@@ -204,8 +204,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 576080088768381598}
-        m_TargetAssemblyTypeName: RoomItem, Menu
-        m_MethodName: OnClickItem
+        m_TargetAssemblyTypeName: RoomManager, Menu
+        m_MethodName: OnClickRoomItem
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

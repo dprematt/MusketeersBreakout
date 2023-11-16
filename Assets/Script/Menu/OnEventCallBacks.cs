@@ -13,7 +13,7 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
     public RoomManager RoomItemPrefab_;
     List<RoomManager> RoomItemList_ = new List<RoomManager>();
     public Transform ContentObject_;
-    public float TimeUpdate_ = 1.5f;
+    public float TimeUpdate_ = 5f;
     float NextUpdateTime_;
 
     public override void OnConnectedToMaster()
@@ -44,9 +44,16 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
 
             foreach (RoomInfo room in RoomList)
             {
-                RoomManager newroom = Instantiate(RoomItemPrefab_, ContentObject_);
-                newroom.SetRoomName(room.Name);
-                RoomItemList_.Add(newroom);
+                if (room.RemovedFromList)
+                {
+
+                }
+                else
+                {
+                    RoomManager newroom = Instantiate(RoomItemPrefab_, ContentObject_);
+                    newroom.SetRoomName(room.Name);
+                    RoomItemList_.Add(newroom);
+                }
             }
             NextUpdateTime_ = Time.time + TimeUpdate_;
         }
