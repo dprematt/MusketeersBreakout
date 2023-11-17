@@ -29,8 +29,6 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
 
         PlayFabClientAPI.RegisterPlayFabUser(request, result =>
         {
-            PhotonNetwork.NickName = Username_.text;
-            PhotonNetwork.ConnectUsingSettings();
             Debug.Log("Register success");
             GetPlayerUsername(result.PlayFabId);
         }, error =>
@@ -81,6 +79,8 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         if (result.AccountInfo != null && result.AccountInfo.Username != null)
         {
             string username = result.AccountInfo.Username;
+            PhotonNetwork.NickName = username;
+            PhotonNetwork.ConnectUsingSettings();
             ObjectBienvenue_.SetActive(true);
             BoutonConnexion_.SetActive(false);
             BoutonInscription_.SetActive(false);
