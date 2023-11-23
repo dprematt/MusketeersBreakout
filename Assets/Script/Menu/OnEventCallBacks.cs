@@ -28,7 +28,7 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
         LobbyPanel_.SetActive(false);
         RoomPanel_.SetActive(true);
         Room_.text = "Room name : " + PhotonNetwork.CurrentRoom.Name;
-        //PhotonNetwork.LoadLevel("Delivery");
+        PhotonNetwork.LoadLevel("GamePlayDev");
         Debug.Log("Room joined : " + PhotonNetwork.CurrentRoom.Name);
     }
 
