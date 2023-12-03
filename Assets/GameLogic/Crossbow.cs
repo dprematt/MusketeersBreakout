@@ -20,6 +20,8 @@ public class CrossBow : Weapons
 
     public override void OnPickup()
     {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        bulletSpawnPoint = player.transform;
         gameObject.SetActive(false);
     }
     public override string Name
@@ -47,6 +49,7 @@ public class CrossBow : Weapons
     }
     public void Update()
     {
+        
         /*if (Input.GetKeyDown(KeyCode.L))
         {
             SpawnBullet();

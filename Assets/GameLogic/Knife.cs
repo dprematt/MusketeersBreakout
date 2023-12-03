@@ -22,6 +22,8 @@ public class Knife : Weapons
 
     public override void OnPickup()
     {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        weaponSpawnPoint = player.transform;
         gameObject.SetActive(false);
     }
     public override string Name

@@ -36,6 +36,7 @@ public class PlayerMove : MonoBehaviour
         inventory = player.GetComponent<Inventory>();
         Debug.Log(inventory);
         HUD = GameObject.FindGameObjectWithTag("InventoryHUD");
+        HUD.GetComponent<HUD>().init();
     }
 
     public void TakeDamage(float damageAmount)
@@ -77,7 +78,14 @@ public class PlayerMove : MonoBehaviour
         if (item != null)
         {
            // Debug.Log("in controller collider -> item found");
-            Debug.Log(inventory);
+           /*if (inventory == null)
+            {
+                Debug.Log("inventory is null if");
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                inventory = player.GetComponent<Inventory>();
+                Debug.Log("inventory is set end of if");
+            }*/
+            Debug.Log("inventory sa mere", inventory);
             inventory.AddItem(item);
            // Debug.Log("in controller collider -> item added");
         }

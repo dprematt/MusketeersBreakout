@@ -15,10 +15,13 @@ public class Spear : Weapons
     }
     private void Start()
     {
+        
         LifeTime = 10;
     }
     public override void OnPickup()
     {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        bulletSpawnPoint = player.transform;
         gameObject.SetActive(false);
     }
     public override string Name

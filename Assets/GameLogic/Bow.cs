@@ -16,10 +16,13 @@ public class Bow : Weapons
 
     private void Start()
     {
+        
         LifeTime = 10;
     }
     public override void OnPickup()
     {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        bulletSpawnPoint = player.transform;
         Debug.Log("Bow onPickup");
         gameObject.SetActive(false);
     }

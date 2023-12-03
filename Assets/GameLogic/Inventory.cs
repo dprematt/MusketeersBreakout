@@ -49,7 +49,7 @@ public class Inventory : MonoBehaviour
 
             //if (ItemAdded != null)
             //{
-            // Debug.Log("Event created");
+            Debug.Log("Event created");
             ItemAdded(this, new InventoryEventArgs(item));
             //}
             //}
@@ -69,6 +69,32 @@ public class Inventory : MonoBehaviour
         {
             Debug.Log("Delete loot");
             Destroy(gameObject);
+        }
+    }
+
+    private void DisplayLoot(Inventory playerInventory)
+    {
+        GameObject lootHUD = Resources.Load<GameObject>("Prefabs/LootHUD");
+        lootHUD.GetComponent<LootHUD>().InventoryFill(mItems);
+        var hud = Instantiate(lootHUD);
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Destroy(lootHUD);
+        }
+
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (loot == true)
+        {
+            Inventory playerInventory = collision.collider.GetComponent<Inventory>();
+            if (playerInventory != null)
+            {
+                if (Input.GetKeyDown(KeyCode.E))
+                    {
+                    DisplayLoot(playerInventory);
+                }
+            }
         }
     }
 }

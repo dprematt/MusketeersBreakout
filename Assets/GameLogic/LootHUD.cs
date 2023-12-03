@@ -3,36 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HUD : MonoBehaviour
+public class LootHUD : MonoBehaviour
 {
     void Start()
     {
-        //gameObject.SetActive(false);
-    }
-
-    public void init()
-    {
-        Debug.Log("player event handler added");
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        Debug.Log(player);
-        Inventory inventory = player.GetComponent<Inventory>();
-        Debug.Log("start hud");
-        Debug.Log(inventory);
-        Debug.Log("start 2 hud");
-        inventory.ItemAdded += InventoryScript_ItemAdded;
         Transform inventoryPanel = transform.Find("Inventory");
         foreach (Transform slot in inventoryPanel)
         {
             Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
             image.enabled = false;
         }
+        //gameObject.SetActive(false);
     }
 
+    public void InventoryFill(List<IInventoryItem> items)
+    {
+        Transform inventoryPanel = transform.Find("Inventory");
+        int counter = 0;
+        foreach (Transform slot in inventoryPanel)
+        {
+            Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
+            if (!image.enabled)
+            {
+                image.enabled = true;
+                image.sprite = items[counter].Image;
+            }
+            counter++;
+        }
+    }
     private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
     {
         Debug.Log("event item added hud");
         Transform inventoryPanel = transform.Find("Inventory");
-        foreach(Transform slot in inventoryPanel)
+        foreach (Transform slot in inventoryPanel)
         {
             Debug.Log("event item loop");
             Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
@@ -61,5 +64,6 @@ public class HUD : MonoBehaviour
             Debug.Log("update item loop");
             Button button = slot.GetChild(0).GetComponent<Button>();
             button.onClick.AddListener()
-        */}
+        */
+    }
 }
