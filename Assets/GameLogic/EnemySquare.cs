@@ -48,8 +48,17 @@ using UnityEngine;
     void Update() 
     {
         if (target == null)
-            return;
-        
+        {
+            if (GameObject.FindWithTag("Player") != null)
+            {
+                target = GameObject.FindWithTag("Player").GetComponent<Transform>();
+            }
+            else
+            {
+                return;
+            }
+        }
+
         transform.LookAt(target);
         float distance = Vector3.Distance(transform.position,target.position);
 
