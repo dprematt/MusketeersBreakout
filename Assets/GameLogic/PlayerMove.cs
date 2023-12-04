@@ -87,6 +87,7 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         float moveSpeed = 3f;
+        float acceleratedMoveSpeed = 10f;
         float rotationAngle = 90f;
 
         float h = Input.GetAxis("Horizontal");
@@ -102,6 +103,14 @@ public class PlayerMove : MonoBehaviour
             cylinderTransform.Rotate(Vector3.up * -rotationAngle);
         }
 
+        /*if (Input.GetKeyDown(KeyCode.M))
+        {
+            Debug.Log("acccccccelere tmr");
+            moveSpeed = 7f;
+        } else {
+            moveSpeed = 3f;
+        }*/
+
         Vector3 forward = cylinderTransform.forward;
         Vector3 right = cylinderTransform.right;
 
@@ -109,7 +118,9 @@ public class PlayerMove : MonoBehaviour
         right.y = 0f;
 
         Vector3 desiredMoveDirection = forward * v + right * h;
-        rb.velocity = desiredMoveDirection.normalized * moveSpeed;
+        bool accelerateKeyPressed = Input.GetKey(KeyCode.M);
+        float currentMoveSpeed = accelerateKeyPressed ? acceleratedMoveSpeed : moveSpeed;
+        rb.velocity = desiredMoveDirection.normalized * currentMoveSpeed;
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {

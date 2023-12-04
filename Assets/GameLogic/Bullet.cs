@@ -51,6 +51,11 @@ public class Bullet : MonoBehaviour
                 enemyComponentCircle.TakeDamage(Damage);
                 Destroy(gameObject);
         }
+        else if (col.gameObject.TryGetComponent(out PlayerMove playerComponent))
+            {
+                playerComponent.TakeDamage(Damage);
+                Destroy(gameObject);
+        }
     }
 
 }
