@@ -60,116 +60,27 @@ public class PlayerMove : MonoBehaviour
         isGrounded = true;
     }
 
-   /*private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        Debug.Log("in controller collider");
-        IInventoryItem item = hit.collider.GetComponent<IInventoryItem>();
-        if (item != null)
-        {
-            Debug.Log("in controller collider -> item found");
-            inventory.AddItem(item);
-            Debug.Log("in controller collider -> item added");
-        }
-    }*/
     void OnCollisionEnter(Collision col)
-    {
-       // Debug.Log("in controller collider");
+    {//here
+        Debug.Log("COLLISION WITH PLAYER !");
+        Inventory loot = col.collider.GetComponent<Inventory>();
+        if (loot != null)
+        {
+            Debug.Log("in if 1 inventory");
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Debug.Log("in if 2 inventory");
+                loot.DisplayLoot(inventory);
+            }
+            return;
+        }
         IInventoryItem item = col.collider.GetComponent<IInventoryItem>();
         if (item != null)
         {
-           // Debug.Log("in controller collider -> item found");
-           /*if (inventory == null)
-            {
-                Debug.Log("inventory is null if");
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                inventory = player.GetComponent<Inventory>();
-                Debug.Log("inventory is set end of if");
-            }*/
-            Debug.Log("inventory sa mere", inventory);
+            Debug.Log("item CATCH !");
             inventory.AddItem(item);
-           // Debug.Log("in controller collider -> item added");
         }
-        /*if (col.gameObject.CompareTag("WeaponBow"))
-        {
-        
-                Bow weapon_script = gameObject.AddComponent<Bow>();
-                weapon_script.bulletSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
-                weapon_script.bulletPrefab = bulletPrefab;
-                inventory.AddItem(weapon_script);
-                Destroy(col.gameObject);
-        }
-        if (col.gameObject.CompareTag("WeaponCrossBow"))
-        {       CrossBow weapon_script = gameObject.AddComponent<CrossBow>();
-                weapon_script.bulletSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
-                weapon_script.bulletPrefab = bulletPrefab;
-                inventory.AddItem(weapon_script);
-                Destroy(col.gameObject);
-        
-        }
-        if (col.gameObject.CompareTag("WeaponSpear"))
-        {
-        
-                Spear weapon_script = gameObject.AddComponent<Spear>();
-                weapon_script.bulletSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
-                weapon_script.bulletPrefab = bulletPrefab;
-                inventory.AddItem(weapon_script);
-                Destroy(col.gameObject);
-       
-        }
-        if (col.gameObject.CompareTag("WeaponGun"))
-        {
-       
-                Gun weapon_script = gameObject.AddComponent<Gun>();
-                weapon_script.bulletSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
-                weapon_script.bulletPrefab = bulletPrefab;
-                inventory.AddItem(weapon_script);
-                Destroy(col.gameObject);
-      
-        }
-        if (col.gameObject.CompareTag("WeaponKnife"))
-        {
-                Knife weapon_script = gameObject.AddComponent<Knife>();
-                weapon_script.weaponSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/WeaponProx");
-                weapon_script.weaponPrefab = bulletPrefab;
-                inventory.AddItem(weapon_script);
-                Destroy(col.gameObject);
-      
-        }
-        if (col.gameObject.CompareTag("WeaponDagger"))
-        {
-                Dagger weapon_script = gameObject.AddComponent<Dagger>();
-                weapon_script.weaponSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/WeaponProx");
-                weapon_script.weaponPrefab = bulletPrefab;
-                inventory.AddItem(weapon_script);
-                Destroy(col.gameObject);
-      
-        }
-        if (col.gameObject.CompareTag("WeaponSword"))
-        {
-                Sword weapon_script = gameObject.AddComponent<Sword>();
-                weapon_script.weaponSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/WeaponProx");
-                weapon_script.weaponPrefab = bulletPrefab;
-                inventory.AddItem(weapon_script);
-                Destroy(col.gameObject);
-      
-        }
-        if (col.gameObject.CompareTag("WeaponHalberd"))
-        {
-                Halberd weapon_script = gameObject.AddComponent<Halberd>();
-                weapon_script.weaponSpawnPoint = gameObject.transform;
-                GameObject bulletPrefab = Resources.Load<GameObject>("Prefabs/WeaponProx");
-                weapon_script.weaponPrefab = bulletPrefab;
-                inventory.AddItem(weapon_script);
-                Destroy(col.gameObject);
-      
-        }*/
+
     }
 
     // Update is called once per frame

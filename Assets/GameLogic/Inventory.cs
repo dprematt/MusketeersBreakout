@@ -72,8 +72,9 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private void DisplayLoot(Inventory playerInventory)
+    public void DisplayLoot(Inventory playerInventory)
     {
+        Debug.Log("in display loot");
         GameObject lootHUD = Resources.Load<GameObject>("Prefabs/LootHUD");
         lootHUD.GetComponent<LootHUD>().InventoryFill(mItems);
         var hud = Instantiate(lootHUD);
@@ -83,15 +84,17 @@ public class Inventory : MonoBehaviour
         }
 
     }
-    private void OnCollisionEnter(Collision collision)
-    {
+        public void OnCollisionEnter(Collision collision)
+        {
         if (loot == true)
         {
             Inventory playerInventory = collision.collider.GetComponent<Inventory>();
             if (playerInventory != null)
             {
+                Debug.Log("in if 2 inventory");
                 if (Input.GetKeyDown(KeyCode.E))
-                    {
+                {
+                    Debug.Log("in if 3 inventory");
                     DisplayLoot(playerInventory);
                 }
             }
