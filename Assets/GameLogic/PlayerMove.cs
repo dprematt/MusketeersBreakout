@@ -63,15 +63,12 @@ public class PlayerMove : MonoBehaviour
     void OnCollisionEnter(Collision col)
     {//here
         Debug.Log("COLLISION WITH PLAYER !");
+        Debug.Log(col.gameObject.name);
         Inventory loot = col.collider.GetComponent<Inventory>();
         if (loot != null)
         {
-            Debug.Log("in if 1 inventory");
-            if (Input.GetKeyDown(KeyCode.E))
-            {
                 Debug.Log("in if 2 inventory");
                 loot.DisplayLoot(inventory);
-            }
             return;
         }
         IInventoryItem item = col.collider.GetComponent<IInventoryItem>();

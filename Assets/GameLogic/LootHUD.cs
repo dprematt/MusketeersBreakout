@@ -58,6 +58,10 @@ public class LootHUD : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Destroy(gameObject);
+        }
         /*Transform inventoryPanel = transform.Find("Inventory");
         foreach (Transform slot in inventoryPanel)
         {

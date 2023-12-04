@@ -78,11 +78,6 @@ public class Inventory : MonoBehaviour
         GameObject lootHUD = Resources.Load<GameObject>("Prefabs/LootHUD");
         lootHUD.GetComponent<LootHUD>().InventoryFill(mItems);
         var hud = Instantiate(lootHUD);
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Destroy(lootHUD);
-        }
-
     }
         public void OnCollisionEnter(Collision collision)
         {
