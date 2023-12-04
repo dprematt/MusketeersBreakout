@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 5959047820862470653}
   - component: {fileID: 1640232077926909850}
   - component: {fileID: 3903981109638537291}
-  - component: {fileID: 2101936678010332269}
   m_Layer: 0
   m_Name: CrossBow
   m_TagString: WeaponCrossBow
@@ -114,16 +113,4 @@ MonoBehaviour:
   bulletSpawnPoint: {fileID: 0}
   bulletPrefab: {fileID: 1227652172285325768, guid: ac1e8113cfb984757a078f3596ce4212, type: 3}
   bulletSpeed: 5
---- !u!114 &2101936678010332269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1356332979306255762}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b2fde0746f114f3b886a1412ca97c51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  c: {fileID: 3903981109638537291}
+  _Image: {fileID: 21300000, guid: 9094173f46c681f469620a9397895cf0, type: 3}

@@ -44,6 +44,7 @@ public class Inventory : MonoBehaviour
             //{
             Debug.Log("in inventory add item -> collider found!");
             //  collider.enabled = false;
+            Debug.Log(item.Name);
             mItems.Add(item);
             item.OnPickup();
 
@@ -75,9 +76,39 @@ public class Inventory : MonoBehaviour
     public void DisplayLoot(Inventory playerInventory)
     {
         Debug.Log("in display loot");
-        GameObject lootHUD = Resources.Load<GameObject>("Prefabs/LootHUD");
-        lootHUD.GetComponent<LootHUD>().InventoryFill(mItems);
-        var hud = Instantiate(lootHUD);
+        Debug.Log(mItems.Count);
+        int free_slots = 9 - playerInventory.mItems.Count;
+        foreach (IInventoryItem lootItem in mItems) 
+        {
+            if (free_slots == 0)
+                return;
+            Debug.Log(lootItem.Name);
+            if (lootItem.Name == "Halberd")
+            {
+                GameObject go = Resources.Load<GameObject>("Prefabs/Halberd");
+                var halberd = Instantiate(go, playerInventory.gameObject.transform.position,
+                    playerInventory.gameObject.transform.rotation);
+                halberd.GetComponent<Halberd>().buildHalberd();
+                IInventoryItem newHalberd = go.GetComponent<IInventoryItem>();
+                playerInventory.AddItem(newHalberd);
+            }
+            else if (lootItem.Name == "Sword")
+            {
+                Debug.Log("sword creation");
+                GameObject go = Resources.Load<GameObject>("Prefabs/Sword");
+                var sword = Instantiate(go, playerInventory.gameObject.transform.position,
+                    playerInventory.gameObject.transform.rotation);
+                sword.GetComponent<Sword>().buildSword();
+                IInventoryItem newSword = go.GetComponent<IInventoryItem>();
+                playerInventory.AddItem(newSword);
+            }
+            Debug.Log("item added");
+            mItems.Remove(lootItem);
+            Debug.Log(mItems.Count);
+            if (mItems.Count == 0)
+                Destroy(gameObject);
+            free_slots--;
+        }
     }
         public void OnCollisionEnter(Collision collision)
         {

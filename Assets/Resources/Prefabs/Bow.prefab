@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 6089223440000629213}
   - component: {fileID: 2665502770639141750}
   - component: {fileID: 7007506594324517173}
-  - component: {fileID: 718813430374592259}
   - component: {fileID: 3833354309212275397}
   m_Layer: 0
   m_Name: Bow
@@ -99,19 +98,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &718813430374592259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1853749750495738176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b82da630f0ef0477595634a98f322617, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  b: {fileID: 0}
 --- !u!114 &3833354309212275397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,3 +113,4 @@ MonoBehaviour:
   bulletSpawnPoint: {fileID: 0}
   bulletPrefab: {fileID: 1227652172285325768, guid: ac1e8113cfb984757a078f3596ce4212, type: 3}
   bulletSpeed: 10
+  _Image: {fileID: 21300000, guid: a48e38fd1099fb14aa960aaaed42dec5, type: 3}

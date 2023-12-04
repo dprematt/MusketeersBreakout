@@ -75,6 +75,7 @@ public class PlayerMove : MonoBehaviour
         if (item != null)
         {
             Debug.Log("item CATCH !");
+            Debug.Log(item);
             inventory.AddItem(item);
         }
 

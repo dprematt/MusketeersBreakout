@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 1141650255035036186}
   - component: {fileID: 1861765854929555584}
   - component: {fileID: 7369656691890905415}
-  - component: {fileID: 4598323500359160502}
   m_Layer: 0
   m_Name: Halberd
   m_TagString: WeaponHalberd
@@ -113,16 +112,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponSpawnPoint: {fileID: 0}
   weaponPrefab: {fileID: 7661578362052809882, guid: 0bf26a6526a1ecf459db1377aab2a364, type: 3}
---- !u!114 &4598323500359160502
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9208269171727442931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0df4ed42275346da96241b931b43d00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  h: {fileID: 0}
+  _Image: {fileID: 21300000, guid: d8550dacd5445ec4992ed8bf2c38d269, type: 3}

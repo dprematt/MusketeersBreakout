@@ -13,6 +13,14 @@ public class Sword : Weapons
         get { return _Image; }
     }
 
+    public void buildSword()
+    {
+        weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
+        _Image = Resources.Load("Sprites/sword") as Sprite;
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        weaponSpawnPoint = player.gameObject.transform;
+        IsPlayer = true;
+    }
     private void Start()
     {
        

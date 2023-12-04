@@ -19,6 +19,14 @@ public class Halberd : Weapons
     {
         LifeTime = 10;
     }
+    public void buildHalberd()
+    {
+        _Image = Resources.Load("Sprites/halberd") as Sprite;
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        weaponSpawnPoint = player.gameObject.transform;
+        weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
+        IsPlayer = true;
+    }
     public override void OnPickup()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");

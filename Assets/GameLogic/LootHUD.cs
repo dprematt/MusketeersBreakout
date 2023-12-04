@@ -20,13 +20,20 @@ public class LootHUD : MonoBehaviour
     {
         Transform inventoryPanel = transform.Find("Inventory");
         int counter = 0;
+        Debug.Log("ITEMS IN inventory fill size = ");
+        Debug.Log(items.Count);
         foreach (Transform slot in inventoryPanel)
         {
+            Debug.Log("in foreach inventory counter = ");
+            Debug.Log(counter);
+            Debug.Log(items[counter]);
             Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
             if (!image.enabled)
             {
+                Debug.Log("in foreach inventory FILL 2");
                 image.enabled = true;
                 image.sprite = items[counter].Image;
+                Debug.Log(items[counter].Image);
             }
             counter++;
         }

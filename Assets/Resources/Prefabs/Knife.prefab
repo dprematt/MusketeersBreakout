@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4076631676392309913}
   - component: {fileID: 1137455072467061474}
   - component: {fileID: 448539800182589440}
-  - component: {fileID: 2803009739966303781}
   m_Layer: 0
   m_Name: Knife
   m_TagString: WeaponKnife
@@ -113,16 +112,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponSpawnPoint: {fileID: 0}
   weaponPrefab: {fileID: 7661578362052809882, guid: 0bf26a6526a1ecf459db1377aab2a364, type: 3}
---- !u!114 &2803009739966303781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 108858609192919229}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eaa1a3822a5c644adbbeed3063a0bc81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  k: {fileID: 0}
+  _Image: {fileID: 21300000, guid: 6360a69cc794d9548b549a0b0f3aa7ae, type: 3}

@@ -93,7 +93,7 @@ using UnityEngine;
             PlayerMove player = GameObject.FindObjectOfType<PlayerMove>();
             player.UpdateXp(10);
             GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
-            var loot = Instantiate(LootPrefab, target.position, target.rotation);
+            var loot = Instantiate(LootPrefab, gameObject.transform.position, gameObject.transform.rotation);
             loot.GetComponentInChildren<Inventory>().Initialize(9, inventory.mItems, true);
             Destroy(gameObject);
             return 1;
