@@ -22,6 +22,10 @@ public class PlayerMove : MonoBehaviour
     public GameObject HUD;
     
     [SerializeField] float health, maxHealth = 10f;
+    float currentMoveSpeed = 0f;
+    private float stamina;
+    [SerializeField] private float maxStamina = 100f;
+    private bool staminaFullUsed;
 
     void Start()
     {
@@ -117,7 +121,24 @@ public class PlayerMove : MonoBehaviour
 
         Vector3 desiredMoveDirection = forward * v + right * h;
         bool accelerateKeyPressed = Input.GetKey(KeyCode.M);
-        float currentMoveSpeed = accelerateKeyPressed ? acceleratedMoveSpeed : moveSpeed;
+        if (accelerateKeyPressed && !staminaFullUsed)
+        {
+            if (stamina > 0)
+            {
+                stamina -= 30 * Time.deltaTime;
+                currentMoveSpeed = acceleratedMoveSpeed;
+            } else {
+                staminaFullUsed = true;
+            }
+        } else {
+            if (stamina < maxStamina)
+            {
+                stamina += 30 * Time.deltaTime;
+                currentMoveSpeed = moveSpeed;
+            } else {
+                staminaFullUsed = false;
+            }
+        }
         rb.velocity = desiredMoveDirection.normalized * currentMoveSpeed;
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
