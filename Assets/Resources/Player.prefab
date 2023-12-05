@@ -175,6 +175,7 @@ MonoBehaviour:
   HUD: {fileID: 0}
   health: 0
   maxHealth: 10
+  maxStamina: 100
 --- !u!114 &548762425837157621
 MonoBehaviour:
   m_ObjectHideFlags: 0

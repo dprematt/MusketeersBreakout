@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641228, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1161,7 +1161,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: df55c384bb2224c5f8447069ebb36945, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 423531d21273366468724b7dd9f8d653, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2966,6 +2966,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 827ecbd8310a4482ebff5cc4d094c985, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletSpawnPoint: {fileID: 0}
+  bulletPrefab: {fileID: 0}
+  bulletSpeed: 5
+  _Image: {fileID: 0}
 --- !u!1 &985851198
 GameObject:
   m_ObjectHideFlags: 0
@@ -5198,7 +5202,7 @@ GameObject:
   - component: {fileID: 1735936147}
   - component: {fileID: 1735936150}
   - component: {fileID: 1735936149}
-  - component: {fileID: 1735936148}
+  - component: {fileID: 1735936151}
   m_Layer: 5
   m_Name: StaminaWheel
   m_TagString: Untagged
@@ -5228,21 +5232,6 @@ RectTransform:
   m_AnchoredPosition: {x: 800, y: 345}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1735936148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735936146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75878b356682d4fd78ff5f569039bc0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxStamina: 100
-  greenWheel: {fileID: 1883337102}
-  redWheel: {fileID: 317860732}
 --- !u!114 &1735936149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5263,7 +5252,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: df55c384bb2224c5f8447069ebb36945, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 423531d21273366468724b7dd9f8d653, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5281,6 +5270,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1735936146}
   m_CullTransparentMesh: 1
+--- !u!114 &1735936151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735936146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04678c74679dedf448150980712277e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxStamina: 100
+  greenWheel: {fileID: 1883337102}
+  redWheel: {fileID: 317860732}
 --- !u!1 &1755699156
 GameObject:
   m_ObjectHideFlags: 0
@@ -5718,7 +5722,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: df55c384bb2224c5f8447069ebb36945, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 423531d21273366468724b7dd9f8d653, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
