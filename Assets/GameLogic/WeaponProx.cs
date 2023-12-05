@@ -23,9 +23,24 @@ public class WeaponProx : MonoBehaviour
     void OnCollisionEnter(Collision col)
     {
         Debug.Log("in weapon prox colision");
-        if (col.gameObject.TryGetComponent(out Enemy enemyComponent) && isEnnemy != true)
+        /*if (col.gameObject.TryGetComponent(out Enemy enemyComponent) && isEnnemy != true)
         {
             enemyComponent.TakeDamage(Damage);
+            Destroy(gameObject);
+        }
+        else if (col.gameObject.TryGetComponent(out EnemySquare enemyComponentSquare) && isEnnemy != true)
+        {
+            enemyComponentSquare.TakeDamage(Damage);
+            Destroy(gameObject);
+        }
+        else if (col.gameObject.TryGetComponent(out EnemyShape enemyComponentShape) && isEnnemy != true)
+        {
+            enemyComponentShape.TakeDamage(Damage);
+            Destroy(gameObject);
+        }*/
+        if (col.gameObject.TryGetComponent(out PlayerMove player))
+        {
+            player.TakeDamage(Damage);
             Destroy(gameObject);
         }
         else

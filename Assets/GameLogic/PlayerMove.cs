@@ -11,6 +11,7 @@ public class PlayerMove : MonoBehaviour
     public float heightModifier = 0.5f;
     public float minHeight = 0.5f;
     public int xp;
+    public bool Demo = false;
     /// <summary>
     /// private 
     /// </summary>
@@ -88,6 +89,8 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Demo == true)
+            return;
         float moveSpeed = 3f;
         float acceleratedMoveSpeed = 10f;
         float rotationAngle = 90f;
