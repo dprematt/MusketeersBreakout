@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : MonoBehaviourPunCallbacks
 {
     // Start is called before the first frame update
     public bool isGrounded = true;
@@ -27,9 +29,13 @@ public class PlayerMove : MonoBehaviour
     private float stamina;
     [SerializeField] private float maxStamina = 100f;
     private bool staminaFullUsed;
+    private HealthManager HealthManager;
+
+    float Max_Health_ = 100;
 
     void Start()
     {
+        HealthManager = GetComponent<HealthManager>();
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         jump = new Vector3(0.0f, 2.0f, 0.0f);
@@ -44,13 +50,21 @@ public class PlayerMove : MonoBehaviour
         HUD.GetComponent<HUD>().init();
     }
 
-    public void TakeDamage(float damageAmount)
-    {
-        health -= damageAmount;
+    //public void TakeDamage(float damageAmount)
+    //{
+    //    health -= damageAmount;
 
-        if (health <= 0)
+    //    if (health <= 0)
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
+
+    public void TakeDamage(float Damage)
+    {
+        if (photonView.IsMine)
         {
-            Destroy(gameObject);
+            HealthManager.Take_Damage((int)Damage);
         }
     }
 

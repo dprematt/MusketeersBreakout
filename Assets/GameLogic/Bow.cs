@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Realtime;
+using Photon.Pun;
 
 public class Bow : Weapons
 {
-    public Transform bulletSpawnPoint;
-    public GameObject bulletPrefab;
+    public Transform BulletSpawnPoint_;
+    public GameObject BulletPrefab_;
     public float bulletSpeed = 10;
     public Sprite _Image = null;
 
@@ -22,8 +24,8 @@ public class Bow : Weapons
     public override void OnPickup()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        bulletSpawnPoint = player.transform;
-        Debug.Log("Bow onPickup");
+        BulletSpawnPoint_ = player.transform;
+        //Debug.Log("Bow onPickup");
         gameObject.SetActive(false);
     }
     public override string Name
@@ -33,29 +35,36 @@ public class Bow : Weapons
 
     public override void Attack()
     {
-        Debug.Log("in attack bow");
+        //Debug.Log("in attack bow");
         SpawnBullet();
     }
+
     public void SpawnBullet()
     {
-        if (LifeTime > 0) {
-            var NewPos = bulletSpawnPoint.position;
+        if (LifeTime > 0)
+        {
+
+            var NewPos = BulletSpawnPoint_.position;
             NewPos.z += 1;
             NewPos.y += 1;
-            Damage = 2;
-            var bullet = Instantiate(bulletPrefab, NewPos, bulletSpawnPoint.rotation);
-            bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
-            bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
-            Debug.Log("spawn bullet end");
+
+            GameObject Bullet = PhotonNetwork.Instantiate(BulletPrefab_.name, NewPos, Quaternion.identity);
+            //Damage = 2;
+            //var bullet = Instantiate(bulletPrefab, NewPos, bulletSpawnPoint.rotation);
+            //bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
+            //bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
+            //Debug.Log("spawn bullet end");
         }
     }
+
+
     public void Update()
     {
         /*if (Input.GetKeyDown(KeyCode.L))
         {
             SpawnBullet();
             if (UpdateLifeTime(LifeTime--))
-                Destroy(gameObject); // destruction de l'arc si la durabilité atteint 0;
+                Destroy(gameObject); // destruction de l'arc si la durabilit? atteint 0;
         }*/
     }
 }
