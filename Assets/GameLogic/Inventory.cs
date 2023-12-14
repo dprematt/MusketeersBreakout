@@ -24,14 +24,31 @@ public class Inventory : MonoBehaviour
     }
     public void Start()
     {
-        Debug.Log("in inventory start");
+        //Debug.Log("in inventory start");
         if (mItems == null)
         {
-            Debug.Log("in inventory start item == null");
+            //Debug.Log("in inventory start item == null");
             mItems = new List<IInventoryItem>();
             SLOTS = 9;
         }
     }
+
+    public List<IInventoryItem> GetInventory()
+    {
+        return mItems;
+    }
+
+    public void Print_Inventory()
+    {
+        List<IInventoryItem> Item = GetInventory();
+
+        foreach (IInventoryItem tmp in Item)
+        {
+            Debug.Log("Item in inventory : " + tmp.Name);
+        }
+
+    }
+
     public void AddItem(IInventoryItem item)
     {
         // Debug.Log("in add item");
@@ -42,15 +59,15 @@ public class Inventory : MonoBehaviour
             //Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
             //if (collider.enabled)
             //{
-            Debug.Log("in inventory add item -> collider found!");
+            //Debug.Log("in inventory add item -> collider found!");
             //  collider.enabled = false;
-            Debug.Log(item.Name);
+            //Debug.Log(item.Name);
             mItems.Add(item);
             item.OnPickup();
 
             //if (ItemAdded != null)
             //{
-            Debug.Log("Event created");
+            //Debug.Log("Event created");
             ItemAdded(this, new InventoryEventArgs(item));
             //}
             //}
@@ -61,28 +78,28 @@ public class Inventory : MonoBehaviour
     {
         if (loot == true)
         {
-            Debug.Log("Loot update & count !");
-            Debug.Log("is a loot = " + loot);
-            Debug.Log("how many slots = " + SLOTS);
-            Debug.Log("how many items = " + mItems.Count);
+            //Debug.Log("Loot update & count !");
+            //Debug.Log("is a loot = " + loot);
+            //Debug.Log("how many slots = " + SLOTS);
+            //Debug.Log("how many items = " + mItems.Count);
         }
         if (mItems.Count == 0 && loot == true)
         {
-            Debug.Log("Delete loot");
+            //Debug.Log("Delete loot");
             Destroy(gameObject);
         }
     }
 
     public void DisplayLoot(Inventory playerInventory)
     {
-        Debug.Log("in display loot");
+        //Debug.Log("in display loot");
         Debug.Log(mItems.Count);
         int free_slots = 9 - playerInventory.mItems.Count;
         foreach (IInventoryItem lootItem in mItems) 
         {
             if (free_slots == 0)
                 return;
-            Debug.Log(lootItem.Name);
+            //Debug.Log(lootItem.Name);
             if (lootItem.Name == "Halberd")
             {
                 GameObject go = Resources.Load<GameObject>("Prefabs/Halberd");
@@ -94,7 +111,7 @@ public class Inventory : MonoBehaviour
             }
             else if (lootItem.Name == "Sword")
             {
-                Debug.Log("sword creation");
+                //Debug.Log("sword creation");
                 GameObject go = Resources.Load<GameObject>("Prefabs/Sword");
                 var sword = Instantiate(go, playerInventory.gameObject.transform.position,
                     playerInventory.gameObject.transform.rotation);
@@ -102,7 +119,7 @@ public class Inventory : MonoBehaviour
                 IInventoryItem newSword = go.GetComponent<IInventoryItem>();
                 playerInventory.AddItem(newSword);
             }
-            Debug.Log("item added");
+            //Debug.Log("item added");
             mItems.Remove(lootItem);
             Debug.Log(mItems.Count);
             if (mItems.Count == 0)
@@ -117,10 +134,10 @@ public class Inventory : MonoBehaviour
             Inventory playerInventory = collision.collider.GetComponent<Inventory>();
             if (playerInventory != null)
             {
-                Debug.Log("in if 2 inventory");
+                //Debug.Log("in if 2 inventory");
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    Debug.Log("in if 3 inventory");
+                    //Debug.Log("in if 3 inventory");
                     DisplayLoot(playerInventory);
                 }
             }

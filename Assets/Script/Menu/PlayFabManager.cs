@@ -66,6 +66,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
     // Get the player's username using the PlayFabID
     public void GetPlayerUsername(string playFabId)
     {
+        PlayerPrefs.SetString("playfabID", playFabId);
         GetAccountInfoRequest request = new GetAccountInfoRequest
         {
             PlayFabId = playFabId

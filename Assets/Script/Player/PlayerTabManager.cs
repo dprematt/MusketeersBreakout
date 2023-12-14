@@ -23,22 +23,22 @@ public class PlayerTabManager : MonoBehaviourPun
         PlayerHealth_.text = Health_.ToString() + "HP";
     }
 
-    [PunRPC]
-    public void TakeDamage(float damageAmount)
-    {
-        Debug.Log("Dmg : " + damageAmount + "   Health : " + Health_);
-        Debug.Log("Joueur : " + PhotonNetwork.LocalPlayer.NickName);
-        Health_ -= damageAmount;
-        SetPlayerHP();
-        Debug.Log("\n\n\nInTakeDamage\n\n\n");
-        if (Health_ <= 0)
-        {
-            Destroy(gameObject);
-            if (photonView.IsMine)
-            {
-                PhotonNetwork.LoadLevel("Menu");
-            }
-        }
+    //[PunRPC]
+    //public void TakeDamage(float damageAmount)
+    //{
+    //    Debug.Log("Dmg : " + damageAmount + "   Health : " + Health_);
+    //    Debug.Log("Joueur : " + PhotonNetwork.LocalPlayer.NickName);
+    //    Health_ -= damageAmount;
+    //    SetPlayerHP();
+    //    Debug.Log("\n\n\nInTakeDamage\n\n\n");
+    //    if (Health_ <= 0)
+    //    {
+    //        Destroy(gameObject);
+    //        if (photonView.IsMine)
+    //        {
+    //            PhotonNetwork.LoadLevel("Menu");
+    //        }
+    //    }
 
-    }
+    //}
 }

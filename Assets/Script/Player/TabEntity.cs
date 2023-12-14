@@ -15,15 +15,6 @@ public class TabEntity : MonoBehaviour
 
     }
 
-    public void Exit()
-    {
-        // Quitter la room
-        PhotonNetwork.LeaveRoom();
-
-        // Charger la nouvelle scène
-        PhotonNetwork.LoadLevel("Menu");
-    }
-
     void OnKeyNPressed()
     {
         if (Input.GetKeyDown(KeyCode.N))

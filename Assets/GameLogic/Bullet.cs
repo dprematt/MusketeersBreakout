@@ -41,7 +41,6 @@ public class Bullet : MonoBehaviourPun
     public void Destroy()
     {
         Destroy(this.gameObject);
-
     }
 
     void checkRange()
@@ -74,8 +73,9 @@ public class Bullet : MonoBehaviourPun
         }
         else if (col.gameObject.TryGetComponent(out PlayerMove playerComponent))
         {
-            playerComponent.TakeDamage(Damage);
+            playerComponent.TakeDamage(10);
             Debug.Log("Collide Call InflictDamage");
+
             this.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
         }
     }

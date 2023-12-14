@@ -11,21 +11,43 @@ public class HealthManager : MonoBehaviourPunCallbacks
     float Health_ = 100;
     public Text Health_Text_;
 
+    private void Start()
+    {
+    }
 
-    public void Take_Damage(int Damage)
+
+    public void Take_Damage(int Damage, GameObject Player)
     {
         if (photonView.IsMine)
         {
-            photonView.RPC("DamageInstance", RpcTarget.All, Damage);
+            if (Damage < Health_)
+                photonView.RPC("DamageInstance", RpcTarget.All, Damage);
+            else
+                DestroyPlayer(Player);
         }
+    }
+
+    void DestroyPlayer(GameObject Player)
+    {
+        // Détruire le GameObject localement
+        Destroy(Player);
+
+        // Détruire le GameObject de manière synchronisée sur le réseau
+        PhotonNetwork.Destroy(Player);
+
+    }
+
+    public float GetHealth()
+    {
+        return Health_;
     }
 
 
     [PunRPC]
     public void DamageInstance(int Damage)
     {
-        Health_ -= 10;
-
+        Health_ -= Damage;
+        Debug.Log("Damage Taken : " + Damage);
     }
 
     private void FixedUpdate()

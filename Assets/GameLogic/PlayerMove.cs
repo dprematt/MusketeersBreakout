@@ -30,12 +30,14 @@ public class PlayerMove : MonoBehaviourPunCallbacks
     [SerializeField] private float maxStamina = 100f;
     private bool staminaFullUsed;
     private HealthManager HealthManager;
+    private PlayFabInventory PFInventory_;
 
     float Max_Health_ = 100;
 
     void Start()
     {
         HealthManager = GetComponent<HealthManager>();
+        PFInventory_ = GetComponent<PlayFabInventory>();
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         jump = new Vector3(0.0f, 2.0f, 0.0f);
@@ -64,7 +66,12 @@ public class PlayerMove : MonoBehaviourPunCallbacks
     {
         if (photonView.IsMine)
         {
-            HealthManager.Take_Damage((int)Damage);
+            if (HealthManager.GetHealth() <= Damage)
+            {
+                PFInventory_.PlayerLose();
+            }
+
+            HealthManager.Take_Damage((int)Damage, gameObject);
         }
     }
 
