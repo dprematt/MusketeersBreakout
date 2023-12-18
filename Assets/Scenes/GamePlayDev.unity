@@ -2920,7 +2920,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ContentObject_: {fileID: 1692569051}
-  PlayerItemPrefab_: {fileID: -1890980748891517707, guid: 701cce534d2fc473dad365762f6ee8ef, type: 3}
+  PlayerItemPrefab_: {fileID: 6518554862412067711, guid: 701cce534d2fc473dad365762f6ee8ef, type: 3}
   TimeUpdate_: 5
 --- !u!114 &833270734
 MonoBehaviour:
@@ -5675,6 +5675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13822980f7693436e8f6e6c6d7d5c48a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Player_: {fileID: 0}
 --- !u!1 &1730602355
 GameObject:
   m_ObjectHideFlags: 0
@@ -6085,6 +6086,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 3895824024544643139, guid: 068ac9e1590924f58aeaa4b59d2ed6ec, type: 3}
+  ContentObject_: {fileID: 0}
+  PlayerItemPrefab_: {fileID: 0}
   minx: -262.7407
   maxx: -262.7407
   miny: 9
@@ -6116,6 +6119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13822980f7693436e8f6e6c6d7d5c48a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Player_: {fileID: 0}
 --- !u!1 &1867697593
 GameObject:
   m_ObjectHideFlags: 0

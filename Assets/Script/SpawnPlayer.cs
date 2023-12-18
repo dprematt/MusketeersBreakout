@@ -6,7 +6,7 @@ using Photon.Pun;
 public class SpawnPlayer : MonoBehaviour
 {
     public GameObject Prefab;
-    
+
 
     public float minx;
     public float maxx;
@@ -16,9 +16,11 @@ public class SpawnPlayer : MonoBehaviour
 
     private void Start()
     {
-        Vector2 radom = new Vector2(Random.Range(minx, maxx), Random.Range(miny, maxy));
-        GameObject Player_ = PhotonNetwork.Instantiate(Prefab.name, radom, Quaternion.identity);
+        Vector2 random = new Vector2(Random.Range(minx, maxx), Random.Range(miny, maxy));
+        GameObject Player_ = PhotonNetwork.Instantiate(Prefab.name, random, Quaternion.identity);
         Player_.GetComponent<SetupPlayer>().IsLocalPlayer();
+
+
     }
 
     // Update is called once per frame

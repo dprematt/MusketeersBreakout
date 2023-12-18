@@ -55,4 +55,4 @@ public class OnEventCallBacksPlayer : MonoBehaviourPunCallbacks
             Debug.Log("New player : " + player.NickName);
         }
     }
-   }
+}

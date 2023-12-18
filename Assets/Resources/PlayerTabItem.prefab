@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3298076425444889496}
-  - component: {fileID: -1890980748891517707}
+  - component: {fileID: 6518554862412067711}
   m_Layer: 5
   m_Name: PlayerTabItem
   m_TagString: Untagged
@@ -39,7 +39,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &-1890980748891517707
+--- !u!114 &6518554862412067711
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -53,7 +53,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerName_: {fileID: 3873404385421060111}
   PlayerHealth_: {fileID: 8437975099078734130}
-  Health_: 100
 --- !u!1 &1222675971619378374
 GameObject:
   m_ObjectHideFlags: 0

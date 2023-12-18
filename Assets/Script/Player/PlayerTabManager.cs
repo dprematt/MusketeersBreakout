@@ -10,7 +10,12 @@ public class PlayerTabManager : MonoBehaviourPun
     public Text PlayerName_;
     public Text PlayerHealth_;
 
-    public float Health_ = 100;
+    HealthManager HealthManager_;
+
+    private void Start()
+    {
+        HealthManager_ = GetComponent<HealthManager>();
+    }
 
 
     public void SetPlayerName(string PlayerName)
@@ -20,7 +25,7 @@ public class PlayerTabManager : MonoBehaviourPun
 
     public void SetPlayerHP()
     {
-        PlayerHealth_.text = Health_.ToString() + "HP";
+        PlayerHealth_.text = HealthManager_.GetHealth().ToString() + "HP";
     }
 
     //[PunRPC]
