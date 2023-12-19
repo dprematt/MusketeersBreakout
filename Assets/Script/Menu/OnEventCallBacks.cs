@@ -16,6 +16,7 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
     public float TimeUpdate_ = 5f;
     float NextUpdateTime_;
 
+
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.JoinLobby();

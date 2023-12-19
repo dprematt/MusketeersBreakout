@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public abstract class Weapons : MonoBehaviour, IInventoryItem
+public abstract class Weapons : MonoBehaviourPun, IInventoryItem
 {
     public virtual string Name { get; protected set; }
     public virtual Sprite Image { get; protected set; }

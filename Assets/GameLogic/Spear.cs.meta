@@ -3,7 +3,11 @@ guid: e546c7fa5396442d0a5d2c55a7ae8dc3
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - bulletSpawnPoint: {instanceID: 0}
+  - bulletPrefab: {fileID: 1227652172285325768, guid: cd3a6cf24d84648ee9814e90292ebe52, type: 3}
+  - SpearPrefab_: {fileID: 954474420991633718, guid: bb82626df95c30a46a13533c390794be, type: 3}
+  - _Image: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

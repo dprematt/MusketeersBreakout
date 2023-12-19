@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Spear : Weapons
 {
@@ -13,17 +14,26 @@ public class Spear : Weapons
     {
         get { return _Image; }
     }
+
     private void Start()
     {
-        
         LifeTime = 10;
     }
     public override void OnPickup()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         bulletSpawnPoint = player.transform;
+        //gameObject.SetActive(false);
+        photonView.RPC("DisableObject", RpcTarget.AllBuffered);
+
+    }
+
+    [PunRPC]
+    public void DisableObject()
+    {
         gameObject.SetActive(false);
     }
+
     public override string Name
     {
         get { return "Spear"; }
@@ -45,6 +55,7 @@ public class Spear : Weapons
     public override void Attack()
     {
         SpawnBullet();
+        Debug.Log("Attack");
     }
     public void Update()
     {
@@ -52,7 +63,7 @@ public class Spear : Weapons
         {
             SpawnBullet();
             if (UpdateLifeTime(LifeTime--))
-                Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
+                Destroy(gameObject); // destruction de l'arme si la durabilit? atteint 0;
         }*/
     }
 }

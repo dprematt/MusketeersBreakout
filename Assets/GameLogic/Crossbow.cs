@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class CrossBow : Weapons
 {
@@ -22,8 +23,17 @@ public class CrossBow : Weapons
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         bulletSpawnPoint = player.transform;
+        //gameObject.SetActive(false);
+        photonView.RPC("DisableObject", RpcTarget.AllBuffered);
+
+    }
+
+    [PunRPC]
+    public void DisableObject()
+    {
         gameObject.SetActive(false);
     }
+
     public override string Name
     {
         get { return "CrossBow"; }
@@ -46,6 +56,7 @@ public class CrossBow : Weapons
     public override void Attack()
     {
         SpawnBullet();
+        Debug.Log("Attack");
     }
     public void Update()
     {
@@ -54,7 +65,7 @@ public class CrossBow : Weapons
         {
             SpawnBullet();
             if (UpdateLifeTime(LifeTime--))
-                Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
+                Destroy(gameObject); // destruction de l'arme si la durabilit? atteint 0;
         }*/
     }
 }

@@ -25,7 +25,7 @@ public class PlayerTabManager : MonoBehaviourPun
 
     public void SetPlayerHP()
     {
-        PlayerHealth_.text = HealthManager_.GetHealth().ToString() + "HP";
+        //PlayerHealth_.text = HealthManager_.GetHealth().ToString() + "HP";
     }
 
     //[PunRPC]

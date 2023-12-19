@@ -24,7 +24,6 @@ public class OnEventCallBacksPlayer : MonoBehaviourPunCallbacks
         if (Time.time >= NextUpdateTime_)
         {
             DeletePlayerList();
-            AddPlayerList();
             NextUpdateTime_ = Time.time + TimeUpdate_;
         }
     }
@@ -34,8 +33,10 @@ public class OnEventCallBacksPlayer : MonoBehaviourPunCallbacks
         foreach (PlayerTabManager Item in PlayerItemList_)
         {
             Destroy(Item.gameObject);
-            PlayerItemList_.Remove(Item);
         }
+
+        PlayerItemList_.Clear();
+        AddPlayerList();
     }
 
     public void AddPlayerList()
@@ -52,7 +53,6 @@ public class OnEventCallBacksPlayer : MonoBehaviourPunCallbacks
             NewPlayer_.SetPlayerName(player.NickName);
             NewPlayer_.SetPlayerHP();
             PlayerItemList_.Add(NewPlayer_);
-            Debug.Log("New player : " + player.NickName);
         }
     }
 }

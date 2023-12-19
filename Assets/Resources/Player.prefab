@@ -381,8 +381,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health_Text_: {fileID: 1165513205599850237}
-  HealthTab_Text_: {fileID: 0}
-  PlayerName_Text_: {fileID: 0}
 --- !u!114 &1301985091787779193
 MonoBehaviour:
   m_ObjectHideFlags: 0

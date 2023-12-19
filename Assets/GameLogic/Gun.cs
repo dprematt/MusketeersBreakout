@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Gun : Weapons
 {
@@ -15,15 +16,23 @@ public class Gun : Weapons
         get { return _Image; }
     }
     private void Start()
-    {  
+    {
         LifeTime = 10;
     }
     public override void OnPickup()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         bulletSpawnPoint = player.transform;
+        //gameObject.SetActive(false);
+        photonView.RPC("DisableObject", RpcTarget.AllBuffered);
+    }
+
+    [PunRPC]
+    public void DisableObject()
+    {
         gameObject.SetActive(false);
     }
+    
     public override string Name
     {
         get { return "Gun"; }
@@ -32,7 +41,9 @@ public class Gun : Weapons
     public override void Attack()
     {
         SpawnBullet();
+        Debug.Log("Attack");
     }
+
     public void SpawnBullet()
     {
         if (LifeTime > 0) {
@@ -51,7 +62,7 @@ public class Gun : Weapons
         {
             SpawnBullet();
             if (UpdateLifeTime(LifeTime--))
-                Destroy(gameObject); // destruction de l'arc si la durabilité atteint 0;
+                Destroy(gameObject); // destruction de l'arc si la durabilit? atteint 0;
         }*/
     }
 }

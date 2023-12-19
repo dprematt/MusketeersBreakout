@@ -18,16 +18,23 @@ public class Bow : Weapons
 
     private void Start()
     {
-        
         LifeTime = 10;
     }
+
     public override void OnPickup()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         BulletSpawnPoint_ = player.transform;
         //Debug.Log("Bow onPickup");
+        photonView.RPC("DisableObject", RpcTarget.AllBuffered);
+    }
+
+    [PunRPC]
+    public void DisableObject()
+    {
         gameObject.SetActive(false);
     }
+
     public override string Name
     {
         get { return "Bow"; }
@@ -35,8 +42,8 @@ public class Bow : Weapons
 
     public override void Attack()
     {
-        //Debug.Log("in attack bow");
         SpawnBullet();
+        Debug.Log("Attack");
     }
 
     public void SpawnBullet()

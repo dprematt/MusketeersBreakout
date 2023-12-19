@@ -35,6 +35,7 @@ public class Bullet : MonoBehaviourPun
     private void Update()
     {
         transform.Translate(Vector3.forward * Time.deltaTime * 10f);
+        Debug.Log("Travel");
     }
 
     [PunRPC]
