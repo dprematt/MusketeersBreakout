@@ -6,9 +6,11 @@ using System.Collections.Generic;
 public class generator : MonoBehaviour
 {
 
+    public MeshRenderer meshRenderer; // Ajoutez cette ligne
+
     public enum DrawMode {map, colorMap, mesh}
     public DrawMode drawMode;
-    public const int mapChunckSize = 241;
+    public const int mapChunckSize = 239;
     [Range(0,6)]
     public int levelOfDetail;
     public Skeleton.NormalizeMode normalizeMode;
@@ -49,7 +51,7 @@ public class generator : MonoBehaviour
         }
     }
     MapData SkeletonGenerator(Vector2 center) {
-        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode); 
+        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize + 2, mapChunckSize + 2,seed, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode); 
 
         Color[] colorMap = new Color[mapChunckSize * mapChunckSize];
 
@@ -61,9 +63,12 @@ public class generator : MonoBehaviour
 
                 for (int k = 0; k < regions.Length; k++) {
 
-                    if (curHeight <= regions[k].height) {
+                    if (curHeight >= regions[k].height) {
 
                         colorMap[i * mapChunckSize + j]  = regions[k].colour;
+                    }
+                    else 
+                    {
                         break;
                     }
 
@@ -143,6 +148,7 @@ public struct TerrainType {
     public string name;
     public float height;
     public Color colour;
+    public Material material;
 }
 
 public struct MapData {
