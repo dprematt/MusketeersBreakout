@@ -6,6 +6,8 @@ using System.Collections.Generic;
 public class generator : MonoBehaviour
 {
 
+    public GameObject extractionZonePrefab;
+
     public enum DrawMode {map, colorMap, mesh}
     public DrawMode drawMode;
     public const int mapChunckSize = 241;
@@ -33,6 +35,26 @@ public class generator : MonoBehaviour
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<meshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<meshData>>();
 
+    private void Start() {
+        PlaceExtractionZones();
+    }
+
+    public void PlaceExtractionZones() {
+        float halfMapSize = 1500f / 2f;
+    
+        // Les positions des coins, en supposant que la carte est centrée sur (0,0)
+        Vector3[] cornerPositions = {
+            new Vector3(-halfMapSize, 0, -halfMapSize),
+            new Vector3(-halfMapSize, 0, halfMapSize),
+            new Vector3(halfMapSize, 0, -halfMapSize),
+            new Vector3(halfMapSize, 0, halfMapSize)
+        };
+
+        foreach (Vector3 position in cornerPositions) {
+            
+            Instantiate(extractionZonePrefab, position, Quaternion.identity);
+        }
+    }
     public void DrawMap() {
         MapData mapdata = SkeletonGenerator(Vector2.zero);
 

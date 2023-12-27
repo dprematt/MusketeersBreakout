@@ -31,9 +31,11 @@ public class Endless : MonoBehaviour {
 
     private void Update() {
         viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
+
+    
         viewerPosition = new Vector2(
-            Mathf.Clamp(viewerPosition.x, 0, 2000),
-            Mathf.Clamp(viewerPosition.y, 0, 2000)
+            Mathf.Clamp(viewerPosition.x, -550, 550),
+            Mathf.Clamp(viewerPosition.y, -550, 550)
         );
 
         if ((oldViewerPosition - viewerPosition).sqrMagnitude > sqrViewerMoveThresholdForChunkUpdate) {
@@ -42,33 +44,36 @@ public class Endless : MonoBehaviour {
         }
     }
 
-    void UpdateVisibleChunk() {
-            
-        int currentChunkCoordX = Mathf.RoundToInt(viewerPosition.x / chunkSize);
-        int currentChunkCoordY = Mathf.RoundToInt(viewerPosition.y / chunkSize);
-        int maxChunksInRow = 2000 / chunkSize;
-        int startX = Mathf.Max(currentChunkCoordX - maxChunksInRow, 0);
-        int endX = Mathf.Min(currentChunkCoordX + maxChunksInRow, maxChunksInRow);
-        int startY = Mathf.Max(currentChunkCoordY - maxChunksInRow, 0);
-        int endY = Mathf.Min(currentChunkCoordY + maxChunksInRow, maxChunksInRow);
+    void UpdateVisibleChunk() {    
+        int centralChunkCoordX = Mathf.RoundToInt(viewerPosition.x / chunkSize);
+        int centralChunkCoordY = Mathf.RoundToInt(viewerPosition.y / chunkSize);
+
+        int mapRadius = 750;
+        int startChunkX = centralChunkCoordX - Mathf.CeilToInt((float)mapRadius / chunkSize);
+        int endChunkX = centralChunkCoordX + Mathf.CeilToInt((float)mapRadius / chunkSize);
+        int startChunkY = centralChunkCoordY - Mathf.CeilToInt((float)mapRadius / chunkSize);
+        int endChunkY = centralChunkCoordY + Mathf.CeilToInt((float)mapRadius / chunkSize);
 
         for (int i = 0; i < chunkVisibleLastUpdate.Count; i++) {
             chunkVisibleLastUpdate[i].SetVisible(false);
         }
         chunkVisibleLastUpdate.Clear();
 
+        for (int yOffset = startChunkY; yOffset <= endChunkY; yOffset++) {
+            for (int xOffset = startChunkX; xOffset <= endChunkX; xOffset++) {
+                Vector2 viewedChunkCoord = new Vector2(xOffset, yOffset);
 
-        for (int yOffset = startY; yOffset <= endY; yOffset++) {
-            for (int xOffset = startX; xOffset <= endX; xOffset++) {
-                Vector2 viewedChunkCoord = new Vector2(currentChunkCoordX + xOffset, currentChunkCoordY + yOffset);
-  
+
                 if (chunkDict.ContainsKey(viewedChunkCoord)) {
                     chunkDict[viewedChunkCoord].UpdateChunk();
+                    if (chunkDict[viewedChunkCoord].isVisible()) {
+                        chunkVisibleLastUpdate.Add(chunkDict[viewedChunkCoord]);
+                    }
                 } else {
                     chunkDict.Add(viewedChunkCoord, new Chunk(viewedChunkCoord, chunkSize, detailsLevel, transform, mapMaterial));
                 }
             }
-         }
+        }
     }
     public class Chunk {
         GameObject meshObject;
