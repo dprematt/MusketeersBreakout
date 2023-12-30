@@ -94,13 +94,20 @@ public class Endless : MonoBehaviour {
 
         int previousLOD;
         int previousLODIndex = -1;
+        Vector2[] specialPositions = {
+            new Vector2(720, 720),
+            new Vector2(720, -720),
+            new Vector2(-720, -720),
+            new Vector2(-720, 720)
+        };
+
         public Chunk(Vector2 coord, int size, LODInfo[] detailsLevel, Transform parent, Material material) {
+
             this.detailsLevel = detailsLevel;
             position = coord * size;
             bounds = new Bounds(position, Vector2.one * size);
             Vector3 positionV3 = new Vector3(position.x, 0, position.y);
-
-            
+      
             meshObject = new GameObject("Chunk");
             meshRenderer = meshObject.AddComponent<MeshRenderer>();
             meshFilter = meshObject.AddComponent<MeshFilter>();
@@ -119,15 +126,18 @@ public class Endless : MonoBehaviour {
             }
             _generator.RequestMapData(position, OnMapDataReceived);
         }
-
         void OnMapDataReceived(MapData mapData) {
             this.mapdata = mapData;
             mapDataReceived = true;
+            if (IsSpecialPosition(position)) {
+                AdjustChunkHeight(this.mapdata.heightMap);
+                RecalculateColorMap();
+            }
             Texture2D texture = TextureGenerator.TextureFromColorMap(mapData.colorMap, generator.mapChunckSize, generator.mapChunckSize);
             meshRenderer.material.mainTexture = texture;
+            UpdateMesh();
             UpdateChunk();
         }
-
         public void UpdateChunk() {
             if (mapDataReceived) {
                 float viewerDstFromNearestEdge =  Mathf.Sqrt(bounds.SqrDistance(viewerPosition));
@@ -160,6 +170,59 @@ public class Endless : MonoBehaviour {
             }
         }
 
+        private void RecalculateColorMap() {
+            for (int y = 0; y < mapdata.heightMap.GetLength(0); y++) {
+                for (int x = 0; x < mapdata.heightMap.GetLength(1); x++) {
+                    float height = mapdata.heightMap[x, y];
+                    Color color = ChooseColorBasedOnHeight(height);
+                    mapdata.colorMap[y * generator.mapChunckSize + x] = color;
+                }
+            }
+        }
+
+        
+        private Color ChooseColorBasedOnHeight(float height) {
+            foreach (var region in _generator.regions) {
+                if (height <= region.height) {
+                    return region.colour;
+                }
+            }
+            return Color.white;
+        }
+
+        private void UpdateMesh() {
+            _generator.RequestMeshData(mapdata, previousLOD, (meshData) => {
+                meshFilter.mesh = meshData.CreateMesh();
+            });
+        }
+
+
+
+        private bool IsSpecialPosition(Vector2 position) {
+            foreach (var specialPosition in specialPositions) {
+                if (position == specialPosition) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        private void AdjustChunkHeight(float[,] heightMap) {
+            int flatZoneSize = 90;
+            float newHeight = 0.4f;
+
+            int centerX = heightMap.GetLength(0) / 2;
+            int centerY = heightMap.GetLength(1) / 2;
+
+            int startX = centerX - flatZoneSize / 2;
+            int startY = centerY - flatZoneSize / 2;
+            for (int y = startY; y < startY + flatZoneSize; y++) {
+                for (int x = startX; x < startX + flatZoneSize; x++) {
+                    if (x >= 0 && x < heightMap.GetLength(0) && y >= 0 && y < heightMap.GetLength(1)) {
+                        heightMap[y, x] = newHeight;
+                    }
+                }
+            }
+        }
 
         public void SetVisible(bool visible) {
             meshObject.SetActive(visible);

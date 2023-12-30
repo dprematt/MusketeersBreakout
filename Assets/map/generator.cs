@@ -40,24 +40,27 @@ public class generator : MonoBehaviour
     }
 
     public void PlaceExtractionZones() {
-        float halfMapSize = 1500f / 2f;
-    
-        // Les positions des coins, en supposant que la carte est centrée sur (0,0)
+        int i = 1;
         Vector3[] cornerPositions = {
-            new Vector3(-halfMapSize, 0, -halfMapSize),
-            new Vector3(-halfMapSize, 0, halfMapSize),
-            new Vector3(halfMapSize, 0, -halfMapSize),
-            new Vector3(halfMapSize, 0, halfMapSize)
+            new Vector3(-715, 0, -730),
+            new Vector3(-715, 0, 730),
+            new Vector3(715, 0, -730),
+            new Vector3(715, 0, 730)
         };
 
         foreach (Vector3 position in cornerPositions) {
-            
-            Instantiate(extractionZonePrefab, position, Quaternion.identity);
+            GameObject zoneInstance = Instantiate(extractionZonePrefab, position, Quaternion.identity);
+            if (i % 2 != 0) {
+                zoneInstance.transform.Rotate(0.0f, 180.0f, 0.0f);
+            }
+            i += 1;
+            Vector3 newPosition = zoneInstance.transform.position;
+            newPosition.y = 2;
+            zoneInstance.transform.position = newPosition; 
         }
     }
     public void DrawMap() {
         MapData mapdata = SkeletonGenerator(Vector2.zero);
-
         DisplaySkeleton display = FindObjectOfType<DisplaySkeleton>();
         if (drawMode == DrawMode.map) {
 
@@ -72,6 +75,7 @@ public class generator : MonoBehaviour
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunckSize)));
         }
     }
+    
     MapData SkeletonGenerator(Vector2 center) {
         float[,] map = Skeleton.GenerateSkeleton(mapChunckSize + 2, mapChunckSize + 2, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode); 
 
