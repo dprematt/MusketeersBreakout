@@ -4,6 +4,7 @@ using UnityEngine;
 
 
 public class Endless : MonoBehaviour {
+    const float scale = 1;
     const float viewerMoveThresholdForChunkUpdate = 25f;
     const float sqrViewerMoveThresholdForChunkUpdate = viewerMoveThresholdForChunkUpdate * viewerMoveThresholdForChunkUpdate;
     public static float maxViewDist;
@@ -30,7 +31,7 @@ public class Endless : MonoBehaviour {
     }
 
     private void Update() {
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
+        viewerPosition = new Vector2(viewer.position.x, viewer.position.z) / 2f;
 
     
         viewerPosition = new Vector2(
@@ -84,6 +85,7 @@ public class Endless : MonoBehaviour {
 
         MeshRenderer meshRenderer;
         MeshFilter meshFilter;
+        MeshCollider meshCollider;
 
         LODInfo[] detailsLevel;
         LODMesh[] lodMeshes;
@@ -102,9 +104,12 @@ public class Endless : MonoBehaviour {
             meshObject = new GameObject("Chunk");
             meshRenderer = meshObject.AddComponent<MeshRenderer>();
             meshFilter = meshObject.AddComponent<MeshFilter>();
+            meshCollider = meshObject.AddComponent<MeshCollider>();
+
             meshRenderer.material = material;
-            meshObject.transform.position = positionV3;
+            meshObject.transform.position = positionV3 * scale;
             meshObject.transform.parent = parent;
+            meshObject.transform.localScale = Vector3.one * scale; 
             SetVisible(false);
 
             lodMeshes = new LODMesh[detailsLevel.Length];
@@ -139,10 +144,13 @@ public class Endless : MonoBehaviour {
                     }
                     if (lodIndex != previousLODIndex) {
                         LODMesh lodMesh = lodMeshes[lodIndex];
-                        if (lodMesh.hasMesh) {   
+                        if (lodMesh.hasMesh) 
+                        {   
                             previousLODIndex = lodIndex;
                             meshFilter.mesh = lodMesh.mesh;
-                        } else if (!lodMesh.hasRequestedMesh) {
+                            meshCollider.sharedMesh = lodMesh.mesh;
+                        } 
+                        else if (!lodMesh.hasRequestedMesh) {
                             lodMesh.RequestMesh(mapdata);
                         }
                     }

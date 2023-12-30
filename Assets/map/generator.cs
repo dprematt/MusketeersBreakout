@@ -8,7 +8,7 @@ public class generator : MonoBehaviour
 
     public GameObject extractionZonePrefab;
 
-    public enum DrawMode {map, colorMap, mesh}
+    public enum DrawMode {map, colorMap, mesh, fallOfMap}
     public DrawMode drawMode;
     public const int mapChunckSize = 241;
     [Range(0,6)]
@@ -68,10 +68,12 @@ public class generator : MonoBehaviour
             display.DrawTexture(TextureGenerator.TextureFromColorMap(mapdata.colorMap, mapChunckSize, mapChunckSize));
         } else if (drawMode == DrawMode.mesh) {
             display.DrawMesh(MeshGenerator.generateTerrainMesh(mapdata.heightMap, meshHeightMult, meshHeightCurve, levelOfDetail), TextureGenerator.TextureFromColorMap(mapdata.colorMap, mapChunckSize, mapChunckSize));
+        } else if (drawMode == DrawMode.fallOfMap) {
+            display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunckSize)));
         }
     }
     MapData SkeletonGenerator(Vector2 center) {
-        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode); 
+        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize + 2, mapChunckSize + 2, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode); 
 
         Color[] colorMap = new Color[mapChunckSize * mapChunckSize];
 
@@ -83,9 +85,12 @@ public class generator : MonoBehaviour
 
                 for (int k = 0; k < regions.Length; k++) {
 
-                    if (curHeight <= regions[k].height) {
+                    if (curHeight >= regions[k].height) {
 
                         colorMap[i * mapChunckSize + j]  = regions[k].colour;
+                        
+                    }
+                    else {
                         break;
                     }
 
