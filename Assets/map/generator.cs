@@ -104,6 +104,56 @@ public class generator : MonoBehaviour
         return new MapData(map, colorMap);
     }
 
+Vector3[] GetSpawnCoords(float[,] map)
+{
+    List<Vector3> spawnCoords = new List<Vector3>();
+
+    for (int i = 0; i < map.GetLength(0); i++)
+    {
+        for (int j = 0; j < map.GetLength(1); j++)
+        {
+            float height = map[j, i];
+
+            if (height >= 0 && height <= 0.5f && enoughSpace(spawnCoords, i, j, 100))
+            {
+                Vector3 coord = new Vector3(i, j, height);
+                spawnCoords.Add(coord);
+
+                if (spawnCoords.Count == 8)
+                {
+                    return spawnCoords.ToArray();
+                }
+            }
+        }
+    }
+
+    return spawnCoords.ToArray();
+}
+
+    bool enoughSpace(List<Vector3> coords, int x, int y, float distanceMinimale)
+    {
+        foreach (Vector3 existingCoord in coords)
+        {  
+            float distance = distanceEuclidienne(existingCoord.x, existingCoord.y, x, y);
+
+            if (distance < distanceMinimale)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    float distanceEuclidienne(float x1, float y1, float x2, float y2)
+    {
+        float dx = x1 - x2;
+        float dy = y1 - y2;
+
+        return (float)Math.Sqrt(dx * dx + dy * dy);
+    }
+
+
     public void RequestMapData(Vector2  center, Action<MapData> callback) {
         ThreadStart threadStart = delegate {
             MapDataThread(center, callback);
