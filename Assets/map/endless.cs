@@ -9,6 +9,13 @@ public class Endless : MonoBehaviour {
     const float sqrViewerMoveThresholdForChunkUpdate = viewerMoveThresholdForChunkUpdate * viewerMoveThresholdForChunkUpdate;
     public static float maxViewDist;
 
+    float mapSize = 1500f;
+    float safeZone = 100f;
+
+    int numberOfPrefabsToCreate = 2;
+
+    public GameObject[] prefabTypes;
+
     public LODInfo[] detailsLevel;
     public Transform viewer;
     public static Vector2 viewerPosition;
@@ -19,19 +26,26 @@ public class Endless : MonoBehaviour {
     int chunkSize;
     int chunkVisibleViewDist;
     Dictionary<Vector2, Chunk> chunkDict = new Dictionary<Vector2, Chunk>();
+
+    Vector2 placementAreaSize = new Vector2(1500, 1500); 
     static List<Chunk> chunkVisibleLastUpdate = new List<Chunk>();
+
+    public static List<Vector3> prefabPositions = new List<Vector3>();
     private void Start() {
-        _generator = FindObjectOfType<generator>();
+        _generator = FindObjectOfType<generator>();   
+        StartCoroutine(SetupPrefabsAndTerrain());
         maxViewDist = detailsLevel[detailsLevel.Length - 1].visibleDstThreshold;
         chunkSize = generator.mapChunckSize - 1;
         chunkVisibleViewDist = Mathf.RoundToInt(maxViewDist / chunkSize);
-
         UpdateVisibleChunk(); 
         
     }
-
+    IEnumerator SetupPrefabsAndTerrain() {
+        yield return new WaitUntil(() => _generator.CurrentMapData.heightMap != null);
+        PlaceRandomPrefabs(_generator.CurrentMapData.heightMap);
+    }
     private void Update() {
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z) / 2f;
+        viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
 
     
         viewerPosition = new Vector2(
@@ -44,6 +58,57 @@ public class Endless : MonoBehaviour {
             UpdateVisibleChunk();
         }
     }
+    void PlaceRandomPrefabs(float[,] heightMap) {
+        prefabPositions.Clear();
+
+        foreach (GameObject prefab in prefabTypes) {
+            for (int i = 0; i < numberOfPrefabsToCreate; i++) {
+                Vector3 position;
+                bool validPosition;
+
+                do {
+                    validPosition = true;
+                    float x = UnityEngine.Random.Range(-mapSize / 2 + safeZone, mapSize / 2 - safeZone);
+                    float z = UnityEngine.Random.Range(-mapSize / 2 + safeZone, mapSize / 2 - safeZone);
+                    position = new Vector3(x, 0, z);
+
+                    if (IsTooCloseToOtherPrefabs(position, prefabPositions, safeZone)) {
+                        validPosition = false;
+                        continue;
+                    }
+
+                    prefabPositions.Add(position); // Stocker la position globale
+                    Instantiate(prefab, position, Quaternion.identity);
+                } while (!validPosition);
+            }
+        }
+    }
+
+    bool IsTooCloseToOtherPrefabs(Vector3 position, List<Vector3> placedPrefabs, float minDistance) {
+        foreach (var otherPos in placedPrefabs) {
+            if (Vector3.Distance(position, otherPos) < minDistance) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool IsSpecialPrefabPosition(Vector2 position) {
+        Vector3[] cornerPositions = {
+            new Vector3(-715, 0, -730),
+            new Vector3(-715, 0, 730),
+            new Vector3(715, 0, -730),
+            new Vector3(715, 0, 730)
+        };
+
+        foreach (Vector3 cornerPos in cornerPositions) {
+            if (Vector2.Distance(new Vector2(cornerPos.x, cornerPos.z), position) < safeZone) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     void UpdateVisibleChunk() {    
         int centralChunkCoordX = Mathf.RoundToInt(viewerPosition.x / chunkSize);
@@ -126,18 +191,28 @@ public class Endless : MonoBehaviour {
             }
             _generator.RequestMapData(position, OnMapDataReceived);
         }
+
+        bool IsPositionInChunk(Vector3 localPosition) {
+            // Vérifier si la position est dans le chunk
+            return bounds.Contains(new Vector3(localPosition.x, 0, localPosition.z));
+        }
+
         void OnMapDataReceived(MapData mapData) {
             this.mapdata = mapData;
             mapDataReceived = true;
+
             if (IsSpecialPosition(position)) {
-                AdjustChunkHeight(this.mapdata.heightMap);
-                RecalculateColorMap();
+                Debug.Log(position);
+                AdjustChunkHeight(this.mapdata.heightMap, 0.5f);
             }
+            RecalculateColorMap();
+
             Texture2D texture = TextureGenerator.TextureFromColorMap(mapData.colorMap, generator.mapChunckSize, generator.mapChunckSize);
             meshRenderer.material.mainTexture = texture;
             UpdateMesh();
             UpdateChunk();
-        }
+    }
+
         public void UpdateChunk() {
             if (mapDataReceived) {
                 float viewerDstFromNearestEdge =  Mathf.Sqrt(bounds.SqrDistance(viewerPosition));
@@ -196,8 +271,6 @@ public class Endless : MonoBehaviour {
             });
         }
 
-
-
         private bool IsSpecialPosition(Vector2 position) {
             foreach (var specialPosition in specialPositions) {
                 if (position == specialPosition) {
@@ -206,9 +279,8 @@ public class Endless : MonoBehaviour {
             }
             return false;
         }
-        private void AdjustChunkHeight(float[,] heightMap) {
+        private void AdjustChunkHeight(float[,] heightMap, float newHeight) {
             int flatZoneSize = 90;
-            float newHeight = 0.4f;
 
             int centerX = heightMap.GetLength(0) / 2;
             int centerY = heightMap.GetLength(1) / 2;

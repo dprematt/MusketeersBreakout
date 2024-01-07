@@ -5,10 +5,10 @@ using System.Threading;
 using System.Collections.Generic;
 public class generator : MonoBehaviour
 {
-
     public GameObject extractionZonePrefab;
 
     public enum DrawMode {map, colorMap, mesh, fallOfMap}
+
     public DrawMode drawMode;
     public const int mapChunckSize = 241;
     [Range(0,6)]
@@ -30,10 +30,14 @@ public class generator : MonoBehaviour
     public AnimationCurve meshHeightCurve;
     float[,] fallOfMap;
 
+    private bool prefabsPlaced = false;
+    public GameObject[] prefabTypes;
+
     public TerrainType[] regions;
 
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<meshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<meshData>>();
+    public MapData CurrentMapData { get; private set; }
 
     private void Start() {
         PlaceExtractionZones();
@@ -59,6 +63,7 @@ public class generator : MonoBehaviour
             zoneInstance.transform.position = newPosition; 
         }
     }
+
     public void DrawMap() {
         MapData mapdata = SkeletonGenerator(Vector2.zero);
         DisplaySkeleton display = FindObjectOfType<DisplaySkeleton>();
@@ -77,7 +82,7 @@ public class generator : MonoBehaviour
     }
     
     MapData SkeletonGenerator(Vector2 center) {
-        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize + 2, mapChunckSize + 2, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode); 
+        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode); 
 
         Color[] colorMap = new Color[mapChunckSize * mapChunckSize];
 
@@ -101,59 +106,9 @@ public class generator : MonoBehaviour
                 }
             }
         }
-        return new MapData(map, colorMap);
+        CurrentMapData = new MapData(map, colorMap);
+        return CurrentMapData;
     }
-
-Vector3[] GetSpawnCoords(float[,] map)
-{
-    List<Vector3> spawnCoords = new List<Vector3>();
-
-    for (int i = 0; i < map.GetLength(0); i++)
-    {
-        for (int j = 0; j < map.GetLength(1); j++)
-        {
-            float height = map[j, i];
-
-            if (height >= 0 && height <= 0.5f && enoughSpace(spawnCoords, i, j, 100))
-            {
-                Vector3 coord = new Vector3(i, j, height);
-                spawnCoords.Add(coord);
-
-                if (spawnCoords.Count == 8)
-                {
-                    return spawnCoords.ToArray();
-                }
-            }
-        }
-    }
-
-    return spawnCoords.ToArray();
-}
-
-    bool enoughSpace(List<Vector3> coords, int x, int y, float distanceMinimale)
-    {
-        foreach (Vector3 existingCoord in coords)
-        {  
-            float distance = distanceEuclidienne(existingCoord.x, existingCoord.y, x, y);
-
-            if (distance < distanceMinimale)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    float distanceEuclidienne(float x1, float y1, float x2, float y2)
-    {
-        float dx = x1 - x2;
-        float dy = y1 - y2;
-
-        return (float)Math.Sqrt(dx * dx + dy * dy);
-    }
-
-
     public void RequestMapData(Vector2  center, Action<MapData> callback) {
         ThreadStart threadStart = delegate {
             MapDataThread(center, callback);
@@ -198,6 +153,7 @@ Vector3[] GetSpawnCoords(float[,] map)
             }
         }
     }
+
     private void OnValidate() {
         if(lacunarity < 1)
         {
@@ -217,6 +173,12 @@ Vector3[] GetSpawnCoords(float[,] map)
             this.parameter = parameter;
         }
     }
+}
+
+[System.Serializable]
+public struct Biome {
+    public GameObject prefab;
+    public string name;
 }
 
 [System.Serializable]
