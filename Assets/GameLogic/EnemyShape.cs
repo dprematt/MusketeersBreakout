@@ -12,7 +12,6 @@ using UnityEngine;
     public Inventory inventory;
     public bool WeaponChoice = false;
 
-
     public Transform[] points;
     int current;
     private void Start()
@@ -99,7 +98,7 @@ using UnityEngine;
 
         if (health <= 0)
         {
-            PlayerMove player = GameObject.FindObjectOfType<PlayerMove>();
+            PlayerMovements player = GameObject.FindObjectOfType<PlayerMovements>();
             player.UpdateXp(10);
             GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
             var loot = Instantiate(LootPrefab, gameObject.transform.position, gameObject.transform.rotation);
