@@ -13,6 +13,7 @@ using UnityEngine;
     public Inventory inventory;
     public bool WeaponChoice = false;
     public Animator anim;
+    public ParticleSystem particulesDeSang;
 
 
     public Transform[] points;
@@ -43,6 +44,8 @@ using UnityEngine;
         inventory = new Inventory(9, items, false);
 
         current = 0;
+
+        //InvokeRepeating("TakeDamagePeriodically", 0f, 3f);
     }
 
     void Update() 
@@ -75,7 +78,7 @@ using UnityEngine;
             }
             else 
             {
-                current =(current+1)%points.Length;
+                current = (current+1)%points.Length;
             }
         }
     }
@@ -88,6 +91,7 @@ using UnityEngine;
     public int TakeDamage(float damageAmount)
     {
         health -= damageAmount;
+        PlayBloodParticles(transform.position);
 
         if (health <= 0)
         {
@@ -97,8 +101,26 @@ using UnityEngine;
             var loot = Instantiate(LootPrefab, target.position, target.rotation);
             loot.GetComponent<Inventory>().Initialize(9, inventory.mItems, true);
             Destroy(gameObject);
+
             return 1;
         }
         return 0;
+    }
+
+    void PlayBloodParticles(Vector3 position)
+    {
+        //particulesDeSang.transform.position = position;
+
+        Debug.Log("PLAY BLOOD");
+        particulesDeSang.Play();
+    }
+
+    void TakeDamagePeriodically()
+    {
+        // Ajoutez ici la logique pour infliger des dégâts toutes les 3 secondes.
+        // Par exemple, vous pouvez appeler TakeDamage avec un montant spécifique.
+
+        float damageAmount = 1f; // Montant de dégâts à infliger toutes les 3 secondes
+        TakeDamage(damageAmount);
     }
 }

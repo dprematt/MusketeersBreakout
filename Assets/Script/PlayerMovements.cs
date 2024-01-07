@@ -135,6 +135,7 @@ public class PlayerMovements : MonoBehaviour
             newPos.z -= 1;
             cylinderTransform.localPosition = newPos;
         }
+
     }
 
     void MovePlayer()
