@@ -115,6 +115,8 @@ public class PlayerMove : MonoBehaviourPunCallbacks
         float moveSpeed = 3f;
         float acceleratedMoveSpeed = 10f;
         float rotationAngle = 90f;
+        Debug.Log("vitesse avant");
+        Debug.Log(moveSpeed);
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
@@ -129,13 +131,15 @@ public class PlayerMove : MonoBehaviourPunCallbacks
             cylinderTransform.Rotate(Vector3.up * -rotationAngle);
         }
 
-        /*if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.B))
         {
             Debug.Log("acccccccelere tmr");
             moveSpeed = 7f;
         } else {
             moveSpeed = 3f;
-        }*/
+        }
+        Debug.Log("vitesse apres");
+        Debug.Log(moveSpeed);
 
         Vector3 forward = cylinderTransform.forward;
         Vector3 right = cylinderTransform.right;
@@ -144,7 +148,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
         right.y = 0f;
 
         Vector3 desiredMoveDirection = forward * v + right * h;
-        bool accelerateKeyPressed = Input.GetKey(KeyCode.M);
+        bool accelerateKeyPressed = Input.GetKey(KeyCode.B);
         if (accelerateKeyPressed && !staminaFullUsed)
         {
             if (stamina > 0)
