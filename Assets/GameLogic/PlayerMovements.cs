@@ -7,7 +7,6 @@ using Photon.Realtime;
 
 public class PlayerMovements : MonoBehaviourPunCallbacks
 {
-    float playerHeight = 2f;
     public int xp;
     public int level;
     public Text levelText2D;
@@ -23,7 +22,7 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
     [SerializeField] float airMultiplier = 0.4f;
 
     [Header("Jumping")]
-    public float jumpForce = 5f;
+    public float jumpForce = 6f;
 
     [Header("Keybinds")]
     [SerializeField] KeyCode jumpKey = KeyCode.Space;
@@ -154,24 +153,19 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight / 2 + 0.1f);
+        Vector3 temp = transform.position;
+        temp.y += 0.1f;
+        isGrounded = Physics.Raycast(temp, Vector3.down, 0.2f);
+        Debug.DrawRay(temp, Vector3.down * 0.1f, Color.red);
 
         MyInput();
         ControlDrag();
 
         CheckXp();
+
         if (Input.GetKeyDown(jumpKey) && isGrounded)
         {
             Jump();
-        }
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            //Debug.Log("acccccccelere tmr");
-            moveSpeed = 15f;
-        }
-        else
-        {
-            moveSpeed = 6f;
         }
         //Debug.Log("vitesse apres");
         //Debug.Log(moveSpeed);
@@ -183,13 +177,12 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         //right.y = 0f;
 
         //Vector3 desiredMoveDirection = forward * v + right * h;
-        bool accelerateKeyPressed = Input.GetKey(KeyCode.B);
-        if (accelerateKeyPressed && !staminaFullUsed)
+        if (Input.GetKey(KeyCode.LeftShift) && !staminaFullUsed)
         {
             if (stamina > 0)
             {
                 stamina -= 30 * Time.deltaTime;
-                moveSpeed = 15f;
+                moveSpeed = 8f;
             }
             else
             {
@@ -235,7 +228,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         else
             anim.SetBool("isWalking", false);
 
-        // Utilisez la direction de la cam�ra pour le d�placement
         Vector3 cameraForward = Camera.main.transform.forward;
         Vector3 cameraRight = Camera.main.transform.right;
 
@@ -247,7 +239,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
         moveDirection = cameraForward * verticalMovement + cameraRight * horizontalMovement;
 
-        // Calculez la rotation de l'objet "CharacterModel" pour qu'il fasse face � la direction de d�placement
         if (moveDirection != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
@@ -276,7 +267,7 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
     {
         MovePlayer();
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && isGrounded)
+        if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
         {
             float newHeight = originalHeight * heightModifier;
             newHeight = Mathf.Max(newHeight, minHeight);
@@ -284,7 +275,7 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
             newScale.y = newHeight;
             cylinderTransform.localScale = newScale;
         }
-        if (Input.GetKeyUp(KeyCode.LeftShift) && isGrounded)
+        else
         {
             float newHeight = originalHeight;
             Vector3 newScale = cylinderTransform.localScale;

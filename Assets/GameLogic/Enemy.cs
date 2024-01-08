@@ -4,13 +4,16 @@ using UnityEngine;
 
  public class Enemy : MonoBehaviour
 {
-     [SerializeField] float health, maxHealth = 10f;
-    public float speed = 1f;
-    public float minDist = 3f;
-    public float maxDist = 10f;
+    [SerializeField] float health, maxHealth = 10f;
+    public float speed = 5f;
+    public float minDist = 2f;
     public Transform target;
     public Inventory inventory;
     public bool WeaponChoice = false;
+    public Animator anim;
+    public ParticleSystem bloodParticles;
+
+    public float detectionRadius = 10f;
 
 
     public Transform[] points;
@@ -19,12 +22,6 @@ using UnityEngine;
     {
         health = maxHealth;
 
-        if (target == null) {
-            if (GameObject.FindWithTag("Player")!=null)
-            {
-                target = GameObject.FindWithTag("Player").GetComponent<Transform>();
-            }
-        }
         List<IInventoryItem> items = new List<IInventoryItem>();
         Halberd halberd = new Halberd();
         halberd._Image = Resources.Load("Sprites/halberd") as Sprite;
@@ -49,23 +46,22 @@ using UnityEngine;
     {
         if (target == null)
         {
-            if (GameObject.FindWithTag("Player") != null)
-            {
-                target = GameObject.FindWithTag("Player").GetComponent<Transform>();
-            }
-            else
-            {
-                return;
-            }
+            anim.SetBool("isWalking", false);
+            return;
         }
 
-        transform.LookAt(target);
-        float distance = Vector3.Distance(transform.position,target.position);
+        float dist = Vector3.Distance(transform.position, target.position);
 
-        if (distance > minDist && distance < maxDist)	
+        if (dist <= detectionRadius && dist >= minDist)
         {
+            anim.SetBool("isWalking", true);
+            transform.LookAt(target);
             transform.position += transform.forward * speed * Time.deltaTime;
-            if (WeaponChoice == false)
+        }
+        else
+        {
+            anim.SetBool("isWalking", false);
+            /*if (WeaponChoice == false)
             {
                 inventory.mItems[0].Attack();
                 WeaponChoice = true;
@@ -74,19 +70,28 @@ using UnityEngine;
             {
                 inventory.mItems[inventory.mItems.Count - 1].Attack();
                 WeaponChoice = false;
-            }
-            //inventory.mItems[0].Attack();
+            }*/
         }
     }
-
-    public void SetTarget(Transform newTarget)
+    private void OnTriggerEnter(Collider other)
     {
-        target = newTarget;
+        if (other.CompareTag("Player"))
+        {
+            target = other.transform;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            target = null;
+        }
     }
 
     public int TakeDamage(float damageAmount)
     {
         health -= damageAmount;
+        bloodParticles.Play();
 
         if (health <= 0)
         {

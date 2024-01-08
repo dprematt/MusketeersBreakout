@@ -7,13 +7,14 @@ using UnityEngine;
     [SerializeField]
     float health, maxHealth = 10f;
     public float speed = 5f;
-    public float minDist = 3f;
-    public float maxDist = 10f;
+    public float minDist = 2f;
     public Transform target;
     public Inventory inventory;
     public bool WeaponChoice = false;
     public Animator anim;
-    public ParticleSystem particulesDeSang;
+    public ParticleSystem bloodParticles;
+
+    public float detectionRadius = 10f;
 
 
     public Transform[] points;
@@ -22,12 +23,6 @@ using UnityEngine;
     {
         health = maxHealth;
 
-        if (target == null) {
-            if (GameObject.FindWithTag("Player")!=null)
-            {
-                target = GameObject.FindWithTag("Player").GetComponent<Transform>();
-            }
-        }
         List<IInventoryItem> items = new List<IInventoryItem>();
         Halberd halberd = new Halberd();
         halberd._Image = Resources.Load("Sprites/halberd") as Sprite;
@@ -44,22 +39,36 @@ using UnityEngine;
         inventory = new Inventory(9, items, false);
 
         current = 0;
-
-        InvokeRepeating("TakeDamagePeriodically", 0f, 3f);
     }
 
     void Update() 
     {
         if (target == null)
+        {
+            if(transform.position != points[current].position)
+            {
+                anim.SetBool("isWalking", true);
+                transform.position = Vector3.MoveTowards(transform.position, points[current].position, speed * Time.deltaTime);
+            }
+            else
+            {
+                anim.SetBool("isWalking", false);
+                current = (current + 1) % points.Length;
+            }
             return;
-        
-        transform.LookAt(target);
-        float distance = Vector3.Distance(transform.position,target.position);
+        }
 
-        if (distance > minDist && distance < maxDist)	
+        float dist = Vector3.Distance(transform.position, target.position);
+
+        if (dist <= detectionRadius && dist >= minDist)
         {
             anim.SetBool("isWalking", true);
+            transform.LookAt(target);
             transform.position += transform.forward * speed * Time.deltaTime;
+        }
+        else
+        {
+            anim.SetBool("isWalking", false);
             /*if (WeaponChoice == false)
             {
                 inventory.mItems[0].Attack();
@@ -70,28 +79,29 @@ using UnityEngine;
                 inventory.mItems[inventory.mItems.Count - 1].Attack();
                 WeaponChoice = false;
             }*/
-        } else {
-            anim.SetBool("isWalking", false);
-            if (transform.position != points[current].position)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, points[current].position, speed * Time.deltaTime);
-            }
-            else 
-            {
-                current = (current+1)%points.Length;
-            }
         }
     }
 
-    public void SetTarget(Transform newTarget)
+    private void OnTriggerEnter(Collider other)
     {
-        target = newTarget;
+        if (other.CompareTag("Player"))
+        {
+            target = other.transform;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            target = null;
+        }
     }
 
     public int TakeDamage(float damageAmount)
     {
         health -= damageAmount;
-        PlayBloodParticles(transform.position);
+        bloodParticles.Play();
 
         if (health <= 0)
         {
@@ -105,17 +115,5 @@ using UnityEngine;
             return 1;
         }
         return 0;
-    }
-
-    void PlayBloodParticles(Vector3 position)
-    {
-        Debug.Log("PLAY BLOOD");
-        particulesDeSang.Play();
-    }
-
-    void TakeDamagePeriodically()
-    {
-        float damageAmount = 1f;
-        TakeDamage(damageAmount);
     }
 }

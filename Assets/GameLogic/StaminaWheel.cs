@@ -16,7 +16,7 @@ public class StaminaWheel : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKey(KeyCode.B) && !staminaFullUsed)
+        if (Input.GetKey(KeyCode.LeftShift) && !staminaFullUsed)
         {
             if (stamina > 0)
             {
