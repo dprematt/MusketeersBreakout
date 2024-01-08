@@ -51,57 +51,36 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(IInventoryItem item)
     {
-        // Debug.Log("in add item");
         Debug.Log(mItems.Count);
         if (mItems.Count < SLOTS)
         {
-            // Debug.Log("in add item 2");
-            //Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
-            //if (collider.enabled)
-            //{
-            //Debug.Log("in inventory add item -> collider found!");
-            //  collider.enabled = false;
-            //Debug.Log(item.Name);
             mItems.Add(item);
             item.OnPickup();
-
-            //if (ItemAdded != null)
-            //{
-            //Debug.Log("Event created");
             ItemAdded(this, new InventoryEventArgs(item));
-            //}
-            //}
         }
     }
 
     public void Update()
     {
-        if (loot == true)
-        {
-            //Debug.Log("Loot update & count !");
-            //Debug.Log("is a loot = " + loot);
-            //Debug.Log("how many slots = " + SLOTS);
-            //Debug.Log("how many items = " + mItems.Count);
-        }
         if (mItems.Count == 0 && loot == true)
         {
-            //Debug.Log("Delete loot");
             Destroy(gameObject);
         }
     }
 
     public void DisplayLoot(Inventory playerInventory)
     {
-        //Debug.Log("in display loot");
+        Debug.Log("in display loot");
         Debug.Log(mItems.Count);
         int free_slots = 9 - playerInventory.mItems.Count;
         foreach (IInventoryItem lootItem in mItems) 
         {
             if (free_slots == 0)
                 return;
-            //Debug.Log(lootItem.Name);
+            Debug.Log(lootItem.Name);
             if (lootItem.Name == "Halberd")
             {
+                Debug.Log("halberd creation");
                 GameObject go = Resources.Load<GameObject>("Prefabs/Halberd");
                 var halberd = Instantiate(go, playerInventory.gameObject.transform.position,
                     playerInventory.gameObject.transform.rotation);
@@ -111,7 +90,7 @@ public class Inventory : MonoBehaviour
             }
             else if (lootItem.Name == "Sword")
             {
-                //Debug.Log("sword creation");
+                Debug.Log("sword creation");
                 GameObject go = Resources.Load<GameObject>("Prefabs/Sword");
                 var sword = Instantiate(go, playerInventory.gameObject.transform.position,
                     playerInventory.gameObject.transform.rotation);
@@ -119,7 +98,7 @@ public class Inventory : MonoBehaviour
                 IInventoryItem newSword = go.GetComponent<IInventoryItem>();
                 playerInventory.AddItem(newSword);
             }
-            //Debug.Log("item added");
+            Debug.Log("item added");
             mItems.Remove(lootItem);
             Debug.Log(mItems.Count);
             if (mItems.Count == 0)

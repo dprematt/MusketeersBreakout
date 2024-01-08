@@ -96,17 +96,18 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         return xp;
     }
 
-    void OnTriggerEnter(Collider col)
-    {//here
-        Debug.Log("COLLISION WITH PLAYER !");
-        Debug.Log(col.gameObject.name);
-        Inventory loot = col.GetComponent<Inventory>();
+    void OnCollisionEnter(Collision col)
+    {
+        Inventory loot = col.gameObject.GetComponent<Inventory>();
         if (loot != null)
         {
-            Debug.Log("in if 2 inventory");
             loot.DisplayLoot(inventory);
             return;
         }
+    }
+    void OnTriggerEnter(Collider col)
+    {
+        Inventory loot = col.GetComponent<Inventory>();
         IInventoryItem item = col.GetComponent<IInventoryItem>();
         if (item != null)
         {
@@ -135,7 +136,7 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         }
         else
         {
-            moveSpeed = 3f;
+            moveSpeed = 6f;
         }
         Debug.Log("vitesse apres");
         Debug.Log(moveSpeed);
