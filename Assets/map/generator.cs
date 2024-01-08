@@ -5,8 +5,10 @@ using System.Threading;
 using System.Collections.Generic;
 public class generator : MonoBehaviour
 {
+    public GameObject extractionZonePrefab;
 
-    public enum DrawMode {map, colorMap, mesh}
+    public enum DrawMode {map, colorMap, mesh, fallOfMap}
+
     public DrawMode drawMode;
     public const int mapChunckSize = 241;
     [Range(0,6)]
@@ -28,14 +30,42 @@ public class generator : MonoBehaviour
     public AnimationCurve meshHeightCurve;
     float[,] fallOfMap;
 
+    private bool prefabsPlaced = false;
+    public GameObject[] prefabTypes;
+
     public TerrainType[] regions;
 
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<meshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<meshData>>();
+    public MapData CurrentMapData { get; private set; }
+
+    private void Start() {
+        PlaceExtractionZones();
+    }
+
+    public void PlaceExtractionZones() {
+        int i = 1;
+        Vector3[] cornerPositions = {
+            new Vector3(-715, 0, -730),
+            new Vector3(-715, 0, 730),
+            new Vector3(715, 0, -730),
+            new Vector3(715, 0, 730)
+        };
+
+        foreach (Vector3 position in cornerPositions) {
+            GameObject zoneInstance = Instantiate(extractionZonePrefab, position, Quaternion.identity);
+            if (i % 2 != 0) {
+                zoneInstance.transform.Rotate(0.0f, 180.0f, 0.0f);
+            }
+            i += 1;
+            Vector3 newPosition = zoneInstance.transform.position;
+            newPosition.y = 2;
+            zoneInstance.transform.position = newPosition; 
+        }
+    }
 
     public void DrawMap() {
         MapData mapdata = SkeletonGenerator(Vector2.zero);
-
         DisplaySkeleton display = FindObjectOfType<DisplaySkeleton>();
         if (drawMode == DrawMode.map) {
 
@@ -46,8 +76,11 @@ public class generator : MonoBehaviour
             display.DrawTexture(TextureGenerator.TextureFromColorMap(mapdata.colorMap, mapChunckSize, mapChunckSize));
         } else if (drawMode == DrawMode.mesh) {
             display.DrawMesh(MeshGenerator.generateTerrainMesh(mapdata.heightMap, meshHeightMult, meshHeightCurve, levelOfDetail), TextureGenerator.TextureFromColorMap(mapdata.colorMap, mapChunckSize, mapChunckSize));
+        } else if (drawMode == DrawMode.fallOfMap) {
+            display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunckSize)));
         }
     }
+    
     MapData SkeletonGenerator(Vector2 center) {
         float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode); 
 
@@ -61,18 +94,21 @@ public class generator : MonoBehaviour
 
                 for (int k = 0; k < regions.Length; k++) {
 
-                    if (curHeight <= regions[k].height) {
+                    if (curHeight >= regions[k].height) {
 
                         colorMap[i * mapChunckSize + j]  = regions[k].colour;
+                        
+                    }
+                    else {
                         break;
                     }
 
                 }
             }
         }
-        return new MapData(map, colorMap);
+        CurrentMapData = new MapData(map, colorMap);
+        return CurrentMapData;
     }
-
     public void RequestMapData(Vector2  center, Action<MapData> callback) {
         ThreadStart threadStart = delegate {
             MapDataThread(center, callback);
@@ -117,6 +153,7 @@ public class generator : MonoBehaviour
             }
         }
     }
+
     private void OnValidate() {
         if(lacunarity < 1)
         {
@@ -136,6 +173,12 @@ public class generator : MonoBehaviour
             this.parameter = parameter;
         }
     }
+}
+
+[System.Serializable]
+public struct Biome {
+    public GameObject prefab;
+    public string name;
 }
 
 [System.Serializable]
