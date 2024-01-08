@@ -102,10 +102,11 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
     public int UpdateXp(int new_xp)
     {
+        xp += new_xp;
         XpProgressBar.fillAmount = (float)(xp / max_xp);
         Debug.Log((float)(xp / max_xp));
         xpText2D.text = "XP " + xp.ToString() + " / " + max_xp.ToString();
-        Debug.Log("XP = " + xp);
+        Debug.Log("testtttt XP = " + xp);
         return xp;
     }
 
