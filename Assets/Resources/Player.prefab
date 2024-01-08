@@ -4935,6 +4935,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xp: 0
+  level: 0
+  levelText2D: {fileID: 0}
+  xpText2D: {fileID: 0}
+  XpProgressBar: {fileID: 0}
+  health_up: 0
+  max_xp: 0
   Demo: 0
   moveSpeed: 6
   movementMultiplier: 10
@@ -4948,8 +4954,10 @@ MonoBehaviour:
   maxStamina: 100
   inventory: {fileID: 0}
   HUD: {fileID: 0}
+  moveDirection: {x: 0, y: 0, z: 0}
   heightModifier: 0.5
   minHeight: 0.5
+  cylinderTransform: {fileID: 0}
   rotationSpeed: 5
   characterModel: {fileID: 7801814207774365845}
   anim: {fileID: 4661507371320996336}
