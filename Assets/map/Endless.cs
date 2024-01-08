@@ -45,8 +45,15 @@ public class Endless : MonoBehaviour {
         PlaceRandomPrefabs(_generator.CurrentMapData.heightMap);
     }
     private void Update() {
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
+        GameObject player = GameObject.Find("Player(Clone)");
+        if (player != null) {
+            viewer = player.transform;
+            Debug.LogWarning("Player has been found");
 
+        } else {
+            Debug.LogWarning("Le GameObject 'Player(Clone)' n'a pas été trouvé.");
+        }
+        viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
     
         viewerPosition = new Vector2(
             Mathf.Clamp(viewerPosition.x, -550, 550),
