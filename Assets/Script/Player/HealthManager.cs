@@ -52,6 +52,12 @@ public class HealthManager : MonoBehaviourPunCallbacks
         Debug.Log("Damage Taken : " + Damage);
     }
 
+    public void HealthUp(int HealtAdd)
+    {
+        Debug.Log(HealtAdd);
+        Health_ += HealtAdd;
+    }
+
     private void FixedUpdate()
     {
         Health_Text_.text = Health_.ToString() + "HP";

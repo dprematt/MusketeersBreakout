@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
@@ -8,6 +9,12 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 {
     float playerHeight = 2f;
     public int xp;
+    public int level;
+    public Text levelText2D;
+    public Text xpText2D;
+    [SerializeField] private Image XpProgressBar;
+    public int health_up;
+    public int max_xp;
     public bool Demo = false;
 
     [Header("Movement")]
@@ -67,6 +74,9 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         rb.freezeRotation = true;
         health = maxHealth;
         xp = 0;
+        level = 1;
+        max_xp = 20;
+        health_up = 30;
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         inventory = player.GetComponent<Inventory>();
         Debug.Log(inventory);
@@ -92,8 +102,31 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
     public int UpdateXp(int new_xp)
     {
-        xp += new_xp;
+        XpProgressBar.fillAmount = (float)(xp / max_xp);
+        Debug.Log((float)(xp / max_xp));
+        xpText2D.text = "XP " + xp.ToString() + " / " + max_xp.ToString();
+        Debug.Log("XP = " + xp);
         return xp;
+    }
+
+    public void UpdateLevel()
+    {
+        level = level + 1;
+        xp = xp - max_xp;
+        HealthManager.HealthUp(health_up);
+        health_up = health_up + 5;
+        max_xp = max_xp + 10;
+        XpProgressBar.fillAmount = (float)(xp / max_xp);
+        xpText2D.text = "XP " + xp.ToString() + " / " + max_xp.ToString();
+        levelText2D.text = "LEVEL " + level.ToString();
+        Debug.Log(level);
+    }
+
+    public void CheckXp()
+    {
+        if (xp >= max_xp) {
+            UpdateLevel();
+        }
     }
 
     void OnCollisionEnter(Collision col)
@@ -125,21 +158,22 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         MyInput();
         ControlDrag();
 
+        CheckXp();
         if (Input.GetKeyDown(jumpKey) && isGrounded)
         {
             Jump();
         }
         if (Input.GetKeyDown(KeyCode.B))
         {
-            Debug.Log("acccccccelere tmr");
-            moveSpeed = 7f;
+            //Debug.Log("acccccccelere tmr");
+            moveSpeed = 15f;
         }
         else
         {
             moveSpeed = 6f;
         }
-        Debug.Log("vitesse apres");
-        Debug.Log(moveSpeed);
+        //Debug.Log("vitesse apres");
+        //Debug.Log(moveSpeed);
 
         //Vector3 forward = cylinderTransform.forward;
         //Vector3 right = cylinderTransform.right;
@@ -200,7 +234,7 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         else
             anim.SetBool("isWalking", false);
 
-        // Utilisez la direction de la caméra pour le déplacement
+        // Utilisez la direction de la camï¿½ra pour le dï¿½placement
         Vector3 cameraForward = Camera.main.transform.forward;
         Vector3 cameraRight = Camera.main.transform.right;
 
@@ -212,7 +246,7 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
         moveDirection = cameraForward * verticalMovement + cameraRight * horizontalMovement;
 
-        // Calculez la rotation de l'objet "CharacterModel" pour qu'il fasse face à la direction de déplacement
+        // Calculez la rotation de l'objet "CharacterModel" pour qu'il fasse face ï¿½ la direction de dï¿½placement
         if (moveDirection != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
