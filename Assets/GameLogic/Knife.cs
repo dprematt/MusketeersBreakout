@@ -8,7 +8,11 @@ public class Knife : Weapons
 {
     public Transform weaponSpawnPoint;
     public GameObject weaponPrefab;
+
     public Sprite _Image = null;
+
+    public AudioClip shootingSound;
+    private AudioSource audioSource;
 
     public override Sprite Image
     {
@@ -18,13 +22,16 @@ public class Knife : Weapons
     private void Start()
     {
         LifeTime = 10;
+        audioSource = GetComponent<AudioSource>();
     }
 
     public override void OnPickup()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
+        transform.parent = player.transform;
+        transform.localPosition = new Vector3(0.3f, 1f, 0.0f);
         weaponSpawnPoint = player.transform;
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
     public override string Name
     {
@@ -42,6 +49,8 @@ public class Knife : Weapons
 
     public override void Attack()
     {
+        audioSource.PlayOneShot(shootingSound);
+
         SpawnWeaponProx();
     }
     public void Update()

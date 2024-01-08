@@ -93,7 +93,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 846625759545779298}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -113,3 +113,4 @@ MonoBehaviour:
   weaponSpawnPoint: {fileID: 0}
   weaponPrefab: {fileID: 7661578362052809882, guid: da6be78ea175afe40b006cd9e8f15c28, type: 3}
   _Image: {fileID: 21300000, guid: 2f69d8ee810980b44945a30ca55d1eeb, type: 3}
+  shootingSound: {fileID: 8300000, guid: d47a3792053fce8449895856817d5cd3, type: 3}

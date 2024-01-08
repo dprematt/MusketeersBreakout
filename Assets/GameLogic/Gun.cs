@@ -11,6 +11,9 @@ public class Gun : Weapons
 
     public Sprite _Image = null;
 
+    public AudioClip shootingSound;
+    private AudioSource audioSource;
+
     public override Sprite Image
     {
         get { return _Image; }
@@ -18,13 +21,17 @@ public class Gun : Weapons
     private void Start()
     {
         LifeTime = 10;
+        audioSource = GetComponent<AudioSource>();
     }
     public override void OnPickup()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
+        transform.parent = player.transform;
+        transform.localPosition = new Vector3(0.3f, 1f, 0.0f);
         bulletSpawnPoint = player.transform;
+
         //gameObject.SetActive(false);
-        photonView.RPC("DisableObject", RpcTarget.AllBuffered);
+        //photonView.RPC("DisableObject", RpcTarget.AllBuffered);
     }
 
     [PunRPC]
@@ -40,6 +47,8 @@ public class Gun : Weapons
 
     public override void Attack()
     {
+        audioSource.PlayOneShot(shootingSound);
+
         SpawnBullet();
         Debug.Log("Attack");
     }

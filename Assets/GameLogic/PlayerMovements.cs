@@ -96,18 +96,18 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         return xp;
     }
 
-    void OnCollisionEnter(Collision col)
+    void OnTriggerEnter(Collider col)
     {//here
         Debug.Log("COLLISION WITH PLAYER !");
         Debug.Log(col.gameObject.name);
-        Inventory loot = col.collider.GetComponent<Inventory>();
+        Inventory loot = col.GetComponent<Inventory>();
         if (loot != null)
         {
             Debug.Log("in if 2 inventory");
             loot.DisplayLoot(inventory);
             return;
         }
-        IInventoryItem item = col.collider.GetComponent<IInventoryItem>();
+        IInventoryItem item = col.GetComponent<IInventoryItem>();
         if (item != null)
         {
             Debug.Log("item CATCH !");

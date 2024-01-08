@@ -115,6 +115,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1227652172285325768, guid: ac1e8113cfb984757a078f3596ce4212, type: 3}
   bulletSpeed: 20
   _Image: {fileID: 21300000, guid: 65bda2761b563c647af1682665ed138c, type: 3}
+  shootingSound: {fileID: 0}
 --- !u!114 &-2178777819777871309
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -21,7 +21,7 @@ public class RoomManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("PhotonManager found.");
+            Debug.Log("PhotonManager found.");
         }
     }
 

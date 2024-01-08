@@ -45,7 +45,7 @@ using UnityEngine;
 
         current = 0;
 
-        //InvokeRepeating("TakeDamagePeriodically", 0f, 3f);
+        InvokeRepeating("TakeDamagePeriodically", 0f, 3f);
     }
 
     void Update() 
@@ -109,18 +109,13 @@ using UnityEngine;
 
     void PlayBloodParticles(Vector3 position)
     {
-        //particulesDeSang.transform.position = position;
-
         Debug.Log("PLAY BLOOD");
         particulesDeSang.Play();
     }
 
     void TakeDamagePeriodically()
     {
-        // Ajoutez ici la logique pour infliger des dégâts toutes les 3 secondes.
-        // Par exemple, vous pouvez appeler TakeDamage avec un montant spécifique.
-
-        float damageAmount = 1f; // Montant de dégâts à infliger toutes les 3 secondes
+        float damageAmount = 1f;
         TakeDamage(damageAmount);
     }
 }

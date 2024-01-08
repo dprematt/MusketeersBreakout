@@ -8,11 +8,16 @@ public class CrossBow : Weapons
     public Transform bulletSpawnPoint;
     public GameObject bulletPrefab;
     public float bulletSpeed = 5;
+
     public Sprite _Image = null;
+
+    public AudioClip shootingSound;
+    private AudioSource audioSource;
 
     private void Start()
     {
         LifeTime = 10;
+        audioSource = GetComponent<AudioSource>();
     }
     public override Sprite Image
     {
@@ -22,9 +27,11 @@ public class CrossBow : Weapons
     public override void OnPickup()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
+        transform.parent = player.transform;
+        transform.localPosition = new Vector3(0.3f, 1f, 0.0f);
         bulletSpawnPoint = player.transform;
         //gameObject.SetActive(false);
-        photonView.RPC("DisableObject", RpcTarget.AllBuffered);
+        //photonView.RPC("DisableObject", RpcTarget.AllBuffered);
 
     }
 
@@ -55,6 +62,8 @@ public class CrossBow : Weapons
 
     public override void Attack()
     {
+        audioSource.PlayOneShot(shootingSound);
+
         SpawnBullet();
         Debug.Log("Attack");
     }

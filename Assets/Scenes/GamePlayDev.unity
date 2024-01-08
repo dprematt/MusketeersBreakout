@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -676,6 +676,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -627378441272665127, guid: bdd621ae8a04bd24aaabe1d81d2ee66c, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3088938849605491068, guid: bdd621ae8a04bd24aaabe1d81d2ee66c, type: 3}
+      propertyPath: BulletPrefab_
+      value: 
+      objectReference: {fileID: 1227652172285325768, guid: ac1e8113cfb984757a078f3596ce4212, type: 3}
+    - target: {fileID: 3088938849605491068, guid: bdd621ae8a04bd24aaabe1d81d2ee66c, type: 3}
+      propertyPath: shootingSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 193a774c690b8e6469b0f608f5a1916a, type: 3}
     - target: {fileID: 5149924044244270180, guid: bdd621ae8a04bd24aaabe1d81d2ee66c, type: 3}
       propertyPath: m_RootOrder
       value: 37
@@ -723,6 +735,10 @@ PrefabInstance:
     - target: {fileID: 5490983116922971870, guid: bdd621ae8a04bd24aaabe1d81d2ee66c, type: 3}
       propertyPath: m_Name
       value: Bow (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5794125601204235002, guid: bdd621ae8a04bd24aaabe1d81d2ee66c, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bdd621ae8a04bd24aaabe1d81d2ee66c, type: 3}
@@ -1635,6 +1651,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sword(1)
       objectReference: {fileID: 0}
+    - target: {fileID: 499002922093390632, guid: cc6e26147b439e142939d1bc16efa20d, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 650634646228962676, guid: cc6e26147b439e142939d1bc16efa20d, type: 3}
+      propertyPath: shootingSound
+      value: 
+      objectReference: {fileID: 8300000, guid: d47a3792053fce8449895856817d5cd3, type: 3}
     - target: {fileID: 731081942809833125, guid: cc6e26147b439e142939d1bc16efa20d, type: 3}
       propertyPath: m_RootOrder
       value: 45
@@ -1678,6 +1702,10 @@ PrefabInstance:
     - target: {fileID: 731081942809833125, guid: cc6e26147b439e142939d1bc16efa20d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8880215054961105050, guid: cc6e26147b439e142939d1bc16efa20d, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc6e26147b439e142939d1bc16efa20d, type: 3}
@@ -1857,6 +1885,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6934135527497437509, guid: 455be2d759bc1524d8f932ed1d58d68f, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2286815148343793146, guid: 455be2d759bc1524d8f932ed1d58d68f, type: 3}
+      propertyPath: shootingSound
+      value: 
+      objectReference: {fileID: 8300000, guid: d47a3792053fce8449895856817d5cd3, type: 3}
+    - target: {fileID: 3441826677568884472, guid: 455be2d759bc1524d8f932ed1d58d68f, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7378223783999177461, guid: 455be2d759bc1524d8f932ed1d58d68f, type: 3}
       propertyPath: m_Name
       value: Dagger (1)
@@ -2017,6 +2057,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6627990032062773393, guid: 71b83acdc503fd74fae9d2cafce410c6, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2926281476982849476, guid: 71b83acdc503fd74fae9d2cafce410c6, type: 3}
+      propertyPath: shootingSound
+      value: 
+      objectReference: {fileID: 8300000, guid: d47a3792053fce8449895856817d5cd3, type: 3}
     - target: {fileID: 8489869156156426121, guid: 71b83acdc503fd74fae9d2cafce410c6, type: 3}
       propertyPath: m_RootOrder
       value: 43
@@ -2059,6 +2107,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8489869156156426121, guid: 71b83acdc503fd74fae9d2cafce410c6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8920619137996990417, guid: 71b83acdc503fd74fae9d2cafce410c6, type: 3}
+      propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9122537649499774259, guid: 71b83acdc503fd74fae9d2cafce410c6, type: 3}
@@ -2132,6 +2184,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -877782006934686049, guid: 277c4895473bd9644ad1801505e09337, type: 3}
+      propertyPath: shootingSound
+      value: 
+      objectReference: {fileID: 8300000, guid: d47a3792053fce8449895856817d5cd3, type: 3}
+    - target: {fileID: 574895595838282936, guid: 277c4895473bd9644ad1801505e09337, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1792506817673130495, guid: 277c4895473bd9644ad1801505e09337, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.31
@@ -3387,6 +3447,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4134866046999465325, guid: 591889e335de55940abaa28713e9495c, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4134866046999465325, guid: 591889e335de55940abaa28713e9495c, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3692408956843321836, guid: 591889e335de55940abaa28713e9495c, type: 3}
+      propertyPath: shootingSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 94ff6c5c1969a3241af8ce537907fefb, type: 3}
     - target: {fileID: 6082017216327338335, guid: 591889e335de55940abaa28713e9495c, type: 3}
       propertyPath: m_Name
       value: Gun (1)
@@ -3435,35 +3507,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8834260518423199894, guid: 591889e335de55940abaa28713e9495c, type: 3}
+      propertyPath: sceneViewId
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 591889e335de55940abaa28713e9495c, type: 3}
---- !u!1 &833799060 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6082017216327338335, guid: 591889e335de55940abaa28713e9495c, type: 3}
-  m_PrefabInstance: {fileID: 833799059}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &833799061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 833799060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 7
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &850774253
 GameObject:
   m_ObjectHideFlags: 0
@@ -3743,6 +3792,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   bulletSpeed: 5
   _Image: {fileID: 0}
+  shootingSound: {fileID: 0}
 --- !u!1001 &967819368
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3750,6 +3800,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 296354038411139405, guid: dc6803508890bf744bec163cd8e59908, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3485079559888827547, guid: dc6803508890bf744bec163cd8e59908, type: 3}
       propertyPath: m_RootOrder
       value: 38
@@ -7386,6 +7440,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7127964700325228410, guid: 6e6718739a4a1364facb46f7c639bc15, type: 3}
+      propertyPath: shootingSound
+      value: 
+      objectReference: {fileID: 8300000, guid: d47a3792053fce8449895856817d5cd3, type: 3}
     - target: {fileID: 1196670818858099621, guid: 6e6718739a4a1364facb46f7c639bc15, type: 3}
       propertyPath: m_Name
       value: Spear (1)
@@ -7433,6 +7491,14 @@ PrefabInstance:
     - target: {fileID: 2004310090259937567, guid: 6e6718739a4a1364facb46f7c639bc15, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3313570106103421873, guid: 6e6718739a4a1364facb46f7c639bc15, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7498456967868199011, guid: 6e6718739a4a1364facb46f7c639bc15, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e6718739a4a1364facb46f7c639bc15, type: 3}

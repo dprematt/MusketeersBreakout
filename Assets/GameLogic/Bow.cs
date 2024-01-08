@@ -9,7 +9,11 @@ public class Bow : Weapons
     public Transform BulletSpawnPoint_;
     public GameObject BulletPrefab_;
     public float bulletSpeed = 10;
+
     public Sprite _Image = null;
+
+    public AudioClip shootingSound;
+    private AudioSource audioSource;
 
     public override Sprite Image
     {
@@ -19,14 +23,17 @@ public class Bow : Weapons
     private void Start()
     {
         LifeTime = 10;
+        audioSource = GetComponent<AudioSource>();
     }
 
     public override void OnPickup()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
+        transform.parent = player.transform;
+        transform.localPosition = new Vector3(0.3f, 1f, 0.0f);
         BulletSpawnPoint_ = player.transform;
         //Debug.Log("Bow onPickup");
-        photonView.RPC("DisableObject", RpcTarget.AllBuffered);
+        //photonView.RPC("DisableObject", RpcTarget.AllBuffered);
     }
 
     [PunRPC]
@@ -42,6 +49,8 @@ public class Bow : Weapons
 
     public override void Attack()
     {
+        audioSource.PlayOneShot(shootingSound);
+
         SpawnBullet();
         Debug.Log("Attack");
     }
