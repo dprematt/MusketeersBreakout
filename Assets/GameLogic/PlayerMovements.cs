@@ -44,14 +44,14 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
     bool isGrounded;
 
-    Vector3 moveDirection;
+    public Vector3 moveDirection;
 
     Rigidbody rb;
 
     private float originalHeight;
     public float heightModifier = 0.5f;
     public float minHeight = 0.5f;
-    private Transform cylinderTransform;
+    public Transform cylinderTransform;
 
     public float rotationSpeed = 50.0f;
 

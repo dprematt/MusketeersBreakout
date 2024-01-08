@@ -13,6 +13,7 @@ public class WeaponProx : MonoBehaviour
     public void Initialize(Transform spawnPoint, float range, float damage, bool type = false)
     {
         weaponSpawnPoint = spawnPoint;
+        weaponSpawnPoint.localPosition += new Vector3(0, 0, -1);
         Range = range;
         Damage = damage;
         gameObject.transform.localScale += new Vector3(0, 0, range);
@@ -23,7 +24,7 @@ public class WeaponProx : MonoBehaviour
     void OnCollisionEnter(Collision col)
     {
         Debug.Log("in weapon prox colision");
-        /*if (col.gameObject.TryGetComponent(out Enemy enemyComponent) && isEnnemy != true)
+        if (col.gameObject.TryGetComponent(out Enemy enemyComponent) && isEnnemy != true)
         {
             enemyComponent.TakeDamage(Damage);
             Destroy(gameObject);
@@ -37,8 +38,8 @@ public class WeaponProx : MonoBehaviour
         {
             enemyComponentShape.TakeDamage(Damage);
             Destroy(gameObject);
-        }*/
-        if (col.gameObject.TryGetComponent(out PlayerMove player))
+        }
+        if (col.gameObject.TryGetComponent(out PlayerMovements player))
         {
             player.TakeDamage(Damage);
             Destroy(gameObject);

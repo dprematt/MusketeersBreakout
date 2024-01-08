@@ -72,7 +72,7 @@ public class Bullet : MonoBehaviourPun
             enemyComponentCircle.TakeDamage(Damage);
             Destroy(gameObject);
         }
-        else if (col.gameObject.TryGetComponent(out PlayerMove playerComponent))
+        else if (col.gameObject.TryGetComponent(out PlayerMovements playerComponent))
         {
             playerComponent.TakeDamage(10);
             Debug.Log("Collide Call InflictDamage");

@@ -53,16 +53,31 @@ public class Gun : Weapons
         Debug.Log("Attack");
     }
 
+    bool IsLookingDownward(Quaternion characterRot, Vector3 forwardVector)
+    {
+        // Get the character's current rotation
+
+        // Get the forward vector of the character
+        forwardVector = characterRot * Vector3.forward;
+
+        // Check if the y-component of the forward vector is negative
+        return forwardVector.y < 0;
+    }
     public void SpawnBullet()
     {
         if (LifeTime > 0) {
-            var NewPos = bulletSpawnPoint.position;
-            NewPos.z += 1;
+            float offset = 1f;
+            PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
+            var NewPos = bulletSpawnPoint.position + pm.characterModel.rotation * pm.characterModel.forward * offset;
             NewPos.y += 1;
+            if (IsLookingDownward(pm.characterModel.rotation, pm.characterModel.forward)) ;
+            {
+                NewPos.z -= 1;
+            }
             Damage = 4;
-            var bullet = Instantiate(bulletPrefab, NewPos, bulletSpawnPoint.rotation);
-            bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
-            bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
+            var bullet = Instantiate(bulletPrefab, NewPos, pm.characterModel.rotation);
+            bullet.GetComponent<Rigidbody>().velocity = pm.characterModel.forward * bulletSpeed;
+            bullet.GetComponent<Bullet>().Initialize(pm.characterModel, Range, Damage);
         }
     }
     public void Update()
