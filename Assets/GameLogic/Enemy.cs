@@ -15,6 +15,7 @@ using UnityEngine;
 
     public float detectionRadius = 10f;
 
+    public float rotationSpeed = 5f;
 
     public Transform[] points;
     int current;
@@ -55,7 +56,12 @@ using UnityEngine;
         if (dist <= detectionRadius && dist >= minDist)
         {
             anim.SetBool("isWalking", true);
-            transform.LookAt(target);
+
+            Vector3 targetPosition = new Vector3(target.position.x, transform.position.y, target.position.z);
+
+            Quaternion targetRotation = Quaternion.LookRotation(targetPosition - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+
             transform.position += transform.forward * speed * Time.deltaTime;
         }
         else

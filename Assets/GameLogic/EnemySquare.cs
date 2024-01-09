@@ -16,6 +16,7 @@ using UnityEngine;
 
     public float detectionRadius = 10f;
 
+    public float rotationSpeed = 5f;
 
     public Transform[] points;
     int current;
@@ -45,14 +46,18 @@ using UnityEngine;
     {
         if (target == null)
         {
-            if(transform.position != points[current].position)
+            anim.SetBool("isWalking", true);
+            if (transform.position.x != points[current].position.x && transform.position.z != points[current].position.z)
             {
-                anim.SetBool("isWalking", true);
-                transform.position = Vector3.MoveTowards(transform.position, points[current].position, speed * Time.deltaTime);
+                Vector3 targetPosition = new Vector3(points[current].position.x, transform.position.y, points[current].position.z);
+
+                Quaternion targetRotation = Quaternion.LookRotation(targetPosition - transform.position);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
             }
             else
             {
-                anim.SetBool("isWalking", false);
                 current = (current + 1) % points.Length;
             }
             return;
@@ -63,7 +68,12 @@ using UnityEngine;
         if (dist <= detectionRadius && dist >= minDist)
         {
             anim.SetBool("isWalking", true);
-            transform.LookAt(target);
+
+            Vector3 targetPosition = new Vector3(target.position.x, transform.position.y, target.position.z);
+
+            Quaternion targetRotation = Quaternion.LookRotation(targetPosition - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+
             transform.position += transform.forward * speed * Time.deltaTime;
         }
         else
