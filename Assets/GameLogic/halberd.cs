@@ -12,7 +12,7 @@ public class Halberd : Weapons
     public Sprite _Image = null;
 
     public AudioClip shootingSound;
-    private AudioSource audioSource;
+    public AudioSource audioSource;
 
     public override Sprite Image
     {
@@ -44,11 +44,46 @@ public class Halberd : Weapons
     {
         get { return "Halberd"; }
     }
+
+    public void SpawnEnemyWeaponProx()
+    {
+        //float offset = 2.8f;
+        //GameObject pm = gameObject;
+        //Debug.Log(gameObject);
+
+        Debug.Log("ATTACK in enemy ! 4");
+        //audioSource.PlayOneShot(shootingSound);
+        // Use the forward vector to determine the spawn position
+        //var NewPos = weaponSpawnPoint.position + pm.transform.rotation * Vector3.forward * offset;
+        var NewPos = weaponSpawnPoint.position;
+        NewPos.y += 1.5f;
+        NewPos.z -= 1;
+        var halberd = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
+        Debug.Log("ATTACK in enemy ! 5");
+        if (IsPlayer == true)
+            halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4);
+        else
+        {
+            halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4, true);
+        }
+        Debug.Log("ATTACK in enemy ! 6");
+    }
     public void SpawnWeaponProx()
     {
         float offset = 2.8f;
-        PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
+        try
+        {
+            PlayerMovements pm1 = gameObject.GetComponentInParent<PlayerMovements>();
+        }
+        catch
+        {
+            Debug.Log("ATTACK in enemy ! 3");
+            SpawnEnemyWeaponProx();
+            return;
+        }
 
+        PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
+        Debug.Log("ATTACK in enemy ! 2");
         // Use the forward vector to determine the spawn position
         var NewPos = weaponSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
         NewPos.y += 1.5f;
@@ -64,7 +99,9 @@ public class Halberd : Weapons
 
     public override void Attack()
     {
-        audioSource.PlayOneShot(shootingSound);
+        Debug.Log("ATTACK in enemy ! 1");
+        if (shootingSound != null)
+            audioSource.PlayOneShot(shootingSound);
 
         SpawnWeaponProx();
     }

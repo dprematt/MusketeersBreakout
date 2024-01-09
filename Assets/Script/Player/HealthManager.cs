@@ -11,7 +11,7 @@ public class HealthManager : MonoBehaviourPunCallbacks
     float Health_ = 100;
     public Text Health_Text_;
 
-    public ParticleSystem bloodParticles;
+    //public ParticleSystem bloodParticles;
 
     private void Start()
     {
@@ -50,7 +50,7 @@ public class HealthManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void DamageInstance(int Damage)
     {
-        bloodParticles.Play();
+        //bloodParticles.Play();
         Health_ -= Damage;
         Debug.Log("Damage Taken : " + Damage);
     }

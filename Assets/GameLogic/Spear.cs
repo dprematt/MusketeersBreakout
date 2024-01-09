@@ -12,7 +12,7 @@ public class Spear : Weapons
     public Sprite _Image = null;
 
     public AudioClip shootingSound;
-    private AudioSource audioSource;
+    public AudioSource audioSource;
 
     public override Sprite Image
     {

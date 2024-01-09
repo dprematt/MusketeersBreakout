@@ -6,7 +6,7 @@ using UnityEngine;
 {
     [SerializeField] float health, maxHealth = 10f;
     public float speed = 5f;
-    public float minDist = 2f;
+    public float minDist = 3f;
     public Transform target;
     public Inventory inventory;
     public bool WeaponChoice = false;
@@ -30,12 +30,14 @@ using UnityEngine;
         halberd.weaponSpawnPoint = gameObject.transform;
         Debug.Log("is inventory still alive" + inventory);
         halberd.IsPlayer = false;
+        halberd.audioSource = GetComponent<AudioSource>();
         items.Add(halberd);
         Sword sword = new Sword();
         // sword._Image = Resources.Load("Sprites/sword") as Sprite;
         sword.weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
         sword.weaponSpawnPoint = gameObject.transform;
         sword.IsPlayer = false;
+        sword.audioSource = GetComponent<AudioSource>();
         items.Add(sword);
         inventory = new Inventory(9, items, false);
         Debug.Log("in start enemy weapons count = " + inventory.mItems.Count);
@@ -66,17 +68,20 @@ using UnityEngine;
         }
         else
         {
+            Debug.Log("ATTACK in enemy ! -1");
             anim.SetBool("isWalking", false);
-            /*if (WeaponChoice == false)
+            if (WeaponChoice == false)
             {
+                Debug.Log("ATTACK in enemy ! 0");
                 inventory.mItems[0].Attack();
                 WeaponChoice = true;
             }
             else
             {
+                Debug.Log("ATTACK in enemy ! 0Bis");
                 inventory.mItems[inventory.mItems.Count - 1].Attack();
                 WeaponChoice = false;
-            }*/
+            }
         }
     }
     private void OnTriggerEnter(Collider other)

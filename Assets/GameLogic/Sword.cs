@@ -9,7 +9,7 @@ public class Sword : Weapons
     public Sprite _Image = null;
 
     public AudioClip shootingSound;
-    private AudioSource audioSource;
+    public AudioSource audioSource;
 
     public override Sprite Image
     {
@@ -41,11 +41,39 @@ public class Sword : Weapons
     {
         get { return "Sword"; }
     }
+    public void SpawnEnemyWeaponProx()
+    {
+        //float offset = 2.8f;
+        //Enemy pm = gameObject.GetComponentInParent<Enemy>();
+
+        //audioSource.PlayOneShot(shootingSound);
+        // Use the forward vector to determine the spawn position
+        //var NewPos = weaponSpawnPoint.position + pm.transform.rotation * Vector3.forward * offset;
+        Vector3 NewPos = weaponSpawnPoint.position;
+        NewPos.y += 1.5f;
+        NewPos.z -= 1;
+        var halberd = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
+        if (IsPlayer == true)
+            halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4);
+        else
+        {
+            halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4, true);
+        }
+    }
     public void SpawnWeaponProx()
     {
         float offset = 2.2f;
+        try
+        {
+            PlayerMovements pm1 = gameObject.GetComponentInParent<PlayerMovements>();
+        }
+        catch
+        {
+            Debug.Log("ATTACK in enemy ! 3");
+            SpawnEnemyWeaponProx();
+            return;
+        }
         PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
-
         // Use the forward vector to determine the spawn position
         var NewPos = weaponSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
         NewPos.y += 1.5f;
@@ -56,7 +84,8 @@ public class Sword : Weapons
 
     public override void Attack()
     {
-        audioSource.PlayOneShot(shootingSound);
+        if (shootingSound != null)
+            audioSource.PlayOneShot(shootingSound);
         SpawnWeaponProx();
     }
     public void Update()

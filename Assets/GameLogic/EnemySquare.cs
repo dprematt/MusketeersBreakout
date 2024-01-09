@@ -7,7 +7,7 @@ using UnityEngine;
     [SerializeField]
     float health, maxHealth = 10f;
     public float speed = 5f;
-    public float minDist = 2f;
+    public float minDist = 3f;
     public Transform target;
     public Inventory inventory;
     public bool WeaponChoice = false;
@@ -30,12 +30,14 @@ using UnityEngine;
         halberd.weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
         halberd.weaponSpawnPoint = gameObject.transform;
         halberd.IsPlayer = false;
+        halberd.audioSource = GetComponent<AudioSource>();
         items.Add(halberd);
         Sword sword = new Sword();
         // sword._Image = Resources.Load("Sprites/sword") as Sprite;
         sword.weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
         sword.weaponSpawnPoint = gameObject.transform;
         sword.IsPlayer = false;
+        sword.audioSource = GetComponent<AudioSource>();
         items.Add(sword);
         inventory = new Inventory(9, items, false);
 
@@ -79,7 +81,7 @@ using UnityEngine;
         else
         {
             anim.SetBool("isWalking", false);
-            /*if (WeaponChoice == false)
+            if (WeaponChoice == false)
             {
                 inventory.mItems[0].Attack();
                 WeaponChoice = true;
@@ -88,7 +90,7 @@ using UnityEngine;
             {
                 inventory.mItems[inventory.mItems.Count - 1].Attack();
                 WeaponChoice = false;
-            }*/
+            }
         }
     }
 
