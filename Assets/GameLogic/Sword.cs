@@ -42,11 +42,15 @@ public class Sword : Weapons
         get { return "Sword"; }
     }
     public void SpawnWeaponProx()
-    { 
-        var NewPos = weaponSpawnPoint.position;
-        NewPos.z += 3/2;
-        NewPos.y += 1;
-        var sword = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
+    {
+        float offset = 2.2f;
+        PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
+
+        // Use the forward vector to determine the spawn position
+        var NewPos = weaponSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
+        NewPos.y += 1.5f;
+        NewPos.z -= 1;
+        var sword = Instantiate(weaponPrefab, NewPos, pm.characterModel.rotation);
         sword.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 3, 5);
     }
 

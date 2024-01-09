@@ -59,10 +59,14 @@ public class Bow : Weapons
     {
         if (LifeTime > 0)
         {
+            float offset = 1f;
+            PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
 
-            var NewPos = BulletSpawnPoint_.position;
-            NewPos.z += 1;
-            NewPos.y += 1;
+            // Use the forward vector to determine the spawn position
+            var NewPos = BulletSpawnPoint_.position + pm.characterModel.rotation * Vector3.forward * offset;
+            NewPos.y += 1.5f;
+            NewPos.z -= 1;
+            Damage = 4;
 
             GameObject Bullet = PhotonNetwork.Instantiate(BulletPrefab_.name, NewPos, Quaternion.identity);
             //Damage = 2;

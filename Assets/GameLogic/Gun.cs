@@ -68,13 +68,12 @@ public class Gun : Weapons
         if (LifeTime > 0) {
             float offset = 1f;
             PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
-            var NewPos = bulletSpawnPoint.position + pm.characterModel.rotation * pm.characterModel.forward * offset;
-            NewPos.y += 1;
-            if (IsLookingDownward(pm.characterModel.rotation, pm.characterModel.forward)) ;
-            {
-                NewPos.z -= 1;
-            }
-            Damage = 4;
+
+            // Use the forward vector to determine the spawn position
+            var NewPos = bulletSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
+            NewPos.y += 1.5f;
+            NewPos.z -= 1;
+            Damage = 6;
             var bullet = Instantiate(bulletPrefab, NewPos, pm.characterModel.rotation);
             bullet.GetComponent<Rigidbody>().velocity = pm.characterModel.forward * bulletSpeed;
             bullet.GetComponent<Bullet>().Initialize(pm.characterModel, Range, Damage);

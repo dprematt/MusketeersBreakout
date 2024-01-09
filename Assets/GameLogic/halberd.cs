@@ -46,10 +46,14 @@ public class Halberd : Weapons
     }
     public void SpawnWeaponProx()
     {
-        var NewPos = weaponSpawnPoint.position;
-        NewPos.z += 4 / 2;
-        NewPos.y += 1;
-        var halberd = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
+        float offset = 2.8f;
+        PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
+
+        // Use the forward vector to determine the spawn position
+        var NewPos = weaponSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
+        NewPos.y += 1.5f;
+        NewPos.z -= 1;
+        var halberd = Instantiate(weaponPrefab, NewPos, pm.characterModel.rotation);
         if (IsPlayer == true)
             halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4);
         else

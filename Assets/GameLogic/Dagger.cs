@@ -34,14 +34,32 @@ public class Dagger : Weapons
     {
         get { return "Dagger"; }
     }
+    bool IsLookingDownward(Quaternion characterRot, Vector3 forwardVector)
+    {
+        // Get the character's current rotation
+
+        // Get the forward vector of the character
+        forwardVector = characterRot * Vector3.forward;
+
+        // Check if the y-component of the forward vector is negative
+        return forwardVector.y < 0;
+    }
     public void SpawnWeaponProx()
-    { 
-        var NewPos = weaponSpawnPoint.position;
-        NewPos.z += 1/2;
-        NewPos.y += 1;
-        var dagger = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
+    {
+        float offset = 1.5f;
+        PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
+
+        // Use the forward vector to determine the spawn position
+        var NewPos = weaponSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
+        NewPos.y += 1.5f;
+        NewPos.z -= 1;
+
+        // Spawn the dagger directly in the direction the player is facing
+        var dagger = Instantiate(weaponPrefab, NewPos, pm.characterModel.rotation);
         dagger.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 1, 3);
     }
+
+
 
     public override void Attack()
     {

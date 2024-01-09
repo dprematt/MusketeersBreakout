@@ -50,12 +50,15 @@ public class Spear : Weapons
         //Debug.Log(Lifetime);
         if (LifeTime > 0)
         {
-            var NewPos = bulletSpawnPoint.position;
-            NewPos.z += 1;
-            NewPos.y += 1;
-            Damage = 5;
-            var bullet = Instantiate(bulletPrefab, NewPos, bulletSpawnPoint.rotation);
-            bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
+            float offset = 1f;
+            PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
+
+            // Use the forward vector to determine the spawn position
+            var NewPos = bulletSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
+            NewPos.y += 1.5f;
+            NewPos.z -= 1;
+            Damage = 3;
+            var bullet = Instantiate(bulletPrefab, NewPos, pm.characterModel.rotation);
             bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
         }
     }

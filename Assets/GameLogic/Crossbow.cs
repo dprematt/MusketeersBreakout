@@ -7,7 +7,7 @@ public class CrossBow : Weapons
 {
     public Transform bulletSpawnPoint;
     public GameObject bulletPrefab;
-    public float bulletSpeed = 5;
+    public float bulletSpeed = 7;
 
     public Sprite _Image = null;
 
@@ -47,14 +47,17 @@ public class CrossBow : Weapons
     }
     public void SpawnBullet()
     {
-        //Debug.Log(Lifetime);
         if (LifeTime > 0)
         {
-            var NewPos = bulletSpawnPoint.position;
-            NewPos.z += 1;
-            NewPos.y += 1;
-            Damage = 3;
-            var bullet = Instantiate(bulletPrefab, NewPos, bulletSpawnPoint.rotation);
+            float offset = 1f;
+            PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
+
+            // Use the forward vector to determine the spawn position
+            var NewPos = bulletSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
+            NewPos.y += 1.5f;
+            NewPos.z -= 1;
+            Damage = 5;
+            var bullet = Instantiate(bulletPrefab, NewPos, pm.characterModel.rotation);
             bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
             bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
         }
