@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
+    private Transform selectedSlot;
     void Start()
     {
         //gameObject.SetActive(false);
@@ -55,11 +56,57 @@ public class HUD : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*Transform inventoryPanel = transform.Find("Inventory");
-        foreach (Transform slot in inventoryPanel)
+        if (Input.GetKeyDown(KeyCode.L))
         {
-            Debug.Log("update item loop");
-            Button button = slot.GetChild(0).GetComponent<Button>();
-            button.onClick.AddListener()
-        */}
+            // Set the first slot as selected
+            SelectSlot(transform.Find("Inventory").GetChild(0));
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            SelectSlot(transform.Find("Inventory").GetChild(1));
+        }
+    }
+
+    void SelectSlot(Transform slot)
+    {
+        // Deselect the previously selected slot
+        if (selectedSlot != null)
+        {
+            DeselectSlot(selectedSlot);
+        }
+
+        // Select the new slot
+        selectedSlot = slot;
+        SelectBorder(selectedSlot.Find("Border"));
+        selectedSlot.GetChild(0).GetComponent<Button>().interactable = false;
+    }
+
+    void DeselectSlot(Transform slot)
+    {
+        // Deselect the slot
+        DeselectBorder(slot.Find("Border"));
+        slot.GetChild(0).GetComponent<Button>().interactable = true;
+    }
+
+    void SelectBorder(Transform border)
+    {
+        // Toggle the selected state of the Border
+        border.GetComponent<Image>().enabled = true;
+
+        // Manually invoke the onClick event of the button in the Border
+        Button button = border.GetComponent<Button>();
+        Debug.Log("button found");
+        Debug.Log(border);
+        Debug.Log(button);
+        button.onClick.Invoke();
+        // Add other selected visual changes as needed
+    }
+
+    void DeselectBorder(Transform border)
+    {
+        // Deselect the Border
+        border.GetComponent<Image>().enabled = false;
+
+        // Add other deselected visual changes as needed
+    }
 }
