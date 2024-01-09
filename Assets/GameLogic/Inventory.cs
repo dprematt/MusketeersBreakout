@@ -54,6 +54,16 @@ public class Inventory : MonoBehaviour
         Debug.Log(mItems.Count);
         if (mItems.Count < SLOTS)
         {
+            string name = item.Name;
+            foreach (IInventoryItem lootItem in mItems)
+            {
+                if (lootItem.Name == name)
+                {
+                    //Destroy(item);
+                    return;
+                }
+
+            }
             mItems.Add(item);
             item.OnPickup();
             ItemAdded(this, new InventoryEventArgs(item));
