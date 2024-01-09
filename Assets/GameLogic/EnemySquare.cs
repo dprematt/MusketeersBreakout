@@ -115,13 +115,21 @@ using UnityEngine;
 
         if (health <= 0)
         {
-            PlayerMovements player = GameObject.FindObjectOfType<PlayerMovements>();
-            //player.UpdateXp(10);
-            GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
+            GameObject player = GameObject.FindWithTag("Player");
+            PlayerMovements playerMov = player.GetComponent<PlayerMovements>();
+            playerMov.UpdateXp(10);
+            /*GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
+            if (target == null)
+            {
+                target = gameObject.transform;
+            }
+            if (inventory == null)
+            {
+                inventory = null;
+            }
             var loot = Instantiate(LootPrefab, target.position, target.rotation);
-            loot.GetComponent<Inventory>().Initialize(9, inventory.mItems, true);
+            loot.GetComponent<Inventory>().Initialize(9, inventory.mItems, true);*/
             Destroy(gameObject);
-
             return 1;
         }
         return 0;
