@@ -81,6 +81,12 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         Debug.Log(inventory);
         HUD = GameObject.FindGameObjectWithTag("InventoryHUD");
         HUD.GetComponent<HUD>().init();
+        GameObject xpProgressBarExperience = GameObject.FindWithTag("ExperienceBarDefaultTag");
+        GameObject xpProgressBarLevel = GameObject.FindWithTag("ExperienceBarLevelTag");
+        GameObject xpProgressBarXp = GameObject.FindWithTag("ExperienceBarXpTag");
+        XpProgressBar = xpProgressBarExperience.GetComponent<Image>();
+        levelText2D = xpProgressBarLevel.GetComponent<Text>();
+        xpText2D = xpProgressBarXp.GetComponent<Text>();
 
         cylinderTransform = transform;
         originalHeight = cylinderTransform.localScale.y;
