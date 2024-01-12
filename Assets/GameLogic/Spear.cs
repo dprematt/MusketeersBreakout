@@ -31,7 +31,7 @@ public class Spear : Weapons
         transform.localPosition = new Vector3(0.3f, 1f, 0.0f);
         bulletSpawnPoint = player.transform;
         //gameObject.SetActive(false);
-        //photonView.RPC("DisableObject", RpcTarget.AllBuffered);
+        photonView.RPC("DisableObject", RpcTarget.AllBuffered);
 
     }
 

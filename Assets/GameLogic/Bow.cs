@@ -33,7 +33,7 @@ public class Bow : Weapons
         transform.localPosition = new Vector3(0.3f, 1f, 0.0f);
         BulletSpawnPoint_ = player.transform;
         //Debug.Log("Bow onPickup");
-        //photonView.RPC("DisableObject", RpcTarget.AllBuffered);
+        photonView.RPC("DisableObject", RpcTarget.AllBuffered);
     }
 
     [PunRPC]

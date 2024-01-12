@@ -14,13 +14,13 @@ public class SpawnWeapons : MonoBehaviour
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            Vector3 position = new Vector3(-259, 9, 15);
+            Vector3 position = new Vector3(-244, 1, 12);
             PhotonNetwork.Instantiate(BowPrefab_.name, position, Quaternion.identity);
-            position = new Vector3(-254, 9, 15);
+            position = new Vector3(-252, 1, 12);
             PhotonNetwork.Instantiate(SpearPrefab_.name, position, Quaternion.identity);
-            position = new Vector3(-261, 9, 15);
+            position = new Vector3(-247, 1, 12);
             PhotonNetwork.Instantiate(GunPrefab_.name, position, Quaternion.identity);
-            position = new Vector3(-257, 9, 15);
+            position = new Vector3(-245, 1, 12);
             PhotonNetwork.Instantiate(CrossBowPrefab_.name, position, Quaternion.identity);
             //Bow_Object_.name = "Bow";
         }

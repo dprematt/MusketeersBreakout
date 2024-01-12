@@ -4,10 +4,10 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - BowPrefab_: {fileID: 1853749750495738176, guid: 80d1d07b6d784594f80cb6815d13f1c5, type: 3}
-  - CrossBowPrefab_: {fileID: 1356332979306255762, guid: 2828ddbb0f32890429e28b16f23511c7, type: 3}
-  - GunPrefab_: {fileID: 6879412021008930514, guid: 8814046a5ebaeda418cd7617acae08c5, type: 3}
-  - SpearPrefab_: {fileID: 954474420991633718, guid: bb82626df95c30a46a13533c390794be, type: 3}
+  - BowPrefab_: {instanceID: 0}
+  - CrossBowPrefab_: {instanceID: 0}
+  - GunPrefab_: {instanceID: 0}
+  - SpearPrefab_: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

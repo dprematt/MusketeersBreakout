@@ -31,7 +31,7 @@ public class Gun : Weapons
         bulletSpawnPoint = player.transform;
 
         //gameObject.SetActive(false);
-        //photonView.RPC("DisableObject", RpcTarget.AllBuffered);
+        photonView.RPC("DisableObject", RpcTarget.AllBuffered);
     }
 
     [PunRPC]
