@@ -11,7 +11,7 @@ public static class Skeleton
 
         float maxPossibleHeight = 0;
         System.Random random = new System.Random();
-        int seed = random.Next(1,1);
+        int seed = random.Next();
         System.Random prng = new System.Random(seed);
         float amplitude = 1;
         float frequency = 1;

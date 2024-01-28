@@ -20,7 +20,6 @@ public class generator : MonoBehaviour
     public float persistance;
     public float lacunarity;
     public bool autoUpdate;
-    public int seed;
     public Vector2 offSet;
 
     public bool useFallOf;
