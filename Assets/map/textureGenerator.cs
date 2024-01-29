@@ -27,7 +27,6 @@ public static class TextureGenerator{
                 colorMap[i * width + j] = Color.Lerp(Color.black, Color.white, heightMap[j, i]);
             }
         }
-        BiomesGenerator.GenerateBiomes(colorMap, width, height);
         return TextureFromColorMap(colorMap, width, height);
     }   
 
