@@ -3,20 +3,21 @@ using System.Collections;
 using System;
 using System.Threading;
 using System.Collections.Generic;
+
 public class generator : MonoBehaviour
 {
     public GameObject extractionZonePrefab;
 
-    public enum DrawMode {map, colorMap, mesh, fallOfMap}
+    public enum DrawMode { map, colorMap, mesh, fallOfMap }
 
     public DrawMode drawMode;
     public const int mapChunckSize = 241;
-    [Range(0,6)]
+    [Range(0, 6)]
     public int levelOfDetail;
     public Skeleton.NormalizeMode normalizeMode;
     public float scale;
     public int octaves;
-    [Range(0,1)]
+    [Range(0, 1)]
     public float persistance;
     public float lacunarity;
     public bool autoUpdate;
@@ -25,7 +26,6 @@ public class generator : MonoBehaviour
 
     public bool useFallOf;
 
-    
     public float meshHeightMult;
     public AnimationCurve meshHeightCurve;
     float[,] fallOfMap;
@@ -39,11 +39,13 @@ public class generator : MonoBehaviour
     Queue<MapThreadInfo<meshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<meshData>>();
     public MapData CurrentMapData { get; private set; }
 
-    private void Start() {
+    private void Start()
+    {
         PlaceExtractionZones();
     }
 
-    public void PlaceExtractionZones() {
+    public void PlaceExtractionZones()
+    {
         int i = 1;
         Vector3[] cornerPositions = {
             new Vector3(-715, 0, -730),
@@ -52,123 +54,147 @@ public class generator : MonoBehaviour
             new Vector3(715, 0, 730)
         };
 
-        foreach (Vector3 position in cornerPositions) {
+        foreach (Vector3 position in cornerPositions)
+        {
             GameObject zoneInstance = Instantiate(extractionZonePrefab, position, Quaternion.identity);
-            if (i % 2 != 0) {
+            if (i % 2 != 0)
+            {
                 zoneInstance.transform.Rotate(0.0f, 180.0f, 0.0f);
             }
             i += 1;
             Vector3 newPosition = zoneInstance.transform.position;
             newPosition.y = 2;
-            zoneInstance.transform.position = newPosition; 
+            zoneInstance.transform.position = newPosition;
         }
     }
 
-    public void DrawMap() {
+    public void DrawMap()
+    {
         MapData mapdata = SkeletonGenerator(Vector2.zero);
         DisplaySkeleton display = FindObjectOfType<DisplaySkeleton>();
-        if (drawMode == DrawMode.map) {
-
+        if (drawMode == DrawMode.map)
+        {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(mapdata.heightMap));
-
-        } else if (drawMode == DrawMode.colorMap) {
-
-            display.DrawTexture(TextureGenerator.TextureFromColorMap(mapdata.colorMap, mapChunckSize, mapChunckSize));
-        } else if (drawMode == DrawMode.mesh) {
-            display.DrawMesh(MeshGenerator.generateTerrainMesh(mapdata.heightMap, meshHeightMult, meshHeightCurve, levelOfDetail), TextureGenerator.TextureFromColorMap(mapdata.colorMap, mapChunckSize, mapChunckSize));
-        } else if (drawMode == DrawMode.fallOfMap) {
+        }
+        else if (drawMode == DrawMode.colorMap)
+        {
+            // Ne rien faire pour colorMap, car la couleur a été supprimée.
+        }
+        else if (drawMode == DrawMode.mesh)
+        {
+            meshData meshdata = MeshGenerator.generateTerrainMesh(mapdata.heightMap, meshHeightMult, meshHeightCurve, levelOfDetail);
+        }
+        else if (drawMode == DrawMode.fallOfMap)
+        {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunckSize)));
         }
     }
-    
-    MapData SkeletonGenerator(Vector2 center) {
-        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode); 
 
-        Color[] colorMap = new Color[mapChunckSize * mapChunckSize];
+    MapData SkeletonGenerator(Vector2 center)
+    {
+        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode);
 
-        for (int i = 0; i < mapChunckSize; i++) {
+        float[,] colorMap = new float[mapChunckSize, mapChunckSize];
 
-            for (int j = 0; j < mapChunckSize; j++) {
+        for (int i = 0; i < mapChunckSize; i++)
+        {
+            for (int j = 0; j < mapChunckSize; j++)
+            {
+                float curHeight = map[j, i];
 
-                float curHeight = map[j,i];
-
-                for (int k = 0; k < regions.Length; k++) {
-
-                    if (curHeight >= regions[k].height) {
-
-                        colorMap[i * mapChunckSize + j]  = regions[k].colour;
-                        
+                for (int k = 0; k < regions.Length; k++)
+                {
+                    if (curHeight >= regions[k].height)
+                    {
+                        colorMap[j, i] = curHeight;
                     }
-                    else {
+                    else
+                    {
                         break;
                     }
-
                 }
             }
         }
         CurrentMapData = new MapData(map, colorMap);
         return CurrentMapData;
     }
-    public void RequestMapData(Vector2  center, Action<MapData> callback) {
-        ThreadStart threadStart = delegate {
+
+    public void RequestMapData(Vector2 center, Action<MapData> callback)
+    {
+        ThreadStart threadStart = delegate
+        {
             MapDataThread(center, callback);
         };
         new Thread(threadStart).Start();
     }
 
-    void MapDataThread(Vector2 center, Action<MapData> callback) {
+    void MapDataThread(Vector2 center, Action<MapData> callback)
+    {
         MapData mapdata = SkeletonGenerator(center);
-        lock (mapDataThreadInfoQueue) {
+        lock (mapDataThreadInfoQueue)
+        {
             mapDataThreadInfoQueue.Enqueue(new MapThreadInfo<MapData>(callback, mapdata));
         }
     }
 
-    public void RequestMeshData(MapData mapdata, int lod, Action<meshData> callback) {
-        ThreadStart threadStart = delegate {
+    public void RequestMeshData(MapData mapdata, int lod, Action<meshData> callback)
+    {
+        ThreadStart threadStart = delegate
+        {
             MeshDataThread(mapdata, lod, callback);
         };
         new Thread(threadStart).Start();
     }
 
-    void MeshDataThread(MapData mapdata, int lod, Action<meshData> callback) {
+    void MeshDataThread(MapData mapdata, int lod, Action<meshData> callback)
+    {
         meshData meshdata = MeshGenerator.generateTerrainMesh(mapdata.heightMap, meshHeightMult, meshHeightCurve, lod);
-        lock (meshDataThreadInfoQueue) {
+        lock (meshDataThreadInfoQueue)
+        {
             meshDataThreadInfoQueue.Enqueue(new MapThreadInfo<meshData>(callback, meshdata));
         }
     }
 
-
-    private void Update() {
-        if (mapDataThreadInfoQueue.Count > 0) {
-            for (int i = 0; i < mapDataThreadInfoQueue.Count; i++) {
+    private void Update()
+    {
+        if (mapDataThreadInfoQueue.Count > 0)
+        {
+            for (int i = 0; i < mapDataThreadInfoQueue.Count; i++)
+            {
                 MapThreadInfo<MapData> threadInfo = mapDataThreadInfoQueue.Dequeue();
                 threadInfo.callback(threadInfo.parameter);
             }
         }
 
-        if (meshDataThreadInfoQueue.Count > 0) {
-            for (int i = 0; i < meshDataThreadInfoQueue.Count; i++) {
+        if (meshDataThreadInfoQueue.Count > 0)
+        {
+            for (int i = 0; i < meshDataThreadInfoQueue.Count; i++)
+            {
                 MapThreadInfo<meshData> threadInfo = meshDataThreadInfoQueue.Dequeue();
                 threadInfo.callback(threadInfo.parameter);
             }
         }
     }
 
-    private void OnValidate() {
-        if(lacunarity < 1)
+    private void OnValidate()
+    {
+        if (lacunarity < 1)
         {
             lacunarity = 1;
         }
-        if(octaves < 0)
+        if (octaves < 0)
         {
             octaves = 0;
         }
     }
-    struct MapThreadInfo<T> {
-        public  readonly Action<T> callback;
+
+    struct MapThreadInfo<T>
+    {
+        public readonly Action<T> callback;
         public readonly T parameter;
 
-        public MapThreadInfo(Action<T> callback, T parameter) {
+        public MapThreadInfo(Action<T> callback, T parameter)
+        {
             this.callback = callback;
             this.parameter = parameter;
         }
@@ -176,23 +202,19 @@ public class generator : MonoBehaviour
 }
 
 [System.Serializable]
-public struct Biome {
-    public GameObject prefab;
-    public string name;
-}
-
-[System.Serializable]
-public struct TerrainType {
+public struct TerrainType
+{
     public string name;
     public float height;
-    public Color colour;
 }
 
-public struct MapData {
+public struct MapData
+{
     public readonly float[,] heightMap;
-    public readonly Color[] colorMap;
+    public readonly float[,] colorMap;
 
-    public MapData (float[,] heightMap, Color[] colorMap) {
+    public MapData(float[,] heightMap, float[,] colorMap)
+    {
         this.heightMap = heightMap;
         this.colorMap = colorMap;
     }

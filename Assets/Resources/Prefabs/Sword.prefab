@@ -114,3 +114,4 @@ MonoBehaviour:
   weaponPrefab: {fileID: 7661578362052809882, guid: da6be78ea175afe40b006cd9e8f15c28, type: 3}
   _Image: {fileID: 21300000, guid: 2f69d8ee810980b44945a30ca55d1eeb, type: 3}
   shootingSound: {fileID: 8300000, guid: d47a3792053fce8449895856817d5cd3, type: 3}
+  audioSource: {fileID: 0}

@@ -28,15 +28,34 @@ public class Sword : Weapons
     {
         LifeTime = 10;
         audioSource = GetComponent<AudioSource>();
+
     }
     public override void OnPickup()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        weaponSpawnPoint = player.transform;
-        transform.localPosition = new Vector3(0.3f, 1f, 0.0f);
-        transform.parent = player.transform;
+        Transform spawnInHand = transform.Find("spawnInHand");
+        Transform hand = FindDeepChild(player.transform, "jointItemR");
+
+        transform.parent = hand;
+        transform.localPosition = new Vector3(0.02f, 0.15f, 0);
+        transform.localRotation = Quaternion.Euler(90f, 90f, 0);
         //gameObject.SetActive(false);
     }
+
+    Transform FindDeepChild(Transform parent, string nom)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == nom)
+                return child;
+
+            Transform result = FindDeepChild(child, nom);
+            if (result != null)
+                return result;
+        }
+        return null;
+    }
+
     public override string Name
     {
         get { return "Sword"; }

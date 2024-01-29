@@ -5275,6 +5275,7 @@ MonoBehaviour:
   rotationSpeed: 5
   characterModel: {fileID: 7801814207774365845}
   anim: {fileID: 4661507371320996336}
+  isAttacking: 0
 --- !u!114 &3107699292531397568
 MonoBehaviour:
   m_ObjectHideFlags: 0

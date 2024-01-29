@@ -7,17 +7,15 @@ public class DisplaySkeleton : MonoBehaviour
     public Renderer textureRenderer;
     public MeshFilter meshFilter;
     public MeshRenderer meshRenderer;
-     
-    public void DrawTexture(Texture2D texture) {
 
+    public void DrawTexture(Texture2D texture)
+    {
         textureRenderer.sharedMaterial.mainTexture = texture;
         textureRenderer.transform.localScale = new Vector3(texture.width, 1, texture.height);
- 
     }
 
-    public void DrawMesh(meshData mesh, Texture2D texture)
+    public void DrawMesh(meshData mesh)
     {
         meshFilter.sharedMesh = mesh.CreateMesh();
-        meshRenderer.sharedMaterial.mainTexture = texture;
     }
 }

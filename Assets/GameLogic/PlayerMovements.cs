@@ -65,6 +65,8 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
     public Animator anim;
 
+    public bool isAttacking = false;
+
     private void Start()
     {
         HealthManager = GetComponent<HealthManager>();
@@ -221,6 +223,11 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
                 HUD.SetActive(true);
             }
         }
+
+        if (anim.GetBool("isAttacking") == true)
+            moveSpeed = 0f;
+        else
+            moveSpeed = 6f;
         //rb.velocity = desiredMoveDirection.normalized * currentMoveSpeed;
     }
 
@@ -294,7 +301,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
             newPos.z -= 1;
             cylinderTransform.localPosition = newPos;
         }
-
     }
 
     void MovePlayer()

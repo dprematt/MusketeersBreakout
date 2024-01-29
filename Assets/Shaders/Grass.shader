@@ -139,9 +139,15 @@ Shader "Mathis/Grass"
 				float segmentForward = pow(t, _BladeCurve) * forward;
 				float3x3 transformMatrix = i == 0 ? transformationMatrixFacing : transformationMatrix;
 
-				triStream.Append(GenerateGrassVertex(pos, segmentWidth, segmentHeight, segmentForward, float2(0, t), transformMatrix));
-				triStream.Append(GenerateGrassVertex(pos, -segmentWidth, segmentHeight, segmentForward, float2(1, t), transformMatrix));
+				float actualHeight = segmentHeight + pos.y;
+
+				if (actualHeight >= 0.4 && actualHeight <= 9)
+				{
+					triStream.Append(GenerateGrassVertex(pos, segmentWidth, segmentHeight, segmentForward, float2(0, t), transformMatrix));
+					triStream.Append(GenerateGrassVertex(pos, -segmentWidth, segmentHeight, segmentForward, float2(1, t), transformMatrix));
+				}
 			}
+			float3x3 transformMatrix = transformationMatrix;
 			triStream.Append(GenerateGrassVertex(pos, 0, height, forward, float2(0.5, 1), transformationMatrix));
 		};
 		ENDCG

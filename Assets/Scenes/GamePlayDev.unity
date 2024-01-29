@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641228, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3172,31 +3172,22 @@ MonoBehaviour:
   regions:
   - name: deepwater
     height: 0.2
-    colour: {r: 0.14640439, g: 0.15765469, b: 0.8867924, a: 0}
   - name: water
     height: 0.3
-    colour: {r: 0.12775902, g: 0.87340856, b: 0.9339623, a: 0}
   - name: sand
     height: 0.35
-    colour: {r: 0.9339623, g: 0.82573867, b: 0.101326115, a: 0}
   - name: grass
     height: 0.4
-    colour: {r: 0.18222976, g: 0.7075472, b: 0.056737285, a: 0}
   - name: grass2
     height: 0.5
-    colour: {r: 0.13006403, g: 0.5566038, b: 0.03938234, a: 0}
   - name: rock
     height: 0.7
-    colour: {r: 0.6886792, g: 0.3766227, b: 0.068218224, a: 0}
   - name: rock2
     height: 0.8
-    colour: {r: 0.4433962, g: 0.19884953, b: 0.035555363, a: 0}
   - name: snwp
     height: 1
-    colour: {r: 0.990566, g: 0.9578586, b: 0.9578586, a: 0}
   - name: toto
     height: 0.55
-    colour: {r: 0.8018868, g: 0.07186719, b: 0.6763144, a: 0}
 --- !u!114 &850191868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3221,7 +3212,8 @@ MonoBehaviour:
   - lod: 2
     visibleDstThreshold: 200
   viewer: {fileID: 1264809108}
-  mapMaterial: {fileID: 2100000, guid: 7881864a2955b0b49b55c97f2dfa5d34, type: 2}
+  mapMaterial: {fileID: 2100000, guid: 035e57fafe64bfe4c884924755a6a2bb, type: 2}
+  grassMaterial: {fileID: 2100000, guid: 767dbc30f734e51469a09216ffc92f35, type: 2}
 --- !u!114 &850191869
 MonoBehaviour:
   m_ObjectHideFlags: 0
