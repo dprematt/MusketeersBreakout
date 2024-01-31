@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class WeaponManager : Weapons
+public class WeaponManager : MonoBehaviourPun, IInventoryItem
 {
+    public virtual string Name { get; protected set; }
+    public virtual bool IsPlayer { get; set; }
+
     public AudioClip attackSound;
     public AudioSource audioSource;
 
@@ -34,7 +38,23 @@ public class WeaponManager : Weapons
         }
     }
 
-    public override Sprite Image
+    public virtual bool SetIsPlayer(bool type)
+    {
+        IsPlayer = type;
+        return IsPlayer;
+    }
+
+    public virtual void OnPickup()
+    {
+
+    }
+
+    public virtual void SelectItem(bool state)
+    {
+        gameObject.SetActive(state);
+    }
+
+    public Sprite Image
     {
         get { return _Image; }
     }
@@ -74,7 +94,7 @@ public class WeaponManager : Weapons
         return null;
     }
 
-    public override void Attack()
+    public virtual void Attack()
     {
         isAttacking = true;
         anim.SetBool("isAttacking", true);

@@ -33,7 +33,6 @@ public class PlayFabInventory : MonoBehaviour
         foreach (IInventoryItem tmp in Inventory_.GetInventory())
         {
             SaveInventory(tmp.Name, 0);
-            Debug.Log("Lose Item : " + tmp.Name);
         }
 
     }
@@ -43,7 +42,6 @@ public class PlayFabInventory : MonoBehaviour
         foreach (IInventoryItem tmp in Inventory_.GetInventory())
         {
             SaveInventory(tmp.Name, 1);
-            Debug.Log("Lose Item : " + tmp.Name);
         }
     }
 
@@ -63,11 +61,9 @@ public class PlayFabInventory : MonoBehaviour
 
     private void OnVariableEnregistree(UpdateUserDataResult result)
     {
-        Debug.Log("Variable enregistrée avec succès !");
     }
 
     private void OnPlayFabError(PlayFabError error)
     {
-        Debug.LogError("Erreur PlayFab : " + error.ErrorMessage);
     }
 }
