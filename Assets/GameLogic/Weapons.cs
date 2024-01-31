@@ -26,7 +26,6 @@ public abstract class Weapons : MonoBehaviourPun, IInventoryItem
     }
     public virtual void Attack()
     {
-        Debug.Log("in attack virtual");
     }
     public virtual int UpgradeLevel(int levels)
     {
@@ -36,7 +35,6 @@ public abstract class Weapons : MonoBehaviourPun, IInventoryItem
 
     public virtual void SelectItem(bool state)
     {
-        Debug.Log("in Select Item callback");
         gameObject.SetActive(state);
     }
     public virtual int UpdateMag(int mag)

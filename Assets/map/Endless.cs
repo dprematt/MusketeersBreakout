@@ -55,11 +55,9 @@ public class Endless : MonoBehaviour
         if (player != null)
         {
             viewer = player.transform;
-            Debug.LogWarning("Player has been found");
         }
         else
         {
-            Debug.LogWarning("Le GameObject 'Player(Clone)' n'a pas été trouvé.");
         }
 
         viewerPosition = new Vector2(viewer.position.x, viewer.position.z);

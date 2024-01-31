@@ -80,7 +80,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         health_up = 30;
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         inventory = player.GetComponent<Inventory>();
-        Debug.Log(inventory);
         HUD = GameObject.FindGameObjectWithTag("InventoryHUD");
         HUD.GetComponent<HUD>().init();
         GameObject xpProgressBarExperience = GameObject.FindWithTag("ExperienceBarDefaultTag");
@@ -111,9 +110,7 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
     {
         xp += new_xp;
         XpProgressBar.fillAmount = (float)(xp / max_xp);
-        Debug.Log((float)(xp / max_xp));
         xpText2D.text = "XP " + xp.ToString() + " / " + max_xp.ToString();
-        Debug.Log("testtttt XP = " + xp);
         return xp;
     }
 
@@ -127,7 +124,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         XpProgressBar.fillAmount = (float)(xp / max_xp);
         xpText2D.text = "XP " + xp.ToString() + " / " + max_xp.ToString();
         levelText2D.text = "LEVEL " + level.ToString();
-        Debug.Log(level);
     }
 
     public void CheckXp()
@@ -152,8 +148,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         IInventoryItem item = col.GetComponent<IInventoryItem>();
         if (item != null)
         {
-            Debug.Log("item CATCH !");
-            Debug.Log(item);
             inventory.AddItem(item);
         }
 
@@ -164,7 +158,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         Vector3 temp = transform.position;
         temp.y += 0.1f;
         isGrounded = Physics.Raycast(temp, Vector3.down, 0.2f);
-        Debug.DrawRay(temp, Vector3.down * 0.1f, Color.red);
 
         MyInput();
         ControlDrag();
@@ -175,8 +168,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         {
             Jump();
         }
-        //Debug.Log("vitesse apres");
-        //Debug.Log(moveSpeed);
 
         //Vector3 forward = cylinderTransform.forward;
         //Vector3 right = cylinderTransform.right;
@@ -211,15 +202,12 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         }
         if (Input.GetKeyDown(KeyCode.U))
         {
-            Debug.Log(HUD);
             if (HUD.activeSelf)
             {
                 HUD.SetActive(false);
-                // Debug.Log("close hud");
             }
             else
             {
-                //  Debug.Log("activate hud");
                 HUD.SetActive(true);
             }
         }

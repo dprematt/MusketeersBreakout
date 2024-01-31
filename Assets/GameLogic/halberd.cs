@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
 public class Halberd : Weapons
 {
     public Transform weaponSpawnPoint;

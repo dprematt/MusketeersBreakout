@@ -28,7 +28,6 @@ using UnityEngine;
         halberd._Image = Resources.Load("Sprites/halberd") as Sprite;
         halberd.weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
         halberd.weaponSpawnPoint = gameObject.transform;
-        Debug.Log("is inventory still alive" + inventory);
         halberd.IsPlayer = false;
         halberd.audioSource = GetComponent<AudioSource>();
         items.Add(halberd);
@@ -40,7 +39,6 @@ using UnityEngine;
         sword.audioSource = GetComponent<AudioSource>();
         items.Add(sword);
         inventory = new Inventory(9, items, false);
-        Debug.Log("in start enemy weapons count = " + inventory.mItems.Count);
 
         current = 0;
     }
@@ -78,7 +76,7 @@ using UnityEngine;
 
             transform.position += transform.forward * speed * Time.deltaTime;
         }
-        else
+        /*else
         {
             anim.SetBool("isWalking", false);
             if (WeaponChoice == false)
@@ -91,7 +89,7 @@ using UnityEngine;
                 inventory.mItems[inventory.mItems.Count - 1].Attack();
                 WeaponChoice = false;
             }
-        }
+        }*/
     }
 
     private void OnTriggerEnter(Collider other)

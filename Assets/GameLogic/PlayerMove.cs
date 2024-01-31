@@ -47,9 +47,6 @@ public class PlayerMove : MonoBehaviourPunCallbacks
         xp = 0;
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         inventory = player.GetComponent<Inventory>();
-        Debug.Log(inventory);
-        HUD = GameObject.FindGameObjectWithTag("InventoryHUD");
-        HUD.GetComponent<HUD>().init();
     }
 
     //public void TakeDamage(float damageAmount)

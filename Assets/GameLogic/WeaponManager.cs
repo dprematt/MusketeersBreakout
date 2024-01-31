@@ -14,7 +14,11 @@ public class WeaponManager : Weapons
 
     public bool isLooted = false;
 
+    public bool isAttacking = false;
+
     public Animator anim;
+
+    GameObject holder;
 
     private void Start()
     {
@@ -38,14 +42,21 @@ public class WeaponManager : Weapons
     public void OnTriggerEnter(Collider other)
     {
         if (!isLooted && other.gameObject.CompareTag("Player")) {
-            GameObject player = other.gameObject;
-            Transform hand = FindDeepChild(player.transform, "jointItemR");
+            holder = other.gameObject;
+            Transform hand = FindDeepChild(holder.transform, "jointItemR");
 
             transform.parent = hand;
             transform.localPosition = new Vector3(0.02f, 0.15f, 0);
             transform.localRotation = Quaternion.Euler(90f, 90f, 0);
-            anim = player.GetComponentInChildren<Animator>();
+            anim = holder.GetComponentInChildren<Animator>();
             isLooted = true;
+        }
+
+        if (isAttacking && other.gameObject != holder)
+        {
+            other.gameObject.GetComponent<Enemy>().TakeDamage(2);
+            isAttacking = false;
+            return;
         }
     }
 
@@ -65,6 +76,7 @@ public class WeaponManager : Weapons
 
     public override void Attack()
     {
+        isAttacking = true;
         anim.SetBool("isAttacking", true);
         audioSource.PlayOneShot(attackSound);
         lastAttackTime = Time.time;

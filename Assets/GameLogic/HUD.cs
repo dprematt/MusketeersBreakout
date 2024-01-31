@@ -13,13 +13,8 @@ public class HUD : MonoBehaviour
 
     public void init()
     {
-        Debug.Log("player event handler added");
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        Debug.Log(player);
         Inventory inventory = player.GetComponent<Inventory>();
-        Debug.Log("start hud");
-        Debug.Log(inventory);
-        Debug.Log("start 2 hud");
         inventory.ItemAdded += InventoryScript_ItemAdded;
         Transform inventoryPanel = transform.Find("Inventory");
         foreach (Transform slot in inventoryPanel)
@@ -31,24 +26,17 @@ public class HUD : MonoBehaviour
 
     private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
     {
-        Debug.Log("event item added hud");
         Transform inventoryPanel = transform.Find("Inventory");
         foreach(Transform slot in inventoryPanel)
         {
-            Debug.Log("event item loop");
             Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
             Button button = slot.GetChild(0).GetComponent<Button>();
-            Debug.Log(e.Item.Image);
-            Debug.Log(image.enabled);
 
             if (!image.enabled)
             {
-                Debug.Log("event item to enable");
                 image.enabled = true;
                 image.sprite = e.Item.Image;
-                Debug.Log("event item enabled");
                 button.onClick.AddListener(e.Item.Attack);
-                Debug.Log("onclick button event listener item enabled");
                 break;
             }
         }
@@ -95,9 +83,6 @@ public class HUD : MonoBehaviour
 
         // Manually invoke the onClick event of the button in the Border
         Button button = border.GetComponent<Button>();
-        Debug.Log("button found");
-        Debug.Log(border);
-        Debug.Log(button);
         button.onClick.Invoke();
         // Add other selected visual changes as needed
     }

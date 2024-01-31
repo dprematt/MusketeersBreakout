@@ -4,7 +4,8 @@ using UnityEngine;
 
  public class Enemy : MonoBehaviour
 {
-    [SerializeField] float health, maxHealth = 10f;
+    [SerializeField]
+    public float health, maxHealth = 10f;
     public float speed = 5f;
     public float minDist = 3f;
     public Transform target;
@@ -28,7 +29,6 @@ using UnityEngine;
         halberd._Image = Resources.Load("Sprites/halberd") as Sprite;
         halberd.weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
         halberd.weaponSpawnPoint = gameObject.transform;
-        Debug.Log("is inventory still alive" + inventory);
         halberd.IsPlayer = false;
         halberd.audioSource = GetComponent<AudioSource>();
         items.Add(halberd);
@@ -40,7 +40,6 @@ using UnityEngine;
         sword.audioSource = GetComponent<AudioSource>();
         items.Add(sword);
         inventory = new Inventory(9, items, false);
-        Debug.Log("in start enemy weapons count = " + inventory.mItems.Count);
 
         current = 0;
     }
@@ -66,23 +65,20 @@ using UnityEngine;
 
             transform.position += transform.forward * speed * Time.deltaTime;
         }
-        else
+        /*else
         {
-            Debug.Log("ATTACK in enemy ! -1");
             anim.SetBool("isWalking", false);
             if (WeaponChoice == false)
             {
-                Debug.Log("ATTACK in enemy ! 0");
                 inventory.mItems[0].Attack();
                 WeaponChoice = true;
             }
             else
             {
-                Debug.Log("ATTACK in enemy ! 0Bis");
                 inventory.mItems[inventory.mItems.Count - 1].Attack();
                 WeaponChoice = false;
             }
-        }
+        }*/
     }
     private void OnTriggerEnter(Collider other)
     {

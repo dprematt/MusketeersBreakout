@@ -78,7 +78,7 @@ using UnityEngine;
 
             transform.position += transform.forward * speed * Time.deltaTime;
         }
-        else
+        /*else
         {
             anim.SetBool("isWalking", false);
             if (WeaponChoice == false)
@@ -91,7 +91,7 @@ using UnityEngine;
                 inventory.mItems[inventory.mItems.Count - 1].Attack();
                 WeaponChoice = false;
             }
-        }
+        }*/
     }
 
     private void OnTriggerEnter(Collider other)

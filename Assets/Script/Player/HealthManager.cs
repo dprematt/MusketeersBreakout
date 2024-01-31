@@ -52,12 +52,10 @@ public class HealthManager : MonoBehaviourPunCallbacks
     {
         //bloodParticles.Play();
         Health_ -= Damage;
-        Debug.Log("Damage Taken : " + Damage);
     }
 
     public void HealthUp(int HealtAdd)
     {
-        Debug.Log(HealtAdd);
         Health_ += HealtAdd;
     }
 
@@ -75,9 +73,6 @@ public class HealthManager : MonoBehaviourPunCallbacks
         else if (Stream.IsReading)
         {
             Health_ = (float)Stream.ReceiveNext();
-            Debug.Log("Received HP Other: " + Health_.ToString());
-
-
         }
     }
 }
