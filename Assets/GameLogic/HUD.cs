@@ -20,13 +20,13 @@ public class HUD : MonoBehaviour
 
     public void init()
     {
-        Debug.Log("player event handler added");
+        //Debug.Log("player event handler added");
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        Debug.Log(player);
+        //Debug.Log(player);
         Inventory inventory = player.GetComponent<Inventory>();
-        Debug.Log("start hud");
-        Debug.Log(inventory);
-        Debug.Log("start 2 hud");
+        //Debug.Log("start hud");
+        //Debug.Log(inventory);
+        //Debug.Log("start 2 hud");
         inventory.ItemAdded += InventoryScript_ItemAdded;
         Transform inventoryPanel = transform.Find("Inventory");
         foreach (Transform slot in inventoryPanel)
@@ -61,24 +61,24 @@ public class HUD : MonoBehaviour
 
     private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
     {
-        Debug.Log("event item added hud");
+        //Debug.Log("event item added hud");
         Transform inventoryPanel = transform.Find("Inventory");
         foreach (Transform slot in inventoryPanel)
         {
-            Debug.Log("event item loop");
+            //Debug.Log("event item loop");
             Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
             Button button = slot.GetChild(0).GetComponent<Button>();
-            Debug.Log(e.Item.Image);
-            Debug.Log(image.enabled);
+            //Debug.Log(e.Item.Image);
+            //Debug.Log(image.enabled);
 
             if (!image.enabled)
             {
-                Debug.Log("event item to enable");
+                //Debug.Log("event item to enable");
                 image.enabled = true;
                 image.sprite = e.Item.Image;
-                Debug.Log("event item enabled");
+                //Debug.Log("event item enabled");
                 button.onClick.AddListener(e.Item.Attack);
-                Debug.Log("onclick button event listener item enabled");
+                //Debug.Log("onclick button event listener item enabled");
                 break;
             }
         }
@@ -93,20 +93,34 @@ public class HUD : MonoBehaviour
         //offset = (Vector2)selectedSlot.position - eventData.position;
     }
 
+   /* private int FindSlotId(Transform slot)
+    {
+        int counter = 0;
+        Transform inventoryPanel = transform.Find("Inventory");
+        foreach (Transform s in inventoryPanel)
+        {
+            if (slot == s)
+            {
+                return counter;
+            }
+            counter++;
+        }
+        return -1;
+    }*/
     private void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("ON BEGIN DRAG !");
+        //Debug.Log("ON BEGIN DRAG !");
         selectedSlot = eventData.pointerPress.transform.parent;
         offset = (Vector2)selectedSlot.position - eventData.position;
         if (selectedSlot != null)
         {
             startPos = selectedSlot.position;
-            Debug.Log(startPos);
+            //Debug.Log(startPos);
             isDragging = true;
-            Debug.Log("Disable button interaction during drag");
-            Debug.Log(selectedSlot);
-            Debug.Log(selectedSlot.GetChild(0));
-            Debug.Log(selectedSlot.GetChild(0).GetComponent<Button>());
+            //Debug.Log("Disable button interaction during drag");
+            //Debug.Log(selectedSlot);
+            //Debug.Log(selectedSlot.GetChild(0));
+            //Debug.Log(selectedSlot.GetChild(0).GetComponent<Button>());
             selectedSlot.GetChild(0).GetComponent<Button>().interactable = false;
         }
     }
@@ -125,7 +139,7 @@ public class HUD : MonoBehaviour
     {
         if (isDragging && selectedSlot != null)
         {
-            Debug.Log("Enable button interaction after drag");
+            //Debug.Log("Enable button interaction after drag");
             selectedSlot.GetChild(0).GetComponent<Button>().interactable = true;
             isDragging = false;
 
@@ -135,23 +149,23 @@ public class HUD : MonoBehaviour
 
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pointerData, results);
-            Debug.Log("raycast results");
-            Debug.Log(results);
+            //Debug.Log("raycast results");
+            //Debug.Log(results);
 
             Transform releasedSlot = FindSlotFromRaycastResults(results);
 
             // If a slot is found, swap positions
             if (releasedSlot == null)
             {
-                Debug.Log("released slot is null!");
-                Debug.Log(startPos);
+                //Debug.Log("released slot is null!");
+                //Debug.Log(startPos);
                 selectedSlot.position = startPos;
                 return;
             }
             if (releasedSlot == selectedSlot)
             {
-                Debug.Log("released slot not selected slot!");
-                Debug.Log(startPos);
+                //Debug.Log("released slot not selected slot!");
+                //Debug.Log(startPos);
                 selectedSlot.position = startPos;
                 return;
             }
@@ -169,8 +183,9 @@ public class HUD : MonoBehaviour
         {
             Transform slot = result.gameObject.transform;
             // Check if the GameObject is a slot or a child of a slot
-            Debug.Log(slot);
-            if (slot.CompareTag("Slot") && slot != null)
+            //Debug.Log(slot);
+            string tag = slot.tag;
+            if (tag.StartsWith("Slot") && slot != null)
             {
                 return slot;
             }
@@ -180,66 +195,25 @@ public class HUD : MonoBehaviour
 
     private void SwapSlots(Transform slot1, Transform slot2)
     {
-        Debug.Log("Swap the positions of the two slots");
+        //Debug.Log("Swap the positions of the two slots");
         //Vector3 tempPosition = slot1.position;
+        //Debug.Log("tag1");
+        //Debug.Log(slot1.tag);
+        //Debug.Log("tag2");
+        //Debug.Log(slot2.tag);
         endPos = slot2.position;
         slot1.position = endPos;
         slot2.position = startPos;
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Inventory inventory = player.GetComponent<Inventory>();
+        char id_1_c = slot1.tag[slot1.tag.Length - 1];
+        int id_1 = int.Parse(id_1_c.ToString());
+        char id_2_c = slot1.tag[slot2.tag.Length - 1];
+        int id_2 = int.Parse(id_2_c.ToString());
+        inventory.SwapItems<IInventoryItem>(id_1, id_2);
     }
 
     void Update()
     {
-        /*if (Input.GetKeyDown(KeyCode.L))
-        {
-            // Set the first slot as selected
-            SelectSlot(transform.Find("Inventory").GetChild(0));
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            SelectSlot(transform.Find("Inventory").GetChild(1));
-        }*/
     }
-
-    /*void SelectSlot(Transform slot)
-    {
-        // Deselect the previously selected slot
-        if (selectedSlot != null)
-        {
-            DeselectSlot(selectedSlot);
-        }
-
-        // Select the new slot
-        selectedSlot = slot;
-        SelectBorder(selectedSlot.Find("Border"));
-        selectedSlot.GetChild(0).GetComponent<Button>().interactable = false;
-    }*/
-
-    /*void DeselectSlot(Transform slot)
-    {
-        // Deselect the slot
-        DeselectBorder(slot.Find("Border"));
-        slot.GetChild(0).GetComponent<Button>().interactable = true;
-    }*/
-
-    /*void SelectBorder(Transform border)
-    {
-        // Toggle the selected state of the Border
-        border.GetComponent<Image>().enabled = true;
-
-        // Manually invoke the onClick event of the button in the Border
-        Button button = border.GetComponent<Button>();
-        Debug.Log("button found");
-        Debug.Log(border);
-        Debug.Log(button);
-        button.onClick.Invoke();
-        // Add other selected visual changes as needed
-    }*/
-
-    /*void DeselectBorder(Transform border)
-    {
-        // Deselect the Border
-        border.GetComponent<Image>().enabled = false;
-
-        // Add other deselected visual changes as needed
-    }*/
 }
