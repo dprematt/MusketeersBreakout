@@ -36,7 +36,7 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
     float Max_Health_ = 100;
 
     [SerializeField] private float maxStamina = 100f;
-    private float stamina;
+    public float stamina;
 
     private bool staminaFullUsed;
     private HealthManager HealthManager;
@@ -211,11 +211,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
                 HUD.SetActive(true);
             }
         }
-
-        if (anim.GetBool("isAttacking") == true)
-            moveSpeed = 0f;
-        else
-            moveSpeed = 6f;
         //rb.velocity = desiredMoveDirection.normalized * currentMoveSpeed;
     }
 
