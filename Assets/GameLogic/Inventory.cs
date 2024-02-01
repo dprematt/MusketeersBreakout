@@ -38,6 +38,13 @@ public class Inventory : MonoBehaviour
         return mItems;
     }
 
+    public void SwapItems<IInventoryItems>(int index1, int index2)
+    {
+        IInventoryItem temp = mItems[index1];
+        mItems[index1] = mItems[index2];
+        mItems[index2] = temp;
+    }
+
     public void Print_Inventory()
     {
         List<IInventoryItem> Item = GetInventory();
