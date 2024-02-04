@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9208269171727442931}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.685774, y: 0, z: 17.39857}
+  m_LocalPosition: {x: 0.3, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -113,3 +113,5 @@ MonoBehaviour:
   weaponSpawnPoint: {fileID: 0}
   weaponPrefab: {fileID: 7661578362052809882, guid: 0bf26a6526a1ecf459db1377aab2a364, type: 3}
   _Image: {fileID: 21300000, guid: d8550dacd5445ec4992ed8bf2c38d269, type: 3}
+  shootingSound: {fileID: 0}
+  audioSource: {fileID: 0}

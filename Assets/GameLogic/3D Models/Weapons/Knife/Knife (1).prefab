@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4791206105503025196}
   - component: {fileID: 7320952868463197414}
   - component: {fileID: -6627990032062773393}
-  - component: {fileID: -2926281476982849476}
+  - component: {fileID: 1155412363699375739}
   - component: {fileID: 8920619137996990417}
   m_Layer: 0
   m_Name: Knife (1)
@@ -94,12 +94,12 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9122537649499774259}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.03110044, y: 0.060274273, z: 0.35166174}
   m_Center: {x: 0.0000000023283064, y: -0.0013618618, z: 0.03934653}
---- !u!114 &-2926281476982849476
+--- !u!114 &1155412363699375739
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,12 +108,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 9122537649499774259}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9bbc08fce0684fbc882308833b161e4, type: 3}
+  m_Script: {fileID: 11500000, guid: bff308da8ab0ae8498bb4bcbbe91e5b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponSpawnPoint: {fileID: 0}
-  weaponPrefab: {fileID: 7661578362052809882, guid: da6be78ea175afe40b006cd9e8f15c28, type: 3}
-  _Image: {fileID: 21300000, guid: c40e6082155fe004e8b5574373533094, type: 3}
+  weaponType: 4
+  attackSound: {fileID: 8300000, guid: d47a3792053fce8449895856817d5cd3, type: 3}
+  audioSource: {fileID: 0}
+  _Image: {fileID: 21300000, guid: 6360a69cc794d9548b549a0b0f3aa7ae, type: 3}
+  isLooted: 0
+  anim: {fileID: 0}
+  animOverride: {fileID: 22100000, guid: f18a03a9456d28c4f930e48d646145ce, type: 2}
+  damages: 2
+  resetTime: 0.8
+  positionX: 0
+  positionY: 0.1
+  positionZ: 0
+  rotationX: -90
+  rotationY: 90
+  rotationZ: 0
 --- !u!82 &8920619137996990417
 AudioSource:
   m_ObjectHideFlags: 0

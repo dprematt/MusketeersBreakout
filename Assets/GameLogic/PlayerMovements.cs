@@ -37,6 +37,7 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
     [SerializeField] private float maxStamina = 100f;
     public float stamina;
+    public static event System.Action<float, float> OnStaminaChanged;
 
     private bool staminaFullUsed;
     private HealthManager HealthManager;
@@ -169,13 +170,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
             Jump();
         }
 
-        //Vector3 forward = cylinderTransform.forward;
-        //Vector3 right = cylinderTransform.right;
-
-        //forward.y = 0f;
-        //right.y = 0f;
-
-        //Vector3 desiredMoveDirection = forward * v + right * h;
         if (Input.GetKey(KeyCode.LeftShift) && !staminaFullUsed)
         {
             if (stamina > 0)
@@ -200,6 +194,8 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
                 staminaFullUsed = false;
             }
         }
+        OnStaminaChanged?.Invoke(stamina, maxStamina);
+
         if (Input.GetKeyDown(KeyCode.U))
         {
             if (HUD.activeSelf)
@@ -211,7 +207,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
                 HUD.SetActive(true);
             }
         }
-        //rb.velocity = desiredMoveDirection.normalized * currentMoveSpeed;
     }
 
     void MyInput()

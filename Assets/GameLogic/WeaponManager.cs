@@ -8,31 +8,37 @@ public class WeaponManager : MonoBehaviourPun, IInventoryItem
     public virtual string Name { get; protected set; }
     public virtual bool IsPlayer { get; set; }
 
+    public int weaponType;
+
     public AudioClip attackSound;
     public AudioSource audioSource;
 
     public Sprite _Image;
 
-    private float lastAttackTime;
-
-    public float coolDown = 2f;
-    private float nextFireTime = 0f;
-    public static int noOfClicks = 0;
-    float lastClickedTime = 0;
-    float maxComboDelay = 1;
-
     public bool isLooted = false;
     private bool damageDealt = false;
 
     public Animator anim;
+    public AnimatorOverrideController animOverride;
 
     private GameObject holder;
 
     private PlayerMovements holderMovements;
 
-    public bool isAttacking;
     private float timeSinceAttack;
-    public int currentAttack = 0;
+    private int currentAttack = 0;
+
+    public int damages;
+
+    public float resetTime;
+
+    public float positionX;
+    public float positionY;
+    public float positionZ;
+
+    public float rotationX;
+    public float rotationY;
+    public float rotationZ;
 
 
     private void Start()
@@ -44,7 +50,6 @@ public class WeaponManager : MonoBehaviourPun, IInventoryItem
     {
         if (isLooted)
         {
-            Debug.Log(currentAttack);
             timeSinceAttack += Time.deltaTime;
             Attack();
         }
@@ -78,16 +83,18 @@ public class WeaponManager : MonoBehaviourPun, IInventoryItem
             Transform hand = FindDeepChild(holder.transform, "jointItemR");
 
             transform.parent = hand;
-            transform.localPosition = new Vector3(0.02f, 0.15f, 0);
-            transform.localRotation = Quaternion.Euler(90f, 90f, 0);
+            transform.localPosition = new Vector3(positionX, positionY, positionZ);
+            transform.localRotation = Quaternion.Euler(rotationX, rotationY, rotationZ);
             anim = holder.GetComponentInChildren<Animator>();
+            anim.runtimeAnimatorController = animOverride;
+            anim.SetInteger("weaponType", weaponType);
             holderMovements = holder.GetComponent<PlayerMovements>();
             isLooted = true;
         }
 
         if (anim.GetBool("hit" + currentAttack) && other.gameObject != holder && !damageDealt)
         {
-            other.gameObject.GetComponent<Enemy>().TakeDamage(2);
+            other.gameObject.GetComponent<Enemy>().TakeDamage(damages);
             damageDealt = true;
             return;
         }
@@ -109,14 +116,15 @@ public class WeaponManager : MonoBehaviourPun, IInventoryItem
 
     public virtual void Attack()
     {
-        if (timeSinceAttack > 0.8)
+        if (timeSinceAttack > resetTime)
         {
             anim.SetBool("hit" + currentAttack, false);
 
-            if (Input.GetMouseButtonDown(0) && timeSinceAttack > 0.8f && isLooted)
+            if (Input.GetMouseButtonDown(0) && timeSinceAttack > resetTime && isLooted && holderMovements.stamina >= 30)
             {
                 currentAttack++;
                 damageDealt = false;
+                holderMovements.stamina -= 30;
 
                 if (currentAttack > 3)
                 {
@@ -130,7 +138,7 @@ public class WeaponManager : MonoBehaviourPun, IInventoryItem
                 timeSinceAttack = 0;
             }
 
-            if (timeSinceAttack > 1.0f)
+            if (timeSinceAttack > (resetTime + 0.2f))
                 currentAttack = 0;
         }
     }

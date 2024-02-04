@@ -111,11 +111,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff308da8ab0ae8498bb4bcbbe91e5b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponType: 1
   attackSound: {fileID: 8300000, guid: d47a3792053fce8449895856817d5cd3, type: 3}
   audioSource: {fileID: 0}
   _Image: {fileID: 21300000, guid: 3b6b7a7651800be41b15d4182df100ce, type: 3}
-  coolDown: 3
   isLooted: 0
+  anim: {fileID: 0}
+  animOverride: {fileID: 22100000, guid: 0db0b3e85a353884796d05cd298ac181, type: 2}
+  damages: 3
+  resetTime: 0.8
+  positionX: 0.02
+  positionY: 0.15
+  positionZ: 0
+  rotationX: 90
+  rotationY: 90
+  rotationZ: 0
 --- !u!82 &499002922093390632
 AudioSource:
   m_ObjectHideFlags: 0

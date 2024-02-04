@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 6521419284200249322}
   - component: {fileID: 9035429218203444000}
   - component: {fileID: -6934135527497437509}
-  - component: {fileID: 2286815148343793146}
   - component: {fileID: 3441826677568884472}
+  - component: {fileID: 6136640410982580658}
   m_Layer: 0
   m_Name: Dagger (1)
   m_TagString: WeaponDagger
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 7378223783999177461}
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -0, y: 0.13577001, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -94,26 +94,11 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7378223783999177461}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.08371835, y: 0.03158807, z: 0.44684908}
   m_Center: {x: 0, y: 0, z: -0.000000014901165}
---- !u!114 &2286815148343793146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7378223783999177461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbe30580d844b44b493b2f9dd2bf3ca3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponSpawnPoint: {fileID: 0}
-  weaponPrefab: {fileID: 7661578362052809882, guid: da6be78ea175afe40b006cd9e8f15c28, type: 3}
-  _Image: {fileID: 21300000, guid: 82d97e49c2e517c4a8be1597869dd457, type: 3}
 --- !u!82 &3441826677568884472
 AudioSource:
   m_ObjectHideFlags: 0
@@ -210,3 +195,30 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6136640410982580658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7378223783999177461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff308da8ab0ae8498bb4bcbbe91e5b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponType: 0
+  attackSound: {fileID: 8300000, guid: d47a3792053fce8449895856817d5cd3, type: 3}
+  audioSource: {fileID: 0}
+  _Image: {fileID: 21300000, guid: 82d97e49c2e517c4a8be1597869dd457, type: 3}
+  isLooted: 0
+  anim: {fileID: 0}
+  animOverride: {fileID: 22100000, guid: f18a03a9456d28c4f930e48d646145ce, type: 2}
+  damages: 2
+  resetTime: 0.8
+  positionX: 0
+  positionY: 0.16
+  positionZ: 0
+  rotationX: 90
+  rotationY: 0
+  rotationZ: 0
