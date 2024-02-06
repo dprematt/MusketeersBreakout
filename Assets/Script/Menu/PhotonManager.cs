@@ -28,5 +28,12 @@ public class PhotonManager : MonoBehaviour
         }
     }
 
+    public void JoinRandomRoom()
+    {
+        PhotonNetwork.JoinRandomRoom();
+    }
+
+    
+
 
 }
