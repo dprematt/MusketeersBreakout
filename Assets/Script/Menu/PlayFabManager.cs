@@ -48,6 +48,15 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         }, OnLoginSuccess, OnLoginFailure);
     }
 
+    public void Login_Admin()
+    {
+        PlayFabClientAPI.LoginWithEmailAddress(new LoginWithEmailAddressRequest
+        {
+            Email = "okayokay999@gmail.com",
+            Password = "okayokay999"
+        }, OnLoginSuccess, OnLoginFailure);
+    }
+
     public void OnLoginSuccess(LoginResult result)
     {
         // Access the PlayFabID from the authentication result
