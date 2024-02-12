@@ -10,6 +10,7 @@ public class MasterClientManager : MonoBehaviourPun
     public Transform ContentObject_;
     public PlayerTabManager PlayerItemPrefab_;
     public Text Waiting;
+    public int MaxPlayersRoom;
 
     List<PlayerTabManager> PlayerItemList_ = new List<PlayerTabManager>();
 
@@ -45,7 +46,6 @@ public class MasterClientManager : MonoBehaviourPun
     {
 
         Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
-        float tmp;
 
         // Parcours la liste et imprime le nom de chaque joueur
         foreach (Photon.Realtime.Player player in players)

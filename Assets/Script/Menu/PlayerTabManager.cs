@@ -10,10 +10,6 @@ public class PlayerTabManager : MonoBehaviourPunCallbacks
     public Text PlayerName_;
     public GameObject ExcludeButton;
 
-    //private PhotonView photonView;
-
-    private string name;
-
     private void Start()
     {
         PhotonNetwork.EnableCloseConnection = true;
@@ -22,14 +18,12 @@ public class PlayerTabManager : MonoBehaviourPunCallbacks
     public void SetPlayerName(string PlayerName)
     {
         PlayerName_.text = PlayerName;
-        name = PlayerName;
     }
 
     public void DisplayPlayerManager()
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log("MasterClient displaying PlayerManager !");
             if (ExcludeButton.activeSelf)
             {
                 ExcludeButton.SetActive(false);
