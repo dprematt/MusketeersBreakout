@@ -33,7 +33,9 @@ public class PhotonManager : MonoBehaviour
         PhotonNetwork.JoinRandomRoom();
     }
 
-    
+
+
+
 
 
 }

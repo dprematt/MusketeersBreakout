@@ -33,8 +33,8 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
     {
         LobbyPanel_.SetActive(false);
         RoomPanel_.SetActive(true);
-        Room_.text = "Room name : " + PhotonNetwork.CurrentRoom.Name;
-        PhotonNetwork.LoadLevel("GamePlayDev");
+        //Room_.text = "Room name : " + PhotonNetwork.CurrentRoom.Name;
+        //PhotonNetwork.LoadLevel("GamePlayDev");
         Debug.Log("Room joined : " + PhotonNetwork.CurrentRoom.Name);
     }
 
@@ -67,6 +67,12 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
     }
 
     public override void OnLeftRoom()
+    {
+        RoomPanel_.SetActive(false);
+        LobbyPanel_.SetActive(true);
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
     {
         RoomPanel_.SetActive(false);
         LobbyPanel_.SetActive(true);
