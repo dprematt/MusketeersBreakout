@@ -11,6 +11,7 @@ public class MasterClientManager : MonoBehaviourPun
     public PlayerTabManager PlayerItemPrefab_;
     public Text Waiting;
     public int MaxPlayersRoom;
+    public GameObject StartButton;
 
     List<PlayerTabManager> PlayerItemList_ = new List<PlayerTabManager>();
 
@@ -61,6 +62,10 @@ public class MasterClientManager : MonoBehaviourPun
     public void UpdateWaitingMessage()
     {
         Waiting.text = "Waiting for " + (GetMaxPlayers() - GetCurrentPlayers()).ToString() + " players ...";
+        if (PhotonNetwork.IsMasterClient && GetMaxPlayers() - GetCurrentPlayers() == 0)
+            StartButton.SetActive(true);
+        else
+            StartButton.SetActive(false);
     }
 
     public int GetCurrentPlayers()
@@ -85,4 +90,14 @@ public class MasterClientManager : MonoBehaviourPun
         return -1;
     }
 
+    public void StartGame()
+    {
+        photonView.RPC("RPC_StartGame", RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void RPC_StartGame()
+    {
+        PhotonNetwork.LoadLevel("GamePlayDev");
+    }
 }
