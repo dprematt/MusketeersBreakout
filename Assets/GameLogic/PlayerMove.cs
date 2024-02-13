@@ -32,7 +32,6 @@ public class PlayerMove : MonoBehaviourPunCallbacks
     private HealthManager HealthManager;
     private PlayFabInventory PFInventory_;
 
-    float Max_Health_ = 100;
 
     void Start()
     {
@@ -104,7 +103,6 @@ public class PlayerMove : MonoBehaviourPunCallbacks
             Debug.Log(item);
             inventory.AddItem(item);
         }
-
     }
 
     // Update is called once per frame
