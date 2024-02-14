@@ -4,15 +4,15 @@ using UnityEngine;
 using System;
 public static class Skeleton
 {
+    private static int seed = 78669;
+    private static System.Random prng = new System.Random(seed);
     public enum NormalizeMode { Local, Global }
+
     public static float[,] GenerateSkeleton(int mapWidth, int mapHeight, float scale, int octaves, float persistance, float lacunarity, Vector2 offset, NormalizeMode normalizeMode)
     {
         float[,] skeleton = new float[mapWidth, mapHeight];
 
         float maxPossibleHeight = 0;
-        System.Random random = new System.Random();
-        int seed = random.Next();
-        System.Random prng = new System.Random(seed);
         float amplitude = 1;
         float frequency = 1;
 

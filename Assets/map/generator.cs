@@ -77,7 +77,7 @@ public class generator : MonoBehaviour
         }
         else if (drawMode == DrawMode.colorMap)
         {
-            // Ne rien faire pour colorMap, car la couleur a été supprimée.
+            // Ne rien faire pour colorMap, car la couleur a ï¿½tï¿½ supprimï¿½e.
         }
         else if (drawMode == DrawMode.mesh)
         {
