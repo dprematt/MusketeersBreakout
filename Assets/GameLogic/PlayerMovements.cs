@@ -232,6 +232,7 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             characterModel.rotation = Quaternion.Slerp(characterModel.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            //transform.rotation = Quaternion.Slerp(characterModel.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
 
