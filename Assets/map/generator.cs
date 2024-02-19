@@ -23,6 +23,10 @@ public class generator : MonoBehaviour
     public bool autoUpdate;
     public Vector2 offSet;
 
+    float[,] colorMap = new float[mapChunckSize, mapChunckSize];
+    public Vector3[] _spawnCoords = new Vector3[20];
+
+
     public bool useFallOf;
 
     public float meshHeightMult;
@@ -41,6 +45,7 @@ public class generator : MonoBehaviour
     private void Start()
     {
         PlaceExtractionZones();
+
     }
 
     public void PlaceExtractionZones()
@@ -70,6 +75,18 @@ public class generator : MonoBehaviour
     public void DrawMap()
     {
         MapData mapdata = SkeletonGenerator(Vector2.zero);
+
+        selectPos(colorMap);
+
+        Debug.Log("TAB LENGHT = " + _spawnCoords.Length);
+        for (int i = 0; i < _spawnCoords.Length; ++i)
+            Debug.Log("tmp[" + i + "] = " + _spawnCoords[i].ToString());
+
+        if (_spawnCoords.Length == 0)
+            Debug.Log("TMP = EMPTY");
+
+
+
         DisplaySkeleton display = FindObjectOfType<DisplaySkeleton>();
         if (drawMode == DrawMode.map)
         {
@@ -89,11 +106,55 @@ public class generator : MonoBehaviour
         }
     }
 
+
+    public void selectPos(float[,] colorMap)
+    {
+        float minHeight = 0.2f;
+        float maxHeight = 0.5f;
+
+        List<Vector2Int> availableCoords = new List<Vector2Int>();
+
+        for (int i = 0; i < mapChunckSize; i++)
+        {
+            for (int j = 0; j < mapChunckSize; j++)
+            {
+                float curHeight = colorMap[j, i];
+
+                if (curHeight >= minHeight && curHeight <= maxHeight)
+                {
+                    availableCoords.Add(new Vector2Int(j, i));
+                }
+            }
+        }
+
+        if (availableCoords.Count >= 20)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, availableCoords.Count);
+                Vector2Int selectedCoord = availableCoords[randomIndex];
+
+                float randomHeight = colorMap[selectedCoord.y, selectedCoord.x];
+
+                randomHeight = Mathf.Clamp(randomHeight, minHeight, maxHeight);
+
+                _spawnCoords[i] = new Vector3(selectedCoord.x, randomHeight, selectedCoord.y);
+
+                availableCoords.RemoveAt(randomIndex);
+            }
+        }
+        else
+        {
+            Debug.LogError("Pas assez de coordonnées disponibles.");
+        }
+}
+
+
     MapData SkeletonGenerator(Vector2 center)
     {
+
         float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode);
 
-        float[,] colorMap = new float[mapChunckSize, mapChunckSize];
 
         for (int i = 0; i < mapChunckSize; i++)
         {
@@ -114,7 +175,9 @@ public class generator : MonoBehaviour
                 }
             }
         }
+
         CurrentMapData = new MapData(map, colorMap);
+
         return CurrentMapData;
     }
 
