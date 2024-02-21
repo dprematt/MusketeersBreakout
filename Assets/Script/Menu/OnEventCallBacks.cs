@@ -11,11 +11,16 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
     public Text Room_;
 
     public RoomManager RoomItemPrefab_;
+    public PhotonManager Manager;
     List<RoomManager> RoomItemList_ = new List<RoomManager>();
     public Transform ContentObject_;
     public float TimeUpdate_ = 5f;
     float NextUpdateTime_;
 
+    private void Start()
+    {
+        Manager = GetComponent<PhotonManager>();
+    }
 
     public override void OnConnectedToMaster()
     {
@@ -28,8 +33,8 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
     {
         LobbyPanel_.SetActive(false);
         RoomPanel_.SetActive(true);
-        Room_.text = "Room name : " + PhotonNetwork.CurrentRoom.Name;
-        PhotonNetwork.LoadLevel("GamePlayDev");
+        //Room_.text = "Room name : " + PhotonNetwork.CurrentRoom.Name;
+        //PhotonNetwork.LoadLevel("GamePlayDev");
         Debug.Log("Room joined : " + PhotonNetwork.CurrentRoom.Name);
     }
 
@@ -65,5 +70,18 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
     {
         RoomPanel_.SetActive(false);
         LobbyPanel_.SetActive(true);
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        RoomPanel_.SetActive(false);
+        LobbyPanel_.SetActive(true);
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        Debug.Log("No random room available, creating new room...");
+        Manager.CreateRoom("Baguette");
+        Manager.JoinRandomRoom();
     }
 }

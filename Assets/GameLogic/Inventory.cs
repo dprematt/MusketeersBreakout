@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using PlayFab;
+using PlayFab.ClientModels;
 
 public class Inventory : MonoBehaviour
 {
@@ -9,6 +11,30 @@ public class Inventory : MonoBehaviour
     public bool loot = false;
 
     public event EventHandler<InventoryEventArgs> ItemAdded;
+
+
+    public void AddWeapon(string weaponName)
+    {
+        GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
+        if (weaponPrefab == null)
+        {
+            Debug.LogError("Weapon not found in folder Resources : " + weaponName);
+            return;
+        }
+        GameObject weaponObject = Instantiate(weaponPrefab);
+        IInventoryItem weaponItem = weaponObject.GetComponent<IInventoryItem>();
+        Destroy(weaponObject);
+        Destroy(weaponPrefab);
+        if (weaponItem == null)
+        {
+            Debug.LogError("Weapon doesn't implement IInventoryItem interface: " + weaponName);
+            Destroy(weaponObject);
+            return;
+        }
+        AddItem(weaponItem);
+    }
+
+
     public void Initialize(int slots, List<IInventoryItem> items, bool isLoot)
     {
         SLOTS = slots;

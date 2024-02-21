@@ -24,7 +24,7 @@ public class Endless : MonoBehaviour
     public Material mapMaterial;
     public Material grassMaterial;
     static generator _generator;
-    int chunkSize;
+    int chunkSize;  
     int chunkVisibleViewDist;
     Dictionary<Vector2, Chunk> chunkDict = new Dictionary<Vector2, Chunk>();
 

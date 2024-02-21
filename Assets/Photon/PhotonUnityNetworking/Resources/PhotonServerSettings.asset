@@ -45,6 +45,8 @@ MonoBehaviour:
   - DisableObject
   - Fire
   - RespawnSpaceship
+  - KickPlayer
+  - RPC_StartGame
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

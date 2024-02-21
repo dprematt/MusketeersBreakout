@@ -33,8 +33,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
     [SerializeField] float health, maxHealth = 10f;
 
-    float Max_Health_ = 100;
-
     [SerializeField] private float maxStamina = 100f;
     public float stamina;
     public static event System.Action<float, float> OnStaminaChanged;
@@ -248,6 +246,7 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             characterModel.rotation = Quaternion.Slerp(characterModel.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            //transform.rotation = Quaternion.Slerp(characterModel.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
 

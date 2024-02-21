@@ -25,7 +25,9 @@ public class PlayFabInventory : MonoBehaviour
         //Inventory_ = Player_.GetComponent<Inventory>();
         //PlayFabSettings.TitleId = PlayFabID_;
         PlayFabID_ = PlayerPrefs.GetString("playfabID");
-        
+        FetchAllPlayerData();
+
+
     }
 
     public void PlayerLose()
@@ -65,5 +67,28 @@ public class PlayFabInventory : MonoBehaviour
 
     private void OnPlayFabError(PlayFabError error)
     {
+    }
+
+    public void FetchAllPlayerData()
+    {
+        GetUserDataRequest request = new GetUserDataRequest();
+        PlayFabClientAPI.GetUserData(request, OnUserDataSuccess, OnUserDataError);
+    }
+
+    private void OnUserDataSuccess(GetUserDataResult result)
+    {
+        foreach (var kvp in result.Data)
+        {
+            Debug.Log("Key: " + kvp.Key + ", Value: " + kvp.Value.Value);
+            if (kvp.Value.Value == "1")
+            {
+                Inventory_.AddWeapon(kvp.Key);
+            }
+        }
+    }
+
+    private void OnUserDataError(PlayFabError error)
+    {
+        Debug.LogError("Failed to get user data: " + error.GenerateErrorReport());
     }
 }
