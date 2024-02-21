@@ -97,7 +97,6 @@ using UnityEngine;
 
     public int TakeDamage(float damageAmount)
     {
-        Debug.Log("DAMAGES : " + damageAmount);
         health -= damageAmount;
         bloodParticles.Play();
 

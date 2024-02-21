@@ -68,6 +68,8 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
     public bool isAttacking = false;
 
+    public ParticleSystem bloodParticles;
+
     private void Start()
     {
         HealthManager = GetComponent<HealthManager>();
@@ -92,6 +94,17 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
         cylinderTransform = transform;
         originalHeight = cylinderTransform.localScale.y;
+
+        //StartCoroutine(DamageOverTime());
+    }
+
+    private IEnumerator DamageOverTime()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(3f);
+            TakeDamage(1);
+        }
     }
 
     public void TakeDamage(float Damage)
@@ -104,6 +117,7 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
             }
 
             HealthManager.Take_Damage((int)Damage, gameObject);
+            bloodParticles.Play();
         }
     }
 
