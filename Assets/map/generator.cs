@@ -50,10 +50,7 @@ public class generator : MonoBehaviourPun
     private void Start()
     {
         PlaceExtractionZones();
-        Debug.Log("azerty");
         SpawnPlayer();
-        Debug.Log("ytreza");
-
     }
 
     public void PlaceExtractionZones()
