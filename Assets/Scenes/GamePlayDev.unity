@@ -3100,6 +3100,7 @@ GameObject:
   - component: {fileID: 850191869}
   - component: {fileID: 850191868}
   - component: {fileID: 850191867}
+  - component: {fileID: 850191871}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Untagged
@@ -3120,6 +3121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extractionZonePrefab: {fileID: 8195994125897338424, guid: c43593d2b8ded3a9cbd3db1aac4ac683, type: 3}
+  PlayerPrefab_: {fileID: 4756814486136092166, guid: b1d4021c9e3797d48a2d443ad5e7797d, type: 3}
   drawMode: 0
   levelOfDetail: 1
   normalizeMode: 0
@@ -3129,6 +3131,27 @@ MonoBehaviour:
   lacunarity: 2
   autoUpdate: 1
   offSet: {x: 0, y: 0}
+  _spawnCoords:
+  - {x: 170, y: 0.5, z: 72}
+  - {x: 183, y: 0.5, z: 54}
+  - {x: 171, y: 0.5, z: 135}
+  - {x: 92, y: 0.45777312, z: 223}
+  - {x: 117, y: 0.5, z: 209}
+  - {x: 29, y: 0.35300034, z: 176}
+  - {x: 111, y: 0.5, z: 23}
+  - {x: 52, y: 0.5, z: 228}
+  - {x: 148, y: 0.48376715, z: 160}
+  - {x: 182, y: 0.2834786, z: 236}
+  - {x: 72, y: 0.35947105, z: 183}
+  - {x: 181, y: 0.5, z: 133}
+  - {x: 109, y: 0.5, z: 177}
+  - {x: 16, y: 0.5, z: 195}
+  - {x: 68, y: 0.28118226, z: 70}
+  - {x: 208, y: 0.5, z: 59}
+  - {x: 224, y: 0.37839925, z: 86}
+  - {x: 219, y: 0.5, z: 153}
+  - {x: 171, y: 0.47148547, z: 156}
+  - {x: 101, y: 0.49143517, z: 119}
   useFallOf: 1
   meshHeightMult: 20
   meshHeightCurve:
@@ -3243,6 +3266,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 36
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &850191871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850191866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 6
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &850774253
 GameObject:
   m_ObjectHideFlags: 0
@@ -6958,7 +7003,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1820895074}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7db598920acd44395bbf52285dd365d6, type: 3}
   m_Name: 
@@ -8066,7 +8111,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5429995278238207036, guid: 16c7c3a640eb64a2fafa220cd1c41430, type: 3}
       propertyPath: sceneViewId
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c7c3a640eb64a2fafa220cd1c41430, type: 3}
