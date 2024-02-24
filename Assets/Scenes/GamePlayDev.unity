@@ -3100,6 +3100,7 @@ GameObject:
   - component: {fileID: 850191869}
   - component: {fileID: 850191868}
   - component: {fileID: 850191867}
+  - component: {fileID: 850191871}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Untagged
@@ -3120,6 +3121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extractionZonePrefab: {fileID: 8195994125897338424, guid: c43593d2b8ded3a9cbd3db1aac4ac683, type: 3}
+  PlayerPrefab_: {fileID: 4756814486136092166, guid: b1d4021c9e3797d48a2d443ad5e7797d, type: 3}
   drawMode: 0
   levelOfDetail: 1
   normalizeMode: 0
@@ -3264,6 +3266,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 38
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &850191871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850191866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 6
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &850774253
 GameObject:
   m_ObjectHideFlags: 0
@@ -7159,7 +7183,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1820895074}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7db598920acd44395bbf52285dd365d6, type: 3}
   m_Name: 
@@ -8279,7 +8303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5429995278238207036, guid: 16c7c3a640eb64a2fafa220cd1c41430, type: 3}
       propertyPath: sceneViewId
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16c7c3a640eb64a2fafa220cd1c41430, type: 3}

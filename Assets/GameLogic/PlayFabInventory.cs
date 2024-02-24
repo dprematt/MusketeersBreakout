@@ -1,5 +1,6 @@
 using UnityEngine;
 using PlayFab;
+using System.Threading.Tasks;
 using PlayFab.ClientModels;
 
 public class PlayFabInventory : MonoBehaviour
@@ -12,6 +13,7 @@ public class PlayFabInventory : MonoBehaviour
 
     private void Start()
     {
+        Task.Delay(4000).Wait();
         Player_ = GameObject.FindGameObjectWithTag("Player");
         if (Player_ != null)
         {
@@ -22,11 +24,8 @@ public class PlayFabInventory : MonoBehaviour
         {
             Debug.LogError("PlayerMove not found on the same GameObject as PlayFabInventory.");
         }
-        //Inventory_ = Player_.GetComponent<Inventory>();
-        //PlayFabSettings.TitleId = PlayFabID_;
         PlayFabID_ = PlayerPrefs.GetString("playfabID");
         FetchAllPlayerData();
-
 
     }
 

@@ -3,10 +3,15 @@ using System.Collections;
 using System;
 using System.Threading;
 using System.Collections.Generic;
+using Photon.Realtime;
+using Photon.Pun;
+using PlayFab;
+using UnityEngine.UI;
 
-public class generator : MonoBehaviour
+public class generator : MonoBehaviourPun
 {
     public GameObject extractionZonePrefab;
+    public GameObject PlayerPrefab_;
 
     public enum DrawMode { map, colorMap, mesh, fallOfMap }
 
@@ -45,7 +50,7 @@ public class generator : MonoBehaviour
     private void Start()
     {
         PlaceExtractionZones();
-
+        SpawnPlayer();
     }
 
     public void PlaceExtractionZones()
@@ -147,7 +152,48 @@ public class generator : MonoBehaviour
         {
             Debug.LogError("Pas assez de coordonnées disponibles.");
         }
-}
+    }
+
+    private void SpawnPlayer()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("GetCoords", RpcTarget.All, _spawnCoords);
+        }
+        float randomDelay = UnityEngine.Random.Range(0f, 2f);
+
+        Invoke("SpawnFunc", randomDelay);
+
+    }
+
+    private void SpawnFunc()
+    {
+        GameObject Player_ = PhotonNetwork.Instantiate(PlayerPrefab_.name, _spawnCoords[0], Quaternion.identity);
+        Debug.Log("Nom de l'instance PlayFab : " + PlayFabSettings.TitleId + " Spawn aux coordonnées : x = " + _spawnCoords[0].x + " y = " + _spawnCoords[0].y + " z = " + _spawnCoords[0].z);
+        Player_.GetComponent<SetupPlayer>().IsLocalPlayer();
+        photonView.RPC("DeleteCoords", RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void GetCoords(Vector3[] spawnCoords)
+    {
+        _spawnCoords = spawnCoords;
+    }
+
+    [PunRPC]
+    private void DeleteCoords()
+    {
+        List<Vector3> spawnCoordsList = new List<Vector3>(_spawnCoords);
+        if (spawnCoordsList.Count > 0)
+        {
+            spawnCoordsList.RemoveAt(0);
+            _spawnCoords = spawnCoordsList.ToArray();
+        }
+        else
+        {
+            Debug.LogWarning("La liste _spawnCoords est vide.");
+        }
+    }
 
 
     MapData SkeletonGenerator(Vector2 center)
