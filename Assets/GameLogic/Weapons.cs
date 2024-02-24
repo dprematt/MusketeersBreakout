@@ -79,4 +79,3 @@ public abstract class Weapons : MonoBehaviourPun, IInventoryItem
 
     }
 }
-

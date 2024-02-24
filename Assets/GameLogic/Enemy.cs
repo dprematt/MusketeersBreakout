@@ -18,12 +18,15 @@ using UnityEngine;
 
     public float rotationSpeed = 5f;
 
-    public Transform[] points;
-    int current;
+    public List<Weapon> weaponList;
+    private int currentWeapon = 0;
+
+    public float nextAttack = 0f;
+    private float delay = 1.5f;
+
     private void Start()
     {
         health = maxHealth;
-
         List<IInventoryItem> items = new List<IInventoryItem>();
         Halberd halberd = new Halberd();
         halberd._Image = Resources.Load("Sprites/halberd") as Sprite;
@@ -41,11 +44,20 @@ using UnityEngine;
         items.Add(sword);
         inventory = new Inventory(9, items, false);
 
-        current = 0;
+        Transform hand = FindDeepChild(transform, "hand.R");
+        foreach (Weapon weapon in weaponList)
+            weapon.whenPickUp(gameObject, hand);
+        weaponList[1].gameObject.SetActive(false);
+        weaponList[0].setAnim();
     }
 
-    void Update() 
+    void Update()
     {
+        if (weaponList[currentWeapon].anim.GetCurrentAnimatorStateInfo(0).IsName("hit1"))
+        {
+            weaponList[currentWeapon].anim.SetBool("hit1", false);
+        }
+
         if (target == null)
         {
             anim.SetBool("isWalking", false);
@@ -65,20 +77,25 @@ using UnityEngine;
 
             transform.position += transform.forward * speed * Time.deltaTime;
         }
-        /*else
+        else
         {
             anim.SetBool("isWalking", false);
-            if (WeaponChoice == false)
+            if (weaponList.Count > 0)
             {
-                inventory.mItems[0].Attack();
-                WeaponChoice = true;
+                if (Time.time > nextAttack)
+                {
+                    weaponList[currentWeapon].BotAttack();
+                    weaponList[currentWeapon].gameObject.SetActive(false);
+
+                    currentWeapon = currentWeapon == 0 ? 1 : 0;
+
+                    weaponList[currentWeapon].gameObject.SetActive(true);
+                    weaponList[currentWeapon].setAnim();
+
+                    nextAttack = Time.time + delay;
+                }
             }
-            else
-            {
-                inventory.mItems[inventory.mItems.Count - 1].Attack();
-                WeaponChoice = false;
-            }
-        }*/
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -112,5 +129,18 @@ using UnityEngine;
             return 1;
         }
         return 0;
+    }
+    Transform FindDeepChild(Transform parent, string name)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == name)
+                return child;
+
+            Transform result = FindDeepChild(child, name);
+            if (result != null)
+                return result;
+        }
+        return null;
     }
 }

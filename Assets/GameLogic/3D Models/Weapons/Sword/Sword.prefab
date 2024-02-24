@@ -94,7 +94,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 103164478061917215}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -118,6 +118,8 @@ MonoBehaviour:
   isLooted: 0
   anim: {fileID: 0}
   animOverride: {fileID: 22100000, guid: 0db0b3e85a353884796d05cd298ac181, type: 2}
+  holder: {fileID: 0}
+  holderMovements: {fileID: 0}
   damages: 3
   resetTime: 0.8
   positionX: 0.02

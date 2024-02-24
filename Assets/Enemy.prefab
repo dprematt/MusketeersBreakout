@@ -10974,7 +10974,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &3062668265298199943
 CapsuleCollider:
@@ -15732,7 +15732,9 @@ MonoBehaviour:
   anim: {fileID: 1311753358829301974}
   bloodParticles: {fileID: 6813569006514032907}
   detectionRadius: 10
-  points: []
+  rotationSpeed: 5
+  weaponList: []
+  nextAttack: 0
 --- !u!199 &-1213841984179507511
 ParticleSystemRenderer:
   serializedVersion: 6

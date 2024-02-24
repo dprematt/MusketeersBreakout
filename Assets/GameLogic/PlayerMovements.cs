@@ -68,8 +68,12 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
     public ParticleSystem bloodParticles;
 
+    public List<Weapon> weaponList;
+    private int currentWeapon;
+
     private void Start()
     {
+        weaponList = new List<Weapon>();
         HealthManager = GetComponent<HealthManager>();
         PFInventory_ = GetComponent<PlayFabInventory>();
         rb = GetComponent<Rigidbody>();
@@ -164,6 +168,24 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
             inventory.AddItem(item);
         }
 
+        Weapon weaponComp = col.GetComponent<Weapon>();
+        if (weaponComp != null && weaponList.Count < 2)
+        {
+            GameObject weapon = col.gameObject;
+            if (!weaponComp.isLooted)
+            {
+                weaponList.Add(weaponComp);
+                Transform hand = FindDeepChild(transform, "jointItemR");
+                weaponComp.whenPickUp(gameObject, hand);
+                if (weaponList.Count == 2)
+                    weapon.SetActive(false);
+                else
+                {
+                    weaponComp.setAnim();
+                    currentWeapon = 0;
+                }
+            }
+        }
     }
 
     private void Update()
@@ -177,9 +199,23 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
 
         CheckXp();
 
+        for (int i = 0; i < weaponList.Count; i++)
+            Debug.Log(weaponList[i].name);
+
         if (Input.GetKeyDown(jumpKey) && isGrounded)
         {
             Jump();
+        }
+
+        float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
+        if (scrollDelta > 0f || scrollDelta < 0f)
+        {
+            weaponList[currentWeapon].gameObject.SetActive(false);
+
+            currentWeapon = currentWeapon == 0 ? 1 : 0;
+
+            weaponList[currentWeapon].gameObject.SetActive(true);
+            weaponList[currentWeapon].setAnim();
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && !staminaFullUsed)
@@ -305,5 +341,18 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         {
             rb.AddForce(moveDirection.normalized * moveSpeed * movementMultiplier * airMultiplier, ForceMode.Acceleration);
         }
+    }
+    Transform FindDeepChild(Transform parent, string name)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == name)
+                return child;
+
+            Transform result = FindDeepChild(child, name);
+            if (result != null)
+                return result;
+        }
+        return null;
     }
 }

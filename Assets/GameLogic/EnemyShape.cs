@@ -61,6 +61,7 @@ using UnityEngine;
             {
                 current = (current + 1) % points.Length;
             }
+            return;
         }
 
         float dist = Vector3.Distance(transform.position, target.position);

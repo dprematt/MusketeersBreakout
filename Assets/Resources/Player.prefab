@@ -5280,6 +5280,7 @@ MonoBehaviour:
   anim: {fileID: 4661507371320996336}
   isAttacking: 0
   bloodParticles: {fileID: -6681432496318675080}
+  weaponList: []
 --- !u!114 &3107699292531397568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5316,7 +5317,6 @@ MonoBehaviour:
   - {fileID: -3871568989856592407}
   - {fileID: -1379219858753776991}
   - {fileID: 6213211073331797823}
-  - {fileID: 6516570572402197074}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
