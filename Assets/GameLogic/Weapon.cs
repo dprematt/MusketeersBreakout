@@ -81,14 +81,10 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
     {
         if (anim.GetBool("hit" + currentAttack) && other.gameObject != holder && !damageDealt)
         {
-            Debug.Log("LAA");
             if (holder.CompareTag("Player"))
                 other.gameObject.GetComponent<Enemy>().TakeDamage(damages);
             else if (holder.CompareTag("Enemy"))
-            {
-                Debug.Log("AIE");
                 other.gameObject.GetComponent<PlayerMovements>().TakeDamage(damages);
-            }
             damageDealt = true;
             return;
         }
