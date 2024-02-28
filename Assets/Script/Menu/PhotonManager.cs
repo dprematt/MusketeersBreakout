@@ -15,6 +15,7 @@ public class PhotonManager : MonoBehaviour
     {
         Nb_max = 2;
         Players.text = Nb_max.ToString();
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     public void Plus()
@@ -43,7 +44,11 @@ public class PhotonManager : MonoBehaviour
     {
         RoomOptions roomOptions = new RoomOptions { MaxPlayers = (byte)Nb_max };
         if (Name.Length >= 1)
-        {
+        {   
+            int seed = new System.Random().Next();
+            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mapSeed", seed } };
+            roomOptions.CustomRoomPropertiesForLobby = new string[] { "mapSeed" };
+
             PhotonNetwork.CreateRoom(Name, roomOptions);
         }
     }

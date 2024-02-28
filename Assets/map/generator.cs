@@ -42,6 +42,7 @@ public class generator : MonoBehaviourPun
     public GameObject[] prefabTypes;
 
     public TerrainType[] regions;
+    public static int seed = 0;
 
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<meshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<meshData>>();
@@ -49,8 +50,18 @@ public class generator : MonoBehaviourPun
 
     private void Start()
     {
+        SetSeedFromRoomProperties();
         PlaceExtractionZones();
         SpawnPlayer();
+    }
+
+    public static void SetSeedFromRoomProperties()
+    {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("mapSeed", out object seedValue))
+        {
+            seed = (int)seedValue;
+            Debug.Log($"Seed récupérée dans generator: {seed}");
+        }
     }
 
     public void PlaceExtractionZones()
@@ -199,7 +210,7 @@ public class generator : MonoBehaviourPun
     MapData SkeletonGenerator(Vector2 center)
     {
 
-        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode);
+        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode, seed);
 
 
         for (int i = 0; i < mapChunckSize; i++)
