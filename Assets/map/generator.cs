@@ -157,7 +157,7 @@ public class generator : MonoBehaviourPun
 
                     float randomHeight = colorMap[selectedCoord.y, selectedCoord.x];
 
-                    randomHeight = Mathf.Clamp(randomHeight, minHeight, maxHeight);
+                    randomHeight = Mathf.Clamp(randomHeight, minHeight, maxHeight) + 10;
 
                     _spawnCoords[i] = new Vector3(selectedCoord.x, randomHeight, selectedCoord.y);
                     Debug.Log("_spawnCoords : " + _spawnCoords[i]);
