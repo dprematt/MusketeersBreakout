@@ -190,7 +190,7 @@ public class generator : MonoBehaviourPun
         GameObject Player_ = PhotonNetwork.Instantiate(PlayerPrefab_.name, _spawnCoords[0], Quaternion.identity);
         Debug.Log("Nom de l'instance PlayFab : " + PlayFabSettings.TitleId + " Spawn aux coordonnées : x = " + _spawnCoords[0].x + " y = " + _spawnCoords[0].y + " z = " + _spawnCoords[0].z);
         Player_.GetComponent<SetupPlayer>().IsLocalPlayer();
-        photonView.RPC("DeleteCoords", RpcTarget.All);
+        //photonView.RPC("DeleteCoords", RpcTarget.All);
     }
 
     [PunRPC]
