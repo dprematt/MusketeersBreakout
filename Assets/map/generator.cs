@@ -42,6 +42,7 @@ public class generator : MonoBehaviourPun
     public GameObject[] prefabTypes;
 
     public TerrainType[] regions;
+    public static int seed = 0;
 
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<meshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<meshData>>();
@@ -49,8 +50,20 @@ public class generator : MonoBehaviourPun
 
     private void Start()
     {
+        float randomDelay = UnityEngine.Random.Range(3f, 4f);
+
+        SetSeedFromRoomProperties();
         PlaceExtractionZones();
-        SpawnPlayer();
+        Invoke("DrawMap", randomDelay);
+    }
+
+    public static void SetSeedFromRoomProperties()
+    {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("mapSeed", out object seedValue))
+        {
+            seed = (int)seedValue;
+            Debug.Log($"Seed récupérée dans generator: {seed}");
+        }
     }
 
     public void PlaceExtractionZones()
@@ -80,7 +93,7 @@ public class generator : MonoBehaviourPun
     public void DrawMap()
     {
         MapData mapdata = SkeletonGenerator(Vector2.zero);
-
+        
         selectPos(colorMap);
 
         Debug.Log("TAB LENGHT = " + _spawnCoords.Length);
@@ -116,42 +129,48 @@ public class generator : MonoBehaviourPun
     {
         float minHeight = 0.2f;
         float maxHeight = 0.5f;
+        Debug.Log("SelectPos");
 
-        List<Vector2Int> availableCoords = new List<Vector2Int>();
-
-        for (int i = 0; i < mapChunckSize; i++)
+        if (PhotonNetwork.IsMasterClient)
         {
-            for (int j = 0; j < mapChunckSize; j++)
-            {
-                float curHeight = colorMap[j, i];
+            List<Vector2Int> availableCoords = new List<Vector2Int>();
 
-                if (curHeight >= minHeight && curHeight <= maxHeight)
+            for (int i = 0; i < mapChunckSize; i++)
+            {
+                for (int j = 0; j < mapChunckSize; j++)
                 {
-                    availableCoords.Add(new Vector2Int(j, i));
+                    float curHeight = colorMap[j, i];
+
+                    if (curHeight >= minHeight && curHeight <= maxHeight)
+                    {
+                        availableCoords.Add(new Vector2Int(j, i));
+                    }
                 }
             }
-        }
 
-        if (availableCoords.Count >= 20)
-        {
-            for (int i = 0; i < 20; i++)
+            if (availableCoords.Count >= 20)
             {
-                int randomIndex = UnityEngine.Random.Range(0, availableCoords.Count);
-                Vector2Int selectedCoord = availableCoords[randomIndex];
+                for (int i = 0; i < 20; i++)
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, availableCoords.Count);
+                    Vector2Int selectedCoord = availableCoords[randomIndex];
 
-                float randomHeight = colorMap[selectedCoord.y, selectedCoord.x];
+                    float randomHeight = colorMap[selectedCoord.y, selectedCoord.x];
 
-                randomHeight = Mathf.Clamp(randomHeight, minHeight, maxHeight);
+                    randomHeight = Mathf.Clamp(randomHeight, minHeight, maxHeight) + 10;
 
-                _spawnCoords[i] = new Vector3(selectedCoord.x, randomHeight, selectedCoord.y);
+                    _spawnCoords[i] = new Vector3(selectedCoord.x, randomHeight, selectedCoord.y);
+                    Debug.Log("_spawnCoords : " + _spawnCoords[i]);
 
-                availableCoords.RemoveAt(randomIndex);
+                    availableCoords.RemoveAt(randomIndex);
+                }
+            }
+            else
+            {
+                Debug.LogError("Pas assez de coordonnées disponibles.");
             }
         }
-        else
-        {
-            Debug.LogError("Pas assez de coordonnées disponibles.");
-        }
+        SpawnPlayer();
     }
 
     private void SpawnPlayer()
@@ -160,7 +179,7 @@ public class generator : MonoBehaviourPun
         {
             photonView.RPC("GetCoords", RpcTarget.All, _spawnCoords);
         }
-        float randomDelay = UnityEngine.Random.Range(0f, 2f);
+        float randomDelay = UnityEngine.Random.Range(1f, 2f);
 
         Invoke("SpawnFunc", randomDelay);
 
@@ -171,7 +190,7 @@ public class generator : MonoBehaviourPun
         GameObject Player_ = PhotonNetwork.Instantiate(PlayerPrefab_.name, _spawnCoords[0], Quaternion.identity);
         Debug.Log("Nom de l'instance PlayFab : " + PlayFabSettings.TitleId + " Spawn aux coordonnées : x = " + _spawnCoords[0].x + " y = " + _spawnCoords[0].y + " z = " + _spawnCoords[0].z);
         Player_.GetComponent<SetupPlayer>().IsLocalPlayer();
-        photonView.RPC("DeleteCoords", RpcTarget.All);
+        //photonView.RPC("DeleteCoords", RpcTarget.All);
     }
 
     [PunRPC]
@@ -199,7 +218,7 @@ public class generator : MonoBehaviourPun
     MapData SkeletonGenerator(Vector2 center)
     {
 
-        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode);
+        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode, seed);
 
 
         for (int i = 0; i < mapChunckSize; i++)
