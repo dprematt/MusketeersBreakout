@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4562332779647995054}
   - component: {fileID: 8954096233075025343}
   - component: {fileID: 8302657082354690837}
-  - component: {fileID: 7150871007682398926}
+  - component: {fileID: 2919733102005021396}
   - component: {fileID: -5747767739723621172}
   m_Layer: 0
   m_Name: Bullet
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 1227652172285325768}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -94,12 +94,12 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1227652172285325768}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &7150871007682398926
+--- !u!54 &2919733102005021396
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,6 +127,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b1a7864da1904088af4d97297359f06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpawnPoint: {fileID: 0}
-  bulletPrefab: {fileID: 0}
-  bulletSpeed: 10

@@ -41,7 +41,7 @@ public class Knife : Weapons
     public void SpawnWeaponProx()
     {
         float offset = 1.5f;
-        PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
+        Player pm = gameObject.GetComponentInParent<Player>();
 
         // Use the forward vector to determine the spawn position
         var NewPos = weaponSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
@@ -63,7 +63,7 @@ public class Knife : Weapons
         {
             SpawnWeaponProx();
             if (UpdateLifeTime(LifeTime--))
-                Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
+                Destroy(gameObject); // destruction de l'arme si la durabilitï¿½ atteint 0;
         }*/
     }
 }

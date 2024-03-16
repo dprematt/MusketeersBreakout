@@ -84,7 +84,6 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(IInventoryItem item)
     {
-        Debug.Log(mItems.Count);
         if (mItems.Count < SLOTS)
         {
             string name = item.Name;

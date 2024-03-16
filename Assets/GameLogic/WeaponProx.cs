@@ -39,7 +39,7 @@ public class WeaponProx : MonoBehaviour
             enemyComponentShape.TakeDamage(Damage);
             Destroy(gameObject);
         }
-        if (col.gameObject.TryGetComponent(out PlayerMovements player))
+        if (col.gameObject.TryGetComponent(out Player player))
         {
             Debug.Log("PLAYER TAKE DMG !!!");
             player.TakeDamage(Damage);

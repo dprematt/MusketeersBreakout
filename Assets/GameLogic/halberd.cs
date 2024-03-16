@@ -72,7 +72,7 @@ public class Halberd : Weapons
         float offset = 2.8f;
         try
         {
-            PlayerMovements pm1 = gameObject.GetComponentInParent<PlayerMovements>();
+            Player pm1 = gameObject.GetComponentInParent<Player>();
         }
         catch
         {
@@ -81,7 +81,7 @@ public class Halberd : Weapons
             return;
         }
 
-        PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
+        Player pm = gameObject.GetComponentInParent<Player>();
         Debug.Log("ATTACK in enemy ! 2");
         // Use the forward vector to determine the spawn position
         var NewPos = weaponSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
@@ -111,7 +111,7 @@ public class Halberd : Weapons
          {
              SpawnWeaponProx();
              if (UpdateLifeTime(LifeTime--))
-                 Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
+                 Destroy(gameObject); // destruction de l'arme si la durabilitï¿½ atteint 0;
          }*/
     }
 }

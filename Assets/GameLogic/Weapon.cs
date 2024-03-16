@@ -23,7 +23,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public GameObject holder;
 
-    public PlayerMovements holderMovements;
+    public Player holderMovements;
 
     private float timeSinceAttack;
     private int currentAttack = 0;
@@ -42,6 +42,8 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     private bool isPlayer;
 
+    public bool isLongRange;
+
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -52,7 +54,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         if (isLooted)
         {
             timeSinceAttack += Time.deltaTime;
-            Attack();
         }
     }
 
@@ -84,7 +85,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             if (holder.CompareTag("Player"))
                 other.gameObject.GetComponent<Enemy>().TakeDamage(damages);
             else if (holder.CompareTag("Enemy"))
-                other.gameObject.GetComponent<PlayerMovements>().TakeDamage(damages);
+                other.gameObject.GetComponent<Player>().TakeDamage(damages);
             damageDealt = true;
             return;
         }
@@ -106,32 +107,31 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public virtual void Attack()
     {
-        if (timeSinceAttack > resetTime)
+        if (!isLongRange && timeSinceAttack > resetTime && holderMovements.stamina >= 30 && isLooted)
         {
-            anim.SetBool("hit" + currentAttack, false);
+            currentAttack++;
+            damageDealt = false;
+            if (isPlayer)
+                holderMovements.stamina -= 30;
 
-            if (Input.GetMouseButtonDown(0) && holderMovements.stamina >= 30 && timeSinceAttack > resetTime && isLooted)
+            if (currentAttack > 3)
             {
-                currentAttack++;
-                damageDealt = false;
-                if (isPlayer)
-                    holderMovements.stamina -= 30;
-
-                if (currentAttack > 3)
-                {
-                    currentAttack = 1;
-                }
-
-                anim.SetBool("hit" + currentAttack, true);
-
-                audioSource.PlayOneShot(attackSound);
-
-                timeSinceAttack = 0;
+                currentAttack = 1;
             }
 
-            if (timeSinceAttack > (resetTime + 0.2f))
-                currentAttack = 0;
+            anim.SetBool("hit" + currentAttack, true);
+
+            audioSource.PlayOneShot(attackSound);
+
+            timeSinceAttack = 0;
         }
+    }
+
+    public void ResetAttackAnimation()
+    {
+        anim.SetBool("hit" + currentAttack, false);
+        if (timeSinceAttack > (resetTime + 0.2f))
+            currentAttack = 0;
     }
 
     public void BotAttack()
@@ -150,14 +150,15 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         transform.localPosition = new Vector3(positionX, positionY, positionZ);
         transform.localRotation = Quaternion.Euler(rotationX, rotationY, rotationZ);
         if (isPlayer)
-            holderMovements = holder.GetComponent<PlayerMovements>();
+            holderMovements = holder.GetComponent<Player>();
         isLooted = true;
     }
 
     public void setAnim()
     {
         anim = holder.GetComponentInChildren<Animator>();
-        anim.runtimeAnimatorController = animOverride;
+        if(animOverride != null)
+            anim.runtimeAnimatorController = animOverride;
         anim.SetInteger("weaponType", weaponType);
     }
 }

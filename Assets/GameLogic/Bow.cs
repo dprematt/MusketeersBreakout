@@ -60,7 +60,7 @@ public class Bow : Weapons
         if (LifeTime > 0)
         {
             float offset = 1f;
-            PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
+            Player pm = gameObject.GetComponentInParent<Player>();
 
             // Use the forward vector to determine the spawn position
             var NewPos = BulletSpawnPoint_.position + pm.characterModel.rotation * Vector3.forward * offset;

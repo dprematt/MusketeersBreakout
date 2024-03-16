@@ -8,12 +8,12 @@ public class StaminaWheel : MonoBehaviour
 
     private void Start()
     {
-        PlayerMovements.OnStaminaChanged += UpdateStaminaDisplay;
+        Player.OnStaminaChanged += UpdateStaminaDisplay;
     }
 
     private void OnDestroy()
     {
-        PlayerMovements.OnStaminaChanged -= UpdateStaminaDisplay;
+        Player.OnStaminaChanged -= UpdateStaminaDisplay;
     }
 
     private void UpdateStaminaDisplay(float currentStamina, float maxStamina)

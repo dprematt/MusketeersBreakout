@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class PlayerMovements : MonoBehaviourPunCallbacks
+public class Player : MonoBehaviourPunCallbacks
 {
     public int xp;
     public int level;
@@ -71,6 +71,9 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
     public List<Weapon> weaponList;
     private int currentWeapon;
 
+    private Vector3 aimTarget;
+    LineRenderer lineRenderer;
+
     private void Start()
     {
         weaponList = new List<Weapon>();
@@ -98,6 +101,109 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
         originalHeight = cylinderTransform.localScale.y;
 
         //StartCoroutine(DamageOverTime());
+    }
+
+    private void Update()
+    {
+        if (lineRenderer == null)
+        {
+            lineRenderer = GetComponent<LineRenderer>();
+            lineRenderer.enabled = false;
+        }
+
+        Vector3 temp = transform.position;
+        temp.y += 0.1f;
+        isGrounded = Physics.Raycast(temp, Vector3.down, 0.2f);
+
+        MyInput();
+        ControlDrag();
+
+        CheckXp();
+
+        if (Input.GetKeyDown(jumpKey) && isGrounded)
+        {
+            Jump();
+        }
+
+        float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
+        if ((scrollDelta > 0f || scrollDelta < 0f) && weaponList.Count > 1)
+        {
+            weaponList[currentWeapon].gameObject.SetActive(false);
+
+            currentWeapon = currentWeapon == 0 ? 1 : 0;
+
+            weaponList[currentWeapon].gameObject.SetActive(true);
+            weaponList[currentWeapon].setAnim();
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift) && !staminaFullUsed)
+        {
+            if (stamina > 0)
+            {
+                stamina -= 30 * Time.deltaTime;
+                moveSpeed = 8f;
+            }
+            else
+            {
+                staminaFullUsed = true;
+            }
+        }
+        else
+        {
+            if (stamina < maxStamina)
+            {
+                stamina += 30 * Time.deltaTime;
+                moveSpeed = 6f;
+            }
+            else
+            {
+                staminaFullUsed = false;
+            }
+        }
+        OnStaminaChanged?.Invoke(stamina, maxStamina);
+
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            if (HUD.activeSelf)
+            {
+                HUD.SetActive(false);
+            }
+            else
+            {
+                HUD.SetActive(true);
+            }
+        }
+
+        if (weaponList.Count > 0)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                weaponList[currentWeapon].Attack();
+            }
+            else
+            {
+                weaponList[currentWeapon].ResetAttackAnimation();
+            }
+
+            if (weaponList[currentWeapon].isLongRange && !Input.GetKey(KeyCode.LeftShift))
+            {
+                IsometricAiming aim = gameObject.GetComponent<IsometricAiming>();
+
+                if (Input.GetMouseButtonDown(1))
+                    aim.laserStartAndStop();
+
+                if (Input.GetMouseButton(1))
+                {
+                    anim.SetLayerWeight(1, Mathf.Lerp(anim.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
+                    aim.Aiming();
+                }
+                else
+                    anim.SetLayerWeight(1, Mathf.Lerp(anim.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
+
+                if (Input.GetMouseButtonUp(1))
+                    aim.laserStartAndStop();
+            }
+        }
     }
 
     private IEnumerator DamageOverTime()
@@ -161,12 +267,12 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
     }
     void OnTriggerEnter(Collider col)
     {
-        Inventory loot = col.GetComponent<Inventory>();
+        /*Inventory loot = col.GetComponent<Inventory>();
         IInventoryItem item = col.GetComponent<IInventoryItem>();
         if (item != null)
         {
             inventory.AddItem(item);
-        }
+        }*/
 
         Weapon weaponComp = col.GetComponent<Weapon>();
         if (weaponComp != null && weaponList.Count < 2)
@@ -184,75 +290,6 @@ public class PlayerMovements : MonoBehaviourPunCallbacks
                     weaponComp.setAnim();
                     currentWeapon = 0;
                 }
-            }
-        }
-    }
-
-    private void Update()
-    {
-        Vector3 temp = transform.position;
-        temp.y += 0.1f;
-        isGrounded = Physics.Raycast(temp, Vector3.down, 0.2f);
-
-        MyInput();
-        ControlDrag();
-
-        CheckXp();
-
-        for (int i = 0; i < weaponList.Count; i++)
-            Debug.Log(weaponList[i].name);
-
-        if (Input.GetKeyDown(jumpKey) && isGrounded)
-        {
-            Jump();
-        }
-
-        float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
-        if (scrollDelta > 0f || scrollDelta < 0f)
-        {
-            weaponList[currentWeapon].gameObject.SetActive(false);
-
-            currentWeapon = currentWeapon == 0 ? 1 : 0;
-
-            weaponList[currentWeapon].gameObject.SetActive(true);
-            weaponList[currentWeapon].setAnim();
-        }
-
-        if (Input.GetKey(KeyCode.LeftShift) && !staminaFullUsed)
-        {
-            if (stamina > 0)
-            {
-                stamina -= 30 * Time.deltaTime;
-                moveSpeed = 8f;
-            }
-            else
-            {
-                staminaFullUsed = true;
-            }
-        }
-        else
-        {
-            if (stamina < maxStamina)
-            {
-                stamina += 30 * Time.deltaTime;
-                moveSpeed = 6f;
-            }
-            else
-            {
-                staminaFullUsed = false;
-            }
-        }
-        OnStaminaChanged?.Invoke(stamina, maxStamina);
-
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            if (HUD.activeSelf)
-            {
-                HUD.SetActive(false);
-            }
-            else
-            {
-                HUD.SetActive(true);
             }
         }
     }

@@ -13,18 +13,17 @@ public class Bullet : MonoBehaviourPun
     private float PosActual;
     private float PosInit;
 
+    IEnumerator DestroyBullet()
+    {
+        yield return new WaitForSeconds(2f);
+        Destroy(gameObject);
+        //this.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
+    }
 
-
-    //IEnumerator DestroyBullet()
-    //{
-    //    yield return new WaitForSeconds(2f);
-    //    this.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
-    //}
-
-    //private void Start()
-    //{
-    //    StartCoroutine(DestroyBullet());
-    //}
+    private void Start()
+    {
+        StartCoroutine(DestroyBullet());
+    }
 
     public void Initialize(Transform spawnPoint, float range, float damage)
     {
@@ -32,10 +31,11 @@ public class Bullet : MonoBehaviourPun
         Range = range;
         Damage = damage;
     }
+
     private void Update()
     {
         transform.Translate(Vector3.forward * Time.deltaTime * 10f);
-        Debug.Log("Travel");
+        checkRange();
     }
 
     [PunRPC]
@@ -46,17 +46,16 @@ public class Bullet : MonoBehaviourPun
 
     void checkRange()
     {
-        //Debug.Log("Check bullet range");
-        /*PosInit = bulletSpawnPoint.transform.position.z;
+        PosInit = bulletSpawnPoint.transform.position.z;
         PosActual = gameObject.transform.position.z;
-        if (PosActual <= PosInit + Range) {
-                return;
-            } else
-                Destroy(gameObject);*/
+        if (PosActual >= PosInit + Range)
+        {
+            Destroy(gameObject);
+        }
     }
-    void OnCollisionEnter(Collision col)
-    {
 
+    void OnTriggerEnter(Collider col)
+    {
         if (col.gameObject.TryGetComponent(out Enemy enemyComponent))
         {
             enemyComponent.TakeDamage(Damage);
@@ -72,12 +71,12 @@ public class Bullet : MonoBehaviourPun
             enemyComponentCircle.TakeDamage(Damage);
             Destroy(gameObject);
         }
-        else if (col.gameObject.TryGetComponent(out PlayerMovements playerComponent))
+        else if (col.gameObject.TryGetComponent(out Player playerComponent))
         {
             playerComponent.TakeDamage(10);
             Debug.Log("Collide Call InflictDamage");
 
-            this.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
+            GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
         }
     }
 }

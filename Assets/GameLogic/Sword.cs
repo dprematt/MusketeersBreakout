@@ -84,7 +84,7 @@ public class Sword : Weapons
         float offset = 2.2f;
         try
         {
-            PlayerMovements pm1 = gameObject.GetComponentInParent<PlayerMovements>();
+            Player pm1 = gameObject.GetComponentInParent<Player>();
         }
         catch
         {
@@ -92,7 +92,7 @@ public class Sword : Weapons
             SpawnEnemyWeaponProx();
             return;
         }
-        PlayerMovements pm = gameObject.GetComponentInParent<PlayerMovements>();
+        Player pm = gameObject.GetComponentInParent<Player>();
         // Use the forward vector to determine the spawn position
         var NewPos = weaponSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
         NewPos.y += 1.5f;
@@ -113,7 +113,7 @@ public class Sword : Weapons
         {
             SpawnWeaponProx();
             if (UpdateLifeTime(LifeTime--))
-                Destroy(gameObject); // destruction de l'arme si la durabilité atteint 0;
+                Destroy(gameObject); // destruction de l'arme si la durabilitï¿½ atteint 0;
         }*/
     }
 }

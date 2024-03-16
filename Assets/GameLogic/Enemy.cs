@@ -53,7 +53,7 @@ using UnityEngine;
 
     void Update()
     {
-        if (weaponList[currentWeapon].anim.GetCurrentAnimatorStateInfo(0).IsName("hit1"))
+        if (weaponList.Count > 0 &&  weaponList[currentWeapon].anim.GetCurrentAnimatorStateInfo(0).IsName("hit1"))
         {
             weaponList[currentWeapon].anim.SetBool("hit1", false);
         }
@@ -120,7 +120,7 @@ using UnityEngine;
         if (health <= 0)
         {
             GameObject player = GameObject.FindWithTag("Player");
-            PlayerMovements playerMov = player.GetComponent<PlayerMovements>();
+            Player playerMov = player.GetComponent<Player>();
             playerMov.UpdateXp(10);
             GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
             var loot = Instantiate(LootPrefab, gameObject.transform.position, gameObject.transform.rotation);

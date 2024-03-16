@@ -117,7 +117,7 @@ using UnityEngine;
         if (health <= 0)
         {
             GameObject player = GameObject.FindWithTag("Player");
-            PlayerMovements playerMov = player.GetComponent<PlayerMovements>();
+            Player playerMov = player.GetComponent<Player>();
             playerMov.UpdateXp(10);
             GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
             var loot = Instantiate(LootPrefab, gameObject.transform.position, gameObject.transform.rotation);

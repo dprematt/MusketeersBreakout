@@ -15,6 +15,6 @@ public class Isometric : MonoBehaviour
             targetAngle += mouseX * mouseSensitivity;
 
         currentAngle = Mathf.LerpAngle(transform.eulerAngles.y, targetAngle, rotationSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.Euler(30, currentAngle, 0);
+        transform.rotation = Quaternion.Euler(45, currentAngle, 0);
     }
 }

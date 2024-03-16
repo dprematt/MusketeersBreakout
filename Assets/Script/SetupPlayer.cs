@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SetupPlayer : MonoBehaviour
 {
-    public PlayerMovements Move_;
+    public Player Move_;
     public GameObject Camera_;
     // Start is called before the first frame update
 
