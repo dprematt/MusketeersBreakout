@@ -12,6 +12,9 @@ public class generator : MonoBehaviourPun
 {
     public GameObject extractionZonePrefab;
     public GameObject PlayerPrefab_;
+    public GameObject LoadScreen_;
+
+    public GameObject Hud_, LootHud_;
 
     public enum DrawMode { map, colorMap, mesh, fallOfMap }
 
@@ -191,6 +194,9 @@ public class generator : MonoBehaviourPun
         Debug.Log("Nom de l'instance PlayFab : " + PlayFabSettings.TitleId + " Spawn aux coordonnées : x = " + _spawnCoords[0].x + " y = " + _spawnCoords[0].y + " z = " + _spawnCoords[0].z);
         Player_.GetComponent<SetupPlayer>().IsLocalPlayer();
         //photonView.RPC("DeleteCoords", RpcTarget.All);
+        LoadScreen_.SetActive(false);
+        Hud_.SetActive(true);
+        LootHud_.SetActive(true);
     }
 
     [PunRPC]
