@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Photon.Pun;
+
 
 public class Timer : MonoBehaviour
 {
@@ -21,8 +23,10 @@ public class Timer : MonoBehaviour
     {
         // Mettre à jour le texte du chronomètre
         currentTime -= Time.deltaTime;
-        if (currentTime < 0f)
+        if (currentTime < 0f){
             currentTime = 0f;
+            PhotonNetwork.LoadLevel("Menu");
+        }
         
         UpdateTimeUI();
     }
@@ -33,12 +37,14 @@ public class Timer : MonoBehaviour
         int secondes = Mathf.FloorToInt(currentTime % 60);
         string timeString = string.Format("{00:00}:{01:00}", minutes, secondes);
         timerText.text = timeString;
-
-        if (currentTime > 15f)
+ 
+        if (currentTime > 900f) {
             timerText.color = Color.green;
-        if (currentTime < 15f && currentTime > 5f)
+            Debug.Log(currentTime.ToString());
+        }
+        else if (currentTime < 900f && currentTime > 300f)
             timerText.color = new Color(1.0f, 0.5f, 0.0f);
-        else if (currentTime < 5f)
+        else if (currentTime < 300f)
             timerText.color = Color.red;
     }
 
