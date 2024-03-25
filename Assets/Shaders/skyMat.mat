@@ -45,7 +45,7 @@ Material:
     m_Floats:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
-    - _blendValue: 0.2
-    - _timeScale: 0.02
+    - _blendValue: 1
+    - _timeScale: 0.00002
     m_Colors: []
   m_BuildTextureStacks: []
