@@ -19,7 +19,7 @@ public class generator : MonoBehaviourPun
     public enum DrawMode { map, colorMap, mesh, fallOfMap }
 
     public DrawMode drawMode;
-    public const int mapChunckSize = 241;
+    public const int mapChunkSize = 241;
     [Range(0, 6)]
     public int levelOfDetail;
     public Skeleton.NormalizeMode normalizeMode;
@@ -31,7 +31,7 @@ public class generator : MonoBehaviourPun
     public bool autoUpdate;
     public Vector2 offSet;
 
-    float[,] colorMap = new float[mapChunckSize, mapChunckSize];
+    float[,] colorMap = new float[mapChunkSize, mapChunkSize];
     public Vector3[] _spawnCoords = new Vector3[20];
 
 
@@ -49,7 +49,10 @@ public class generator : MonoBehaviourPun
 
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<meshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<meshData>>();
+    private Dictionary<Vector2, MapData> chunkDataMap = new Dictionary<Vector2, MapData>();
     public MapData CurrentMapData { get; private set; }
+
+    private object _heightMapLock = new object();
 
     private void Start()
     {
@@ -59,6 +62,112 @@ public class generator : MonoBehaviourPun
         PlaceExtractionZones();
         Invoke("DrawMap", randomDelay);
     }
+
+    void OnDrawGizmos() {
+        // Dessine une ligne rouge au bord supérieur de la plage.
+        float mapChunkSize = 241;
+        float topBorder = 3.5f * mapChunkSize;
+        float bottomBorder = -topBorder;
+        float leftBorder = -topBorder;
+        float rightBorder = topBorder;
+
+        Gizmos.color = Color.yellow;
+        // Gauche de la carte
+        Gizmos.DrawLine(new Vector3(leftBorder, 0, topBorder), new Vector3(leftBorder, 0, bottomBorder));
+        Gizmos.color = Color.green;
+        // Droit de la carte
+        Gizmos.DrawLine(new Vector3(rightBorder, 0, topBorder), new Vector3(rightBorder, 0, bottomBorder));
+    
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(new Vector3(leftBorder, 0, topBorder), new Vector3(rightBorder, 0, topBorder));
+
+        // Dessine une ligne bleue au bord inférieur de la plage.
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(new Vector3(leftBorder, 0, bottomBorder), new Vector3(rightBorder, 0, bottomBorder));
+    }
+
+    private void GenerateBeaches(Vector2 chunkCenter)
+    {
+        float normalizedWaterHeight = 0.0001f / meshHeightMult;
+        int beachThickness = 50;
+
+        float mapHalfSize = mapChunkSize * 7 / 2; // Si votre carte est de 7 chunks par 7 chunks.
+
+        // Les coordonnées des bords de la carte
+        float leftMapBorder = -mapHalfSize;
+        float rightMapBorder = mapHalfSize;
+
+        float chunkTopBorder = chunkCenter.y + (mapChunkSize / 2);
+        float chunkBottomBorder = chunkCenter.y - (mapChunkSize / 2);
+        float chunkRightBorder = chunkCenter.x + (mapChunkSize / 2);
+        float chunkLeftBorder = chunkCenter.x - (mapChunkSize / 2);
+
+        bool isTopBorderChunk = chunkTopBorder > 720;
+        bool isBottomBorderChunk = chunkBottomBorder < -720;
+        bool isLeftBorderChunk = chunkLeftBorder < leftMapBorder + beachThickness;
+        bool isRightBorderChunk = chunkRightBorder > rightMapBorder - beachThickness;
+
+        if (isTopBorderChunk)
+        {
+            ApplyBeachToTopOrBottom(beachThickness, chunkCenter, normalizedWaterHeight, true);
+        }
+
+
+        if (isBottomBorderChunk)
+        {
+            ApplyBeachToTopOrBottom(beachThickness, chunkCenter, normalizedWaterHeight, false);
+        }
+
+        if (isLeftBorderChunk)
+        {
+            ApplyBeachToLeftOrRightBorder(beachThickness, chunkCenter, normalizedWaterHeight, true);
+        }
+        if (isRightBorderChunk)
+        {
+            ApplyBeachToLeftOrRightBorder(beachThickness, chunkCenter, normalizedWaterHeight, false);
+        }
+    }
+
+    private void ApplyBeachToTopOrBottom(int beachThickness, Vector2 chunkCenter, float normalizedWaterHeight, bool isTopBorder)
+    {
+        float chunkBorderStartZ = isTopBorder ? chunkCenter.y - (mapChunkSize / 2) : chunkCenter.y + (mapChunkSize / 2);
+        float chunkBorderEndZ = chunkBorderStartZ + (isTopBorder ? beachThickness : -beachThickness);
+
+        lock (_heightMapLock) {
+            for (int x = 0; x < mapChunkSize; x++)
+            {
+                for (int z = 0; z < mapChunkSize; z++)
+                {
+                    float worldZ = chunkCenter.y - (mapChunkSize / 2) + z;
+
+                    if (isTopBorder ? (worldZ >= chunkBorderStartZ && worldZ <= chunkBorderEndZ) :
+                                    (worldZ <= chunkBorderStartZ && worldZ >= chunkBorderEndZ))
+                    {
+                        CurrentMapData.heightMap[x, z] = normalizedWaterHeight;
+                    }
+                }
+            }
+        }
+    }
+
+    private void ApplyBeachToLeftOrRightBorder(int beachThickness, Vector2 chunkCenter, float normalizedWaterHeight, bool isLeftBorder)
+    {
+        // Commencer ou finir la plage selon le bord où se trouve le chunk
+        int startX = isLeftBorder ? 0 : mapChunkSize - beachThickness;
+        int endX = isLeftBorder ? beachThickness : mapChunkSize;
+        
+        lock (_heightMapLock) {
+            for (int x = startX; x < endX; x++)
+            {
+                for (int z = 0; z < mapChunkSize; z++)
+                {
+                    // Appliquer la plage sur la bordure du chunk
+                    CurrentMapData.heightMap[x, z] = normalizedWaterHeight;
+                }
+            }
+        }
+    }
+
 
     public static void SetSeedFromRoomProperties()
     {
@@ -99,12 +208,12 @@ public class generator : MonoBehaviourPun
         
         selectPos(colorMap);
 
-        Debug.Log("TAB LENGHT = " + _spawnCoords.Length);
-        for (int i = 0; i < _spawnCoords.Length; ++i)
-            Debug.Log("tmp[" + i + "] = " + _spawnCoords[i].ToString());
+        // Debug.Log("TAB LENGHT = " + _spawnCoords.Length);
+        // for (int i = 0; i < _spawnCoords.Length; ++i)
+        //     Debug.Log("tmp[" + i + "] = " + _spawnCoords[i].ToString());
 
-        if (_spawnCoords.Length == 0)
-            Debug.Log("TMP = EMPTY");
+        // if (_spawnCoords.Length == 0)
+        //     Debug.Log("TMP = EMPTY");
 
 
 
@@ -123,7 +232,7 @@ public class generator : MonoBehaviourPun
         }
         else if (drawMode == DrawMode.fallOfMap)
         {
-            display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunckSize)));
+            display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunkSize)));
         }
     }
 
@@ -138,9 +247,9 @@ public class generator : MonoBehaviourPun
         {
             List<Vector2Int> availableCoords = new List<Vector2Int>();
 
-            for (int i = 0; i < mapChunckSize; i++)
+            for (int i = 0; i < mapChunkSize; i++)
             {
-                for (int j = 0; j < mapChunckSize; j++)
+                for (int j = 0; j < mapChunkSize; j++)
                 {
                     float curHeight = colorMap[j, i];
 
@@ -163,7 +272,7 @@ public class generator : MonoBehaviourPun
                     randomHeight = Mathf.Clamp(randomHeight, minHeight, maxHeight) + 10;
 
                     _spawnCoords[i] = new Vector3(selectedCoord.x, randomHeight, selectedCoord.y);
-                    Debug.Log("_spawnCoords : " + _spawnCoords[i]);
+                    // Debug.Log("_spawnCoords : " + _spawnCoords[i]);
 
                     availableCoords.RemoveAt(randomIndex);
                 }
@@ -224,12 +333,12 @@ public class generator : MonoBehaviourPun
     MapData SkeletonGenerator(Vector2 center)
     {
 
-        float[,] map = Skeleton.GenerateSkeleton(mapChunckSize, mapChunckSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode, seed);
+        float[,] map = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode, seed);
 
 
-        for (int i = 0; i < mapChunckSize; i++)
+        for (int i = 0; i < mapChunkSize; i++)
         {
-            for (int j = 0; j < mapChunckSize; j++)
+            for (int j = 0; j < mapChunkSize; j++)
             {
                 float curHeight = map[j, i];
 
@@ -248,6 +357,7 @@ public class generator : MonoBehaviourPun
         }
 
         CurrentMapData = new MapData(map, colorMap);
+        GenerateBeaches(center);
 
         return CurrentMapData;
     }

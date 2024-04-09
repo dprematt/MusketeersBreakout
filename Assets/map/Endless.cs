@@ -38,7 +38,7 @@ public class Endless : MonoBehaviour
         _generator = FindObjectOfType<generator>();
         StartCoroutine(SetupPrefabsAndTerrain());
         maxViewDist = detailsLevel[detailsLevel.Length - 1].visibleDstThreshold;
-        chunkSize = generator.mapChunckSize - 1;
+        chunkSize = generator.mapChunkSize - 1;
         chunkVisibleViewDist = Mathf.RoundToInt(maxViewDist / chunkSize);
         UpdateVisibleChunk();
     }
