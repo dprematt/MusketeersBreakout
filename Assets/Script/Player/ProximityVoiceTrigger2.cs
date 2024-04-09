@@ -1,6 +1,7 @@
 ﻿#if PUN_2_OR_NEWER
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using Photon.Voice.PUN;
 using Photon.Voice.Unity;
