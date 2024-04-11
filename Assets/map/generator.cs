@@ -93,10 +93,10 @@ public class generator : MonoBehaviourPun
         int[] prefabCounts = new int[] {4, 10, 10, 10};
         float chunkHalfSize = chunkSize / 2f;
 
-        float mapLeftBorder = -3.5f * mapChunkSize;
-        float mapRightBorder = 3.5f * mapChunkSize;
-        float mapTopBorder = 3.5f * mapChunkSize;
-        float mapBottomBorder = -3.5f * mapChunkSize;
+        float mapLeftBorder = -3.5f * mapChunkSize + 30f;
+        float mapRightBorder = 3.5f * mapChunkSize - 30f;
+        float mapTopBorder = 3.5f * mapChunkSize - 30f;
+        float mapBottomBorder = -3.5f * mapChunkSize + 30f;
 
 
         for (int prefabIndex = 0; prefabIndex < prefabNature.Length; prefabIndex++)
