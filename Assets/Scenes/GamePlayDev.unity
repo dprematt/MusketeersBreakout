@@ -3420,10 +3420,14 @@ MonoBehaviour:
   - name: toto
     height: 0.55
   prefabNature:
-  - {fileID: 848257742837555388, guid: 8c493796e38062c7580d3ded731949bd, type: 3}
+  - {fileID: 3934822910950737629, guid: 8c493796e38062c7580d3ded731949bd, type: 3}
   - {fileID: 2097013310233654003, guid: 999c846913319e718a71fecfe94aaf3c, type: 3}
   - {fileID: 4643903192672366057, guid: bc1bc8b318e90298aa98c657cd3e4e5c, type: 3}
   - {fileID: 7931082091875972138, guid: a7c0f540ba663629790a286d889bce6a, type: 3}
+  Biomes:
+  - {fileID: 3997192538817553815, guid: 4b20b14b0dbb180fe9c2a28844868f17, type: 3}
+  - {fileID: 109927449571210476, guid: 6253a3cc942217d849c1d580fb777863, type: 3}
+  - {fileID: 5794360217216551788, guid: 82830d73840d636c1abb7578ff20e35b, type: 3}
 --- !u!114 &850191868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3436,10 +3440,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11a607c1d31cbbf72ae1975e8895a331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Biomes:
-  - {fileID: 3997192538817553815, guid: 4b20b14b0dbb180fe9c2a28844868f17, type: 3}
-  - {fileID: 109927449571210476, guid: 6253a3cc942217d849c1d580fb777863, type: 3}
-  - {fileID: 5794360217216551788, guid: 82830d73840d636c1abb7578ff20e35b, type: 3}
   detailsLevel:
   - lod: 0
     visibleDstThreshold: 75
