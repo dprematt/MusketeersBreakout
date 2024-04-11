@@ -14,7 +14,7 @@ public class Endless : MonoBehaviour
 
     int numberOfPrefabsToCreate = 2;
 
-    public GameObject[] prefabTypes;
+    public GameObject[] Biomes;
 
     public LODInfo[] detailsLevel;
     public Transform viewer;
@@ -32,9 +32,12 @@ public class Endless : MonoBehaviour
     static List<Chunk> chunkVisibleLastUpdate = new List<Chunk>();
 
     public static List<Vector3> prefabPositions = new List<Vector3>();
+    private GameObject BiomesParent;
 
     private void Start()
     {
+        BiomesParent = new GameObject("Biomes");
+        BiomesParent.transform.parent = transform; 
         _generator = FindObjectOfType<generator>();
         StartCoroutine(SetupPrefabsAndTerrain());
         maxViewDist = detailsLevel[detailsLevel.Length - 1].visibleDstThreshold;
@@ -47,7 +50,7 @@ public class Endless : MonoBehaviour
     IEnumerator SetupPrefabsAndTerrain()
     {
         yield return new WaitUntil(() => _generator.CurrentMapData.heightMap != null);
-        PlaceRandomPrefabs(_generator.CurrentMapData.heightMap);
+        PlaceBiomes(_generator.CurrentMapData.heightMap);
     }
 
     private void Update()
@@ -75,40 +78,38 @@ public class Endless : MonoBehaviour
         }
     }
 
-    void PlaceRandomPrefabs(float[,] heightMap)
+    void PlaceBiomes(float[,] heightMap)
     {
         prefabPositions.Clear();
+        GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
 
-        foreach (GameObject prefab in prefabTypes)
-        {
-            for (int i = 0; i < numberOfPrefabsToCreate; i++)
-            {
+        foreach (GameObject prefab in Biomes) {
+            for (int i = 0; i < numberOfPrefabsToCreate; i++) {
                 Vector3 position;
                 bool validPosition;
 
-                do
-                {
+                do {
                     validPosition = true;
                     float x = UnityEngine.Random.Range(-mapSize / 2 + safeZone, mapSize / 2 - safeZone);
                     float z = UnityEngine.Random.Range(-mapSize / 2 + safeZone, mapSize / 2 - safeZone);
                     position = new Vector3(x, 0, z);
 
-                    if (IsTooCloseToOtherPrefabs(position, prefabPositions, safeZone))
-                    {
+                    if (IsTooCloseToOtherBiomes(position, safeZone)) {
                         validPosition = false;
                         continue;
                     }
 
-                    prefabPositions.Add(position); // Stocker la position globale
-                    Instantiate(prefab, position, Quaternion.identity);
+                    prefabPositions.Add(position);
+                    GameObject instance = Instantiate(prefab, position, Quaternion.identity);
+                    instance.transform.SetParent(biomesParent.transform);
                 } while (!validPosition);
             }
         }
     }
 
-    bool IsTooCloseToOtherPrefabs(Vector3 position, List<Vector3> placedPrefabs, float minDistance)
+    bool IsTooCloseToOtherBiomes(Vector3 position, float minDistance)
     {
-        foreach (var otherPos in placedPrefabs)
+        foreach (var otherPos in prefabPositions)
         {
             if (Vector3.Distance(position, otherPos) < minDistance)
             {

@@ -3436,7 +3436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11a607c1d31cbbf72ae1975e8895a331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabTypes:
+  Biomes:
   - {fileID: 3997192538817553815, guid: 4b20b14b0dbb180fe9c2a28844868f17, type: 3}
   - {fileID: 109927449571210476, guid: 6253a3cc942217d849c1d580fb777863, type: 3}
   - {fileID: 5794360217216551788, guid: 82830d73840d636c1abb7578ff20e35b, type: 3}
