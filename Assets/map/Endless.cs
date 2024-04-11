@@ -43,6 +43,7 @@ public class Endless : MonoBehaviour
         UpdateVisibleChunk();
     }
 
+
     IEnumerator SetupPrefabsAndTerrain()
     {
         yield return new WaitUntil(() => _generator.CurrentMapData.heightMap != null);
@@ -194,6 +195,13 @@ public class Endless : MonoBehaviour
 
         int previousLOD;
         int previousLODIndex = -1;
+        public Vector2 ChunkCenter
+        {
+            get
+            {
+                return new Vector2(position.x + 240 / 2, position.y + 241 / 2);
+            }
+        }
 
         public Chunk(Vector2 coord, int size, LODInfo[] detailsLevel, Transform parent, Material material, Material grassMaterial)
         {
@@ -232,6 +240,8 @@ public class Endless : MonoBehaviour
             this.mapdata = mapData;
             mapDataReceived = true;
             UpdateMesh();
+            Vector2 chunkCenter = this.ChunkCenter;
+            _generator.PlacePrefabsInChunk(chunkCenter, mapData.heightMap, 240);
             UpdateChunk();
         }
 

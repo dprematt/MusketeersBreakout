@@ -7,6 +7,7 @@ using Photon.Realtime;
 using Photon.Pun;
 using PlayFab;
 using UnityEngine.UI;
+using static System.Random;
 
 public class generator : MonoBehaviourPun
 {
@@ -42,21 +43,22 @@ public class generator : MonoBehaviourPun
     float[,] fallOfMap;
 
     private bool prefabsPlaced = false;
-    public GameObject[] prefabTypes;
 
     public TerrainType[] regions;
     public static int seed = 0;
+    public GameObject[] prefabNature;
 
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<meshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<meshData>>();
     private Dictionary<Vector2, MapData> chunkDataMap = new Dictionary<Vector2, MapData>();
     public MapData CurrentMapData { get; private set; }
-
+    private GameObject worldObjectsParent;
     private object _heightMapLock = new object();
 
     private void Start()
     {
         float randomDelay = UnityEngine.Random.Range(3f, 4f);
+        worldObjectsParent = new GameObject("WorldObjectsParent");
 
         SetSeedFromRoomProperties();
         PlaceExtractionZones();
@@ -86,14 +88,64 @@ public class generator : MonoBehaviourPun
         Gizmos.DrawLine(new Vector3(leftBorder, 0, bottomBorder), new Vector3(rightBorder, 0, bottomBorder));
     }
 
+    public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize)
+    {
+        int[] prefabCounts = new int[] {4, 10, 10, 10};
+        float chunkHalfSize = chunkSize / 2f;
+
+        float mapLeftBorder = -3.5f * mapChunkSize;
+        float mapRightBorder = 3.5f * mapChunkSize;
+        float mapTopBorder = 3.5f * mapChunkSize;
+        float mapBottomBorder = -3.5f * mapChunkSize;
+
+
+        for (int prefabIndex = 0; prefabIndex < prefabNature.Length; prefabIndex++)
+        {
+            GameObject prefab = prefabNature[prefabIndex];
+            for (int i = 0; i < prefabCounts[prefabIndex]; i++) {
+                Vector3 position = Vector3.zero;
+                bool validPosition = false;
+                int attempts = 0;
+                int maxAttempts = 100;
+                while (!validPosition && attempts < maxAttempts)
+                {
+                    attempts++;
+                    float x = UnityEngine.Random.Range(chunkCenter.x - chunkHalfSize, chunkCenter.x + chunkHalfSize);
+                    float z = UnityEngine.Random.Range(chunkCenter.y - chunkHalfSize, chunkCenter.y + chunkHalfSize);
+
+                    int xIndex = Mathf.FloorToInt(x - (chunkCenter.x - chunkHalfSize));
+                    int zIndex = Mathf.FloorToInt(z - (chunkCenter.y - chunkHalfSize));
+
+                    if (xIndex < 0 || xIndex >= chunkSize || zIndex < 0 || zIndex >= chunkSize) continue;
+
+                    float height = heightMap[xIndex, zIndex];
+
+                    if (x >= mapLeftBorder && x <= mapRightBorder && z >= mapBottomBorder && z <= mapTopBorder) {
+                        if (height > 0.1f && height < 0.5f)
+                        {
+                            position = new Vector3(x, height, z);
+                            validPosition = true;
+                            int[] Y = new int[] {-90, 90, 180, -180, 0};
+                            int randomIndex = UnityEngine.Random.Range(0, Y.Length);
+                            GameObject instance = Instantiate(prefab, position, Quaternion.identity);
+                            instance.transform.Rotate(0.0f, Y[randomIndex], 0.0f);
+                            instance.transform.SetParent(worldObjectsParent.transform);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
     private void GenerateBeaches(Vector2 chunkCenter)
     {
         float normalizedWaterHeight = 0.0001f / meshHeightMult;
         int beachThickness = 50;
 
-        float mapHalfSize = mapChunkSize * 7 / 2; // Si votre carte est de 7 chunks par 7 chunks.
+        float mapHalfSize = mapChunkSize * 7 / 2;
 
-        // Les coordonnées des bords de la carte
         float leftMapBorder = -mapHalfSize;
         float rightMapBorder = mapHalfSize;
 
