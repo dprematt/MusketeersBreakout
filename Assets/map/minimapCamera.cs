@@ -8,7 +8,6 @@ public class minimapCamera : MonoBehaviour
 
     void Start()
     {
-        // Recherche du joueur et récupération du GameObject
         player = GameObject.Find("Player(Clone)");
         if (player == null)
         {
@@ -18,8 +17,10 @@ public class minimapCamera : MonoBehaviour
 
     void LateUpdate()
     {
-        // Vérification que le joueur n'est pas null
-        if (player != null)
+        player = GameObject.Find("Player(Clone)");
+        if (player == null)
+            Debug.LogError("JOUEUR NUL");
+        else if (player != null)
         {
             Vector3 newPos = player.transform.position;
             newPos.y = transform.position.y;
