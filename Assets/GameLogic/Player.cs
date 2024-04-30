@@ -74,6 +74,8 @@ public class Player : MonoBehaviourPunCallbacks
     private Vector3 aimTarget;
     LineRenderer lineRenderer;
 
+    private bool hasShield = false;
+
     private void Start()
     {
         weaponList = new List<Weapon>();
@@ -275,6 +277,13 @@ public class Player : MonoBehaviourPunCallbacks
         }*/
 
         Weapon weaponComp = col.GetComponent<Weapon>();
+        if (hasShield && (weaponComp.tag == "WeaponSpear"
+            || weaponComp.tag == "WeaponHalberd"
+            || weaponComp.tag == "WeaponCrossBow"))
+        {
+            return;
+        }
+
         if (weaponComp != null && weaponList.Count < 2)
         {
             GameObject weapon = col.gameObject;
@@ -290,6 +299,25 @@ public class Player : MonoBehaviourPunCallbacks
                     weaponComp.setAnim();
                     currentWeapon = 0;
                 }
+            }
+        }
+
+        if (weaponList.Count > 0 && (weaponList[currentWeapon].tag == "WeaponSpear"
+            || weaponList[currentWeapon].tag == "WeaponHalberd"
+            || weaponList[currentWeapon].tag == "WeaponCrossBow"))
+        {
+            return;
+        }
+
+        Shield shieldComp = col.GetComponent<Shield>();
+        if (shieldComp != null)
+        {
+            GameObject shield = col.gameObject;
+            if (!shieldComp.isLooted)
+            {
+                hasShield = true;
+                Transform hand = FindDeepChild(transform, "jointItemL");
+                shieldComp.whenPickUp(gameObject, hand);
             }
         }
     }
