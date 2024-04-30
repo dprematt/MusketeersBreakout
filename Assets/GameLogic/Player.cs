@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
-
 public class Player : MonoBehaviourPunCallbacks
 {
     public int xp;
@@ -74,6 +73,8 @@ public class Player : MonoBehaviourPunCallbacks
     private Vector3 aimTarget;
     LineRenderer lineRenderer;
 
+    private bool hasShield = false;
+
     private void Start()
     {
         weaponList = new List<Weapon>();
@@ -96,13 +97,10 @@ public class Player : MonoBehaviourPunCallbacks
         XpProgressBar = xpProgressBarExperience.GetComponent<Image>();
         levelText2D = xpProgressBarLevel.GetComponent<Text>();
         xpText2D = xpProgressBarXp.GetComponent<Text>();
-
         cylinderTransform = transform;
         originalHeight = cylinderTransform.localScale.y;
-
         //StartCoroutine(DamageOverTime());
     }
-
     private void Update()
     {
         if (lineRenderer == null)
@@ -110,32 +108,24 @@ public class Player : MonoBehaviourPunCallbacks
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.enabled = false;
         }
-
         Vector3 temp = transform.position;
         temp.y += 0.1f;
         isGrounded = Physics.Raycast(temp, Vector3.down, 0.2f);
-
         MyInput();
         ControlDrag();
-
         CheckXp();
-
         if (Input.GetKeyDown(jumpKey) && isGrounded)
         {
             Jump();
         }
-
         float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
         if ((scrollDelta > 0f || scrollDelta < 0f) && weaponList.Count > 1)
         {
             weaponList[currentWeapon].gameObject.SetActive(false);
-
             currentWeapon = currentWeapon == 0 ? 1 : 0;
-
             weaponList[currentWeapon].gameObject.SetActive(true);
             weaponList[currentWeapon].setAnim();
         }
-
         if (Input.GetKey(KeyCode.LeftShift) && !staminaFullUsed)
         {
             if (stamina > 0)
@@ -161,7 +151,6 @@ public class Player : MonoBehaviourPunCallbacks
             }
         }
         OnStaminaChanged?.Invoke(stamina, maxStamina);
-
         if (Input.GetKeyDown(KeyCode.U))
         {
             if (HUD.activeSelf)
@@ -173,7 +162,6 @@ public class Player : MonoBehaviourPunCallbacks
                 HUD.SetActive(true);
             }
         }
-
         if (weaponList.Count > 0)
         {
             if (Input.GetMouseButtonDown(0))
@@ -184,14 +172,11 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 weaponList[currentWeapon].ResetAttackAnimation();
             }
-
             if (weaponList[currentWeapon].isLongRange && !Input.GetKey(KeyCode.LeftShift))
             {
                 IsometricAiming aim = gameObject.GetComponent<IsometricAiming>();
-
                 if (Input.GetMouseButtonDown(1))
                     aim.laserStartAndStop();
-
                 if (Input.GetMouseButton(1))
                 {
                     anim.SetLayerWeight(1, Mathf.Lerp(anim.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
@@ -199,13 +184,11 @@ public class Player : MonoBehaviourPunCallbacks
                 }
                 else
                     anim.SetLayerWeight(1, Mathf.Lerp(anim.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
-
                 if (Input.GetMouseButtonUp(1))
                     aim.laserStartAndStop();
             }
         }
     }
-
     private IEnumerator DamageOverTime()
     {
         while (true)
@@ -214,7 +197,6 @@ public class Player : MonoBehaviourPunCallbacks
             TakeDamage(1);
         }
     }
-
     public void TakeDamage(float Damage)
     {
         if (photonView.IsMine)
@@ -223,12 +205,10 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 PFInventory_.PlayerLose();
             }
-
             HealthManager.Take_Damage((int)Damage, gameObject);
             bloodParticles.Play();
         }
     }
-
     public int UpdateXp(int new_xp)
     {
         xp += new_xp;
@@ -236,7 +216,6 @@ public class Player : MonoBehaviourPunCallbacks
         xpText2D.text = "XP " + xp.ToString() + " / " + max_xp.ToString();
         return xp;
     }
-
     public void UpdateLevel()
     {
         level = level + 1;
@@ -248,14 +227,13 @@ public class Player : MonoBehaviourPunCallbacks
         xpText2D.text = "XP " + xp.ToString() + " / " + max_xp.ToString();
         levelText2D.text = "LEVEL " + level.ToString();
     }
-
     public void CheckXp()
     {
-        if (xp >= max_xp) {
+        if (xp >= max_xp)
+        {
             UpdateLevel();
         }
     }
-
     void OnCollisionEnter(Collision col)
     {
         Inventory loot = col.gameObject.GetComponent<Inventory>();
@@ -275,6 +253,13 @@ public class Player : MonoBehaviourPunCallbacks
         }*/
 
         Weapon weaponComp = col.GetComponent<Weapon>();
+        if (hasShield && (weaponComp.tag == "WeaponSpear"
+            || weaponComp.tag == "WeaponHalberd"
+            || weaponComp.tag == "WeaponCrossBow"))
+        {
+            return;
+        }
+
         if (weaponComp != null && weaponList.Count < 2)
         {
             GameObject weapon = col.gameObject;
@@ -292,29 +277,42 @@ public class Player : MonoBehaviourPunCallbacks
                 }
             }
         }
+
+        if (weaponList.Count > 0 && (weaponList[currentWeapon].tag == "WeaponSpear"
+            || weaponList[currentWeapon].tag == "WeaponHalberd"
+            || weaponList[currentWeapon].tag == "WeaponCrossBow"))
+        {
+            return;
+        }
+
+        Shield shieldComp = col.GetComponent<Shield>();
+        if (shieldComp != null)
+        {
+            GameObject shield = col.gameObject;
+            if (!shieldComp.isLooted)
+            {
+                hasShield = true;
+                Transform hand = FindDeepChild(transform, "jointItemL");
+                shieldComp.whenPickUp(gameObject, hand);
+            }
+        }
     }
 
     void MyInput()
     {
         horizontalMovement = Input.GetAxisRaw("Horizontal");
         verticalMovement = Input.GetAxisRaw("Vertical");
-
         if (horizontalMovement != 0 || verticalMovement != 0)
             anim.SetBool("isWalking", true);
         else
             anim.SetBool("isWalking", false);
-
         Vector3 cameraForward = Camera.main.transform.forward;
         Vector3 cameraRight = Camera.main.transform.right;
-
         cameraForward.y = 0;
         cameraRight.y = 0;
-
         cameraForward.Normalize();
         cameraRight.Normalize();
-
         moveDirection = cameraForward * verticalMovement + cameraRight * horizontalMovement;
-
         if (moveDirection != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
@@ -322,12 +320,10 @@ public class Player : MonoBehaviourPunCallbacks
             //transform.rotation = Quaternion.Slerp(characterModel.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
-
     void Jump()
     {
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
-
     void ControlDrag()
     {
         if (isGrounded)
@@ -339,11 +335,9 @@ public class Player : MonoBehaviourPunCallbacks
             rb.drag = airDrag;
         }
     }
-
     private void FixedUpdate()
     {
         MovePlayer();
-
         if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
         {
             float newHeight = originalHeight * heightModifier;
@@ -366,13 +360,11 @@ public class Player : MonoBehaviourPunCallbacks
             cylinderTransform.localPosition = newPos;
         }
     }
-
     void MovePlayer()
     {
         if (isGrounded)
         {
             rb.AddForce(moveDirection.normalized * moveSpeed * movementMultiplier, ForceMode.Acceleration);
-
         }
         else if (!isGrounded)
         {
@@ -385,7 +377,6 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (child.name == name)
                 return child;
-
             Transform result = FindDeepChild(child, name);
             if (result != null)
                 return result;
