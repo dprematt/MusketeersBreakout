@@ -74,6 +74,10 @@ public class Player : MonoBehaviourPunCallbacks
     LineRenderer lineRenderer;
 
     private bool hasShield = false;
+    private GameObject shield;
+    public Shield shieldComp;
+
+    public EventListener eventListener;
 
     private void Start()
     {
@@ -99,6 +103,7 @@ public class Player : MonoBehaviourPunCallbacks
         xpText2D = xpProgressBarXp.GetComponent<Text>();
         cylinderTransform = transform;
         originalHeight = cylinderTransform.localScale.y;
+        eventListener = GameObject.Find("PlayerBody").GetComponent<EventListener>();
         //StartCoroutine(DamageOverTime());
     }
     private void Update()
@@ -108,24 +113,34 @@ public class Player : MonoBehaviourPunCallbacks
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.enabled = false;
         }
+
         Vector3 temp = transform.position;
         temp.y += 0.1f;
         isGrounded = Physics.Raycast(temp, Vector3.down, 0.2f);
+
         MyInput();
         ControlDrag();
         CheckXp();
+
         if (Input.GetKeyDown(jumpKey) && isGrounded)
         {
             Jump();
         }
+
         float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
         if ((scrollDelta > 0f || scrollDelta < 0f) && weaponList.Count > 1)
         {
+            int layer = weaponList[currentWeapon].isLongRange ? 2 : 1;
+
+            anim.SetLayerWeight(layer, 0f);
+
             weaponList[currentWeapon].gameObject.SetActive(false);
             currentWeapon = currentWeapon == 0 ? 1 : 0;
             weaponList[currentWeapon].gameObject.SetActive(true);
             weaponList[currentWeapon].setAnim();
+            eventListener.weaponComp = weaponList[currentWeapon];
         }
+
         if (Input.GetKey(KeyCode.LeftShift) && !staminaFullUsed)
         {
             if (stamina > 0)
@@ -162,28 +177,36 @@ public class Player : MonoBehaviourPunCallbacks
                 HUD.SetActive(true);
             }
         }
+
+        if (hasShield && Input.GetMouseButton(1))
+        {
+            shieldComp.setProtectionMode(true);
+        } else if (hasShield && Input.GetMouseButtonUp(1))
+        {
+            shieldComp.setProtectionMode(false);
+        }
+
         if (weaponList.Count > 0)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (!weaponList[currentWeapon].isLongRange && Input.GetMouseButtonDown(0))
             {
                 weaponList[currentWeapon].Attack();
             }
-            else
-            {
-                weaponList[currentWeapon].ResetAttackAnimation();
-            }
+
             if (weaponList[currentWeapon].isLongRange && !Input.GetKey(KeyCode.LeftShift))
             {
                 IsometricAiming aim = gameObject.GetComponent<IsometricAiming>();
                 if (Input.GetMouseButtonDown(1))
                     aim.laserStartAndStop();
+
                 if (Input.GetMouseButton(1))
                 {
-                    anim.SetLayerWeight(1, Mathf.Lerp(anim.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
+                    anim.SetLayerWeight(2, Mathf.Lerp(anim.GetLayerWeight(2), 1f, Time.deltaTime * 10f));
                     aim.Aiming();
                 }
                 else
-                    anim.SetLayerWeight(1, Mathf.Lerp(anim.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
+                    anim.SetLayerWeight(2, Mathf.Lerp(anim.GetLayerWeight(2), 0f, Time.deltaTime * 10f));
+
                 if (Input.GetMouseButtonUp(1))
                     aim.laserStartAndStop();
             }
@@ -253,47 +276,56 @@ public class Player : MonoBehaviourPunCallbacks
         }*/
 
         Weapon weaponComp = col.GetComponent<Weapon>();
-        if (hasShield && (weaponComp.tag == "WeaponSpear"
+        if (weaponComp != null)
+        {
+            if (hasShield && (weaponComp.tag == "WeaponSpear"
             || weaponComp.tag == "WeaponHalberd"
             || weaponComp.tag == "WeaponCrossBow"))
-        {
-            return;
-        }
-
-        if (weaponComp != null && weaponList.Count < 2)
-        {
-            GameObject weapon = col.gameObject;
-            if (!weaponComp.isLooted)
             {
-                weaponList.Add(weaponComp);
-                Transform hand = FindDeepChild(transform, "jointItemR");
-                weaponComp.whenPickUp(gameObject, hand);
-                if (weaponList.Count == 2)
-                    weapon.SetActive(false);
-                else
+                return;
+            }
+
+            if (weaponList.Count < 2)
+            {
+                GameObject weapon = col.gameObject;
+                if (!weaponComp.isLooted)
                 {
-                    weaponComp.setAnim();
-                    currentWeapon = 0;
+                    weaponList.Add(weaponComp);
+                    Transform hand = FindDeepChild(transform, "jointItemR");
+                    weaponComp.whenPickUp(gameObject, hand);
+                    if (weaponList.Count == 2)
+                    {
+                        weapon.SetActive(false);
+                    }
+                    else
+                    {
+                        weaponComp.setAnim();
+                        currentWeapon = 0;
+                        eventListener.weaponComp = weaponComp;
+                    }
                 }
             }
         }
 
-        if (weaponList.Count > 0 && (weaponList[currentWeapon].tag == "WeaponSpear"
+        if (!hasShield)
+        {
+            if (weaponList.Count > 0 && (weaponList[currentWeapon].tag == "WeaponSpear"
             || weaponList[currentWeapon].tag == "WeaponHalberd"
             || weaponList[currentWeapon].tag == "WeaponCrossBow"))
-        {
-            return;
-        }
-
-        Shield shieldComp = col.GetComponent<Shield>();
-        if (shieldComp != null)
-        {
-            GameObject shield = col.gameObject;
-            if (!shieldComp.isLooted)
             {
-                hasShield = true;
-                Transform hand = FindDeepChild(transform, "jointItemL");
-                shieldComp.whenPickUp(gameObject, hand);
+                return;
+            }
+
+            shieldComp = col.GetComponent<Shield>();
+            if (shieldComp != null)
+            {
+                shield = col.gameObject;
+                if (!shieldComp.isLooted)
+                {
+                    hasShield = true;
+                    Transform hand = FindDeepChild(transform, "jointItemL");
+                    shieldComp.whenPickUp(gameObject, hand);
+                }
             }
         }
     }

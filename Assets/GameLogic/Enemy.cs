@@ -47,7 +47,10 @@ using UnityEngine;
         Transform hand = FindDeepChild(transform, "hand.R");
         foreach (Weapon weapon in weaponList)
             weapon.whenPickUp(gameObject, hand);
-        weaponList[1].gameObject.SetActive(false);
+        if (weaponList.Count > 1)
+        {
+            weaponList[1].gameObject.SetActive(false);
+        }
         weaponList[0].setAnim();
     }
 
@@ -84,7 +87,7 @@ using UnityEngine;
             {
                 if (Time.time > nextAttack)
                 {
-                    weaponList[currentWeapon].BotAttack();
+                    //weaponList[currentWeapon].BotAttack();
                     weaponList[currentWeapon].gameObject.SetActive(false);
 
                     currentWeapon = currentWeapon == 0 ? 1 : 0;

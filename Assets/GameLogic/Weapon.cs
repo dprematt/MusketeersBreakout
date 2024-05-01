@@ -25,12 +25,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public Player holderMovements;
 
-    private float timeSinceAttack;
-    private int currentAttack = 0;
-
     public int damages;
-
-    public float resetTime;
 
     public float positionX;
     public float positionY;
@@ -44,17 +39,18 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public bool isLongRange;
 
+    public bool ignoreAttack = false;
+
+    public int countAttackClick;
+
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        countAttackClick = 0;
     }
 
     public void Update()
     {
-        if (isLooted)
-        {
-            timeSinceAttack += Time.deltaTime;
-        }
     }
 
     public virtual bool SetIsPlayer(bool type)
@@ -80,7 +76,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public void OnTriggerEnter(Collider other)
     {
-        if (anim.GetBool("hit" + currentAttack) && other.gameObject != holder && !damageDealt)
+        /*if (anim.GetBool("hit" + currentAttack) && other.gameObject != holder && !damageDealt && !ignoreAttack)
         {
             if (holder.CompareTag("Player"))
                 other.gameObject.GetComponent<Enemy>().TakeDamage(damages);
@@ -89,6 +85,10 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             damageDealt = true;
             return;
         }
+        else if (ignoreAttack)
+        {
+            ignoreAttack = false;
+        }*/
     }
 
     Transform FindDeepChild(Transform parent, string nom)
@@ -107,40 +107,73 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public virtual void Attack()
     {
-        if (!isLongRange && timeSinceAttack > resetTime && holderMovements.stamina >= 30 && isLooted)
+        countAttackClick += 1;
+
+        if (countAttackClick == 1)
         {
-            currentAttack++;
-            damageDealt = false;
-            if (isPlayer)
-                holderMovements.stamina -= 30;
-
-            if (currentAttack > 3)
-            {
-                currentAttack = 1;
-            }
-
-            anim.SetBool("hit" + currentAttack, true);
-
+            anim.SetInteger("intAttackPhase", 1);
             audioSource.PlayOneShot(attackSound);
-
-            timeSinceAttack = 0;
+            holderMovements.stamina -= 30;
+            damageDealt = false;
         }
     }
 
-    public void ResetAttackAnimation()
+    public void CheckAttackPhase()
     {
-        anim.SetBool("hit" + currentAttack, false);
-        if (timeSinceAttack > (resetTime + 0.2f))
-            currentAttack = 0;
+        Debug.Log("Checking Attack Phase...");
+        if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack 1"))
+        {
+            Debug.Log("Current State : attack 1");
+            if (countAttackClick > 1)
+            {
+                anim.SetInteger("intAttackPhase", 2);
+                audioSource.PlayOneShot(attackSound);
+                holderMovements.stamina -= 30;
+                damageDealt = false;
+            }
+            else
+            {
+                ResetAttackPhase();
+            }
+        }
+        else if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack 2"))
+        {
+            Debug.Log("Current State : attack 2");
+            if (countAttackClick > 2)
+            {
+                anim.SetInteger("intAttackPhase", 3);
+                audioSource.PlayOneShot(attackSound);
+                holderMovements.stamina -= 30;
+                damageDealt = false;
+            }
+            else
+            {
+                ResetAttackPhase();
+            }
+        }
+        else if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack 3"))
+        {
+            Debug.Log("Current State : attack 3");
+            if (countAttackClick >= 3)
+            {
+                ResetAttackPhase();
+            }
+        }
     }
 
-    public void BotAttack()
+    private void ResetAttackPhase()
+    {
+        countAttackClick = 0;
+        anim.SetInteger("intAttackPhase", 0);
+    }
+
+/*    public void BotAttack()
     {
         currentAttack = 1;
         anim.SetBool("hit" + currentAttack, true);
         damageDealt = false;
         audioSource.PlayOneShot(attackSound);
-    }
+    }*/
 
     public void whenPickUp(GameObject newHolder, Transform hand)
     {
@@ -159,6 +192,9 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         anim = holder.GetComponentInChildren<Animator>();
         if(animOverride != null)
             anim.runtimeAnimatorController = animOverride;
-        anim.SetInteger("weaponType", weaponType);
+        if (!isLongRange)
+        {
+            anim.SetLayerWeight(1, 1f);
+        }
     }
 }

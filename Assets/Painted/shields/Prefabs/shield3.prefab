@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 1177451046658632730}
   - component: {fileID: 2880332235539538879}
   - component: {fileID: 7891889602697077}
+  - component: {fileID: 3860792878752215552}
+  - component: {fileID: 7054951143426192723}
   m_Layer: 0
   m_Name: shield3
   m_TagString: Untagged
@@ -84,3 +86,38 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3860792878752215552
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953706618697791136}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2, z: 0.21634331}
+  m_Center: {x: -0.0016005635, y: -0.055565923, z: -0.016042758}
+--- !u!114 &7054951143426192723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953706618697791136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca62a73776df5564f8877ecca023508b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Image: {fileID: 21300000, guid: e887a6e2728b10945b3da020af88f75a, type: 3}
+  isLooted: 0
+  holder: {fileID: 0}
+  positionX: 0.03
+  positionY: 0
+  positionZ: 0.085
+  rotationX: 1.365
+  rotationY: 8.39
+  rotationZ: -1.17
+  anim: {fileID: 0}

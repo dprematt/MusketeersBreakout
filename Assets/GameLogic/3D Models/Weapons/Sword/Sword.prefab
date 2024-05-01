@@ -97,8 +97,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.16070864, y: 0.4259472, z: 1.3148193}
+  m_Center: {x: 0.00040691718, y: 0.000026464462, z: -0.28378665}
 --- !u!114 &-2185349697743789179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,6 +128,8 @@ MonoBehaviour:
   rotationX: 90
   rotationY: 90
   rotationZ: 0
+  isLongRange: 0
+  ignoreAttack: 0
 --- !u!82 &499002922093390632
 AudioSource:
   m_ObjectHideFlags: 0
