@@ -10914,6 +10914,7 @@ GameObject:
   - component: {fileID: 6813569006514032907}
   - component: {fileID: -4951191275531630021}
   - component: {fileID: -1213841984179507511}
+  - component: {fileID: 288918312977006353}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -15807,6 +15808,19 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &288918312977006353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8489976182974415840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9de68b18e838fb42b38775768c76a8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponComp: {fileID: 0}
 --- !u!1 &8521723152814184806
 GameObject:
   m_ObjectHideFlags: 0

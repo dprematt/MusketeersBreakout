@@ -16,7 +16,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
     public Sprite _Image;
 
     public bool isLooted = false;
-    private bool damageDealt = false;
+    public bool damageDealt;
 
     public Animator anim;
     public AnimatorOverrideController animOverride;
@@ -39,7 +39,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public bool isLongRange;
 
-    public bool ignoreAttack = false;
+    public bool ignoreAttack;
 
     public int countAttackClick;
 
@@ -47,10 +47,16 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
     {
         audioSource = GetComponent<AudioSource>();
         countAttackClick = 0;
+
+        damageDealt = false;
+        ignoreAttack = false;
     }
 
     public void Update()
     {
+        if (gameObject.name == "Sword")
+        {
+        }
     }
 
     public virtual bool SetIsPlayer(bool type)
@@ -76,19 +82,25 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public void OnTriggerEnter(Collider other)
     {
-        /*if (anim.GetBool("hit" + currentAttack) && other.gameObject != holder && !damageDealt && !ignoreAttack)
+
+        if (anim.GetInteger("intAttackPhase") > 0 && other.gameObject != holder && damageDealt == false && ignoreAttack == false)
         {
-            if (holder.CompareTag("Player"))
-                other.gameObject.GetComponent<Enemy>().TakeDamage(damages);
+            if (holder.CompareTag("Player") && other.CompareTag("EnemyBody"))
+            {
+                other.gameObject.GetComponentInParent<Enemy>().TakeDamage(damages);
+                Debug.Log("Hit !!!");
+            }
             else if (holder.CompareTag("Enemy"))
+            {
                 other.gameObject.GetComponent<Player>().TakeDamage(damages);
+            }
             damageDealt = true;
             return;
         }
         else if (ignoreAttack)
         {
             ignoreAttack = false;
-        }*/
+        }
     }
 
     Transform FindDeepChild(Transform parent, string nom)
@@ -113,17 +125,19 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         {
             anim.SetInteger("intAttackPhase", 1);
             audioSource.PlayOneShot(attackSound);
-            holderMovements.stamina -= 30;
+            if (holder.CompareTag("Player")) {
+                holderMovements.stamina -= 30;
+            }
             damageDealt = false;
         }
     }
 
     public void CheckAttackPhase()
     {
-        Debug.Log("Checking Attack Phase...");
+        //Debug.Log("Checking Attack Phase...");
         if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack 1"))
         {
-            Debug.Log("Current State : attack 1");
+            //Debug.Log("Current State : attack 1");
             if (countAttackClick > 1)
             {
                 anim.SetInteger("intAttackPhase", 2);
@@ -138,7 +152,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         }
         else if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack 2"))
         {
-            Debug.Log("Current State : attack 2");
+            //Debug.Log("Current State : attack 2");
             if (countAttackClick > 2)
             {
                 anim.SetInteger("intAttackPhase", 3);
@@ -153,7 +167,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         }
         else if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack 3"))
         {
-            Debug.Log("Current State : attack 3");
+            //Debug.Log("Current State : attack 3");
             if (countAttackClick >= 3)
             {
                 ResetAttackPhase();
@@ -166,14 +180,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         countAttackClick = 0;
         anim.SetInteger("intAttackPhase", 0);
     }
-
-/*    public void BotAttack()
-    {
-        currentAttack = 1;
-        anim.SetBool("hit" + currentAttack, true);
-        damageDealt = false;
-        audioSource.PlayOneShot(attackSound);
-    }*/
 
     public void whenPickUp(GameObject newHolder, Transform hand)
     {

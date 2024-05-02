@@ -9,6 +9,11 @@ TagManager:
   - WeaponSword
   - Ground
   - Bullet
+  - WeaponHalberd
+  - WeaponKnife
+  - WeaponDagger
+  - WeaponSpear
+  - EnemyBody
   layers:
   - Default
   - TransparentFX

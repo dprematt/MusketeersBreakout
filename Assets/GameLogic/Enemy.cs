@@ -24,6 +24,8 @@ using UnityEngine;
     public float nextAttack = 0f;
     private float delay = 1.5f;
 
+    public EventListener eventListener;
+
     private void Start()
     {
         health = maxHealth;
@@ -44,22 +46,27 @@ using UnityEngine;
         items.Add(sword);
         inventory = new Inventory(9, items, false);
 
+        eventListener = GetComponent<EventListener>();
+
         Transform hand = FindDeepChild(transform, "hand.R");
         foreach (Weapon weapon in weaponList)
+        {
             weapon.whenPickUp(gameObject, hand);
+        }
         if (weaponList.Count > 1)
         {
             weaponList[1].gameObject.SetActive(false);
         }
         weaponList[0].setAnim();
+        eventListener.weaponComp = weaponList[0];
     }
 
     void Update()
     {
-        if (weaponList.Count > 0 &&  weaponList[currentWeapon].anim.GetCurrentAnimatorStateInfo(0).IsName("hit1"))
+/*        if (weaponList.Count > 0 &&  weaponList[currentWeapon].anim.GetCurrentAnimatorStateInfo(0).IsName("hit1"))
         {
             weaponList[currentWeapon].anim.SetBool("hit1", false);
-        }
+        }*/
 
         if (target == null)
         {
@@ -87,13 +94,14 @@ using UnityEngine;
             {
                 if (Time.time > nextAttack)
                 {
-                    //weaponList[currentWeapon].BotAttack();
+                    weaponList[currentWeapon].Attack();
                     weaponList[currentWeapon].gameObject.SetActive(false);
 
                     currentWeapon = currentWeapon == 0 ? 1 : 0;
 
                     weaponList[currentWeapon].gameObject.SetActive(true);
                     weaponList[currentWeapon].setAnim();
+                    eventListener.weaponComp = weaponList[currentWeapon];
 
                     nextAttack = Time.time + delay;
                 }
