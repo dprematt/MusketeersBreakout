@@ -9,8 +9,10 @@ public class Inventory : MonoBehaviour
     public int SLOTS;
     public List<IInventoryItem> mItems;
     public bool loot = false;
+    public bool test = false;
 
     public event EventHandler<InventoryEventArgs> ItemAdded;
+    public event EventHandler<InventoryEventArgs> ItemRemoved;
 
 
     public void AddWeapon(string weaponName)
@@ -50,12 +52,21 @@ public class Inventory : MonoBehaviour
     }
     public void Start()
     {
+        SLOTS = 9;
         //Debug.Log("in inventory start");
         if (mItems == null)
         {
             //Debug.Log("in inventory start item == null");
-            mItems = new List<IInventoryItem>();
-            SLOTS = 9;
+            mItems = new List<IInventoryItem>(9);
+        }
+        if (loot == true)
+        {
+            if (mItems.Count == 0)
+            {
+                GameObject go = Resources.Load<GameObject>("Prefabs/Sword");
+                IInventoryItem item = go.GetComponent<IInventoryItem>();
+                mItems.Add(item);
+            }
         }
     }
 
@@ -64,11 +75,39 @@ public class Inventory : MonoBehaviour
         return mItems;
     }
 
-    public void SwapItems<IInventoryItems>(int index1, int index2)
+    public void SwapItems(int index1, int index2)
     {
+        // Ensure that both indices are valid
+        if (index1 < 0 || index1 >= mItems.Count || index2 < 0 || index2 >= mItems.Count)
+        {
+            Debug.LogError("Invalid indices for swapping items.");
+            return;
+        }
+
+        // Swap the items at the specified indices
+
         IInventoryItem temp = mItems[index1];
         mItems[index1] = mItems[index2];
         mItems[index2] = temp;
+        Print_Inventory();
+    }
+
+    public void SwapItemsLoot(int index1, int index2, Inventory lootInventory)
+    {
+        // Ensure that both indices are valid
+        if (index2 >= lootInventory.mItems.Count && index2 <= 9)
+        {
+            lootInventory.AddItem(mItems[index1]);
+            //Debug.LogError("Invalid indices for swapping items.");
+            mItems.RemoveAt(index1);
+            return;
+        }
+
+        // Swap the items at the specified indices
+        IInventoryItem temp = mItems[index1];
+        mItems[index1] = lootInventory.mItems[index2];
+        lootInventory.mItems[index2] = temp;
+        Print_Inventory();
     }
 
     public void Print_Inventory()
@@ -84,20 +123,18 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(IInventoryItem item)
     {
+        if (mItems == null)
+        {
+            mItems = new List<IInventoryItem>(9);
+            Debug.Log("on call l'event add");
+            mItems.Add(item);
+            //item.OnPickup();
+            ItemAdded(this, new InventoryEventArgs(item));
+        }
         if (mItems.Count < SLOTS)
         {
-            string name = item.Name;
-            foreach (IInventoryItem lootItem in mItems)
-            {
-                if (lootItem.Name == name)
-                {
-                    //Destroy(item);
-                    return;
-                }
-
-            }
             mItems.Add(item);
-            item.OnPickup();
+            //item.OnPickup();
             ItemAdded(this, new InventoryEventArgs(item));
         }
     }
@@ -106,51 +143,22 @@ public class Inventory : MonoBehaviour
     {
         if (mItems.Count == 0 && loot == true)
         {
+            mItems.Clear();
             Destroy(gameObject);
         }
     }
 
     public void DisplayLoot(Inventory playerInventory)
     {
-        Debug.Log("in display loot");
-        Debug.Log(mItems.Count);
-        int free_slots = 9 - playerInventory.mItems.Count;
-        foreach (IInventoryItem lootItem in mItems) 
+        foreach (IInventoryItem lootItem in mItems)
         {
-            if (free_slots == 0)
-                return;
-            Debug.Log(lootItem.Name);
-            if (lootItem.Name == "Halberd")
-            {
-                Debug.Log("halberd creation");
-                GameObject go = Resources.Load<GameObject>("Prefabs/Halberd");
-                var halberd = Instantiate(go, playerInventory.gameObject.transform.position,
-                    playerInventory.gameObject.transform.rotation);
-                halberd.GetComponent<Halberd>().buildHalberd();
-                IInventoryItem newHalberd = go.GetComponent<IInventoryItem>();
-                playerInventory.AddItem(newHalberd);
-            }
-            else if (lootItem.Name == "Sword")
-            {
-                Debug.Log("sword creation");
-                GameObject go = Resources.Load<GameObject>("Prefabs/Sword");
-                var sword = Instantiate(go, playerInventory.gameObject.transform.position,
-                    playerInventory.gameObject.transform.rotation);
-                sword.GetComponent<Sword>().buildSword();
-                IInventoryItem newSword = go.GetComponent<IInventoryItem>();
-                playerInventory.AddItem(newSword);
-            }
-            Debug.Log("item added");
-            mItems.Remove(lootItem);
-            Debug.Log(mItems.Count);
-            if (mItems.Count == 0)
-                Destroy(gameObject);
-            free_slots--;
+            //   Debug.Log(lootItem.Name);
+            ItemAdded(this, new InventoryEventArgs(lootItem));
         }
     }
         public void OnCollisionEnter(Collision collision)
         {
-        if (loot == true)
+        /*if (loot == true)
         {
             Inventory playerInventory = collision.collider.GetComponent<Inventory>();
             if (playerInventory != null)
@@ -162,6 +170,16 @@ public class Inventory : MonoBehaviour
                     DisplayLoot(playerInventory);
                 }
             }
-        }
+        }*/
+    }
+
+    public void DropItem(int id)
+    {
+        GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
+        Vector3 newPos = gameObject.transform.position;
+        newPos.x += 2;
+        var loot = Instantiate(LootPrefab, newPos, gameObject.transform.rotation);
+        loot.GetComponentInChildren<Inventory>().loot = true;
+        loot.GetComponentInChildren<Inventory>().AddItem(mItems[id]);
     }
 }

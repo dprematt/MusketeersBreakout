@@ -18,6 +18,22 @@ public class HUD : MonoBehaviour
         //gameObject.SetActive(false);
     }
 
+    public void Clean()
+    {
+        Debug.Log("CLEAN HUD");
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Inventory inventory = player.GetComponent<Inventory>();
+        Transform inventoryPanel = transform.Find("Inventory");
+        for (int i = 0; i < 9; i++)
+        {
+            InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
+        }
+        foreach (IInventoryItem lootItem in inventory.mItems)
+        {
+            Debug.Log(lootItem.Name);
+            InventoryScript_ItemAdded(this, new InventoryEventArgs(lootItem));
+        }
+    }
     public void init()
     {
         //Debug.Log("player event handler added");
@@ -28,7 +44,12 @@ public class HUD : MonoBehaviour
         //Debug.Log(inventory);
         //Debug.Log("start 2 hud");
         inventory.ItemAdded += InventoryScript_ItemAdded;
+        inventory.ItemRemoved += InventoryScript_ItemRemoved;
         Transform inventoryPanel = transform.Find("Inventory");
+        for (int i = 0; i < 9; i++)
+        {
+            InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
+        }
         foreach (Transform slot in inventoryPanel)
         {
             Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
@@ -36,6 +57,7 @@ public class HUD : MonoBehaviour
         }
         foreach (Transform slot in inventoryPanel)
         {
+            slot.GetChild(0).GetChild(0).GetComponent<Image>().enabled = false;
             EventTrigger trigger = slot.gameObject.AddComponent<EventTrigger>();
             EventTrigger.Entry entry = new EventTrigger.Entry();
             entry.eventID = EventTriggerType.PointerClick;
@@ -61,7 +83,8 @@ public class HUD : MonoBehaviour
 
     private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
     {
-        //Debug.Log("event item added hud");
+        Debug.Log("event item added hud");
+        Debug.Log(e.Item.Name);
         Transform inventoryPanel = transform.Find("Inventory");
         foreach (Transform slot in inventoryPanel)
         {
@@ -83,6 +106,24 @@ public class HUD : MonoBehaviour
             }
         }
     }
+
+    private void InventoryScript_ItemRemoved(object sender, InventoryEventArgs e)
+    {
+        Transform inventoryPanel = transform.Find("Inventory");
+        string tag = "Slot" + e.Index;
+        //Debug.Log(tag);
+        foreach (Transform slot in inventoryPanel)
+        {
+            if (slot.CompareTag(tag))
+            {
+                Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
+                Button button = slot.GetChild(0).GetComponent<Button>();
+                image.sprite = null;
+                image.enabled = false;
+                button.onClick.RemoveAllListeners();
+            }
+        }
+    }
     // Update is called once per frame
     private void OnPointerClick(PointerEventData eventData)
     {
@@ -93,20 +134,20 @@ public class HUD : MonoBehaviour
         //offset = (Vector2)selectedSlot.position - eventData.position;
     }
 
-   /* private int FindSlotId(Transform slot)
-    {
-        int counter = 0;
-        Transform inventoryPanel = transform.Find("Inventory");
-        foreach (Transform s in inventoryPanel)
-        {
-            if (slot == s)
-            {
-                return counter;
-            }
-            counter++;
-        }
-        return -1;
-    }*/
+    /* private int FindSlotId(Transform slot)
+     {
+         int counter = 0;
+         Transform inventoryPanel = transform.Find("Inventory");
+         foreach (Transform s in inventoryPanel)
+         {
+             if (slot == s)
+             {
+                 return counter;
+             }
+             counter++;
+         }
+         return -1;
+     }*/
     private void OnBeginDrag(PointerEventData eventData)
     {
         //Debug.Log("ON BEGIN DRAG !");
@@ -160,6 +201,12 @@ public class HUD : MonoBehaviour
                 //Debug.Log("released slot is null!");
                 //Debug.Log(startPos);
                 selectedSlot.position = startPos;
+                char id_1_c = selectedSlot.tag[selectedSlot.tag.Length - 1];
+                int id_1 = int.Parse(id_1_c.ToString());
+                Inventory inventory;
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                inventory = player.GetComponent<Inventory>();
+                inventory.DropItem(id_1);
                 return;
             }
             if (releasedSlot == selectedSlot)
@@ -172,9 +219,14 @@ public class HUD : MonoBehaviour
             if (releasedSlot != null && releasedSlot != selectedSlot)
             {
                 SwapSlots(selectedSlot, releasedSlot);
+                selectedSlot.position = startPos;
                 return;
             }
         }
+        selectedSlot = null;
+        startPos.Set(0, 0, 0);
+        endPos.Set(0, 0, 0);
+        offset.Set(0, 0, 0);
     }
 
     private Transform FindSlotFromRaycastResults(List<RaycastResult> results)
@@ -193,24 +245,59 @@ public class HUD : MonoBehaviour
         return null;
     }
 
+    private bool SameInventory(Inventory player, IInventoryItem toFind)
+    {
+        Debug.Log(toFind.Name);
+        foreach (IInventoryItem item in player.mItems)
+        {
+            Debug.Log(item.Name);
+            if (toFind == item)
+                return true;
+        }
+        return false;
+    }
+
+    private void DropItem()
+    {
+
+    }
+
     private void SwapSlots(Transform slot1, Transform slot2)
     {
-        //Debug.Log("Swap the positions of the two slots");
-        //Vector3 tempPosition = slot1.position;
-        //Debug.Log("tag1");
-        //Debug.Log(slot1.tag);
-        //Debug.Log("tag2");
-        //Debug.Log(slot2.tag);
         endPos = slot2.position;
-        slot1.position = endPos;
-        slot2.position = startPos;
+        Inventory inventory;
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        Inventory inventory = player.GetComponent<Inventory>();
+        inventory = player.GetComponent<Inventory>();
+        //
+        GameObject loot = GameObject.FindGameObjectWithTag("LootHUD");
+        LootHUD lootHUD = loot.GetComponent<LootHUD>();
+        //
         char id_1_c = slot1.tag[slot1.tag.Length - 1];
         int id_1 = int.Parse(id_1_c.ToString());
-        char id_2_c = slot1.tag[slot2.tag.Length - 1];
+        char id_2_c = slot2.tag[slot2.tag.Length - 1];
         int id_2 = int.Parse(id_2_c.ToString());
-        inventory.SwapItems<IInventoryItem>(id_1, id_2);
+        Debug.Log(slot1.position);
+        Debug.Log(slot2.position);
+        Debug.Log(id_1);
+        Debug.Log(id_2);
+        Debug.Log(slot1.tag);
+        Debug.Log(slot2.tag);
+        if ((slot1.position.y <= slot2.position.y + 10) && ((slot1.position.y >= slot2.position.y - 10)))
+        {
+            inventory.SwapItems(id_1, id_2);
+            //slot1.position = endPos;
+            //slot2.position = startPos;
+        }
+        else
+        {
+            //Debug.Log("y different");
+            inventory.SwapItemsLoot(id_1, id_2, lootHUD.inventory);
+            //Debug.Log("print player inventory after");
+            //inventory.Print_Inventory();
+            //Debug.Log("print loot inventory after");
+            //lootHUD.inventory.Print_Inventory();
+        }
+        Clean();
     }
 
     void Update()
