@@ -23,7 +23,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public GameObject holder;
 
-    public Player holderMovements;
+    public Player playerComp;
 
     public int damages;
 
@@ -119,6 +119,11 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public virtual void Attack()
     {
+        if (playerComp.hasShield && playerComp.shieldComp.isProtecting)
+        {
+            return;
+        }
+
         countAttackClick += 1;
 
         if (countAttackClick == 1)
@@ -126,7 +131,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             anim.SetInteger("intAttackPhase", 1);
             audioSource.PlayOneShot(attackSound);
             if (holder.CompareTag("Player")) {
-                holderMovements.stamina -= 30;
+                playerComp.stamina -= 30;
             }
             damageDealt = false;
         }
@@ -142,7 +147,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             {
                 anim.SetInteger("intAttackPhase", 2);
                 audioSource.PlayOneShot(attackSound);
-                holderMovements.stamina -= 30;
+                playerComp.stamina -= 30;
                 damageDealt = false;
             }
             else
@@ -157,7 +162,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             {
                 anim.SetInteger("intAttackPhase", 3);
                 audioSource.PlayOneShot(attackSound);
-                holderMovements.stamina -= 30;
+                playerComp.stamina -= 30;
                 damageDealt = false;
             }
             else
@@ -189,7 +194,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         transform.localPosition = new Vector3(positionX, positionY, positionZ);
         transform.localRotation = Quaternion.Euler(rotationX, rotationY, rotationZ);
         if (isPlayer)
-            holderMovements = holder.GetComponent<Player>();
+            playerComp = holder.GetComponent<Player>();
         isLooted = true;
     }
 
@@ -200,7 +205,14 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             anim.runtimeAnimatorController = animOverride;
         if (!isLongRange)
         {
-            anim.SetLayerWeight(1, 1f);
+            if (playerComp.hasShield)
+            {
+                anim.SetLayerWeight(4, 1f);
+            }
+            else
+            {
+                anim.SetLayerWeight(1, 1f);
+            }
         }
     }
 }

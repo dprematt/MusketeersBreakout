@@ -31,7 +31,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5027895048215052172}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6581286385351836194
 MeshFilter:
@@ -171,14 +171,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1593473872786058132}
-  m_LocalRotation: {x: 0.00000044703472, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.00000056624384, y: 0.000000029802308, z: 0.000000029802308, w: 1}
   m_LocalPosition: {x: 0, y: 1.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6856076961904039220}
   m_Father: {fileID: 5027895048215052172}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4435747048794105758
 GameObject:
@@ -444,8 +444,8 @@ Transform:
   m_Children:
   - {fileID: 7924882684488101246}
   - {fileID: 7801814207774365845}
-  - {fileID: 2135607797617425565}
   - {fileID: 2585372366857885022}
+  - {fileID: 2135607797617425565}
   - {fileID: 3933456742477294755}
   - {fileID: 2255190906901363133}
   m_Father: {fileID: 0}
@@ -5365,6 +5365,7 @@ MonoBehaviour:
   isAttacking: 0
   bloodParticles: {fileID: -6681432496318675080}
   weaponList: []
+  hasShield: 0
   shieldComp: {fileID: 0}
   eventListener: {fileID: 0}
 --- !u!114 &3107699292531397568
@@ -5419,6 +5420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SLOTS: 9
   loot: 0
+  test: 0
 --- !u!114 &-4865825818029781299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5902,8 +5904,8 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 6516570572402197074}
   - {fileID: 5127025623917268453}
+  - {fileID: 6516570572402197074}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -5959,9 +5961,6 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 1
     Name: hit3
-  - Type: 3
-    SynchronizeType: 1
-    Name: weaponType
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0

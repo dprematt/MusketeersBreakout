@@ -73,7 +73,7 @@ public class Player : MonoBehaviourPunCallbacks
     private Vector3 aimTarget;
     LineRenderer lineRenderer;
 
-    private bool hasShield = false;
+    public bool hasShield = false;
     private GameObject shield;
     public Shield shieldComp;
 
@@ -128,7 +128,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
 
         float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
-        if ((scrollDelta > 0f || scrollDelta < 0f) && weaponList.Count > 1)
+        if ((scrollDelta > 0f || scrollDelta < 0f) && weaponList.Count > 1 && anim.GetInteger("intAttackPhase") == 0)
         {
             int layer = weaponList[currentWeapon].isLongRange ? 2 : 1;
 
@@ -325,6 +325,11 @@ public class Player : MonoBehaviourPunCallbacks
                     hasShield = true;
                     Transform hand = FindDeepChild(transform, "jointItemL");
                     shieldComp.whenPickUp(gameObject, hand);
+                    if (weaponList.Count > 0)
+                    {
+                        anim.SetLayerWeight(1, 0f);
+                        anim.SetLayerWeight(4, 1f);
+                    }
                 }
             }
         }
