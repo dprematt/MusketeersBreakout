@@ -70,12 +70,6 @@ public class Shield : MonoBehaviourPun, IInventoryItem
             {
                 Destroy(other.gameObject);
             }
-
-            Weapon weaponComp = other.gameObject.GetComponent<Weapon>();
-            if (weaponComp != null)
-            {
-                weaponComp.ignoreAttack = true;
-            }
         }
     }
 
@@ -156,6 +150,6 @@ public class Shield : MonoBehaviourPun, IInventoryItem
             yield return null;
         }
 
-        transform.localRotation = targetQuaternion; // Assure que la rotation finale est correcte
+        transform.localRotation = targetQuaternion;
     }
 }

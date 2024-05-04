@@ -16,7 +16,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
     public Sprite _Image;
 
     public bool isLooted = false;
-    public bool damageDealt;
 
     public Animator anim;
     public AnimatorOverrideController animOverride;
@@ -39,17 +38,16 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public bool isLongRange;
 
-    public bool ignoreAttack;
-
     public int countAttackClick;
+
+    public bool isAttacking;
 
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
         countAttackClick = 0;
 
-        damageDealt = false;
-        ignoreAttack = false;
+        isAttacking = false;
     }
 
     public void Update()
@@ -82,24 +80,27 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public void OnTriggerEnter(Collider other)
     {
-
-        if (anim.GetInteger("intAttackPhase") > 0 && other.gameObject != holder && damageDealt == false && ignoreAttack == false)
+        if (anim.GetInteger("intAttackPhase") > 0 && other.CompareTag("Shield"))
         {
-            if (holder.CompareTag("Player") && other.CompareTag("EnemyBody"))
+            Shield shieldComp = other.gameObject.GetComponent<Shield>();
+            if (shieldComp.isProtecting)
+            {
+                return;
+            }
+        }
+
+        if (anim.GetInteger("intAttackPhase") > 0 && other.gameObject != holder && isAttacking)
+        {
+            if (IsPlayer && other.CompareTag("EnemyBody"))
             {
                 other.gameObject.GetComponentInParent<Enemy>().TakeDamage(damages);
                 Debug.Log("Hit !!!");
             }
-            else if (holder.CompareTag("Enemy"))
+            else if (holder.CompareTag("Enemy") && other.CompareTag("Player"))
             {
                 other.gameObject.GetComponent<Player>().TakeDamage(damages);
             }
-            damageDealt = true;
-            return;
-        }
-        else if (ignoreAttack)
-        {
-            ignoreAttack = false;
+            isAttacking = false;
         }
     }
 
@@ -119,9 +120,12 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public virtual void Attack()
     {
-        if (playerComp.hasShield && playerComp.shieldComp.isProtecting)
+        if (isPlayer)
         {
-            return;
+            if (playerComp.hasShield && playerComp.shieldComp.isProtecting)
+            {
+                return;
+            }
         }
 
         countAttackClick += 1;
@@ -130,25 +134,25 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         {
             anim.SetInteger("intAttackPhase", 1);
             audioSource.PlayOneShot(attackSound);
-            if (holder.CompareTag("Player")) {
+            if (isPlayer) {
                 playerComp.stamina -= 30;
             }
-            damageDealt = false;
         }
     }
 
     public void CheckAttackPhase()
     {
-        //Debug.Log("Checking Attack Phase...");
         if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack 1"))
         {
-            //Debug.Log("Current State : attack 1");
             if (countAttackClick > 1)
             {
                 anim.SetInteger("intAttackPhase", 2);
                 audioSource.PlayOneShot(attackSound);
-                playerComp.stamina -= 30;
-                damageDealt = false;
+                if (isPlayer)
+                {
+                    playerComp.stamina -= 30;
+                }
+                isAttacking = false;
             }
             else
             {
@@ -157,13 +161,15 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         }
         else if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack 2"))
         {
-            //Debug.Log("Current State : attack 2");
             if (countAttackClick > 2)
             {
                 anim.SetInteger("intAttackPhase", 3);
                 audioSource.PlayOneShot(attackSound);
-                playerComp.stamina -= 30;
-                damageDealt = false;
+                if (isPlayer)
+                {
+                    playerComp.stamina -= 30;
+                }
+                isAttacking = false;
             }
             else
             {
@@ -172,7 +178,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         }
         else if (anim.GetCurrentAnimatorStateInfo(1).IsName("Attack 3"))
         {
-            //Debug.Log("Current State : attack 3");
             if (countAttackClick >= 3)
             {
                 ResetAttackPhase();
@@ -184,6 +189,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
     {
         countAttackClick = 0;
         anim.SetInteger("intAttackPhase", 0);
+        isAttacking = false;
     }
 
     public void whenPickUp(GameObject newHolder, Transform hand)
@@ -205,9 +211,16 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             anim.runtimeAnimatorController = animOverride;
         if (!isLongRange)
         {
-            if (playerComp.hasShield)
+            if (isPlayer)
             {
-                anim.SetLayerWeight(4, 1f);
+                if (playerComp.hasShield)
+                {
+                    anim.SetLayerWeight(4, 1f);
+                }
+                else
+                {
+                    anim.SetLayerWeight(1, 1f);
+                }
             }
             else
             {

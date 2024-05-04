@@ -14,4 +14,9 @@ public class EventListener : MonoBehaviour
     {
         weaponComp.CheckAttackPhase();
     }
+
+    public void HitEvent()
+    {
+        weaponComp.isAttacking = true;
+    }
 }
