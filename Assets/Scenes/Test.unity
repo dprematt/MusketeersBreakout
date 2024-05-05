@@ -123,49 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &161530689 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4756814486136092166, guid: b1d4021c9e3797d48a2d443ad5e7797d, type: 3}
-  m_PrefabInstance: {fileID: 1000423807}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &161530708
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 161530689}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6981bb94cc5b91440970f7e73cbce301, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  aim: 1
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 704
-  ignoreHeight: 0
-  aimedTransform: {fileID: 1923007058}
-  bodyTransform: {fileID: 340790969}
-  laserRenderer: {fileID: 1696451281}
-  laserMask:
-    serializedVersion: 2
-    m_Bits: 704
-  laserLength: 25
-  projectilePrefab: {fileID: 1227652172285325768, guid: ac1e8113cfb984757a078f3596ce4212, type: 3}
-  prefabSpawn: {fileID: 1923007058}
-  gizmo_cameraRay: 1
-  gizmo_ground: 0
-  gizmo_target: 0
-  gizmo_ignoredHeightTarget: 0
-  maxAmmo: 1
-  currentAmmo: 0
-  reloadTime: 2.03
-  isReloading: 0
-  attackSound: {fileID: 8300000, guid: 94ff6c5c1969a3241af8ce537907fefb, type: 3}
-  audioSource: {fileID: 0}
-  damages: 10
-  anim: {fileID: 0}
 --- !u!1 &188201278 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1782702501690864755, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
@@ -217,11 +174,6 @@ Transform:
 --- !u!95 &340790964 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 4661507371320996336, guid: b1d4021c9e3797d48a2d443ad5e7797d, type: 3}
-  m_PrefabInstance: {fileID: 1000423807}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &340790969 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7801814207774365845, guid: b1d4021c9e3797d48a2d443ad5e7797d, type: 3}
   m_PrefabInstance: {fileID: 1000423807}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &426253504
@@ -635,27 +587,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
---- !u!1 &778600832 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4482778166470249717, guid: b1d4021c9e3797d48a2d443ad5e7797d, type: 3}
-  m_PrefabInstance: {fileID: 1000423807}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &778600840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 778600832}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c37e9c97af9e3f54eb5ce247c667693d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetAngle: 45
-  currentAngle: 0
-  mouseSensitivity: 2
-  rotationSpeed: 5
 --- !u!1 &841164186
 GameObject:
   m_ObjectHideFlags: 0
@@ -2961,11 +2892,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff308da8ab0ae8498bb4bcbbe91e5b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!120 &1696451281 stripped
-LineRenderer:
-  m_CorrespondingSourceObject: {fileID: 3549108447124772405, guid: b1d4021c9e3797d48a2d443ad5e7797d, type: 3}
-  m_PrefabInstance: {fileID: 1000423807}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1790882567
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3572,11 +3498,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
---- !u!4 &1923007058 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2585372366857885022, guid: b1d4021c9e3797d48a2d443ad5e7797d, type: 3}
-  m_PrefabInstance: {fileID: 1000423807}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1935390902
 PrefabInstance:
   m_ObjectHideFlags: 0
