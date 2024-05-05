@@ -42,6 +42,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     public Inventory inventory;
     public GameObject HUD;
+    public GameObject LootHUD;
+
 
     float horizontalMovement;
     float verticalMovement;
@@ -95,6 +97,7 @@ public class Player : MonoBehaviourPunCallbacks
         inventory = player.GetComponent<Inventory>();
         HUD = GameObject.FindGameObjectWithTag("InventoryHUD");
         HUD.GetComponent<HUD>().init();
+        LootHUD = GameObject.FindGameObjectWithTag("LootHUD");
         GameObject xpProgressBarExperience = GameObject.FindWithTag("ExperienceBarDefaultTag");
         GameObject xpProgressBarLevel = GameObject.FindWithTag("ExperienceBarLevelTag");
         GameObject xpProgressBarXp = GameObject.FindWithTag("ExperienceBarXpTag");
@@ -176,6 +179,10 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 HUD.SetActive(true);
             }
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            LootHUD.SetActive(false);
         }
 
         if (hasShield && Input.GetMouseButton(1))
@@ -259,21 +266,44 @@ public class Player : MonoBehaviourPunCallbacks
     }
     void OnCollisionEnter(Collision col)
     {
+        Debug.Log("on trigger enter");
         Inventory loot = col.gameObject.GetComponent<Inventory>();
+        if (loot.loot == true)
+        {
+            Debug.Log("do we need to activate ?");
+            if (!LootHUD.activeSelf)
+            {
+                Debug.Log("activated");
+                LootHUD.SetActive(true);
+            }
+            else
+            {
+                Debug.Log("not activated");
+                return;
+            }
+            Debug.Log("size before init");
+            Debug.Log(loot.mItems.Count);
+            LootHUD.GetComponent<LootHUD>().init(ref loot);
+            Debug.Log("size after init");
+            Debug.Log(loot.mItems.Count);
+            loot.DisplayLoot(inventory);
+
+        }
+        /*Inventory loot = col.gameObject.GetComponent<Inventory>();
         if (loot != null)
         {
             loot.DisplayLoot(inventory);
             return;
-        }
+        }*/
     }
     void OnTriggerEnter(Collider col)
     {
-        /*Inventory loot = col.GetComponent<Inventory>();
+        
         IInventoryItem item = col.GetComponent<IInventoryItem>();
         if (item != null)
         {
             inventory.AddItem(item);
-        }*/
+        }
 
         Weapon weaponComp = col.GetComponent<Weapon>();
         if (weaponComp != null)
