@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Sword : Weapons
 {
@@ -71,12 +72,16 @@ public class Sword : Weapons
         Vector3 NewPos = weaponSpawnPoint.position;
         NewPos.y += 1.5f;
         NewPos.z -= 1;
-        var halberd = Instantiate(weaponPrefab, NewPos, weaponSpawnPoint.rotation);
-        if (IsPlayer == true)
-            halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4);
-        else
+        if (PhotonNetwork.IsMasterClient)
         {
-            halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4, true);
+            var halberd = PhotonNetwork.Instantiate(weaponPrefab.name, weaponSpawnPoint.position, weaponSpawnPoint.rotation);
+        
+            if (IsPlayer == true)
+                halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4);
+            else
+            {
+                halberd.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 4, 4, true);
+            }
         }
     }
     public void SpawnWeaponProx()
@@ -92,13 +97,21 @@ public class Sword : Weapons
             SpawnEnemyWeaponProx();
             return;
         }
-        Player pm = gameObject.GetComponentInParent<Player>();
-        // Use the forward vector to determine the spawn position
-        var NewPos = weaponSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
-        NewPos.y += 1.5f;
-        NewPos.z -= 1;
-        var sword = Instantiate(weaponPrefab, NewPos, pm.characterModel.rotation);
-        sword.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 3, 5);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Player pm = gameObject.GetComponentInParent<Player>();
+
+            // Calcul de la position de spawn de l'épée
+            var NewPos = weaponSpawnPoint.position + pm.characterModel.rotation * Vector3.forward * offset;
+            NewPos.y += 1.5f;
+            NewPos.z -= 1;
+
+            // Instanciation de l'épée sur le réseau
+            var sword = PhotonNetwork.Instantiate(weaponPrefab.name, NewPos, pm.characterModel.rotation);
+
+            // Initialisation de l'épée
+            sword.GetComponent<WeaponProx>().Initialize(weaponSpawnPoint, 3, 5);
+        }
     }
 
     public override void Attack()

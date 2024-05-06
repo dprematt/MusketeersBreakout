@@ -17,7 +17,7 @@ public class TabEntity : MonoBehaviour
 
     void OnKeyNPressed()
     {
-        if (Input.GetKeyDown(KeyCode.N))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             // Vérifie si le GameObject est actif
             if (Tabulation.activeSelf)

@@ -5635,6 +5635,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health_Text_: {fileID: 8046730942431530230}
+  Player_: {fileID: 0}
 --- !u!114 &-3871568989856592407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5907,6 +5908,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 899d2db7d7c854178bf11e8afa19e185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MuteButton: {fileID: 0}
   VoiceManager: {fileID: 0}
 --- !u!114 &4559697563773200986
 MonoBehaviour:

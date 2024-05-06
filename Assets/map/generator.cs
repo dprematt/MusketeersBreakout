@@ -32,6 +32,8 @@ public class generator : MonoBehaviourPun
     public bool autoUpdate;
     public Vector2 offSet;
 
+    private SpawnWeapons SpawnWeapons_;
+
     float[,] colorMap = new float[mapChunkSize, mapChunkSize];
     public Vector3[] _spawnCoords = new Vector3[20];
 
@@ -433,6 +435,8 @@ public class generator : MonoBehaviourPun
 
     private void SpawnFunc()
     {
+        SpawnWeapons_ = GetComponent<SpawnWeapons>();
+        SpawnWeapons_.InstanciateWeapons(_spawnCoords[0]);
         GameObject Player_ = PhotonNetwork.Instantiate(PlayerPrefab_.name, _spawnCoords[0], Quaternion.identity);
         Debug.Log("Nom de l'instance PlayFab : " + PlayFabSettings.TitleId + " Spawn aux coordonnées : x = " + _spawnCoords[0].x + " y = " + _spawnCoords[0].y + " z = " + _spawnCoords[0].z);
         Player_.GetComponent<SetupPlayer>().IsLocalPlayer();
