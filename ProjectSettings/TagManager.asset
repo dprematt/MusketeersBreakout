@@ -15,6 +15,25 @@ TagManager:
   - WeaponSpear
   - EnemyBody
   - Shield
+  - LootHUDInventory
+  - WeaponCrossBow
+  - WeaponBow
+  - InventoryHUD
+  - Slot2
+  - Slot5
+  - ExperienceBarXpTag
+  - Slot6
+  - Slot4
+  - Slot8
+  - Slot1
+  - Slot7
+  - Slot3
+  - ExperienceBarLevelTag
+  - ExperienceBarDefaultTag
+  - Loot
+  - LootHUD
+  - Slot0
+  - ExtractionZone
   layers:
   - Default
   - TransparentFX
