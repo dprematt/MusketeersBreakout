@@ -129,7 +129,11 @@ public class Inventory : MonoBehaviour
             Debug.Log("on call l'event add");
             mItems.Add(item);
             //item.OnPickup();
-            ItemAdded(this, new InventoryEventArgs(item));
+            if (ItemAdded != null)
+            {
+                ItemAdded(this, new InventoryEventArgs(item));
+            }
+            return;
         }
         if (mItems.Count < SLOTS)
         {
@@ -181,5 +185,8 @@ public class Inventory : MonoBehaviour
         var loot = Instantiate(LootPrefab, newPos, gameObject.transform.rotation);
         loot.GetComponentInChildren<Inventory>().loot = true;
         loot.GetComponentInChildren<Inventory>().AddItem(mItems[id]);
+        Debug.Log("after add item in drop item");
+        mItems.RemoveAt(id);
+        Debug.Log(mItems.Count);
     }
 }

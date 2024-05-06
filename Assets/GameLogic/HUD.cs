@@ -207,6 +207,7 @@ public class HUD : MonoBehaviour
                 GameObject player = GameObject.FindGameObjectWithTag("Player");
                 inventory = player.GetComponent<Inventory>();
                 inventory.DropItem(id_1);
+                Clean();
                 return;
             }
             if (releasedSlot == selectedSlot)
