@@ -22,6 +22,9 @@ public class Player : MonoBehaviourPunCallbacks
 
     [Header("Jumping")]
     public float jumpForce = 6f;
+    private bool hasDoubleJumped = false;
+
+    public float doubleJumpForce = 3f;
 
     [Header("Keybinds")]
     [SerializeField] public KeyCode jumpKey = KeyCode.Space;
@@ -129,7 +132,7 @@ public class Player : MonoBehaviourPunCallbacks
         ControlDrag();
         CheckXp();
 
-        if (Input.GetKeyDown(jumpKey) && isGrounded)
+        if (Input.GetKeyDown(jumpKey))
         {
             Jump();
         }
@@ -419,7 +422,16 @@ public class Player : MonoBehaviourPunCallbacks
     }
     void Jump()
     {
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        if (isGrounded)
+        {
+            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            hasDoubleJumped = false;
+        }
+        else if (!hasDoubleJumped)
+        {
+            rb.AddForce(transform.up * 6f, ForceMode.Impulse);
+            hasDoubleJumped = true;
+        }
     }
     void ControlDrag()
     {
