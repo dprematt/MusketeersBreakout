@@ -2,6 +2,7 @@ using UnityEngine;
 using PlayFab;
 using System.Threading.Tasks;
 using PlayFab.ClientModels;
+using System.Collections.Generic;
 
 public class PlayFabInventory : MonoBehaviour
 {
@@ -40,9 +41,13 @@ public class PlayFabInventory : MonoBehaviour
 
     public void PlayerWin()
     {
-        foreach (IInventoryItem tmp in Inventory_.GetInventory())
+        List <IInventoryItem> ItemList = Inventory_.GetInventory();
+        foreach (IInventoryItem tmp in ItemList)
         {
-            SaveInventory(tmp.Name, 1);
+            Debug.Log("Arme :" + tmp);
+            if (tmp != null && tmp.Name != null && tmp.Name != "null") {
+                SaveInventory(tmp.Name, 1);
+            }
         }
     }
 
