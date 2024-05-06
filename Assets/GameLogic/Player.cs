@@ -21,10 +21,8 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] float airMultiplier = 0.4f;
 
     [Header("Jumping")]
-    public float jumpForce = 6f;
+    public float jumpForce = 7f;
     private bool hasDoubleJumped = false;
-
-    public float doubleJumpForce = 3f;
 
     [Header("Keybinds")]
     [SerializeField] public KeyCode jumpKey = KeyCode.Space;
@@ -132,7 +130,7 @@ public class Player : MonoBehaviourPunCallbacks
         ControlDrag();
         CheckXp();
 
-        if (Input.GetKeyDown(jumpKey))
+        if (Input.GetKeyDown(jumpKey) && !staminaFullUsed)
         {
             Jump();
         }
@@ -157,6 +155,17 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 stamina -= 30 * Time.deltaTime;
                 moveSpeed = 8f;
+            }
+            else
+            {
+                staminaFullUsed = true;
+            }
+        } 
+        else if (Input.GetKeyDown(jumpKey) && !staminaFullUsed && (isGrounded || !hasDoubleJumped))
+        {
+            if (stamina > 0)
+            {
+                stamina -= 20;
             }
             else
             {
@@ -429,7 +438,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
         else if (!hasDoubleJumped)
         {
-            rb.AddForce(transform.up * 6f, ForceMode.Impulse);
+            rb.AddForce(transform.up * 7f, ForceMode.Impulse);
             hasDoubleJumped = true;
         }
     }
