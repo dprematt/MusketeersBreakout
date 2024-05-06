@@ -77,6 +77,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     public bool hasShield = false;
     private GameObject shield;
+    private GameObject extractionZone;
     public Shield shieldComp;
 
     public EventListener eventListener;
@@ -304,6 +305,15 @@ public class Player : MonoBehaviourPunCallbacks
         {
             inventory.AddItem(item);
         }
+
+        if (col.CompareTag("ExtractionZone"))
+        {
+            PFInventory_.PlayerWin();
+            Debug.Log("Joueur rentré dans la zone d'extraction");
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LoadLevel("Menu");
+        }
+
 
         Weapon weaponComp = col.GetComponent<Weapon>();
         if (weaponComp != null)
