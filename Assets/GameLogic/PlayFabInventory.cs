@@ -44,8 +44,8 @@ public class PlayFabInventory : MonoBehaviour
         List <IInventoryItem> ItemList = Inventory_.GetInventory();
         foreach (IInventoryItem tmp in ItemList)
         {
-            Debug.Log("Arme :" + tmp);
             if (tmp != null && tmp.Name != null && tmp.Name != "null") {
+                Debug.Log("Arme :" + tmp.Name);
                 SaveInventory(tmp.Name, 1);
             }
         }

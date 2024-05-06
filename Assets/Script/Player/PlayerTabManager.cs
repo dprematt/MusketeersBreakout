@@ -10,11 +10,11 @@ public class PlayerTabManager : MonoBehaviourPun
     public Text PlayerName_;
     public Text PlayerHealth_;
 
-    HealthManager HealthManager_;
+    //HealthManager HealthManager_;
 
     private void Start()
     {
-        HealthManager_ = GetComponent<HealthManager>();
+        //HealthManager_ = GetComponent<HealthManager>();
     }
 
 
