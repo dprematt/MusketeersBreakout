@@ -24,7 +24,10 @@ public class Player : MonoBehaviourPunCallbacks
     public float jumpForce = 6f;
 
     [Header("Keybinds")]
-    [SerializeField] KeyCode jumpKey = KeyCode.Space;
+    [SerializeField] public KeyCode jumpKey = KeyCode.Space;
+    [SerializeField] public KeyCode sprintKey = KeyCode.LeftShift;
+    [SerializeField] public KeyCode HUDKey = KeyCode.U;
+    [SerializeField] public KeyCode dodgeKey = KeyCode.F;
 
     [Header("Drag")]
     [SerializeField] float groundDrag = 6f;
@@ -145,7 +148,7 @@ public class Player : MonoBehaviourPunCallbacks
             eventListener.weaponComp = weaponList[currentWeapon];
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && !staminaFullUsed)
+        if (Input.GetKey(sprintKey) && !staminaFullUsed)
         {
             if (stamina > 0)
             {
@@ -170,7 +173,7 @@ public class Player : MonoBehaviourPunCallbacks
             }
         }
         OnStaminaChanged?.Invoke(stamina, maxStamina);
-        if (Input.GetKeyDown(KeyCode.U))
+        if (Input.GetKeyDown(HUDKey))
         {
             if (HUD.activeSelf)
             {
@@ -201,7 +204,7 @@ public class Player : MonoBehaviourPunCallbacks
                 weaponList[currentWeapon].Attack();
             }
 
-            if (weaponList[currentWeapon].isLongRange && !Input.GetKey(KeyCode.LeftShift))
+            if (weaponList[currentWeapon].isLongRange && !Input.GetKey(sprintKey))
             {
                 IsometricAiming aim = gameObject.GetComponent<IsometricAiming>();
                 if (Input.GetMouseButtonDown(1))
@@ -397,6 +400,23 @@ public class Player : MonoBehaviourPunCallbacks
             //transform.rotation = Quaternion.Slerp(characterModel.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
+
+    public void SetJumpKey(KeyCode newJumpKey)
+    {
+        jumpKey = newJumpKey;
+    }
+    public void SetSprintKey(KeyCode newSprintKey)
+    {
+        sprintKey = newSprintKey;
+    }
+    public void SetHUDKey(KeyCode newHUDKey)
+    {
+        HUDKey = newHUDKey;
+    }
+    public void SetDodgeKey(KeyCode newDodgeKey)
+    {
+        dodgeKey = newDodgeKey;
+    }
     void Jump()
     {
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -430,7 +450,7 @@ public class Player : MonoBehaviourPunCallbacks
             newScale.y = newHeight;
             cylinderTransform.localScale = newScale;
         }
-        if (Input.GetKeyDown(KeyCode.F) && isGrounded)
+        if (Input.GetKeyDown(dodgeKey) && isGrounded)
         {
             Vector3 newPos = cylinderTransform.localPosition;
             newPos.z -= 1;
