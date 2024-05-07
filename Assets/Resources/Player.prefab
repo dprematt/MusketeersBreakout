@@ -5547,6 +5547,9 @@ MonoBehaviour:
   airMultiplier: 0.4
   jumpForce: 5
   jumpKey: 32
+  sprintKey: 304
+  HUDKey: 117
+  dodgeKey: 102
   groundDrag: 6
   airDrag: 2
   health: 0

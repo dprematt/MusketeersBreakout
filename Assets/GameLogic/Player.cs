@@ -471,11 +471,15 @@ public class Player : MonoBehaviourPunCallbacks
             newScale.y = newHeight;
             cylinderTransform.localScale = newScale;
         }
-        if (Input.GetKeyDown(dodgeKey) && isGrounded)
+        if (Input.GetKeyDown(dodgeKey) && isGrounded && !anim.GetBool("isDodging"))
         {
-            Vector3 newPos = cylinderTransform.localPosition;
-            newPos.z -= 1;
-            cylinderTransform.localPosition = newPos;
+        Vector3 dodgeDirection = characterModel.forward;
+        rb.AddForce(dodgeDirection.normalized * 50f * movementMultiplier, ForceMode.Acceleration);
+            anim.SetBool("isDodging", true);
+        } 
+        else if(anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1 && !anim.IsInTransition(0) && anim.GetBool("isDodging"))
+        {
+            anim.SetBool("isDodging", false);
         }
     }
     void MovePlayer()
