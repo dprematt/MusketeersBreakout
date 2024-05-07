@@ -194,11 +194,24 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public void whenPickUp(GameObject newHolder, Transform hand)
     {
+        Debug.Log("Arme mise dans les main du joueur");
         holder = newHolder;
         isPlayer = holder.CompareTag("Player") ? true : false;
-        transform.parent = hand;
+        int holderID = newHolder.GetPhotonView().ViewID;
+        Vector3 relativePosition = hand.position;
+        photonView.RPC("SyncPickUp", RpcTarget.All, holderID, relativePosition, rotationX, rotationY, rotationZ);
+    }
+
+     [PunRPC]
+    private void SyncPickUp(int holderID, Vector3 relativePosition, float rotX, float rotY, float rotZ)
+    {
+        GameObject holderObject = PhotonView.Find(holderID).gameObject;
+        holder = holderObject;
+        isPlayer = holder.CompareTag("Player");
+        transform.parent = holder.transform;
         transform.localPosition = new Vector3(positionX, positionY, positionZ);
-        transform.localRotation = Quaternion.Euler(rotationX, rotationY, rotationZ);
+        transform.localRotation = Quaternion.Euler(rotX, rotY, rotZ);
+
         if (isPlayer)
             playerComp = holder.GetComponent<Player>();
         isLooted = true;

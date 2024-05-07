@@ -48,6 +48,7 @@ MonoBehaviour:
   - GetCoords
   - RespawnSpaceship
   - RPC_StartGame
+  - SyncPickUp
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
