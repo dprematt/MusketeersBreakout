@@ -199,6 +199,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         isPlayer = holder.CompareTag("Player") ? true : false;
         int holderID = newHolder.GetPhotonView().ViewID;
         Vector3 relativePosition = hand.position;
+        //transform.parent = hand;
         photonView.RPC("SyncPickUp", RpcTarget.All, holderID, relativePosition, rotationX, rotationY, rotationZ);
     }
 
@@ -209,7 +210,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         holder = holderObject;
         anim = holder.GetComponentInChildren<Animator>();
         isPlayer = holder.CompareTag("Player");
-        transform.parent = holder.transform;
+        transform.parent = FindDeepChild(holderObject.transform, "jointItemL");
         transform.localPosition = new Vector3(positionX, positionY, positionZ);
         transform.localRotation = Quaternion.Euler(rotX, rotY, rotZ);
 
@@ -218,9 +219,20 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         isLooted = true;
     }
 
-    public void setAnim()
+
+
+
+    public void setAnim(GameObject Holder)
     {
-        anim = holder.GetComponentInChildren<Animator>();
+        int holderID = Holder.GetPhotonView().ViewID;
+        photonView.RPC("SyncAnim", RpcTarget.All, holderID);
+    }
+
+    [PunRPC]
+    public void SyncAnim(int holderID)
+    {
+        GameObject holderObject = PhotonView.Find(holderID).gameObject;
+        anim = holderObject.GetComponentInChildren<Animator>();
         if(animOverride != null)
             anim.runtimeAnimatorController = animOverride;
         if (!isLongRange)

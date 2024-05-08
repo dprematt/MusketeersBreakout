@@ -57,7 +57,7 @@ using UnityEngine;
         {
             weaponList[1].gameObject.SetActive(false);
         }
-        weaponList[0].setAnim();
+        weaponList[0].setAnim(gameObject);
         eventListener.weaponComp = weaponList[0];
     }
 
@@ -100,7 +100,7 @@ using UnityEngine;
                     currentWeapon = currentWeapon == 0 ? 1 : 0;
 
                     weaponList[currentWeapon].gameObject.SetActive(true);
-                    weaponList[currentWeapon].setAnim();
+                    weaponList[currentWeapon].setAnim(gameObject);
                     eventListener.weaponComp = weaponList[currentWeapon];
 
                     nextAttack = Time.time + delay;

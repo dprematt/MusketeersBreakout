@@ -145,7 +145,7 @@ public class Player : MonoBehaviourPunCallbacks
             weaponList[currentWeapon].gameObject.SetActive(false);
             currentWeapon = currentWeapon == 0 ? 1 : 0;
             weaponList[currentWeapon].gameObject.SetActive(true);
-            weaponList[currentWeapon].setAnim();
+            weaponList[currentWeapon].setAnim(gameObject);
             eventListener.weaponComp = weaponList[currentWeapon];
         }
 
@@ -354,7 +354,7 @@ public class Player : MonoBehaviourPunCallbacks
                     }
                     else
                     {
-                        weaponComp.setAnim();
+                        weaponComp.setAnim(gameObject);
                         currentWeapon = 0;
                         eventListener.weaponComp = weaponComp;
                     }
