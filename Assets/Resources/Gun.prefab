@@ -112,7 +112,7 @@ Transform:
   m_GameObject: {fileID: 6082017216327338335}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 10, y: 10, z: 2}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.018, y: 0.018, z: 0.018}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6294993176641741501}
@@ -144,23 +144,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff308da8ab0ae8498bb4bcbbe91e5b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 0
-  attackSound: {fileID: 0}
+  weaponType: 5
+  attackSound: {fileID: 8300000, guid: 94ff6c5c1969a3241af8ce537907fefb, type: 3}
   audioSource: {fileID: 0}
-  _Image: {fileID: 0}
+  _Image: {fileID: 21300000, guid: c25b740dcc83e7349b03620206651999, type: 3}
   isLooted: 0
   anim: {fileID: 0}
   animOverride: {fileID: 0}
   holder: {fileID: 0}
   playerComp: {fileID: 0}
   damages: 0
-  positionX: 0
-  positionY: 0
+  positionX: 0.19
+  positionY: 0.055
   positionZ: 0
   rotationX: 0
-  rotationY: 0
+  rotationY: 90
   rotationZ: 0
-  isLongRange: 0
+  isLongRange: 1
   countAttackClick: 0
   isAttacking: 0
 --- !u!114 &8834260518423199894

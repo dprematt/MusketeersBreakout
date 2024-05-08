@@ -207,6 +207,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
     {
         GameObject holderObject = PhotonView.Find(holderID).gameObject;
         holder = holderObject;
+        anim = holder.GetComponentInChildren<Animator>();
         isPlayer = holder.CompareTag("Player");
         transform.parent = holder.transform;
         transform.localPosition = new Vector3(positionX, positionY, positionZ);
