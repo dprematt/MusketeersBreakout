@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public static class Skeleton
 {
     public enum NormalizeMode { Local, Global }
 
-    public static float[,] GenerateSkeleton(int mapWidth, int mapHeight, float scale, int octaves, float persistance, float lacunarity, Vector2 offset, NormalizeMode normalizeMode, int seed) {
+    public static (float[,], List<Vector2>) GenerateSkeleton(int mapWidth, int mapHeight, float scale, int octaves, float persistance, float lacunarity, Vector2 offset, NormalizeMode normalizeMode, int seed) {
         System.Random prng = new System.Random(seed);
         Vector2[] octaveOffsets = new Vector2[octaves];
         float maxPossibleHeight = 0;
@@ -15,9 +16,7 @@ public static class Skeleton
         float frequency = 1;
         float[,] skeleton = new float[mapWidth, mapHeight];
 
-
-        for (int i = 0; i < octaves; i++)
-        {
+        for (int i = 0; i < octaves; i++) {
             float offsetX = prng.Next(-100000, 100000) + offset.x;
             float offsetY = prng.Next(-100000, 100000) - offset.y;
             octaveOffsets[i] = new Vector2(offsetX, offsetY);
@@ -26,31 +25,25 @@ public static class Skeleton
             amplitude *= persistance;
         }
 
-
-        if(scale <= 0)
-        {
+        if (scale <= 0) {
             scale = 0.0001f;
         }
 
         float maxNoiseHeight = float.MinValue;
         float minNoiseHeight = float.MaxValue;
 
-        float halfWidth = mapWidth / 2f; 
+        float halfWidth = mapWidth / 2f;
         float halfHeight = mapHeight / 2f;
 
-        for (int y = 0; y < mapHeight; y++)
-        {
-            for (int x = 0; x < mapWidth; x++)
-            {
+        for (int y = 0; y < mapHeight; y++) {
+            for (int x = 0; x < mapWidth; x++) {
                 amplitude = 1;
                 frequency = 1;
                 float noiseHeight = 0;
 
-                for (int i = 0; i < octaves; i++)
-                {
+                for (int i = 0; i < octaves; i++) {
                     float sampleX = (x - halfWidth + octaveOffsets[i].x) / scale * frequency;
                     float sampleY = (y - halfHeight + octaveOffsets[i].y) / scale * frequency;
-
                     float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1;
                     noiseHeight += perlinValue * amplitude;
 
@@ -58,21 +51,20 @@ public static class Skeleton
                     frequency *= lacunarity;
                 }
 
-                if (noiseHeight > maxNoiseHeight)
-                {
+                if (noiseHeight > maxNoiseHeight) {
                     maxNoiseHeight = noiseHeight;
-                }
-                else if (noiseHeight < minNoiseHeight)
-                {
+                } else if (noiseHeight < minNoiseHeight) {
                     minNoiseHeight = noiseHeight;
                 }
 
-                skeleton[x, y] = noiseHeight;
+                    skeleton[x, y] = noiseHeight;
+                }
             }
-        }
-        
+
         normalizeMode = NormalizeMode.Global;
 
+        // Normalisation des hauteurs
+        
         if (normalizeMode == NormalizeMode.Local) 
         {
             for (int y = 0; y < mapHeight; y++)
@@ -93,6 +85,31 @@ public static class Skeleton
             }
         }
 
-        return skeleton;
+        // Ajout de zones plates irrégulières en utilisant des coordonnées globales pour déterminer les centres
+        float flatHeight = 0.4f;
+        int numberOfPlates = 1;
+        List<Vector2> plateCenters = new List<Vector2>();
+
+        System.Random localPrng = new System.Random(seed + (int)offset.x * 1000 + (int)offset.y); // Unique PRNG par chunk
+        while (plateCenters.Count < numberOfPlates) {
+            Vector2 newCenter = new Vector2(localPrng.Next(0, mapWidth) + offset.x, localPrng.Next(0, mapHeight) + offset.y);
+            if (!plateCenters.Any(center => Vector2.Distance(center, newCenter) < 70)) {  // Assurez-vous que les centres ne sont pas trop proches les uns des autres
+                plateCenters.Add(newCenter);
+            }
+        }
+
+        foreach (var center in plateCenters) {
+            for (int y = 0; y < mapHeight; y++) {
+                for (int x = 0; x < mapWidth; x++) {
+                    // Ajout de bruit de Perlin pour rendre les contours plus naturels
+                    float distance = Vector2.Distance(new Vector2(x + offset.x, y + offset.y), center);
+                    float perlinNoise = Mathf.PerlinNoise((x + offset.x) * 0.1f, (y + offset.y) * 0.1f) * 20f;
+                    if (distance <= 60 + perlinNoise) {  // Rayon de la zone plate avec irrégularités
+                        skeleton[x, y] = flatHeight;
+                    }
+                }
+            }
+        }
+        return (skeleton, plateCenters);
     }
 }

@@ -31,7 +31,6 @@ public class generator : MonoBehaviourPun
     public float lacunarity;
     public bool autoUpdate;
     public Vector2 offSet;
-
     private SpawnWeapons SpawnWeapons_;
 
     float[,] colorMap = new float[mapChunkSize, mapChunkSize];
@@ -73,12 +72,10 @@ public class generator : MonoBehaviourPun
 
         SetSeedFromRoomProperties();
         PlaceExtractionZones();
-        PlaceBiomes(CurrentMapData.heightMap);
         Invoke("DrawMap", randomDelay);
     }
 
     void OnDrawGizmos() {
-        // Dessine une ligne rouge au bord supérieur de la plage.
         float mapChunkSize = 241;
         float topBorder = 3.5f * mapChunkSize;
         float bottomBorder = -topBorder;
@@ -86,16 +83,11 @@ public class generator : MonoBehaviourPun
         float rightBorder = topBorder;
 
         Gizmos.color = Color.yellow;
-        // Gauche de la carte
         Gizmos.DrawLine(new Vector3(leftBorder, 0, topBorder), new Vector3(leftBorder, 0, bottomBorder));
         Gizmos.color = Color.green;
-        // Droit de la carte
         Gizmos.DrawLine(new Vector3(rightBorder, 0, topBorder), new Vector3(rightBorder, 0, bottomBorder));
-    
         Gizmos.color = Color.red;
         Gizmos.DrawLine(new Vector3(leftBorder, 0, topBorder), new Vector3(rightBorder, 0, topBorder));
-
-        // Dessine une ligne bleue au bord inférieur de la plage.
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(new Vector3(leftBorder, 0, bottomBorder), new Vector3(rightBorder, 0, bottomBorder));
     }
@@ -110,11 +102,11 @@ public class generator : MonoBehaviourPun
         float mapTopBorder = 3.5f * mapChunkSize - 40f;
         float mapBottomBorder = -3.5f * mapChunkSize + 40f;
 
-
         for (int prefabIndex = 0; prefabIndex < prefabNature.Length; prefabIndex++)
         {
             GameObject prefab = prefabNature[prefabIndex];
-            for (int i = 0; i < prefabCounts[prefabIndex]; i++) {
+            for (int i = 0; i < prefabCounts[prefabIndex]; i++)
+            {
                 Vector3 position = Vector3.zero;
                 bool validPosition = false;
                 int attempts = 0;
@@ -134,12 +126,13 @@ public class generator : MonoBehaviourPun
                     position = new Vector3(x, height, z);
                     validPosition = !IsTooCloseToBiomes(position, biomesPositions, 30f);
 
-                    if (x >= mapLeftBorder && x <= mapRightBorder && z >= mapBottomBorder && z <= mapTopBorder) {
+                    if (x >= mapLeftBorder && x <= mapRightBorder && z >= mapBottomBorder && z <= mapTopBorder)
+                    {
                         if (height > 0.1f && height < 0.5f)
                         {
                             position = new Vector3(x, height, z);
                             validPosition = true;
-                            int[] Y = new int[] {-90, 90, 180, -180, 0};
+                            int[] Y = new int[] { -90, 90, 180, -180, 0 };
                             int randomIndex = UnityEngine.Random.Range(0, Y.Length);
                             GameObject instance = Instantiate(prefab, position, Quaternion.identity);
                             instance.transform.Rotate(0.0f, Y[randomIndex], 0.0f);
@@ -163,31 +156,42 @@ public class generator : MonoBehaviourPun
         return false;
     }
 
-    void PlaceBiomes(float[,] heightMap)
+    void PlaceBiomesInFlatAreas(List<Vector2> plateCenters)
     {
         biomesPositions.Clear();
         GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
 
-        foreach (GameObject prefab in Biomes) {
-            for (int i = 0; i < numberOfPrefabsToCreate; i++) {
-                Vector3 position;
-                bool validPosition;
+        System.Random prng = new System.Random(seed);
 
-                do {
-                    validPosition = true;
-                    float x = UnityEngine.Random.Range(-mapSize / 2 + safeZone, mapSize / 2 - safeZone);
-                    float z = UnityEngine.Random.Range(-mapSize / 2 + safeZone, mapSize / 2 - safeZone);
-                    position = new Vector3(x, 0, z);
+        foreach (GameObject prefab in Biomes)
+        {
+            for (int i = 0; i < numberOfPrefabsToCreate; i++)
+            {
+                Vector2 center;
+                bool validPosition = false;
+                int attempts = 0;
 
-                    if (IsTooCloseToOtherBiomes(position, safeZone)) {
-                        validPosition = false;
-                        continue;
+                do
+                {
+                    if (plateCenters.Count == 0) break;
+                    int index = prng.Next(0, plateCenters.Count);
+                    center = plateCenters[index];
+                    plateCenters.RemoveAt(index);
+
+                    float x = center.x + prng.Next(-20, 20);
+                    float z = center.y + prng.Next(-20, 20);
+                    Vector3 position = new Vector3(x, 0, z);
+
+                    if (!IsTooCloseToOtherBiomes(position, safeZone))
+                    {
+                        biomesPositions.Add(position);
+                        GameObject instance = Instantiate(prefab, position, Quaternion.identity);
+                        instance.transform.SetParent(biomesParent.transform);
+                        validPosition = true;
                     }
 
-                    biomesPositions.Add(position);
-                    GameObject instance = Instantiate(prefab, position, Quaternion.identity);
-                    instance.transform.SetParent(biomesParent.transform);
-                } while (!validPosition);
+                    attempts++;
+                } while (!validPosition && attempts < 100);
             }
         }
     }
@@ -248,7 +252,6 @@ public class generator : MonoBehaviourPun
             ApplyBeachToTopOrBottom(beachThickness, chunkCenter, normalizedWaterHeight, true);
         }
 
-
         if (isBottomBorderChunk)
         {
             ApplyBeachToTopOrBottom(beachThickness, chunkCenter, normalizedWaterHeight, false);
@@ -269,7 +272,8 @@ public class generator : MonoBehaviourPun
         float chunkBorderStartZ = isTopBorder ? chunkCenter.y - (mapChunkSize / 2) : chunkCenter.y + (mapChunkSize / 2);
         float chunkBorderEndZ = chunkBorderStartZ + (isTopBorder ? beachThickness : -beachThickness);
 
-        lock (_heightMapLock) {
+        lock (_heightMapLock)
+        {
             for (int x = 0; x < mapChunkSize; x++)
             {
                 for (int z = 0; z < mapChunkSize; z++)
@@ -288,22 +292,20 @@ public class generator : MonoBehaviourPun
 
     private void ApplyBeachToLeftOrRightBorder(int beachThickness, Vector2 chunkCenter, float normalizedWaterHeight, bool isLeftBorder)
     {
-        // Commencer ou finir la plage selon le bord où se trouve le chunk
         int startX = isLeftBorder ? 0 : mapChunkSize - beachThickness;
         int endX = isLeftBorder ? beachThickness : mapChunkSize;
-        
-        lock (_heightMapLock) {
+
+        lock (_heightMapLock)
+        {
             for (int x = startX; x < endX; x++)
             {
                 for (int z = 0; z < mapChunkSize; z++)
                 {
-                    // Appliquer la plage sur la bordure du chunk
                     CurrentMapData.heightMap[x, z] = normalizedWaterHeight;
                 }
             }
         }
     }
-
 
     public static void SetSeedFromRoomProperties()
     {
@@ -340,38 +342,31 @@ public class generator : MonoBehaviourPun
 
     public void DrawMap()
     {
-        MapData mapdata = SkeletonGenerator(Vector2.zero);
-        
-        selectPos(colorMap);
+        var (map, plateCenters) = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, Vector2.zero + offSet, normalizeMode, seed);
 
-        // Debug.Log("TAB LENGHT = " + _spawnCoords.Length);
-        // for (int i = 0; i < _spawnCoords.Length; ++i)
-        //     Debug.Log("tmp[" + i + "] = " + _spawnCoords[i].ToString());
-
-        // if (_spawnCoords.Length == 0)
-        //     Debug.Log("TMP = EMPTY");
-
-
+        selectPos(map);
 
         DisplaySkeleton display = FindObjectOfType<DisplaySkeleton>();
         if (drawMode == DrawMode.map)
         {
-            display.DrawTexture(TextureGenerator.TextureFromHeightMap(mapdata.heightMap));
+            display.DrawTexture(TextureGenerator.TextureFromHeightMap(map));
         }
         else if (drawMode == DrawMode.colorMap)
         {
-            // Ne rien faire pour colorMap, car la couleur a �t� supprim�e.
+            // Ne rien faire pour colorMap, car la couleur a été supprimée.
         }
         else if (drawMode == DrawMode.mesh)
         {
-            meshData meshdata = MeshGenerator.generateTerrainMesh(mapdata.heightMap, meshHeightMult, meshHeightCurve, levelOfDetail);
+            meshData meshdata = MeshGenerator.generateTerrainMesh(map, meshHeightMult, meshHeightCurve, levelOfDetail);
         }
-        else if (drawMode == DrawMode.fallOfMap)
+        else if (drawMode ==DrawMode.fallOfMap)
         {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunkSize)));
         }
-    }
 
+        CurrentMapData = new MapData(map, colorMap);
+        PlaceBiomesInFlatAreas(plateCenters);
+    }
 
     public void selectPos(float[,] colorMap)
     {
@@ -408,8 +403,6 @@ public class generator : MonoBehaviourPun
                     randomHeight = Mathf.Clamp(randomHeight, minHeight, maxHeight) + 10;
 
                     _spawnCoords[i] = new Vector3(selectedCoord.x, randomHeight, selectedCoord.y);
-                    // Debug.Log("_spawnCoords : " + _spawnCoords[i]);
-
                     availableCoords.RemoveAt(randomIndex);
                 }
             }
@@ -428,9 +421,7 @@ public class generator : MonoBehaviourPun
             photonView.RPC("GetCoords", RpcTarget.All, _spawnCoords);
         }
         float randomDelay = UnityEngine.Random.Range(1f, 2f);
-
         Invoke("SpawnFunc", randomDelay);
-
     }
 
     private void SpawnFunc()
@@ -440,7 +431,6 @@ public class generator : MonoBehaviourPun
         GameObject Player_ = PhotonNetwork.Instantiate(PlayerPrefab_.name, _spawnCoords[0], Quaternion.identity);
         Debug.Log("Nom de l'instance PlayFab : " + PlayFabSettings.TitleId + " Spawn aux coordonnées : x = " + _spawnCoords[0].x + " y = " + _spawnCoords[0].y + " z = " + _spawnCoords[0].z);
         Player_.GetComponent<SetupPlayer>().IsLocalPlayer();
-        //photonView.RPC("DeleteCoords", RpcTarget.All);
         LoadScreen_.SetActive(false);
         Hud_.SetActive(true);
         LootHud_.SetActive(true);
@@ -467,12 +457,9 @@ public class generator : MonoBehaviourPun
         }
     }
 
-
     MapData SkeletonGenerator(Vector2 center)
     {
-
-        float[,] map = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode, seed);
-
+        var (map, plateCenters) = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode, seed);
 
         for (int i = 0; i < mapChunkSize; i++)
         {
