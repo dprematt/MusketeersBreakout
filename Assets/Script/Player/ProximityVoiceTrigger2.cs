@@ -20,6 +20,8 @@ public class ProximityVoiceTrigger2 : VoiceComponent
     private PhotonVoiceView photonVoiceView;
     private PhotonView photonView;
 
+    private Transform parentTransform;
+
     public byte TargetInterestGroup
     {
         get
@@ -30,6 +32,11 @@ public class ProximityVoiceTrigger2 : VoiceComponent
             }
             return 0;
         }
+    }
+
+    private void Start()
+    {
+        parentTransform = transform.parent;
     }
 
     protected override void Awake()
@@ -111,6 +118,7 @@ public class ProximityVoiceTrigger2 : VoiceComponent
 
     protected void Update()
     {
+        transform.localPosition = Vector3.zero;
         if (!PunVoiceClient.Instance.Client.InRoom)
         {
             this.subscribedGroups = null;
