@@ -10,16 +10,22 @@ public static class Skeleton
     public static float[,] GenerateSkeleton(int mapWidth, int mapHeight, float scale, int octaves, float persistance, float lacunarity, Vector2 offset, NormalizeMode normalizeMode, int seed) {
         System.Random prng = new System.Random(seed);
         Vector2[] octaveOffsets = new Vector2[octaves];
+        float maxPossibleHeight = 0;
+        float amplitude = 1;
+        float frequency = 1;
+        float[,] skeleton = new float[mapWidth, mapHeight];
+
+
         for (int i = 0; i < octaves; i++)
         {
             float offsetX = prng.Next(-100000, 100000) + offset.x;
             float offsetY = prng.Next(-100000, 100000) - offset.y;
             octaveOffsets[i] = new Vector2(offsetX, offsetY);
+
+            maxPossibleHeight += amplitude;
+            amplitude *= persistance;
         }
 
-        float[,] skeleton = new float[mapWidth, mapHeight];
-        float maxPossibleHeight = 0;
-        float amplitude = 1;
 
         if(scale <= 0)
         {
@@ -29,7 +35,7 @@ public static class Skeleton
         float maxNoiseHeight = float.MinValue;
         float minNoiseHeight = float.MaxValue;
 
-        float halfWidth = mapWidth / 2f;
+        float halfWidth = mapWidth / 2f; 
         float halfHeight = mapHeight / 2f;
 
         for (int y = 0; y < mapHeight; y++)
@@ -37,7 +43,7 @@ public static class Skeleton
             for (int x = 0; x < mapWidth; x++)
             {
                 amplitude = 1;
-                float frequency = 1;
+                frequency = 1;
                 float noiseHeight = 0;
 
                 for (int i = 0; i < octaves; i++)
@@ -64,18 +70,24 @@ public static class Skeleton
                 skeleton[x, y] = noiseHeight;
             }
         }
+        
+        normalizeMode = NormalizeMode.Global;
 
-        for (int y = 0; y < mapHeight; y++)
+        if (normalizeMode == NormalizeMode.Local) 
         {
-            for (int x = 0; x < mapWidth; x++)
+            for (int y = 0; y < mapHeight; y++)
             {
-                if (normalizeMode == NormalizeMode.Local) 
+                for (int x = 0; x < mapWidth; x++)
                 {
-                    skeleton[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, skeleton[x, y]);
+                    skeleton[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, skeleton[y, x]);
                 }
-                else 
+            }
+        } else {
+            for (int y = 0; y < mapHeight; y++)
+            {
+                for (int x = 0; x < mapWidth; x++)
                 {
-                    float normalizeHeight = (skeleton[x, y] + 1) / 2 * maxPossibleHeight;
+                    float normalizeHeight = (skeleton[x, y] + 1) / (2 * maxPossibleHeight / 1.5f);
                     skeleton[x, y] = Mathf.Clamp(normalizeHeight, 0, int.MaxValue);
                 }
             }
