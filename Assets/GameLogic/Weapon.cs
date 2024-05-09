@@ -224,8 +224,31 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public void setAnim(GameObject Holder)
     {
-        int holderID = Holder.GetPhotonView().ViewID;
-        photonView.RPC("SyncAnim", RpcTarget.All, holderID);
+        //int holderID = Holder.GetPhotonView().ViewID;
+        //photonView.RPC("SyncAnim", RpcTarget.All, holderID);
+
+        //anim = holderObject.GetComponentInChildren<Animator>();
+        anim = holder.GetComponentInChildren<Animator>();
+        if(animOverride != null)
+            anim.runtimeAnimatorController = animOverride;
+        if (!isLongRange)
+        {
+            if (isPlayer)
+            {
+                if (playerComp.hasShield)
+                {
+                    anim.SetLayerWeight(4, 1f);
+                }
+                else
+                {
+                    anim.SetLayerWeight(1, 1f);
+                }
+            }
+            else
+            {
+                anim.SetLayerWeight(1, 1f);
+            }
+        }
     }
 
     [PunRPC]
