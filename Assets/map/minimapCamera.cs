@@ -5,19 +5,23 @@ using UnityEngine;
 public class minimapCamera : MonoBehaviour
 {
     public GameObject player;
+    
 
     void Start()
     {
-        player = GameObject.Find("Player(Clone)");
+        player = gameObject.transform.parent.gameObject;
+
         if (player == null)
         {
             Debug.LogError("Impossible de trouver le joueur.s");
         }
+        Debug.Log("PAYER = " + player.name);
     }
 
     void LateUpdate()
     {
-        player = GameObject.Find("Player(Clone)");
+        player = gameObject.transform.parent.gameObject;
+
         if (player == null)
             Debug.LogError("JOUEUR NUL");
         else if (player != null)
