@@ -17,13 +17,13 @@ public class SpawnWeapons : MonoBehaviour
         {  
             position.y -= 10;
             position.x += 10;
-            PhotonNetwork.Instantiate(BowPrefab_.name, position, Quaternion.identity);
+            PhotonNetwork.Instantiate(SpearPrefab_.name, position, Quaternion.identity);
             position.z += 10;
             PhotonNetwork.Instantiate(SpearPrefab_.name, position, Quaternion.identity);
             position.z += 10;
-            PhotonNetwork.Instantiate(GunPrefab_.name, position, Quaternion.identity);
+            PhotonNetwork.Instantiate(SpearPrefab_.name, position, Quaternion.identity);
             position.z += 10;
-            PhotonNetwork.Instantiate(CrossBowPrefab_.name, position, Quaternion.identity);
+            PhotonNetwork.Instantiate(SpearPrefab_.name, position, Quaternion.identity);
             //Bow_Object_.name = "Bow";
         }
     }
