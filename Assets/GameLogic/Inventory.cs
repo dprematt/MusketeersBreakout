@@ -3,18 +3,15 @@ using UnityEngine;
 using System;
 using PlayFab;
 using PlayFab.ClientModels;
-
 public class Inventory : MonoBehaviour
 {
     public int SLOTS;
-    public List<IInventoryItem> mItems;
+    public IInventoryItem[] mItems;
     public bool loot = false;
     public bool test = false;
 
     public event EventHandler<InventoryEventArgs> ItemAdded;
     public event EventHandler<InventoryEventArgs> ItemRemoved;
-
-
     public void AddWeapon(string weaponName)
     {
         GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
@@ -36,15 +33,56 @@ public class Inventory : MonoBehaviour
         AddItem(weaponItem);
     }
 
+    public int Count()
+    {
+        int res = 0;
 
-    public void Initialize(int slots, List<IInventoryItem> items, bool isLoot)
+        for (int i = 0; i < mItems.Length; i++)
+        {
+            if (mItems[i] != null)
+                res += 1;
+        }
+        return res;
+    }
+
+    public int Add(IInventoryItem item)
+    {
+        Debug.Log("inventory: in function Add item name = " + item.Name);
+        for (int i = 0; i < mItems.Length; i++)
+        {
+            if (mItems[i] == null)
+            {
+                mItems[i] = item;
+                return 0;
+            }
+        }
+        return -1;
+    }
+
+    public int PocketCount()
+    {
+        int res = 0;
+
+        if (mItems[0] != null)
+            res += 1;
+        if (mItems[1] != null)
+            res += 1;
+        return res;
+    }
+
+    public void RemoveAt(int index)
+    {
+        mItems[index] = null;
+    }
+
+    public void Initialize(int slots, IInventoryItem[] items, bool isLoot)
     {
         SLOTS = slots;
         mItems = items;
         loot = isLoot;
     }
 
-    public Inventory(int slots, List<IInventoryItem> items, bool isLoot)
+    public Inventory(int slots, IInventoryItem[] items, bool isLoot)
     {
         SLOTS = slots;
         mItems = items;
@@ -57,33 +95,33 @@ public class Inventory : MonoBehaviour
         if (mItems == null)
         {
             //Debug.Log("in inventory start item == null");
-            mItems = new List<IInventoryItem>(9);
+            mItems = new IInventoryItem[9];
         }
         if (loot == true)
         {
-            if (mItems.Count == 0)
+            if (Count() == 0)
             {
                 GameObject go = Resources.Load<GameObject>("Prefabs/Sword");
                 IInventoryItem item = go.GetComponent<IInventoryItem>();
-                mItems.Add(item);
+                Add(item);
             }
         }
     }
 
-    public List<IInventoryItem> GetInventory()
+    public IInventoryItem[] GetInventory()
     {
         return mItems;
     }
 
     public void SwapItems(int index1, int index2)
     {
-        // Ensure that both indices are valid
-        if (index1 < 0 || index1 >= mItems.Count || index2 < 0 || index2 >= mItems.Count)
+        /*// Ensure that both indices are valid
+        if (index1 < 0 || index1 >= Count() || index2 < 0 || index2 >= Count()
         {
             Debug.LogError("Invalid indices for swapping items.");
             return;
         }
-
+        */
         // Swap the items at the specified indices
 
         IInventoryItem temp = mItems[index1];
@@ -91,17 +129,16 @@ public class Inventory : MonoBehaviour
         mItems[index2] = temp;
         Print_Inventory();
     }
-
     public void SwapItemsLoot(int index1, int index2, Inventory lootInventory)
     {
         // Ensure that both indices are valid
-        if (index2 >= lootInventory.mItems.Count && index2 <= 9)
+        /*if (index2 >= lootInventory.mItems.Count && index2 <= 9)
         {
             lootInventory.AddItem(mItems[index1]);
             //Debug.LogError("Invalid indices for swapping items.");
             mItems.RemoveAt(index1);
             return;
-        }
+        }*/
 
         // Swap the items at the specified indices
         IInventoryItem temp = mItems[index1];
@@ -109,25 +146,27 @@ public class Inventory : MonoBehaviour
         lootInventory.mItems[index2] = temp;
         Print_Inventory();
     }
-
     public void Print_Inventory()
     {
-        List<IInventoryItem> Item = GetInventory();
+        IInventoryItem[] Item = GetInventory();
 
-        foreach (IInventoryItem tmp in Item)
+        for (int i = 0; i < mItems.Length; i++)
         {
-            Debug.Log("Item in inventory : " + tmp.Name);
+            if (mItems[i] != null)
+                Debug.Log("Item in inventory : " + mItems[i].Name);
         }
-
+        Debug.Log("end of print inventory");
     }
-
     public void AddItem(IInventoryItem item)
     {
-        if (mItems == null)
+        Debug.Log("inventory: in function AddItem item name = " + item.Name);
+        if (Count() == 0)
         {
-            mItems = new List<IInventoryItem>(9);
+            Debug.Log("inventory: AddItem count == 0");
+            mItems = new IInventoryItem[9];
             Debug.Log("on call l'event add");
-            mItems.Add(item);
+            Add(item);
+            Print_Inventory();
             //item.OnPickup();
             if (ItemAdded != null)
             {
@@ -135,9 +174,9 @@ public class Inventory : MonoBehaviour
             }
             return;
         }
-        if (mItems.Count < SLOTS)
+        if (Count() < SLOTS)
         {
-            mItems.Add(item);
+            Add(item);
             //item.OnPickup();
             ItemAdded(this, new InventoryEventArgs(item));
         }
@@ -145,9 +184,9 @@ public class Inventory : MonoBehaviour
 
     public void Update()
     {
-        if (mItems.Count == 0 && loot == true)
+        if (Count() == 0 && loot == true)
         {
-            mItems.Clear();
+            //mItems.Clear();
             Destroy(gameObject);
         }
     }
@@ -176,7 +215,6 @@ public class Inventory : MonoBehaviour
             }
         }*/
     }
-
     public void DropItem(int id)
     {
         GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
@@ -186,7 +224,7 @@ public class Inventory : MonoBehaviour
         loot.GetComponentInChildren<Inventory>().loot = true;
         loot.GetComponentInChildren<Inventory>().AddItem(mItems[id]);
         Debug.Log("after add item in drop item");
-        mItems.RemoveAt(id);
-        Debug.Log(mItems.Count);
+        RemoveAt(id);
+        Debug.Log(Count());
     }
 }

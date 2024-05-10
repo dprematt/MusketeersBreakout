@@ -208,6 +208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff308da8ab0ae8498bb4bcbbe91e5b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: Dagger
   weaponType: 0
   attackSound: {fileID: 8300000, guid: d47a3792053fce8449895856817d5cd3, type: 3}
   audioSource: {fileID: 0}

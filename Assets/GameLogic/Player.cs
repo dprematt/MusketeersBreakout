@@ -73,7 +73,6 @@ public class Player : MonoBehaviourPunCallbacks
 
     public ParticleSystem bloodParticles;
 
-    public List<Weapon> weaponList;
     private int currentWeapon;
 
     private Vector3 aimTarget;
@@ -83,12 +82,12 @@ public class Player : MonoBehaviourPunCallbacks
     private GameObject shield;
     private GameObject extractionZone;
     public Shield shieldComp;
+    public Weapon EquippedWeapon;
 
     public EventListener eventListener;
 
     private void Start()
     {
-        weaponList = new List<Weapon>();
         HealthManager = GetComponent<HealthManager>();
         PFInventory_ = GetComponent<PlayFabInventory>();
         rb = GetComponent<Rigidbody>();
@@ -136,17 +135,17 @@ public class Player : MonoBehaviourPunCallbacks
         }
 
         float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
-        if ((scrollDelta > 0f || scrollDelta < 0f) && weaponList.Count > 1 && anim.GetInteger("intAttackPhase") == 0)
+        if ((scrollDelta > 0f || scrollDelta < 0f) && inventory.PocketCount() > 1 && anim.GetInteger("intAttackPhase") == 0)
         {
-            int layer = weaponList[currentWeapon].isLongRange ? 2 : 1;
+            int layer = EquippedWeapon.isLongRange ? 2 : 1;
 
             anim.SetLayerWeight(layer, 0f);
 
-            weaponList[currentWeapon].gameObject.SetActive(false);
+            EquippedWeapon.gameObject.SetActive(false);
             currentWeapon = currentWeapon == 0 ? 1 : 0;
-            weaponList[currentWeapon].gameObject.SetActive(true);
-            weaponList[currentWeapon].setAnim();
-            eventListener.weaponComp = weaponList[currentWeapon];
+            EquippedWeapon.gameObject.SetActive(true);
+            EquippedWeapon.setAnim();
+            eventListener.weaponComp = EquippedWeapon;
         }
 
         if (Input.GetKey(sprintKey) && !staminaFullUsed)
@@ -209,14 +208,14 @@ public class Player : MonoBehaviourPunCallbacks
             shieldComp.setProtectionMode(false);
         }
 
-        if (weaponList.Count > 0)
+        if (inventory.PocketCount() > 0)
         {
-            if (!weaponList[currentWeapon].isLongRange && Input.GetMouseButtonDown(0))
+            if (!EquippedWeapon.isLongRange && Input.GetMouseButtonDown(0))
             {
-                weaponList[currentWeapon].Attack();
+                EquippedWeapon.Attack();
             }
 
-            if (weaponList[currentWeapon].isLongRange && !Input.GetKey(sprintKey))
+            if (EquippedWeapon.isLongRange && !Input.GetKey(sprintKey))
             {
                 IsometricAiming aim = gameObject.GetComponent<IsometricAiming>();
                 if (Input.GetMouseButtonDown(1))
@@ -298,10 +297,10 @@ public class Player : MonoBehaviourPunCallbacks
                 return;
             }
             Debug.Log("size before init");
-            Debug.Log(loot.mItems.Count);
+            Debug.Log(loot.Count());
             LootHUD.GetComponent<LootHUD>().init(ref loot);
             Debug.Log("size after init");
-            Debug.Log(loot.mItems.Count);
+            Debug.Log(loot.Count());
             loot.DisplayLoot(inventory);
 
         }
@@ -315,11 +314,11 @@ public class Player : MonoBehaviourPunCallbacks
     void OnTriggerEnter(Collider col)
     {
         
-        IInventoryItem item = col.GetComponent<IInventoryItem>();
+       /* IInventoryItem item = col.GetComponent<IInventoryItem>();
         if (item != null)
         {
             inventory.AddItem(item);
-        }
+        }*/
 
         if (col.CompareTag("ExtractionZone"))
         {
@@ -340,15 +339,19 @@ public class Player : MonoBehaviourPunCallbacks
                 return;
             }
 
-            if (weaponList.Count < 2)
+            if (inventory.PocketCount() < 2)
             {
                 GameObject weapon = col.gameObject;
                 if (!weaponComp.isLooted)
                 {
-                    weaponList.Add(weaponComp);
+                    Debug.Log(weaponComp.Name);
+
+                    inventory.AddItem(weaponComp);
                     Transform hand = FindDeepChild(transform, "jointItemR");
                     weaponComp.whenPickUp(gameObject, hand);
-                    if (weaponList.Count == 2)
+                    EquippedWeapon = weaponComp;
+
+                    if (inventory.PocketCount() == 2)
                     {
                         weapon.SetActive(false);
                     }
@@ -364,9 +367,9 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (!hasShield)
         {
-            if (weaponList.Count > 0 && (weaponList[currentWeapon].tag == "WeaponSpear"
-            || weaponList[currentWeapon].tag == "WeaponHalberd"
-            || weaponList[currentWeapon].tag == "WeaponCrossBow"))
+            if (inventory.PocketCount() > 0 && (inventory.mItems[currentWeapon].Name == "WeaponSpear"
+            || inventory.mItems[currentWeapon].Name == "WeaponHalberd"
+            || inventory.mItems[currentWeapon].Name == "WeaponCrossBow"))
             {
                 return;
             }
@@ -380,7 +383,8 @@ public class Player : MonoBehaviourPunCallbacks
                     hasShield = true;
                     Transform hand = FindDeepChild(transform, "jointItemL");
                     shieldComp.whenPickUp(gameObject, hand);
-                    if (weaponList.Count > 0)
+                    //EquippedWeapon = weaponComp; a demander a mathis pr le shield;
+                    if (inventory.PocketCount() > 0)
                     {
                         anim.SetLayerWeight(1, 0f);
                         anim.SetLayerWeight(4, 1f);

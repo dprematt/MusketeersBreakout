@@ -144,6 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff308da8ab0ae8498bb4bcbbe91e5b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: Gun
   weaponType: 5
   attackSound: {fileID: 8300000, guid: 94ff6c5c1969a3241af8ce537907fefb, type: 3}
   audioSource: {fileID: 0}

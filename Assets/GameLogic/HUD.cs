@@ -28,10 +28,14 @@ public class HUD : MonoBehaviour
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
         }
+        Debug.Log("HUD CLEAN: inventory count = " + inventory.Count());
         foreach (IInventoryItem lootItem in inventory.mItems)
         {
-            Debug.Log(lootItem.Name);
-            InventoryScript_ItemAdded(this, new InventoryEventArgs(lootItem));
+            if (lootItem != null)
+            {
+                Debug.Log("HUD CLEAN: item loot name = " + lootItem.Name);
+                InventoryScript_ItemAdded(this, new InventoryEventArgs(lootItem));
+            }
         }
     }
     public void init()

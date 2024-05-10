@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class Weapon : MonoBehaviourPun, IInventoryItem
 {
-    public virtual string Name { get; protected set; }
+    [SerializeField] private string itemName;
     public virtual bool IsPlayer { get; set; }
 
     public int weaponType;
@@ -42,6 +42,11 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public bool isAttacking;
 
+    public string Name
+    {
+        get { return itemName; }
+        set { itemName = value; }
+    }
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();

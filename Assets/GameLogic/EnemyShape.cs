@@ -23,7 +23,7 @@ using UnityEngine;
     {
         health = maxHealth;
 
-        List<IInventoryItem> items = new List<IInventoryItem>();
+        /*List<IInventoryItem> items = new List<IInventoryItem>();
         Halberd halberd = new Halberd();
         halberd._Image = Resources.Load("Sprites/halberd") as Sprite;
         halberd.weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
@@ -38,7 +38,7 @@ using UnityEngine;
         sword.IsPlayer = false;
         sword.audioSource = GetComponent<AudioSource>();
         items.Add(sword);
-        inventory = new Inventory(9, items, false);
+        inventory = new Inventory(9, items, false);*/
 
         current = 0;
     }

@@ -41,7 +41,7 @@ public class PlayFabInventory : MonoBehaviour
 
     public void PlayerWin()
     {
-        List <IInventoryItem> ItemList = Inventory_.GetInventory();
+        IInventoryItem[] ItemList = Inventory_.GetInventory();
         foreach (IInventoryItem tmp in ItemList)
         {
             if (tmp != null && tmp.Name != null && tmp.Name != "null") {
