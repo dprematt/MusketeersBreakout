@@ -105,10 +105,10 @@ public class generator : MonoBehaviourPun
         int[] prefabCounts = new int[] { 2, 5, 5, 5 };
         float chunkHalfSize = chunkSize / 2f;
 
-        float mapLeftBorder = -3.5f * mapChunkSize + 100f; // Augmenté pour éviter le bord de la carte
-        float mapRightBorder = 3.5f * mapChunkSize - 100f; // Augmenté pour éviter le bord de la carte
-        float mapTopBorder = 3.5f * mapChunkSize - 100f; // Augmenté pour éviter le bord de la carte
-        float mapBottomBorder = -3.5f * mapChunkSize + 100f; // Augmenté pour éviter le bord de la carte
+        float mapLeftBorder = -3.5f * mapChunkSize + 100f;
+        float mapRightBorder = 3.5f * mapChunkSize - 100f;
+        float mapTopBorder = 3.5f * mapChunkSize - 100f;
+        float mapBottomBorder = -3.5f * mapChunkSize + 100f;
 
         Dictionary<string, List<Vector3>> placedPrefabs = new Dictionary<string, List<Vector3>>();
 
