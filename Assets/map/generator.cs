@@ -49,7 +49,7 @@ public class generator : MonoBehaviourPun
 
     public TerrainType[] regions;
     public static int seed = 0;
-    public GameObject[] prefabNature;
+    public PrefabType[] prefabNature;
 
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<meshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<meshData>>();
@@ -96,18 +96,27 @@ public class generator : MonoBehaviourPun
 
     public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize)
     {
-        int[] prefabCounts = new int[] {4, 10, 10, 10};
+        Vector3[] extractionZonePositions  = {
+            new Vector3(-730, 0, -775),
+            new Vector3(-730, 0, 775),
+            new Vector3(730, 0, -775),
+            new Vector3(730, 0, 775)
+        };
+        int[] prefabCounts = new int[] { 2, 5, 5, 5 };
         float chunkHalfSize = chunkSize / 2f;
 
-        float mapLeftBorder = -3.5f * mapChunkSize + 40f;
-        float mapRightBorder = 3.5f * mapChunkSize - 40f;
-        float mapTopBorder = 3.5f * mapChunkSize - 40f;
-        float mapBottomBorder = -3.5f * mapChunkSize + 40f;
+        float mapLeftBorder = -3.5f * mapChunkSize + 100f; // Augmenté pour éviter le bord de la carte
+        float mapRightBorder = 3.5f * mapChunkSize - 100f; // Augmenté pour éviter le bord de la carte
+        float mapTopBorder = 3.5f * mapChunkSize - 100f; // Augmenté pour éviter le bord de la carte
+        float mapBottomBorder = -3.5f * mapChunkSize + 100f; // Augmenté pour éviter le bord de la carte
 
-        for (int prefabIndex = 0; prefabIndex < prefabNature.Length; prefabIndex++)
+        Dictionary<string, List<Vector3>> placedPrefabs = new Dictionary<string, List<Vector3>>();
+
+        foreach (var prefabType in prefabNature)
         {
-            GameObject prefab = prefabNature[prefabIndex];
-            for (int i = 0; i < prefabCounts[prefabIndex]; i++)
+            placedPrefabs[prefabType.type] = new List<Vector3>();
+
+            for (int i = 0; i < prefabCounts[Array.IndexOf(prefabNature, prefabType)]; i++)
             {
                 Vector3 position = Vector3.zero;
                 bool validPosition = false;
@@ -126,17 +135,20 @@ public class generator : MonoBehaviourPun
 
                     float height = heightMap[xIndex, zIndex];
                     position = new Vector3(x, height, z);
-                    validPosition = !IsTooCloseToBiomes(position, biomesPositions, 30f);
 
-                    if (x >= mapLeftBorder && x <= mapRightBorder && z >= mapBottomBorder && z <= mapTopBorder)
+                    bool isTooCloseToSameType = placedPrefabs[prefabType.type].Any(pos => Vector3.Distance(position, pos) < 50);
+                    bool isTooCloseToExtractionZone = extractionZonePositions.Any(pos => Vector3.Distance(position, pos) < 100);
+                    bool isTooCloseToBiome = biomesPositions.Any(pos => Vector3.Distance(position, pos) < 100);
+
+                    if (!isTooCloseToSameType && !isTooCloseToExtractionZone && !isTooCloseToBiome && x >= mapLeftBorder && x <= mapRightBorder && z >= mapBottomBorder && z <= mapTopBorder)
                     {
                         if (height > 0.1f && height < 0.5f)
                         {
-                            position = new Vector3(x, height, z);
                             validPosition = true;
+                            placedPrefabs[prefabType.type].Add(position);
                             int[] Y = new int[] { -90, 90, 180, -180, 0 };
                             int randomIndex = UnityEngine.Random.Range(0, Y.Length);
-                            GameObject instance = Instantiate(prefab, position, Quaternion.identity);
+                            GameObject instance = Instantiate(prefabType.prefab, position, Quaternion.identity);
                             instance.transform.Rotate(0.0f, Y[randomIndex], 0.0f);
                             instance.transform.SetParent(worldObjectsParent.transform);
                         }
@@ -145,6 +157,8 @@ public class generator : MonoBehaviourPun
             }
         }
     }
+
+
 
     bool IsTooCloseToBiomes(Vector3 position, List<Vector3> biomesPositions, float buffer)
     {
@@ -224,7 +238,6 @@ public class generator : MonoBehaviourPun
     }
 
 
-
     bool IsPositionOnFlatArea(Vector3 position, Vector2 center)
     {
         float distance = Vector2.Distance(new Vector2(position.x, position.z), center);
@@ -232,6 +245,27 @@ public class generator : MonoBehaviourPun
         return distance <= 60 + perlinNoise;
     }
 
+    bool IsAreaFlat(Vector3 position, float[,] heightMap, int areaSize, float maxSlope)
+    {
+        int startX = Mathf.Max(0, Mathf.FloorToInt(position.x) - areaSize / 2);
+        int startZ = Mathf.Max(0, Mathf.FloorToInt(position.z) - areaSize / 2);
+        int endX = Mathf.Min(heightMap.GetLength(0) - 1, Mathf.FloorToInt(position.x) + areaSize / 2);
+        int endZ = Mathf.Min(heightMap.GetLength(1) - 1, Mathf.FloorToInt(position.z) + areaSize / 2);
+
+        float centerHeight = heightMap[Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.z)];
+
+        for (int x = startX; x <= endX; x++)
+        {
+            for (int z = startZ; z <= endZ; z++)
+            {
+                if (Mathf.Abs(heightMap[x, z] - centerHeight) > maxSlope)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     private void GenerateBeaches(Vector2 chunkCenter)
     {
         float normalizedWaterHeight = 0.0001f / meshHeightMult;
@@ -615,6 +649,13 @@ public struct MapData
 
 [System.Serializable]
 public struct Biome
+{
+    public string type;
+    public GameObject prefab;
+}
+
+[System.Serializable]
+public struct PrefabType
 {
     public string type;
     public GameObject prefab;

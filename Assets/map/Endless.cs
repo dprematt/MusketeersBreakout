@@ -34,7 +34,6 @@ public class Endless : MonoBehaviour
         UpdateVisibleChunk();
     }
 
-
     IEnumerator SetupPrefabsAndTerrain()
     {
         yield return new WaitUntil(() => _generator.CurrentMapData.heightMap != null);
@@ -50,7 +49,6 @@ public class Endless : MonoBehaviour
         else
         {
         }
-
         viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
 
         viewerPosition = new Vector2(
@@ -170,7 +168,7 @@ public class Endless : MonoBehaviour
             mapDataReceived = true;
             UpdateMesh();
             Vector2 chunkCenter = this.ChunkCenter;
-            // _generator.PlacePrefabsInChunk(chunkCenter, mapData.heightMap, 240);
+            _generator.PlacePrefabsInChunk(chunkCenter, mapData.heightMap, 240);
             UpdateChunk();
         }
 
