@@ -37,6 +37,8 @@ public class Inventory : MonoBehaviour
     {
         int res = 0;
 
+        if (mItems == null)
+            return 0;
         for (int i = 0; i < mItems.Length; i++)
         {
             if (mItems[i] != null)
@@ -140,14 +142,18 @@ public class Inventory : MonoBehaviour
             return;
         }*/
 
+        Debug.Log("SWAP ITEMS LOOT: item 1 id = " + index1 + "item 2 id = " + index2);
         // Swap the items at the specified indices
         IInventoryItem temp = mItems[index1];
         mItems[index1] = lootInventory.mItems[index2];
         lootInventory.mItems[index2] = temp;
         Print_Inventory();
+        Debug.Log("SWAP ITEMS LOOT: loot inventory check");
+        lootInventory.Print_Inventory();
     }
     public void Print_Inventory()
     {
+        Debug.Log("PRINT INVENTORY:");
         IInventoryItem[] Item = GetInventory();
 
         for (int i = 0; i < mItems.Length; i++)
@@ -193,10 +199,15 @@ public class Inventory : MonoBehaviour
 
     public void DisplayLoot(Inventory playerInventory)
     {
+        Debug.Log("DISPLAY LOOT");
+        Debug.Log(Count());
         foreach (IInventoryItem lootItem in mItems)
         {
-            //   Debug.Log(lootItem.Name);
-            ItemAdded(this, new InventoryEventArgs(lootItem));
+            if (lootItem != null)
+            {
+                Debug.Log(lootItem.Name);
+                ItemAdded(this, new InventoryEventArgs(lootItem));
+            }
         }
     }
         public void OnCollisionEnter(Collision collision)

@@ -25,15 +25,17 @@ public class LootHUD : MonoBehaviour
         GameObject loot = GameObject.FindGameObjectWithTag("LootHUD");
         LootHUD lootHUD = loot.GetComponent<LootHUD>();
         Inventory inventory = lootHUD.inventory;
-        Transform inventoryPanel = transform.Find("Inventory");
         for (int i = 0; i < 9; i++)
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
         }
         foreach (IInventoryItem lootItem in inventory.mItems)
         {
-            Debug.Log(lootItem.Name);
-            LootInventoryScript_ItemAdded(this, new InventoryEventArgs(lootItem));
+            if (lootItem != null)
+            {
+                Debug.Log(lootItem.Name);
+                LootInventoryScript_ItemAdded(this, new InventoryEventArgs(lootItem));
+            }
         }
     }
     public void init(ref Inventory LootInventory)
@@ -50,6 +52,11 @@ public class LootHUD : MonoBehaviour
         for (int i = 0; i < 9; i++)
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
+        }
+        foreach (Transform slot in inventoryPanel)
+        {
+            Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
+            image.enabled = false;
         }
         foreach (Transform slot in inventoryPanel)
         {
@@ -96,14 +103,6 @@ public class LootHUD : MonoBehaviour
 
             if (!image.enabled)
             {
-                foreach (Transform s in inventoryPanel)
-                {
-                    if (s.GetChild(0).GetChild(0).GetComponent<Image>().sprite == e.Item.Image)
-                    {
-                        //      Debug.Log("ntm de la fdp");
-                        return;
-                    }
-                }
                 //Debug.Log("event item to enable");
                 image.enabled = true;
                 image.sprite = e.Item.Image;
@@ -112,6 +111,13 @@ public class LootHUD : MonoBehaviour
                 //  Debug.Log("onclick button event listener item enabled");
                 break;
             }
+            /*foreach (Transform s in inventoryPanel)
+                {
+                    if (s.GetChild(0).GetChild(0).GetComponent<Image>().sprite == e.Item.Image)
+                    {
+                        //      Debug.Log("ntm de la fdp");
+                        return;
+                    }*/
         }
     }
 
@@ -156,7 +162,7 @@ public class LootHUD : MonoBehaviour
          }
          return -1;
      }*/
-    private void LootOnBeginDrag(PointerEventData eventData)
+            private void LootOnBeginDrag(PointerEventData eventData)
     {
         //Debug.Log("ON BEGIN DRAG !");
         selectedSlot = eventData.pointerPress.transform.parent;
@@ -209,6 +215,11 @@ public class LootHUD : MonoBehaviour
                 //Debug.Log("released slot is null!");
                 //Debug.Log(startPos);
                 selectedSlot.position = startPos;
+                char id_1_c = selectedSlot.tag[selectedSlot.tag.Length - 1];
+                int id_1 = int.Parse(id_1_c.ToString());
+                inventory.DropItem(id_1);
+                selectedSlot.position = startPos;
+                Clean();
                 return;
             }
             if (releasedSlot == selectedSlot)

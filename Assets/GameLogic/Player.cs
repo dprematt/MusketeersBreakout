@@ -301,6 +301,7 @@ public class Player : MonoBehaviourPunCallbacks
             LootHUD.GetComponent<LootHUD>().init(ref loot);
             Debug.Log("size after init");
             Debug.Log(loot.Count());
+            LootHUD.GetComponent<LootHUD>().Clean();
             loot.DisplayLoot(inventory);
 
         }
@@ -383,7 +384,7 @@ public class Player : MonoBehaviourPunCallbacks
                     hasShield = true;
                     Transform hand = FindDeepChild(transform, "jointItemL");
                     shieldComp.whenPickUp(gameObject, hand);
-                    //EquippedWeapon = weaponComp; a demander a mathis pr le shield;
+                    //EquippedWeapon = weaponComp; a demander a mathis pr le  shield;
                     if (inventory.PocketCount() > 0)
                     {
                         anim.SetLayerWeight(1, 0f);
