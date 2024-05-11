@@ -8,6 +8,8 @@ using Photon.Pun;
 using PlayFab;
 using UnityEngine.UI;
 using static System.Random;
+using System.Linq;
+
 
 public class generator : MonoBehaviourPun
 {
@@ -56,7 +58,7 @@ public class generator : MonoBehaviourPun
     private GameObject worldObjectsParent;
     private object _heightMapLock = new object();
     private GameObject BiomesParent;
-    public GameObject[] Biomes;
+    public Biome[] Biomes;
 
     float mapSize = 1500f;
     float safeZone = 100f;
@@ -158,14 +160,17 @@ public class generator : MonoBehaviourPun
 
     void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight)
     {
-        if (PhotonNetwork.IsMasterClient) {
+        if (PhotonNetwork.IsMasterClient)
+        {
             biomesPositions.Clear();
             GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
 
             System.Random prng = new System.Random(seed);
 
-            foreach (GameObject prefab in Biomes)
+            foreach (Biome biome in Biomes)
             {
+                List<Vector3> biomeSpecificPositions = new List<Vector3>();
+
                 for (int i = 0; i < numberOfPrefabsToCreate; i++)
                 {
                     Vector2 center;
@@ -183,26 +188,32 @@ public class generator : MonoBehaviourPun
                         float z = center.y + prng.Next(-20, 20);
                         Vector3 position = new Vector3(x, 0, z);
 
-                        float borderBuffer = 50;
+                        float borderBuffer = 100;
+                        float cornerBuffer = mapChunkSize;
 
                         bool isInCornerChunk = 
-                            (position.x < (topLeft.x + mapChunkSize + borderBuffer) && position.z > (topLeft.y - mapChunkSize - borderBuffer)) ||
-                            (position.x > (bottomRight.x - mapChunkSize - borderBuffer) && position.z > (topLeft.y - mapChunkSize - borderBuffer)) ||
-                            (position.x < (topLeft.x + mapChunkSize + borderBuffer) && position.z < (bottomRight.y + mapChunkSize + borderBuffer)) ||
-                            (position.x > (bottomRight.x - mapChunkSize - borderBuffer) && position.z < (bottomRight.y + mapChunkSize + borderBuffer));
+                            (position.x < (topLeft.x + cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
+                            (position.x > (bottomRight.x - cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
+                            (position.x < (topLeft.x + cornerBuffer) && position.z < (bottomRight.y + cornerBuffer)) ||
+                            (position.x > (bottomRight.x - cornerBuffer) && position.z < (bottomRight.y + cornerBuffer));
 
-                        bool isInBorderBuffer = position.x < (topLeft.x + borderBuffer) || position.x > (bottomRight.x - borderBuffer) ||
-                                                position.z < (bottomRight.y + borderBuffer) || position.z > (topLeft.y - borderBuffer);
+                        bool isInBorderBuffer = 
+                            position.x < (topLeft.x + borderBuffer) || 
+                            position.x > (bottomRight.x - borderBuffer) ||
+                            position.z < (bottomRight.y + borderBuffer) || 
+                            position.z > (topLeft.y - borderBuffer);
 
-                        if (!isInBorderBuffer && !isInCornerChunk && IsPositionOnFlatArea(position, center))
+                        bool isTooCloseToOtherBiomes = 
+                            biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 200) ||
+                            biomeSpecificPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 1000);
+
+                        if (!isInBorderBuffer && !isInCornerChunk && !isTooCloseToOtherBiomes && IsPositionOnFlatArea(position, center))
                         {
-                            if (!IsTooCloseToOtherBiomes(position, safeZone))
-                            {
-                                biomesPositions.Add(position);
-                                GameObject instance = PhotonNetwork.Instantiate(prefab.name, position, Quaternion.identity);
-                                instance.transform.SetParent(biomesParent.transform);
-                                validPosition = true;
-                            }
+                            biomesPositions.Add(position);
+                            biomeSpecificPositions.Add(position);
+                            GameObject instance = PhotonNetwork.Instantiate(biome.prefab.name, position, Quaternion.identity);
+                            instance.transform.SetParent(biomesParent.transform);
+                            validPosition = true;
                         }
 
                         attempts++;
@@ -213,42 +224,12 @@ public class generator : MonoBehaviourPun
     }
 
 
+
     bool IsPositionOnFlatArea(Vector3 position, Vector2 center)
     {
         float distance = Vector2.Distance(new Vector2(position.x, position.z), center);
         float perlinNoise = Mathf.PerlinNoise(position.x * 0.1f, position.z * 0.1f) * 20f;
         return distance <= 60 + perlinNoise;
-    }
-
-    bool IsTooCloseToOtherBiomes(Vector3 position, float minDistance)
-    {
-        foreach (var otherPos in biomesPositions)
-        {
-            if (Vector3.Distance(position, otherPos) < minDistance)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private bool IsSpecialPrefabPosition(Vector2 position)
-    {
-        Vector3[] cornerPositions = {
-            new Vector3(-715, 0, -730),
-            new Vector3(-715, 0, 730),
-            new Vector3(715, 0, -730),
-            new Vector3(715, 0, 730)
-        };
-
-        foreach (Vector3 cornerPos in cornerPositions)
-        {
-            if (Vector2.Distance(new Vector2(cornerPos.x, cornerPos.z), position) < safeZone)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void GenerateBeaches(Vector2 chunkCenter)
@@ -290,6 +271,7 @@ public class generator : MonoBehaviourPun
             ApplyBeachToLeftOrRightBorder(beachThickness, chunkCenter, normalizedWaterHeight, false);
         }
     }
+
 
     private void ApplyBeachToTopOrBottom(int beachThickness, Vector2 chunkCenter, float normalizedWaterHeight, bool isTopBorder)
     {
@@ -344,10 +326,10 @@ public class generator : MonoBehaviourPun
     {
         int i = 1;
         Vector3[] cornerPositions = {
-            new Vector3(-750, 0, -775),
-            new Vector3(-750, 0, 775),
-            new Vector3(750, 0, -775),
-            new Vector3(750, 0, 775)
+            new Vector3(-730, 0, -775),
+            new Vector3(-730, 0, 775),
+            new Vector3(730, 0, -775),
+            new Vector3(730, 0, 775)
         };
 
         foreach (Vector3 position in cornerPositions)
@@ -629,4 +611,11 @@ public struct MapData
         this.heightMap = heightMap;
         this.colorMap = colorMap;
     }
-}   
+}
+
+[System.Serializable]
+public struct Biome
+{
+    public string type;
+    public GameObject prefab;
+}

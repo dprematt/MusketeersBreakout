@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.01818849, g: 0.21826175, b: 0.41088882, a: 1}
+  m_IndirectSpecularColor: {r: 0.018275844, g: 0.2210047, b: 0.4152451, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2353,9 +2353,12 @@ MonoBehaviour:
   - {fileID: 4643903192672366057, guid: bc1bc8b318e90298aa98c657cd3e4e5c, type: 3}
   - {fileID: 7931082091875972138, guid: a7c0f540ba663629790a286d889bce6a, type: 3}
   Biomes:
-  - {fileID: 3997192538817553815, guid: 5fb8fb3cc01af44308006821f1abe929, type: 3}
-  - {fileID: 109927449571210476, guid: a1d9e97f06f6e2340bb4d2114caa2589, type: 3}
-  - {fileID: 5794360217216551788, guid: 4166b722c5a1809d087d3584b69fceba, type: 3}
+  - type: "d\xE9sert"
+    prefab: {fileID: 3997192538817553815, guid: 5fb8fb3cc01af44308006821f1abe929, type: 3}
+  - type: jungle
+    prefab: {fileID: 109927449571210476, guid: a1d9e97f06f6e2340bb4d2114caa2589, type: 3}
+  - type: neige
+    prefab: {fileID: 5794360217216551788, guid: 4166b722c5a1809d087d3584b69fceba, type: 3}
 --- !u!114 &850191868
 MonoBehaviour:
   m_ObjectHideFlags: 0
