@@ -7076,9 +7076,9 @@ MonoBehaviour:
   anim: {fileID: 4661507371320996336}
   isAttacking: 0
   bloodParticles: {fileID: -6681432496318675080}
-  weaponList: []
   hasShield: 0
   shieldComp: {fileID: 0}
+  EquippedWeapon: {fileID: 0}
   eventListener: {fileID: 0}
 --- !u!114 &3107699292531397568
 MonoBehaviour:
