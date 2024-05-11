@@ -344,10 +344,10 @@ public class generator : MonoBehaviourPun
     {
         int i = 1;
         Vector3[] cornerPositions = {
-            new Vector3(-715, 0, -730),
-            new Vector3(-715, 0, 730),
-            new Vector3(715, 0, -730),
-            new Vector3(715, 0, 730)
+            new Vector3(-750, 0, -775),
+            new Vector3(-750, 0, 775),
+            new Vector3(750, 0, -775),
+            new Vector3(750, 0, 775)
         };
 
         foreach (Vector3 position in cornerPositions)
