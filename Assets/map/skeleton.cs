@@ -82,14 +82,13 @@ public static class Skeleton
             }
         }
 
-        // Ajout de zones plates irrégulières en utilisant des coordonnées globales pour déterminer les centres
         float flatHeight = 0.4f;
         int numberOfPlates = 4;
         List<Vector2> plateCenters = new List<Vector2>();
 
-        System.Random localPrng = new System.Random(seed + (int)offset.x * 1000 + (int)offset.y); // Unique PRNG par chunk
+        System.Random localPrng = new System.Random(seed + (int)offset.x * 1000 + (int)offset.y);
         while (plateCenters.Count < numberOfPlates) {
-            Vector2 newCenter = new Vector2(localPrng.Next(20, mapWidth - 20) + offset.x, localPrng.Next(20, mapHeight - 20) + offset.y); // Éloignez les centres des bords
+            Vector2 newCenter = new Vector2(localPrng.Next(20, mapWidth - 20) + offset.x, localPrng.Next(20, mapHeight - 20) + offset.y);
             if (!plateCenters.Any(center => Vector2.Distance(center, newCenter) < 70)) {
                 plateCenters.Add(newCenter);
             }
@@ -98,10 +97,9 @@ public static class Skeleton
         foreach (var center in plateCenters) {
             for (int y = 0; y < mapHeight; y++) {
                 for (int x = 0; x < mapWidth; x++) {
-                    // Ajout de bruit de Perlin pour rendre les contours plus naturels
                     float distance = Vector2.Distance(new Vector2(x + offset.x, y + offset.y), center);
                     float perlinNoise = Mathf.PerlinNoise((x + offset.x) * 0.1f, (y + offset.y) * 0.1f) * 20f;
-                    if (distance <= 60 + perlinNoise) {  // Rayon de la zone plate avec irrégularités
+                    if (distance <= 60 + perlinNoise) { 
                         skeleton[x, y] = flatHeight;
                     }
                 }

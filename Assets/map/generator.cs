@@ -183,12 +183,18 @@ public class generator : MonoBehaviourPun
                         float z = center.y + prng.Next(-20, 20);
                         Vector3 position = new Vector3(x, 0, z);
 
-                        // Exclure les positions dans une zone tampon de 50 unités autour des bords de la carte
-                        float borderBuffer = 50; // Distance à partir du bord pour exclure les angles
+                        float borderBuffer = 50;
+
+                        bool isInCornerChunk = 
+                            (position.x < (topLeft.x + mapChunkSize + borderBuffer) && position.z > (topLeft.y - mapChunkSize - borderBuffer)) ||
+                            (position.x > (bottomRight.x - mapChunkSize - borderBuffer) && position.z > (topLeft.y - mapChunkSize - borderBuffer)) ||
+                            (position.x < (topLeft.x + mapChunkSize + borderBuffer) && position.z < (bottomRight.y + mapChunkSize + borderBuffer)) ||
+                            (position.x > (bottomRight.x - mapChunkSize - borderBuffer) && position.z < (bottomRight.y + mapChunkSize + borderBuffer));
+
                         bool isInBorderBuffer = position.x < (topLeft.x + borderBuffer) || position.x > (bottomRight.x - borderBuffer) ||
                                                 position.z < (bottomRight.y + borderBuffer) || position.z > (topLeft.y - borderBuffer);
 
-                        if (!isInBorderBuffer && IsPositionOnFlatArea(position, center))
+                        if (!isInBorderBuffer && !isInCornerChunk && IsPositionOnFlatArea(position, center))
                         {
                             if (!IsTooCloseToOtherBiomes(position, safeZone))
                             {
@@ -209,7 +215,6 @@ public class generator : MonoBehaviourPun
 
     bool IsPositionOnFlatArea(Vector3 position, Vector2 center)
     {
-        // Ajout de bruit de Perlin pour rendre les contours plus naturels
         float distance = Vector2.Distance(new Vector2(position.x, position.z), center);
         float perlinNoise = Mathf.PerlinNoise(position.x * 0.1f, position.z * 0.1f) * 20f;
         return distance <= 60 + perlinNoise;
@@ -366,7 +371,6 @@ public class generator : MonoBehaviourPun
 
         List<Vector2> allPlateCenters = new List<Vector2>();
 
-        // PrÃ©-gÃ©nÃ©rer tous les chunks de la carte
         for (float x = topLeft.x; x <= bottomRight.x; x += mapChunkSize)
         {
             for (float y = bottomRight.y; y <= topLeft.y; y += mapChunkSize)
@@ -374,16 +378,13 @@ public class generator : MonoBehaviourPun
                 var (map, plateCenters) = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, new Vector2(x, y) + offSet, normalizeMode, seed);
                 allPlateCenters.AddRange(plateCenters);
 
-                // Sauvegarde des donnÃ©es de chunk si nÃ©cessaire
                 Vector2 chunkCoord = new Vector2(x, y);
                 chunkDataMap[chunkCoord] = new MapData(map, colorMap);
             }
         }
 
-        // Placer les biomes sur les zones plates
         PlaceBiomesInFlatAreas(allPlateCenters, topLeft, bottomRight);
 
-        // Dessiner le chunk actuel
         Vector2 center = Vector2.zero + offSet;
         var currentMapData = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center, normalizeMode, seed);
 
