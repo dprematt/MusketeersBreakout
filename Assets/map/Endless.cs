@@ -170,7 +170,7 @@ public class Endless : MonoBehaviour
             mapDataReceived = true;
             UpdateMesh();
             Vector2 chunkCenter = this.ChunkCenter;
-            _generator.PlacePrefabsInChunk(chunkCenter, mapData.heightMap, 240);
+            // _generator.PlacePrefabsInChunk(chunkCenter, mapData.heightMap, 240);
             UpdateChunk();
         }
 

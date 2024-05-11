@@ -156,44 +156,68 @@ public class generator : MonoBehaviourPun
         return false;
     }
 
-    void PlaceBiomesInFlatAreas(List<Vector2> plateCenters)
+    void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight)
     {
-        biomesPositions.Clear();
-        GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
+        if (PhotonNetwork.IsMasterClient) {
+            biomesPositions.Clear();
+            GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
 
-        System.Random prng = new System.Random(seed);
+            System.Random prng = new System.Random(seed);
 
-        foreach (GameObject prefab in Biomes)
-        {
-            for (int i = 0; i < numberOfPrefabsToCreate; i++)
+            foreach (GameObject prefab in Biomes)
             {
-                Vector2 center;
-                bool validPosition = false;
-                int attempts = 0;
-
-                do
+                for (int i = 0; i < numberOfPrefabsToCreate; i++)
                 {
-                    if (plateCenters.Count == 0) break;
-                    int index = prng.Next(0, plateCenters.Count);
-                    center = plateCenters[index];
-                    plateCenters.RemoveAt(index);
+                    Vector2 center;
+                    bool validPosition = false;
+                    int attempts = 0;
 
-                    float x = center.x + prng.Next(-20, 20);
-                    float z = center.y + prng.Next(-20, 20);
-                    Vector3 position = new Vector3(x, 0, z);
-
-                    if (!IsTooCloseToOtherBiomes(position, safeZone))
+                    do
                     {
-                        biomesPositions.Add(position);
-                        GameObject instance = Instantiate(prefab, position, Quaternion.identity);
-                        instance.transform.SetParent(biomesParent.transform);
-                        validPosition = true;
-                    }
+                        if (plateCenters.Count == 0) break;
+                        int index = prng.Next(0, plateCenters.Count);
+                        center = plateCenters[index];
+                        plateCenters.RemoveAt(index);
 
-                    attempts++;
-                } while (!validPosition && attempts < 100);
+                        float x = center.x + prng.Next(-20, 20);
+                        float z = center.y + prng.Next(-20, 20);
+                        Vector3 position = new Vector3(x, 0, z);
+
+                        float borderBuffer = 50;
+
+                        bool isInCornerChunk = 
+                            (position.x < (topLeft.x + mapChunkSize + borderBuffer) && position.z > (topLeft.y - mapChunkSize - borderBuffer)) ||
+                            (position.x > (bottomRight.x - mapChunkSize - borderBuffer) && position.z > (topLeft.y - mapChunkSize - borderBuffer)) ||
+                            (position.x < (topLeft.x + mapChunkSize + borderBuffer) && position.z < (bottomRight.y + mapChunkSize + borderBuffer)) ||
+                            (position.x > (bottomRight.x - mapChunkSize - borderBuffer) && position.z < (bottomRight.y + mapChunkSize + borderBuffer));
+
+                        bool isInBorderBuffer = position.x < (topLeft.x + borderBuffer) || position.x > (bottomRight.x - borderBuffer) ||
+                                                position.z < (bottomRight.y + borderBuffer) || position.z > (topLeft.y - borderBuffer);
+
+                        if (!isInBorderBuffer && !isInCornerChunk && IsPositionOnFlatArea(position, center))
+                        {
+                            if (!IsTooCloseToOtherBiomes(position, safeZone))
+                            {
+                                biomesPositions.Add(position);
+                                GameObject instance = PhotonNetwork.Instantiate(prefab.name, position, Quaternion.identity);
+                                instance.transform.SetParent(biomesParent.transform);
+                                validPosition = true;
+                            }
+                        }
+
+                        attempts++;
+                    } while (!validPosition && attempts < 100);
+                }
             }
         }
+    }
+
+
+    bool IsPositionOnFlatArea(Vector3 position, Vector2 center)
+    {
+        float distance = Vector2.Distance(new Vector2(position.x, position.z), center);
+        float perlinNoise = Mathf.PerlinNoise(position.x * 0.1f, position.z * 0.1f) * 20f;
+        return distance <= 60 + perlinNoise;
     }
 
     bool IsTooCloseToOtherBiomes(Vector3 position, float minDistance)
@@ -312,7 +336,7 @@ public class generator : MonoBehaviourPun
         if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("mapSeed", out object seedValue))
         {
             seed = (int)seedValue;
-            Debug.Log($"Seed récupérée dans generator: {seed}");
+            Debug.Log($"Seed rÃ©cupÃ©rÃ©e dans generator: {seed}");
         }
     }
 
@@ -342,30 +366,49 @@ public class generator : MonoBehaviourPun
 
     public void DrawMap()
     {
-        var (map, plateCenters) = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, Vector2.zero + offSet, normalizeMode, seed);
+        Vector2 topLeft = new Vector2(-3.5f * mapChunkSize, 3.5f * mapChunkSize);
+        Vector2 bottomRight = new Vector2(3.5f * mapChunkSize, -3.5f * mapChunkSize);
 
-        selectPos(map);
+        List<Vector2> allPlateCenters = new List<Vector2>();
+
+        for (float x = topLeft.x; x <= bottomRight.x; x += mapChunkSize)
+        {
+            for (float y = bottomRight.y; y <= topLeft.y; y += mapChunkSize)
+            {
+                var (map, plateCenters) = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, new Vector2(x, y) + offSet, normalizeMode, seed);
+                allPlateCenters.AddRange(plateCenters);
+
+                Vector2 chunkCoord = new Vector2(x, y);
+                chunkDataMap[chunkCoord] = new MapData(map, colorMap);
+            }
+        }
+
+        PlaceBiomesInFlatAreas(allPlateCenters, topLeft, bottomRight);
+
+        Vector2 center = Vector2.zero + offSet;
+        var currentMapData = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center, normalizeMode, seed);
+
+        selectPos(currentMapData.Item1);
 
         DisplaySkeleton display = FindObjectOfType<DisplaySkeleton>();
         if (drawMode == DrawMode.map)
         {
-            display.DrawTexture(TextureGenerator.TextureFromHeightMap(map));
+            display.DrawTexture(TextureGenerator.TextureFromHeightMap(currentMapData.Item1));
         }
         else if (drawMode == DrawMode.colorMap)
         {
-            // Ne rien faire pour colorMap, car la couleur a été supprimée.
+            // Ne rien faire pour colorMap, car la couleur a Ã©tÃ© supprimÃ©e.
         }
         else if (drawMode == DrawMode.mesh)
         {
-            meshData meshdata = MeshGenerator.generateTerrainMesh(map, meshHeightMult, meshHeightCurve, levelOfDetail);
+            meshData meshdata = MeshGenerator.generateTerrainMesh(currentMapData.Item1, meshHeightMult, meshHeightCurve, levelOfDetail);
         }
-        else if (drawMode ==DrawMode.fallOfMap)
+        else if (drawMode == DrawMode.fallOfMap)
         {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunkSize)));
         }
 
-        CurrentMapData = new MapData(map, colorMap);
-        PlaceBiomesInFlatAreas(plateCenters);
+        CurrentMapData = new MapData(currentMapData.Item1, colorMap);
     }
 
     public void selectPos(float[,] colorMap)
@@ -408,7 +451,7 @@ public class generator : MonoBehaviourPun
             }
             else
             {
-                Debug.LogError("Pas assez de coordonnées disponibles.");
+                Debug.LogError("Pas assez de coordonnÃ©es disponibles.");
             }
         }
         SpawnPlayer();
@@ -429,7 +472,7 @@ public class generator : MonoBehaviourPun
         SpawnWeapons_ = GetComponent<SpawnWeapons>();
         SpawnWeapons_.InstanciateWeapons(_spawnCoords[0]);
         GameObject Player_ = PhotonNetwork.Instantiate(PlayerPrefab_.name, _spawnCoords[0], Quaternion.identity);
-        Debug.Log("Nom de l'instance PlayFab : " + PlayFabSettings.TitleId + " Spawn aux coordonnées : x = " + _spawnCoords[0].x + " y = " + _spawnCoords[0].y + " z = " + _spawnCoords[0].z);
+        Debug.Log("Nom de l'instance PlayFab : " + PlayFabSettings.TitleId + " Spawn aux coordonnÃ©es : x = " + _spawnCoords[0].x + " y = " + _spawnCoords[0].y + " z = " + _spawnCoords[0].z);
         Player_.GetComponent<SetupPlayer>().IsLocalPlayer();
         LoadScreen_.SetActive(false);
         Hud_.SetActive(true);
@@ -586,4 +629,4 @@ public struct MapData
         this.heightMap = heightMap;
         this.colorMap = colorMap;
     }
-}
+}   

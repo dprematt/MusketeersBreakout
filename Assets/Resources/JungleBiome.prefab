@@ -211,6 +211,7 @@ GameObject:
   - component: {fileID: 3783727498636295038}
   - component: {fileID: -514699061121744031}
   - component: {fileID: 7513719675811611073}
+  - component: {fileID: 6266115050502574358}
   m_Layer: 0
   m_Name: JungleBiome
   m_TagString: Untagged
@@ -312,10 +313,10 @@ Transform:
   - {fileID: 3052720326529761824}
   - {fileID: 7896677425329032287}
   - {fileID: 7810648989736103924}
-  - {fileID: 7413287434315662082}
   - {fileID: 2444585146338509984}
-  - {fileID: 5201444902784970680}
   - {fileID: 5094410128186535603}
+  - {fileID: 7413287434315662082}
+  - {fileID: 5201444902784970680}
   - {fileID: 1566704071193170613}
   - {fileID: 3133084625233855409}
   m_Father: {fileID: 0}
@@ -377,6 +378,28 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &6266115050502574358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109927449571210476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &119492911706783361
 GameObject:
   m_ObjectHideFlags: 0
@@ -9836,7 +9859,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3783727498636295038}
-  m_RootOrder: 82
+  m_RootOrder: 84
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5072430058570342460
 MeshFilter:
@@ -17494,7 +17517,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3783727498636295038}
-  m_RootOrder: 84
+  m_RootOrder: 85
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3275044220816407671
 MeshFilter:
@@ -26336,7 +26359,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 317944115831912086, guid: 9a91bc2b0a89c4748a0c5b940bd461a7, type: 3}
       propertyPath: m_RootOrder
-      value: 83
+      value: 82
       objectReference: {fileID: 0}
     - target: {fileID: 317944115831912086, guid: 9a91bc2b0a89c4748a0c5b940bd461a7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -29784,7 +29807,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 317944115831912086, guid: 9a91bc2b0a89c4748a0c5b940bd461a7, type: 3}
       propertyPath: m_RootOrder
-      value: 85
+      value: 83
       objectReference: {fileID: 0}
     - target: {fileID: 317944115831912086, guid: 9a91bc2b0a89c4748a0c5b940bd461a7, type: 3}
       propertyPath: m_LocalPosition.x
