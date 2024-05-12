@@ -270,15 +270,14 @@ public class HUD : MonoBehaviour
 
     private void SwapSlots(Transform slot1, Transform slot2)
     {
+        Debug.Log("SwapSlots");
         endPos = slot2.position;
         Inventory inventory;
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         inventory = player.GetComponent<Inventory>();
         //
         GameObject loot = GameObject.FindGameObjectWithTag("LootHUD");
-        if (loot == null)
-            return;
-        LootHUD lootHUD = loot.GetComponent<LootHUD>();
+      
         //
         char id_1_c = slot1.tag[slot1.tag.Length - 1];
         int id_1 = int.Parse(id_1_c.ToString());
@@ -292,6 +291,7 @@ public class HUD : MonoBehaviour
         Debug.Log(slot2.tag);
         if ((slot1.position.y <= slot2.position.y + 10) && ((slot1.position.y >= slot2.position.y - 10)))
         {
+            Debug.Log("call swap items");
             inventory.SwapItems(id_1, id_2);
             //slot1.position = endPos;
             //slot2.position = startPos;
@@ -299,6 +299,12 @@ public class HUD : MonoBehaviour
         else
         {
             //Debug.Log("y different");
+            if (loot == null)
+            {
+                Debug.Log("HUD NOT FOUND");
+                return;
+            }
+            LootHUD lootHUD = loot.GetComponent<LootHUD>();
             inventory.SwapItemsLoot(id_1, id_2, lootHUD.inventory);
             //Debug.Log("print player inventory after");
             //inventory.Print_Inventory();
