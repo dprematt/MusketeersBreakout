@@ -212,6 +212,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (inventory.PocketCount() > 0)
         {
+            Debug.Log("UPDATE ATTACK PLAYER: equipped weapon name = " + EquippedWeapon.name);
             if (!EquippedWeapon.isLongRange && Input.GetMouseButtonDown(0))
             {
                 EquippedWeapon.Attack();
@@ -315,22 +316,30 @@ public class Player : MonoBehaviourPunCallbacks
 
             }
         }
-        /*Inventory loot = col.gameObject.GetComponent<Inventory>();
-        if (loot != null)
+    }
+
+    public void EquipWeapon(Weapon weaponComp, GameObject weaponObject)
+    {
+        Debug.Log("EQUIP WEAPON");
+        inventory.AddItem(weaponComp);
+        Transform hand = FindDeepChild(transform, "jointItemR");
+        weaponComp.whenPickUp(gameObject, hand);
+        if (inventory.PocketCount() == 2)
         {
-            loot.DisplayLoot(inventory);
-            return;
-        }*/
+            Debug.Log("Pocket full");
+            weaponObject.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("Pocket Empty");
+            weaponComp.setAnim();
+            currentWeapon = 0;
+            eventListener.weaponComp = weaponComp;
+        }
+        EquippedWeapon = weaponComp;
     }
     void OnTriggerEnter(Collider col)
     {
-        
-       /* IInventoryItem item = col.GetComponent<IInventoryItem>();
-        if (item != null)
-        {
-            inventory.AddItem(item);
-        }*/
-
         if (col.CompareTag("ExtractionZone"))
         {
             PFInventory_.PlayerWin();
@@ -338,7 +347,6 @@ public class Player : MonoBehaviourPunCallbacks
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel("Menu");
         }
-
 
         Weapon weaponComp = col.GetComponent<Weapon>();
         if (weaponComp != null)
@@ -349,29 +357,13 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 return;
             }
-
             if (inventory.PocketCount() < 2)
             {
                 GameObject weapon = col.gameObject;
                 if (!weaponComp.isLooted)
                 {
                     Debug.Log(weaponComp.Name);
-
-                    inventory.AddItem(weaponComp);
-                    Transform hand = FindDeepChild(transform, "jointItemR");
-                    weaponComp.whenPickUp(gameObject, hand);
-                    EquippedWeapon = weaponComp;
-
-                    if (inventory.PocketCount() == 2)
-                    {
-                        weapon.SetActive(false);
-                    }
-                    else
-                    {
-                        weaponComp.setAnim();
-                        currentWeapon = 0;
-                        eventListener.weaponComp = weaponComp;
-                    }
+                    EquipWeapon(weaponComp, weapon);
                 }
             }
             else
@@ -517,7 +509,7 @@ public class Player : MonoBehaviourPunCallbacks
             rb.AddForce(moveDirection.normalized * moveSpeed * movementMultiplier * airMultiplier, ForceMode.Acceleration);
         }
     }
-    Transform FindDeepChild(Transform parent, string name)
+   public Transform FindDeepChild(Transform parent, string name)
     {
         foreach (Transform child in parent)
         {

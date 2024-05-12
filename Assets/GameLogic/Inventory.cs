@@ -22,8 +22,8 @@ public class Inventory : MonoBehaviour
             return;
         }
         GameObject weaponObject = Instantiate(weaponPrefab);
-        IInventoryItem weaponItem = weaponObject.GetComponent<IInventoryItem>();
-        Destroy(weaponObject);
+        Weapon weaponItem = weaponObject.GetComponent<Weapon>();
+        //Destroy(weaponObject);
         Destroy(weaponPrefab);
         if (weaponItem == null)
         {
@@ -31,8 +31,15 @@ public class Inventory : MonoBehaviour
             Destroy(weaponObject);
             return;
         }
-        Debug.Log("INVENTORY ADD WEAPON: item name = " + weaponItem);
-        AddItem(weaponItem);
+        Debug.Log("INVENTORY ADD WEAPON: item name = " + weaponItem.name);
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        Player playerScript = playerObj.GetComponent<Player>();
+        //AddItem(weaponItem);
+        if (Count() == 0)
+        {
+            Debug.Log("CALL TO EQUI WEAPON FROM INVENTORY");
+            playerScript.EquipWeapon(weaponItem, weaponObject);
+        }
     }
 
     public int Count()
@@ -100,21 +107,10 @@ public class Inventory : MonoBehaviour
     public void Start()
     {
         SLOTS = 9;
-        //Debug.Log("in inventory start");
         if (mItems == null)
         {
-            //Debug.Log("in inventory start item == null");
             mItems = new IInventoryItem[9];
         }
-        /*if (loot == true)
-        {
-            if (Count() == 0)
-            {
-                GameObject go = Resources.Load<GameObject>("Prefabs/Sword");
-                IInventoryItem item = go.GetComponent<IInventoryItem>();
-                Add(item);
-            }
-        }*/
     }
 
     public IInventoryItem[] GetInventory()
@@ -124,42 +120,17 @@ public class Inventory : MonoBehaviour
 
     public void SwapItems(int index1, int index2)
     {
-        /*// Ensure that both indices are valid
-        if (index1 < 0 || index1 >= Count() || index2 < 0 || index2 >= Count()
-        {
-            Debug.LogError("Invalid indices for swapping items.");
-            return;
-        }
-        */
-        // Swap the items at the specified indices
-
         Debug.Log("SWAP ITEMS");
         IInventoryItem temp = mItems[index1];
         InsertAt(mItems[index2], index1);
         InsertAt(temp, index2);
-        Print_Inventory();
     }
     public void SwapItemsLoot(int index1, int index2, Inventory lootInventory)
     {
-        // Ensure that both indices are valid
-        /*if (index2 >= lootInventory.mItems.Count && index2 <= 9)
-        {
-            lootInventory.AddItem(mItems[index1]);
-            //Debug.LogError("Invalid indices for swapping items.");
-            mItems.RemoveAt(index1);
-            return;
-        }*/
-
         Debug.Log("SWAP ITEMS LOOT: item 1 id = " + index1 + "item 2 id = " + index2);
-        // Swap the items at the specified indices
         IInventoryItem temp = mItems[index1];
         InsertAt(lootInventory.mItems[index2], index1);
-        //mItems[index1] = lootInventory.mItems[index2];
         lootInventory.InsertAt(temp, index2);
-        //lootInventory.mItems[index2] = temp;
-        Print_Inventory();
-        Debug.Log("SWAP ITEMS LOOT: loot inventory check");
-        lootInventory.Print_Inventory();
     }
     public void Print_Inventory()
     {
