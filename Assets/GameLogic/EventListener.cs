@@ -17,6 +17,6 @@ public class EventListener : MonoBehaviour
 
     public void HitEvent()
     {
-        weaponComp.isAttacking = true;
+        weaponComp.IsAttacking = true;
     }
 }

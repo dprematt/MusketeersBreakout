@@ -355,6 +355,11 @@ public class Player : MonoBehaviourPunCallbacks
         Weapon weaponComp = col.GetComponent<Weapon>();
         if (weaponComp != null)
         {
+            if (weaponComp.isLooted && weaponComp.holder != gameObject && weaponComp.IsAttacking)
+            {
+                TakeDamage(weaponComp.damages);
+            }
+
             if (hasShield && (weaponComp.tag == "WeaponSpear"
             || weaponComp.tag == "WeaponHalberd"
             || weaponComp.tag == "WeaponCrossBow"))

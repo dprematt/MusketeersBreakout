@@ -40,7 +40,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public int countAttackClick;
 
-    public bool isAttacking;
+    public bool _isAttacking = false;
 
     public string Name
     {
@@ -51,8 +51,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
     {
         audioSource = GetComponent<AudioSource>();
         countAttackClick = 0;
-
-        isAttacking = false;
     }
 
     public void Update()
@@ -60,6 +58,22 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         if (gameObject.name == "Sword")
         {
         }
+    }
+
+    public bool IsAttacking
+    {
+        get { return _isAttacking; }
+        set
+        {
+            _isAttacking = value;
+            photonView.RPC("SyncIsAttacking", RpcTarget.All, value);
+        }
+    }
+
+    [PunRPC]
+    private void SyncIsAttacking(bool value)
+    {
+        _isAttacking = value;
     }
 
     public virtual bool SetIsPlayer(bool type)
@@ -94,7 +108,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             }
         }
 
-        if (anim.GetInteger("intAttackPhase") > 0 && other.gameObject != holder && isAttacking)
+/*        if (anim.GetInteger("intAttackPhase") > 0 && other.gameObject != holder && isAttacking)
         {
             if (IsPlayer && other.CompareTag("EnemyBody"))
             {
@@ -106,7 +120,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
                 other.gameObject.GetComponent<Player>().TakeDamage(damages);
             }
             isAttacking = false;
-        }
+        }*/
     }
 
     Transform FindDeepChild(Transform parent, string nom)
@@ -157,7 +171,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
                 {
                     playerComp.stamina -= 30;
                 }
-                isAttacking = false;
+                IsAttacking = false;
             }
             else
             {
@@ -174,7 +188,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
                 {
                     playerComp.stamina -= 30;
                 }
-                isAttacking = false;
+                IsAttacking = false;
             }
             else
             {
@@ -194,7 +208,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
     {
         countAttackClick = 0;
         anim.SetInteger("intAttackPhase", 0);
-        isAttacking = false;
+        IsAttacking = false;
     }
 
     public void whenPickUp(GameObject newHolder, Transform hand)

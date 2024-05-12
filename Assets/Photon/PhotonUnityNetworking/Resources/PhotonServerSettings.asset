@@ -50,6 +50,7 @@ MonoBehaviour:
   - RPC_StartGame
   - SyncPickUp
   - SyncAnim
+  - SyncIsAttacking
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
