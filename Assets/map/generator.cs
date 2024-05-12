@@ -180,11 +180,15 @@ public class generator : MonoBehaviourPun
 
     void PlaceBiomesGuardians()
     {
+        GameObject guardiansParent = GameObject.Find("Guardians") ?? new GameObject("Guardians");
+
         if (PhotonNetwork.IsMasterClient) {
 
             foreach (Vector3 guardiansCoord in guardiansSpawn)
             {
                 GameObject guardians = PhotonNetwork.Instantiate(ennemyType1.name, guardiansCoord, Quaternion.identity);
+                guardians.transform.SetParent(guardiansParent.transform);
+
             }
         }
     }
