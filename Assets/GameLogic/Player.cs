@@ -257,7 +257,7 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 PFInventory_.PlayerLose();
             }
-            HealthManager.Take_Damage((int)Damage, gameObject);
+            HealthManager.Take_Damage((int)Damage);
             bloodParticles.Play();
         }
     }

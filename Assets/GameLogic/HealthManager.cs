@@ -14,18 +14,14 @@ public class HealthManager : MonoBehaviourPunCallbacks
 
     float Health_ = 100;
     public Text Health_Text_;
-    Player player_;
     PlayFabInventory PFInventory_;
-
-    public GameObject Player_;
-
-
-    //public ParticleSystem bloodParticles;
 
     private void Start()
     {
-        Player_ = GameObject.FindGameObjectWithTag("Player");
-        PFInventory_ = GetComponent<PlayFabInventory>();
+
+        PFInventory_ = gameObject.GetComponent<PlayFabInventory>();
+        if (PFInventory_ == null)
+            Debug.Log("PFInventory_ null");
     }
 
     #if UNITY_EDITOR
@@ -48,32 +44,33 @@ public class HealthManager : MonoBehaviourPunCallbacks
 
     void SubtractTen()
     {
-        Health_ -= 10; // Soustraire 10 à la valeur
-        if (Health_ == 0) {
-            DestroyPlayer(Player_);
-        }
+        if (10 < Health_)
+            {
+                photonView.RPC("DamageInstance", RpcTarget.All, 10);
+                //photonView.RPC("SetPlayerHP", RpcTarget.All);
+            }
+            else
+                DestroyPlayer();
     }
 
 
-    public void Take_Damage(int Damage, GameObject Player)
+    public void Take_Damage(int Damage)
     {
         if (photonView.IsMine)
         {
             if (Damage < Health_)
             {
                 photonView.RPC("DamageInstance", RpcTarget.All, Damage);
-                //photonView.RPC("SetPlayerHP", RpcTarget.All);
             }
             else
-                DestroyPlayer(Player_);
+                DestroyPlayer();
         }
     }
 
-    void DestroyPlayer(GameObject Player)
+    void DestroyPlayer()
     {
         PFInventory_.PlayerLose();
-        Destroy(Player);
-        PhotonNetwork.Destroy(Player);
+        PhotonNetwork.Destroy(gameObject);
     }
 
     public float GetHealth()
@@ -85,15 +82,19 @@ public class HealthManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void DamageInstance(int Damage)
     {
-        //bloodParticles.Play();
         Health_ -= Damage;
     }
 
     public void HealthUp(int HealtAdd)
     {
-        Health_ += HealtAdd;
+        photonView.RPC("HealthUpInstance", RpcTarget.All, HealtAdd);
     }
 
+        [PunRPC]
+    public void HealthUpInstance(int Health)
+    {
+        Health_ += Health;
+    }
     private void FixedUpdate()
     {
         Health_Text_.text = Health_.ToString() + "HP";

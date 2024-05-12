@@ -9,22 +9,12 @@ public class PlayFabInventory : MonoBehaviour
     string PlayFabID_; 
 
     private Inventory Inventory_;
-    //public PlayerMove Player_;
-    public GameObject Player_;
 
     private void Start()
     {
-        Task.Delay(4000).Wait();
-        Player_ = GameObject.FindGameObjectWithTag("Player");
-        if (Player_ != null)
-        {
-            Inventory_ = Player_.GetComponent<Inventory>();
-            PlayFabID_ = PlayerPrefs.GetString("playfabID");
-        }
-        else
-        {
-            Debug.LogError("PlayerMove not found on the same GameObject as PlayFabInventory.");
-        }
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Inventory_ = player.GetComponent<Inventory>();
+        //Inventory_ = GetComponent<Inventory>();
         PlayFabID_ = PlayerPrefs.GetString("playfabID");
         FetchAllPlayerData();
 
@@ -34,15 +24,20 @@ public class PlayFabInventory : MonoBehaviour
     {
         foreach (IInventoryItem tmp in Inventory_.GetInventory())
         {
+            if (tmp != null && tmp.Name != null && tmp.Name != "null") {
             SaveInventory(tmp.Name, 0);
+            }
         }
 
     }
 
     public void PlayerWin()
     {
-        IInventoryItem[] ItemList = Inventory_.GetInventory();
-        foreach (IInventoryItem tmp in ItemList)
+        //IInventoryItem[] Item = Inventory_.GetInventory();
+        IInventoryItem[] Item = Inventory_.GetInventory();
+        if (Item == null)
+            Debug.Log("IInventory null");
+        foreach (IInventoryItem tmp in Item)
         {
             if (tmp != null && tmp.Name != null && tmp.Name != "null") {
                 Debug.Log("Arme :" + tmp.Name);
@@ -55,7 +50,6 @@ public class PlayFabInventory : MonoBehaviour
     {
         var request = new UpdateUserDataRequest
         {
-            //PlayFabId = PlayFabID_,
             Data = new System.Collections.Generic.Dictionary<string, string>
             {
                 { variableKey, flag.ToString() }
