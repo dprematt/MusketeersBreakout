@@ -204,7 +204,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         isPlayer = holder.CompareTag("Player") ? true : false;
         int holderID = newHolder.GetPhotonView().ViewID;
         Vector3 relativePosition = hand.position;
-        //transform.parent = hand;
+        transform.parent = hand;
         photonView.RPC("SyncPickUp", RpcTarget.All, holderID, relativePosition, rotationX, rotationY, rotationZ);
     }
 

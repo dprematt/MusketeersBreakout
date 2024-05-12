@@ -3,6 +3,8 @@ using UnityEngine;
 using System;
 using PlayFab;
 using PlayFab.ClientModels;
+using Photon.Pun;
+using PlayFab.CloudScriptModels;
 public class Inventory : MonoBehaviour
 {
     public int SLOTS;
@@ -21,7 +23,13 @@ public class Inventory : MonoBehaviour
             Debug.LogError("Weapon not found in folder Resources : " + weaponName);
             return;
         }
-        GameObject weaponObject = Instantiate(weaponPrefab);
+        Vector3 pos;
+        pos.z = 0;
+        pos.y = 0;
+        pos.x = 0;
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        Player playerScript = playerObj.GetComponent<Player>();
+        GameObject weaponObject = PhotonNetwork.Instantiate(weaponPrefab.name, pos, Quaternion.identity);
         Weapon weaponItem = weaponObject.GetComponent<Weapon>();
         //Destroy(weaponObject);
         Destroy(weaponPrefab);
@@ -32,8 +40,7 @@ public class Inventory : MonoBehaviour
             return;
         }
         Debug.Log("INVENTORY ADD WEAPON: item name = " + weaponItem.name);
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        Player playerScript = playerObj.GetComponent<Player>();
+        
         //AddItem(weaponItem);
         if (Count() == 0)
         {
@@ -140,10 +147,10 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < mItems.Length; i++)
         {
             if (mItems[i] != null)
-                Debug.Log("Item n°" + i + " = " + mItems[i].Name);
+                Debug.Log("Item nï¿½" + i + " = " + mItems[i].Name);
             else
             {
-                Debug.Log("Item n°" + i + " = Null");
+                Debug.Log("Item nï¿½" + i + " = Null");
             }
         }
         Debug.Log("end of print inventory");
