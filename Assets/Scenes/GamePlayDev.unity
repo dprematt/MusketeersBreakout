@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.018275844, g: 0.2210047, b: 0.4152451, a: 1}
+  m_IndirectSpecularColor: {r: 0.014345179, g: 0.14979127, b: 0.28759015, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2363,6 +2363,10 @@ MonoBehaviour:
     prefab: {fileID: 109927449571210476, guid: a1d9e97f06f6e2340bb4d2114caa2589, type: 3}
   - type: neige
     prefab: {fileID: 5794360217216551788, guid: 4166b722c5a1809d087d3584b69fceba, type: 3}
+  guardiansSpawn: []
+  ennemyType1: {fileID: 8489976182974415840, guid: e2db8a0f84c5732489ba3eef08de905c, type: 3}
+  ennemyType2: {fileID: 8489976182974415840, guid: 561279bd1f7579d45bfe1f36d4338cbf, type: 3}
+  ennemyType3: {fileID: 8489976182974415840, guid: 5528e200471fc7043b950ae9981f046b, type: 3}
 --- !u!114 &850191868
 MonoBehaviour:
   m_ObjectHideFlags: 0

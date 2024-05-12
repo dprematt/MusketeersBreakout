@@ -10914,6 +10914,7 @@ GameObject:
   - component: {fileID: -4636595456398322132}
   - component: {fileID: 8348730504884393306}
   - component: {fileID: -5415840976160194297}
+  - component: {fileID: 4109723445205611524}
   m_Layer: 0
   m_Name: Enemy Shape
   m_TagString: Enemy
@@ -15732,6 +15733,7 @@ MonoBehaviour:
   anim: {fileID: 1311753358829301974}
   bloodParticles: {fileID: -4636595456398322132}
   detectionRadius: 10
+  rotationSpeed: 5
   points: []
 --- !u!199 &-5415840976160194297
 ParticleSystemRenderer:
@@ -15805,6 +15807,28 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &4109723445205611524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8489976182974415840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &8521723152814184806
 GameObject:
   m_ObjectHideFlags: 0

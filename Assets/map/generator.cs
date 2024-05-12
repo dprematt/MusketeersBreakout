@@ -64,6 +64,12 @@ public class generator : MonoBehaviourPun
     float safeZone = 100f;
     public static List<Vector3> biomesPositions = new List<Vector3>();
     int numberOfPrefabsToCreate = 2;
+    public List<Vector3> guardiansSpawn = new List<Vector3>();
+
+    public GameObject ennemyType1;
+    public GameObject ennemyType2;
+    public GameObject ennemyType3;
+
 
     private void Start()
     {
@@ -172,6 +178,17 @@ public class generator : MonoBehaviourPun
         return false;
     }
 
+    void PlaceBiomesGuardians()
+    {
+        if (PhotonNetwork.IsMasterClient) {
+
+            foreach (Vector3 guardiansCoord in guardiansSpawn)
+            {
+                GameObject guardians = PhotonNetwork.Instantiate(ennemyType1.name, guardiansCoord, Quaternion.identity);
+            }
+        }
+    }
+
     void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight)
     {
         if (PhotonNetwork.IsMasterClient)
@@ -266,6 +283,7 @@ public class generator : MonoBehaviourPun
         }
         return true;
     }
+
     private void GenerateBeaches(Vector2 chunkCenter)
     {
         float normalizedWaterHeight = 0.0001f / meshHeightMult;
@@ -352,7 +370,6 @@ public class generator : MonoBehaviourPun
         if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("mapSeed", out object seedValue))
         {
             seed = (int)seedValue;
-            Debug.Log($"Seed rÃ©cupÃ©rÃ©e dans generator: {seed}");
         }
     }
 
@@ -423,7 +440,7 @@ public class generator : MonoBehaviourPun
         {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunkSize)));
         }
-
+        PlaceBiomesGuardians();
         CurrentMapData = new MapData(currentMapData.Item1, colorMap);
     }
 
@@ -431,7 +448,6 @@ public class generator : MonoBehaviourPun
     {
         float minHeight = 0.2f;
         float maxHeight = 0.5f;
-        Debug.Log("SelectPos");
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -465,11 +481,32 @@ public class generator : MonoBehaviourPun
                     availableCoords.RemoveAt(randomIndex);
                 }
             }
-            else
-            {
-                Debug.LogError("Pas assez de coordonnÃ©es disponibles.");
-            }
         }
+
+        foreach (Vector3 vecteur in biomesPositions)
+        {
+            Vector3 pos1 = new Vector3(vecteur.x + 60, vecteur.y + 10, vecteur.z);
+            Vector3 pos2 = new Vector3(vecteur.x + 60, vecteur.y + 10, vecteur.z + 5);
+            Vector3 pos3 = new Vector3(vecteur.x - 60, vecteur.y + 10, vecteur.z);
+            Vector3 pos4 = new Vector3(vecteur.x - 60, vecteur.y + 10, vecteur.z + 5);
+            Vector3 pos5 = new Vector3(vecteur.x, vecteur.y + 10, vecteur.z - 60);
+            Vector3 pos6 = new Vector3(vecteur.x + 5, vecteur.y + 10, vecteur.z - 60);
+            Vector3 pos7 = new Vector3(vecteur.x, vecteur.y + 10, vecteur.z + 60);
+            Vector3 pos8 = new Vector3(vecteur.x + 5, vecteur.y + 10, vecteur.z + 60);
+
+
+
+            guardiansSpawn.Add(pos1);
+            guardiansSpawn.Add(pos2);
+            guardiansSpawn.Add(pos3);
+            guardiansSpawn.Add(pos4);
+            guardiansSpawn.Add(pos5);
+            guardiansSpawn.Add(pos6);
+            guardiansSpawn.Add(pos7);
+            guardiansSpawn.Add(pos8);
+
+        }
+
         SpawnPlayer();
     }
 
@@ -488,7 +525,6 @@ public class generator : MonoBehaviourPun
         SpawnWeapons_ = GetComponent<SpawnWeapons>();
         SpawnWeapons_.InstanciateWeapons(_spawnCoords[0]);
         GameObject Player_ = PhotonNetwork.Instantiate(PlayerPrefab_.name, _spawnCoords[0], Quaternion.identity);
-        Debug.Log("Nom de l'instance PlayFab : " + PlayFabSettings.TitleId + " Spawn aux coordonnÃ©es : x = " + _spawnCoords[0].x + " y = " + _spawnCoords[0].y + " z = " + _spawnCoords[0].z);
         Player_.GetComponent<SetupPlayer>().IsLocalPlayer();
         LoadScreen_.SetActive(false);
         Hud_.SetActive(true);
@@ -509,10 +545,6 @@ public class generator : MonoBehaviourPun
         {
             spawnCoordsList.RemoveAt(0);
             _spawnCoords = spawnCoordsList.ToArray();
-        }
-        else
-        {
-            Debug.LogWarning("La liste _spawnCoords est vide.");
         }
     }
 
