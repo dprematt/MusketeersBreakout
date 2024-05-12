@@ -46,8 +46,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     public Inventory inventory;
     public GameObject HUD;
+    public GameObject HUDFixe;
     public GameObject LootHUD;
-
 
     float horizontalMovement;
     float verticalMovement;
@@ -101,6 +101,8 @@ public class Player : MonoBehaviourPunCallbacks
         inventory = player.GetComponent<Inventory>();
         HUD = GameObject.FindGameObjectWithTag("InventoryHUD");
         HUD.GetComponent<HUD>().init();
+        HUDFixe = GameObject.FindGameObjectWithTag("InventoryHUDFixe");
+        HUDFixe.GetComponent<HUDFixe>().init();
         LootHUD = GameObject.FindGameObjectWithTag("LootHUD");
         GameObject xpProgressBarExperience = GameObject.FindWithTag("ExperienceBarDefaultTag");
         GameObject xpProgressBarLevel = GameObject.FindWithTag("ExperienceBarLevelTag");
@@ -195,6 +197,8 @@ public class Player : MonoBehaviourPunCallbacks
                 HUD.SetActive(true);
                 HUD hud = HUD.GetComponent<HUD>();
                 hud.Clean();
+                HUDFixe hudfixe = HUDFixe.GetComponent<HUDFixe>();
+                hudfixe.Clean();
             }
         }
         if (Input.GetKeyDown(KeyCode.E))
