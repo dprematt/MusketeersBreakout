@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.01818849, g: 0.21826175, b: 0.41088882, a: 1}
+  m_IndirectSpecularColor: {r: 0.018275844, g: 0.2210047, b: 0.4152451, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2348,14 +2348,21 @@ MonoBehaviour:
   - name: toto
     height: 0.55
   prefabNature:
-  - {fileID: 3934822910950737629, guid: 8c493796e38062c7580d3ded731949bd, type: 3}
-  - {fileID: 2097013310233654003, guid: 999c846913319e718a71fecfe94aaf3c, type: 3}
-  - {fileID: 4643903192672366057, guid: bc1bc8b318e90298aa98c657cd3e4e5c, type: 3}
-  - {fileID: 7931082091875972138, guid: a7c0f540ba663629790a286d889bce6a, type: 3}
+  - type: maison
+    prefab: {fileID: 3934822910950737629, guid: d07459f8b1ff698d9abceaf497162d40, type: 3}
+  - type: buisson
+    prefab: {fileID: 7931082091875972138, guid: 8b61b9f3db1c878da9385a879910633b, type: 3}
+  - type: arbre
+    prefab: {fileID: 2097013310233654003, guid: 317e4b3885bb9063f908a46b1a8312e1, type: 3}
+  - type: caillou
+    prefab: {fileID: 4643903192672366057, guid: 5882e0a66f2497b559132a1b7cae739b, type: 3}
   Biomes:
-  - {fileID: 3997192538817553815, guid: 5fb8fb3cc01af44308006821f1abe929, type: 3}
-  - {fileID: 109927449571210476, guid: a1d9e97f06f6e2340bb4d2114caa2589, type: 3}
-  - {fileID: 5794360217216551788, guid: 4166b722c5a1809d087d3584b69fceba, type: 3}
+  - type: "d\xE9sert"
+    prefab: {fileID: 3997192538817553815, guid: 5fb8fb3cc01af44308006821f1abe929, type: 3}
+  - type: jungle
+    prefab: {fileID: 109927449571210476, guid: a1d9e97f06f6e2340bb4d2114caa2589, type: 3}
+  - type: neige
+    prefab: {fileID: 5794360217216551788, guid: 4166b722c5a1809d087d3584b69fceba, type: 3}
 --- !u!114 &850191868
 MonoBehaviour:
   m_ObjectHideFlags: 0

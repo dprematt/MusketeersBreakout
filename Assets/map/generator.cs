@@ -8,6 +8,8 @@ using Photon.Pun;
 using PlayFab;
 using UnityEngine.UI;
 using static System.Random;
+using System.Linq;
+
 
 public class generator : MonoBehaviourPun
 {
@@ -47,7 +49,7 @@ public class generator : MonoBehaviourPun
 
     public TerrainType[] regions;
     public static int seed = 0;
-    public GameObject[] prefabNature;
+    public PrefabType[] prefabNature;
 
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<meshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<meshData>>();
@@ -56,7 +58,7 @@ public class generator : MonoBehaviourPun
     private GameObject worldObjectsParent;
     private object _heightMapLock = new object();
     private GameObject BiomesParent;
-    public GameObject[] Biomes;
+    public Biome[] Biomes;
 
     float mapSize = 1500f;
     float safeZone = 100f;
@@ -94,18 +96,27 @@ public class generator : MonoBehaviourPun
 
     public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize)
     {
-        int[] prefabCounts = new int[] {4, 10, 10, 10};
+        Vector3[] extractionZonePositions  = {
+            new Vector3(-730, 0, -775),
+            new Vector3(-730, 0, 775),
+            new Vector3(730, 0, -775),
+            new Vector3(730, 0, 775)
+        };
+        int[] prefabCounts = new int[] { 2, 5, 5, 5 };
         float chunkHalfSize = chunkSize / 2f;
 
-        float mapLeftBorder = -3.5f * mapChunkSize + 40f;
-        float mapRightBorder = 3.5f * mapChunkSize - 40f;
-        float mapTopBorder = 3.5f * mapChunkSize - 40f;
-        float mapBottomBorder = -3.5f * mapChunkSize + 40f;
+        float mapLeftBorder = -3.5f * mapChunkSize + 100f;
+        float mapRightBorder = 3.5f * mapChunkSize - 100f;
+        float mapTopBorder = 3.5f * mapChunkSize - 100f;
+        float mapBottomBorder = -3.5f * mapChunkSize + 100f;
 
-        for (int prefabIndex = 0; prefabIndex < prefabNature.Length; prefabIndex++)
+        Dictionary<string, List<Vector3>> placedPrefabs = new Dictionary<string, List<Vector3>>();
+
+        foreach (var prefabType in prefabNature)
         {
-            GameObject prefab = prefabNature[prefabIndex];
-            for (int i = 0; i < prefabCounts[prefabIndex]; i++)
+            placedPrefabs[prefabType.type] = new List<Vector3>();
+
+            for (int i = 0; i < prefabCounts[Array.IndexOf(prefabNature, prefabType)]; i++)
             {
                 Vector3 position = Vector3.zero;
                 bool validPosition = false;
@@ -124,17 +135,20 @@ public class generator : MonoBehaviourPun
 
                     float height = heightMap[xIndex, zIndex];
                     position = new Vector3(x, height, z);
-                    validPosition = !IsTooCloseToBiomes(position, biomesPositions, 30f);
 
-                    if (x >= mapLeftBorder && x <= mapRightBorder && z >= mapBottomBorder && z <= mapTopBorder)
+                    bool isTooCloseToSameType = placedPrefabs[prefabType.type].Any(pos => Vector3.Distance(position, pos) < 50);
+                    bool isTooCloseToExtractionZone = extractionZonePositions.Any(pos => Vector3.Distance(position, pos) < 100);
+                    bool isTooCloseToBiome = biomesPositions.Any(pos => Vector3.Distance(position, pos) < 100);
+
+                    if (!isTooCloseToSameType && !isTooCloseToExtractionZone && !isTooCloseToBiome && x >= mapLeftBorder && x <= mapRightBorder && z >= mapBottomBorder && z <= mapTopBorder)
                     {
                         if (height > 0.1f && height < 0.5f)
                         {
-                            position = new Vector3(x, height, z);
                             validPosition = true;
+                            placedPrefabs[prefabType.type].Add(position);
                             int[] Y = new int[] { -90, 90, 180, -180, 0 };
                             int randomIndex = UnityEngine.Random.Range(0, Y.Length);
-                            GameObject instance = Instantiate(prefab, position, Quaternion.identity);
+                            GameObject instance = Instantiate(prefabType.prefab, position, Quaternion.identity);
                             instance.transform.Rotate(0.0f, Y[randomIndex], 0.0f);
                             instance.transform.SetParent(worldObjectsParent.transform);
                         }
@@ -143,6 +157,8 @@ public class generator : MonoBehaviourPun
             }
         }
     }
+
+
 
     bool IsTooCloseToBiomes(Vector3 position, List<Vector3> biomesPositions, float buffer)
     {
@@ -158,14 +174,17 @@ public class generator : MonoBehaviourPun
 
     void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight)
     {
-        if (PhotonNetwork.IsMasterClient) {
+        if (PhotonNetwork.IsMasterClient)
+        {
             biomesPositions.Clear();
             GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
 
             System.Random prng = new System.Random(seed);
 
-            foreach (GameObject prefab in Biomes)
+            foreach (Biome biome in Biomes)
             {
+                List<Vector3> biomeSpecificPositions = new List<Vector3>();
+
                 for (int i = 0; i < numberOfPrefabsToCreate; i++)
                 {
                     Vector2 center;
@@ -183,26 +202,32 @@ public class generator : MonoBehaviourPun
                         float z = center.y + prng.Next(-20, 20);
                         Vector3 position = new Vector3(x, 0, z);
 
-                        float borderBuffer = 50;
+                        float borderBuffer = 100;
+                        float cornerBuffer = mapChunkSize;
 
                         bool isInCornerChunk = 
-                            (position.x < (topLeft.x + mapChunkSize + borderBuffer) && position.z > (topLeft.y - mapChunkSize - borderBuffer)) ||
-                            (position.x > (bottomRight.x - mapChunkSize - borderBuffer) && position.z > (topLeft.y - mapChunkSize - borderBuffer)) ||
-                            (position.x < (topLeft.x + mapChunkSize + borderBuffer) && position.z < (bottomRight.y + mapChunkSize + borderBuffer)) ||
-                            (position.x > (bottomRight.x - mapChunkSize - borderBuffer) && position.z < (bottomRight.y + mapChunkSize + borderBuffer));
+                            (position.x < (topLeft.x + cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
+                            (position.x > (bottomRight.x - cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
+                            (position.x < (topLeft.x + cornerBuffer) && position.z < (bottomRight.y + cornerBuffer)) ||
+                            (position.x > (bottomRight.x - cornerBuffer) && position.z < (bottomRight.y + cornerBuffer));
 
-                        bool isInBorderBuffer = position.x < (topLeft.x + borderBuffer) || position.x > (bottomRight.x - borderBuffer) ||
-                                                position.z < (bottomRight.y + borderBuffer) || position.z > (topLeft.y - borderBuffer);
+                        bool isInBorderBuffer = 
+                            position.x < (topLeft.x + borderBuffer) || 
+                            position.x > (bottomRight.x - borderBuffer) ||
+                            position.z < (bottomRight.y + borderBuffer) || 
+                            position.z > (topLeft.y - borderBuffer);
 
-                        if (!isInBorderBuffer && !isInCornerChunk && IsPositionOnFlatArea(position, center))
+                        bool isTooCloseToOtherBiomes = 
+                            biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 200) ||
+                            biomeSpecificPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 1000);
+
+                        if (!isInBorderBuffer && !isInCornerChunk && !isTooCloseToOtherBiomes && IsPositionOnFlatArea(position, center))
                         {
-                            if (!IsTooCloseToOtherBiomes(position, safeZone))
-                            {
-                                biomesPositions.Add(position);
-                                GameObject instance = PhotonNetwork.Instantiate(prefab.name, position, Quaternion.identity);
-                                instance.transform.SetParent(biomesParent.transform);
-                                validPosition = true;
-                            }
+                            biomesPositions.Add(position);
+                            biomeSpecificPositions.Add(position);
+                            GameObject instance = PhotonNetwork.Instantiate(biome.prefab.name, position, Quaternion.identity);
+                            instance.transform.SetParent(biomesParent.transform);
+                            validPosition = true;
                         }
 
                         attempts++;
@@ -220,37 +245,27 @@ public class generator : MonoBehaviourPun
         return distance <= 60 + perlinNoise;
     }
 
-    bool IsTooCloseToOtherBiomes(Vector3 position, float minDistance)
+    bool IsAreaFlat(Vector3 position, float[,] heightMap, int areaSize, float maxSlope)
     {
-        foreach (var otherPos in biomesPositions)
+        int startX = Mathf.Max(0, Mathf.FloorToInt(position.x) - areaSize / 2);
+        int startZ = Mathf.Max(0, Mathf.FloorToInt(position.z) - areaSize / 2);
+        int endX = Mathf.Min(heightMap.GetLength(0) - 1, Mathf.FloorToInt(position.x) + areaSize / 2);
+        int endZ = Mathf.Min(heightMap.GetLength(1) - 1, Mathf.FloorToInt(position.z) + areaSize / 2);
+
+        float centerHeight = heightMap[Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.z)];
+
+        for (int x = startX; x <= endX; x++)
         {
-            if (Vector3.Distance(position, otherPos) < minDistance)
+            for (int z = startZ; z <= endZ; z++)
             {
-                return true;
+                if (Mathf.Abs(heightMap[x, z] - centerHeight) > maxSlope)
+                {
+                    return false;
+                }
             }
         }
-        return false;
+        return true;
     }
-
-    private bool IsSpecialPrefabPosition(Vector2 position)
-    {
-        Vector3[] cornerPositions = {
-            new Vector3(-715, 0, -730),
-            new Vector3(-715, 0, 730),
-            new Vector3(715, 0, -730),
-            new Vector3(715, 0, 730)
-        };
-
-        foreach (Vector3 cornerPos in cornerPositions)
-        {
-            if (Vector2.Distance(new Vector2(cornerPos.x, cornerPos.z), position) < safeZone)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void GenerateBeaches(Vector2 chunkCenter)
     {
         float normalizedWaterHeight = 0.0001f / meshHeightMult;
@@ -290,6 +305,7 @@ public class generator : MonoBehaviourPun
             ApplyBeachToLeftOrRightBorder(beachThickness, chunkCenter, normalizedWaterHeight, false);
         }
     }
+
 
     private void ApplyBeachToTopOrBottom(int beachThickness, Vector2 chunkCenter, float normalizedWaterHeight, bool isTopBorder)
     {
@@ -344,10 +360,10 @@ public class generator : MonoBehaviourPun
     {
         int i = 1;
         Vector3[] cornerPositions = {
-            new Vector3(-715, 0, -730),
-            new Vector3(-715, 0, 730),
-            new Vector3(715, 0, -730),
-            new Vector3(715, 0, 730)
+            new Vector3(-730, 0, -775),
+            new Vector3(-730, 0, 775),
+            new Vector3(730, 0, -775),
+            new Vector3(730, 0, 775)
         };
 
         foreach (Vector3 position in cornerPositions)
@@ -629,4 +645,18 @@ public struct MapData
         this.heightMap = heightMap;
         this.colorMap = colorMap;
     }
-}   
+}
+
+[System.Serializable]
+public struct Biome
+{
+    public string type;
+    public GameObject prefab;
+}
+
+[System.Serializable]
+public struct PrefabType
+{
+    public string type;
+    public GameObject prefab;
+}
