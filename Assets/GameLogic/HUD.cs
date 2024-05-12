@@ -23,32 +23,27 @@ public class HUD : MonoBehaviour
         Debug.Log("CLEAN HUD");
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Inventory inventory = player.GetComponent<Inventory>();
-        Transform inventoryPanel = transform.Find("Inventory");
         for (int i = 0; i < 9; i++)
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
         }
         Debug.Log("HUD CLEAN: inventory count = " + inventory.Count());
-        foreach (IInventoryItem lootItem in inventory.mItems)
+        for (int i = 0; i < 9; i++)
         {
-            if (lootItem != null)
+            if (inventory.mItems[i] != null)
             {
-                Debug.Log("HUD CLEAN: item loot name = " + lootItem.Name);
-                InventoryScript_ItemAdded(this, new InventoryEventArgs(lootItem));
+                Debug.Log("HUD CLEAN: item loot name = " + inventory.mItems[i].Name);
+                InventoryScript_InsertItemAt(this, new InventoryEventArgs(inventory.mItems[i], i));
             }
         }
     }
     public void init()
     {
-        //Debug.Log("player event handler added");
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        //Debug.Log(player);
         Inventory inventory = player.GetComponent<Inventory>();
-        //Debug.Log("start hud");
-        //Debug.Log(inventory);
-        //Debug.Log("start 2 hud");
         inventory.ItemAdded += InventoryScript_ItemAdded;
         inventory.ItemRemoved += InventoryScript_ItemRemoved;
+        inventory.ItemInsertedAt += InventoryScript_InsertItemAt;
         Transform inventoryPanel = transform.Find("Inventory");
         for (int i = 0; i < 9; i++)
         {
@@ -85,6 +80,19 @@ public class HUD : MonoBehaviour
         }
     }
 
+    private void InventoryScript_InsertItemAt(object sender, InventoryEventArgs e)
+    {
+        Debug.Log("event item inserted hud");
+        Debug.Log(e.Item.Name);
+        Transform inventoryPanel = transform.Find("Inventory");
+        Image image = inventoryPanel.GetChild(e.Index).GetChild(0).GetChild(0).GetComponent<Image>();
+        Button button = inventoryPanel.GetChild(e.Index).GetChild(0).GetComponent<Button>();
+
+        image.enabled = true;
+        image.sprite = e.Item.Image;
+        button.onClick.AddListener(e.Item.Attack);
+    }
+
     private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
     {
         Debug.Log("event item added hud");
@@ -92,41 +100,34 @@ public class HUD : MonoBehaviour
         Transform inventoryPanel = transform.Find("Inventory");
         foreach (Transform slot in inventoryPanel)
         {
-            //Debug.Log("event item loop");
-            Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
-            Button button = slot.GetChild(0).GetComponent<Button>();
-            //Debug.Log(e.Item.Image);
-            //Debug.Log(image.enabled);
-
+            Image image = inventoryPanel.GetChild(e.Index).GetChild(0).GetChild(0).GetComponent<Image>();
+            Button button = inventoryPanel.GetChild(e.Index).GetChild(0).GetComponent<Button>();
             if (!image.enabled)
             {
-                //Debug.Log("event item to enable");
                 image.enabled = true;
                 image.sprite = e.Item.Image;
-                //Debug.Log("event item enabled");
                 button.onClick.AddListener(e.Item.Attack);
-                //Debug.Log("onclick button event listener item enabled");
                 break;
             }
         }
+        Clean();
     }
-
     private void InventoryScript_ItemRemoved(object sender, InventoryEventArgs e)
     {
         Transform inventoryPanel = transform.Find("Inventory");
-        string tag = "Slot" + e.Index;
+        //string tag = "Slot" + e.Index;
         //Debug.Log(tag);
-        foreach (Transform slot in inventoryPanel)
-        {
-            if (slot.CompareTag(tag))
-            {
-                Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
-                Button button = slot.GetChild(0).GetComponent<Button>();
-                image.sprite = null;
-                image.enabled = false;
-                button.onClick.RemoveAllListeners();
-            }
-        }
+        //foreach (Transform slot in inventoryPanel)
+       // {
+         //   if (slot.CompareTag(tag))
+        //{
+        Image image = inventoryPanel.GetChild(e.Index).GetChild(0).GetChild(0).GetComponent<Image>();
+        Button button = inventoryPanel.GetChild(e.Index).GetChild(0).GetComponent<Button>();
+        image.sprite = null;
+        image.enabled = false;
+        button.onClick.RemoveAllListeners();
+          //  }
+        //}
     }
     // Update is called once per frame
     private void OnPointerClick(PointerEventData eventData)
@@ -275,6 +276,8 @@ public class HUD : MonoBehaviour
         inventory = player.GetComponent<Inventory>();
         //
         GameObject loot = GameObject.FindGameObjectWithTag("LootHUD");
+        if (loot == null)
+            return;
         LootHUD lootHUD = loot.GetComponent<LootHUD>();
         //
         char id_1_c = slot1.tag[slot1.tag.Length - 1];

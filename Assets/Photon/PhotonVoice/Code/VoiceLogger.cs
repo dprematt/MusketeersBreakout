@@ -93,7 +93,7 @@ namespace Photon.Voice.Unity
                     case DebugLevel.ERROR: Debug.LogErrorFormat(fmt, args); break;
                     case DebugLevel.WARNING: Debug.LogWarningFormat(fmt, args); break;
                     case DebugLevel.INFO: Debug.LogFormat(fmt, args); break;
-                    case DebugLevel.ALL: Debug.LogFormat(fmt, args); break;
+                    //case DebugLevel.ALL: Debug.LogFormat(fmt, args); break;
                 }
             }
             else

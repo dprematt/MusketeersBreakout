@@ -193,6 +193,8 @@ public class Player : MonoBehaviourPunCallbacks
             else
             {
                 HUD.SetActive(true);
+                HUD hud = HUD.GetComponent<HUD>();
+                hud.Clean();
             }
         }
         if (Input.GetKeyDown(KeyCode.E))
@@ -279,31 +281,39 @@ public class Player : MonoBehaviourPunCallbacks
             UpdateLevel();
         }
     }
+
+    public void DeactivateLoot()
+    {
+        LootHUD.SetActive(false);
+    }
     void OnCollisionEnter(Collision col)
     {
         Debug.Log("on trigger enter");
         Inventory loot = col.gameObject.GetComponent<Inventory>();
-        if (loot.loot == true)
+        if (loot != null)
         {
-            Debug.Log("do we need to activate ?");
-            if (!LootHUD.activeSelf)
+            if (loot.loot == true)
             {
-                Debug.Log("activated");
-                LootHUD.SetActive(true);
-            }
-            else
-            {
-                Debug.Log("not activated");
-                return;
-            }
-            Debug.Log("size before init");
-            Debug.Log(loot.Count());
-            LootHUD.GetComponent<LootHUD>().init(ref loot);
-            Debug.Log("size after init");
-            Debug.Log(loot.Count());
-            LootHUD.GetComponent<LootHUD>().Clean();
-            loot.DisplayLoot(inventory);
+                Debug.Log("do we need to activate ?");
+                if (!LootHUD.activeSelf)
+                {
+                    Debug.Log("activated");
+                    LootHUD.SetActive(true);
+                }
+                else
+                {
+                    Debug.Log("not activated");
+                    return;
+                }
+                Debug.Log("size before init");
+                Debug.Log(loot.Count());
+                LootHUD.GetComponent<LootHUD>().init(ref loot);
+                Debug.Log("size after init");
+                Debug.Log(loot.Count());
+                LootHUD.GetComponent<LootHUD>().Clean();
+                loot.DisplayLoot(inventory);
 
+            }
         }
         /*Inventory loot = col.gameObject.GetComponent<Inventory>();
         if (loot != null)
@@ -362,6 +372,15 @@ public class Player : MonoBehaviourPunCallbacks
                         currentWeapon = 0;
                         eventListener.weaponComp = weaponComp;
                     }
+                }
+            }
+            else
+            {
+                GameObject weapon = col.gameObject;
+                if (inventory.Count() < 9 && (!weaponComp.isLooted))
+                {
+                    inventory.AddItem(weaponComp);
+                    weapon.SetActive(false);
                 }
             }
         }

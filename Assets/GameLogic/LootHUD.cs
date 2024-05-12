@@ -29,12 +29,12 @@ public class LootHUD : MonoBehaviour
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
         }
-        foreach (IInventoryItem lootItem in inventory.mItems)
+        for (int i = 0; i < 9; i++)
         {
-            if (lootItem != null)
+            if (inventory.mItems[i] != null)
             {
-                Debug.Log(lootItem.Name);
-                LootInventoryScript_ItemAdded(this, new InventoryEventArgs(lootItem));
+                Debug.Log("HUD CLEAN: item loot name = " + inventory.mItems[i].Name);
+                LootInventoryScript_InsertItemAt(this, new InventoryEventArgs(inventory.mItems[i], i));
             }
         }
     }
@@ -48,6 +48,8 @@ public class LootHUD : MonoBehaviour
         //inventory.ItemAdded += LootInventoryScript_ItemAdded;
         LootInventory.ItemAdded += LootInventoryScript_ItemAdded;
         LootInventory.ItemRemoved += InventoryScript_ItemRemoved;
+        LootInventory.ItemInsertedAt += LootInventoryScript_InsertItemAt;
+
         Transform inventoryPanel = transform.Find("Inventory");
         for (int i = 0; i < 9; i++)
         {
@@ -84,43 +86,37 @@ public class LootHUD : MonoBehaviour
         }
     }
 
-    private void LootInventory_ItemAdded(object sender, InventoryEventArgs e)
-    {
-        throw new System.NotImplementedException();
-    }
 
+    private void LootInventoryScript_InsertItemAt(object sender, InventoryEventArgs e)
+    {
+        Debug.Log("event item inserted hud");
+        Debug.Log(e.Item.Name);
+        Transform inventoryPanel = transform.Find("Inventory");
+        Image image = inventoryPanel.GetChild(e.Index).GetChild(0).GetChild(0).GetComponent<Image>();
+        Button button = inventoryPanel.GetChild(e.Index).GetChild(0).GetComponent<Button>();
+
+        image.enabled = true;
+        image.sprite = e.Item.Image;
+        button.onClick.AddListener(e.Item.Attack);
+    }
+    
     public void LootInventoryScript_ItemAdded(object sender, InventoryEventArgs e)
     {
-        // Debug.Log("LootHUD event item added hud");
         Transform inventoryPanel = transform.Find("Inventory");
         foreach (Transform slot in inventoryPanel)
         {
             // Debug.Log("event item loop");
             Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
             Button button = slot.GetChild(0).GetComponent<Button>();
-            // Debug.Log(e.Item.Image);
-            // Debug.Log(image.enabled);
-
             if (!image.enabled)
             {
-                //Debug.Log("event item to enable");
                 image.enabled = true;
                 image.sprite = e.Item.Image;
-                //Debug.Log("event item enabled");
                 button.onClick.AddListener(e.Item.Attack);
-                //  Debug.Log("onclick button event listener item enabled");
                 break;
             }
-            /*foreach (Transform s in inventoryPanel)
-                {
-                    if (s.GetChild(0).GetChild(0).GetComponent<Image>().sprite == e.Item.Image)
-                    {
-                        //      Debug.Log("ntm de la fdp");
-                        return;
-                    }*/
         }
     }
-
     private void InventoryScript_ItemRemoved(object sender, InventoryEventArgs e)
     {
         Transform inventoryPanel = transform.Find("Inventory");
@@ -280,15 +276,20 @@ public class LootHUD : MonoBehaviour
         if ((slot1.position.y <= slot2.position.y + 10) && ((slot1.position.y >= slot2.position.y - 10)))
         {
             inventory.SwapItems(id_1, id_2);
+            Clean();
         }
         else
         {
             inventory.SwapItemsLoot(id_1, id_2, p_inventory);
+            GameObject HUD = GameObject.FindGameObjectWithTag("InventoryHUD");
+            HUD hud = HUD.GetComponent<HUD>();
+            hud.Clean();
+            Clean();
 
             //slot1.position = endPos;
             //slot2.position = startPos;
         }
-        Clean();
+        //Clean();
     }
 
     void Update()

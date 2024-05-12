@@ -21,6 +21,12 @@ public class InventoryEventArgs : EventArgs
         Item = item;
     }
 
+    public InventoryEventArgs(IInventoryItem item, int index)
+    {
+        Index = index;
+        Item = item;
+    }
+
     public InventoryEventArgs(int index)
     {
         Index = index;
