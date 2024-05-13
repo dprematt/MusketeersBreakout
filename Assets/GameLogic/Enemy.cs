@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
- public class Enemy : MonoBehaviour
+ public class Enemy : MonoBehaviourPun
 {
     [SerializeField]
     public float health, maxHealth = 10f;
@@ -28,7 +28,7 @@ using Photon.Pun;
     private float delay = 1.5f;
 
     public GameObject Sword;
-     public GameObject Knife;
+    public GameObject Knife;
 
 
     public EventListener eventListener;
@@ -191,11 +191,19 @@ using Photon.Pun;
             GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
             var loot = Instantiate(LootPrefab, gameObject.transform.position, gameObject.transform.rotation);
             loot.GetComponentInChildren<Inventory>().Initialize(9, inventory.mItems, true);
-            Destroy(gameObject);
+            PhotonNetwork.Destroy(gameObject);
+            photonView.RPC("Particles", RpcTarget.All);
             return 1;
         }
         return 0;
     }
+
+    [PunRPC]
+    public void Particles() // ADD
+    {
+        bloodParticles.Play();
+    }
+
     Transform FindDeepChild(Transform parent, string name)
     {
         foreach (Transform child in parent)

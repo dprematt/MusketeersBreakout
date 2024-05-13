@@ -60,7 +60,6 @@ public class IsometricAiming : MonoBehaviourPun
         mainCamera = Camera.main;
         currentAmmo = maxAmmo;
         anim = GetComponentInChildren<Animator>();
-        audioSource = GetComponent<AudioSource>();
 
         if (laserRenderer != null)
         {
@@ -193,7 +192,12 @@ public class IsometricAiming : MonoBehaviourPun
         {
             currentAmmo--;
 
-            audioSource.PlayOneShot(attackSound);
+            Weapon equippedWeapon = GetComponent<Player>().EquippedWeapon;
+            if (equippedWeapon.isLongRange)
+            {
+                audioSource = equippedWeapon.gameObject.GetComponent<AudioSource>();
+                audioSource.PlayOneShot(attackSound);
+            }
 
             /*RaycastHit hit;
             if (Physics.Raycast(prefabSpawn.position, prefabSpawn.forward, out hit, Mathf.Infinity, laserMask))

@@ -36,6 +36,11 @@ public class Shield : MonoBehaviourPun, IInventoryItem
     {
     }
 
+    public GameObject GameObject
+    {
+        get { return gameObject; }
+    }
+
     public virtual bool SetIsPlayer(bool type)
     {
         IsPlayer = type;

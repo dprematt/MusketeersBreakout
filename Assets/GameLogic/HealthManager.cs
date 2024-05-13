@@ -73,6 +73,8 @@ public class HealthManager : MonoBehaviourPunCallbacks
     {
         PFInventory_.PlayerLose();
         PhotonNetwork.Destroy(gameObject);
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LoadLevel("Menu");
     }
 
     public float GetHealth()

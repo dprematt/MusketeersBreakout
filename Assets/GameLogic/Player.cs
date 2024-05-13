@@ -141,15 +141,17 @@ public class Player : MonoBehaviourPunCallbacks
         float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
         if ((scrollDelta > 0f || scrollDelta < 0f) && inventory.PocketCount() > 1 && anim.GetInteger("intAttackPhase") == 0)
         {
-            int layer = EquippedWeapon.isLongRange ? 2 : 1;
-
-            anim.SetLayerWeight(layer, 0f);
-
-            EquippedWeapon.gameObject.SetActive(false);
-            currentWeapon = currentWeapon == 0 ? 1 : 0;
-            EquippedWeapon.gameObject.SetActive(true);
+            inventory.SwapItems(0, 1);
+            if (inventory.mItems[0] == null)
+            {
+                EquippedWeapon = null;
+            }
+            EquippedWeapon = inventory.mItems[0].GameObject.GetComponent<Weapon>();
             EquippedWeapon.setAnim();
             eventListener.weaponComp = EquippedWeapon;
+
+            HUD.GetComponent<HUD>().Clean();
+            HUDFixe.GetComponent<HUDFixe>().Clean();
         }
 
         if (Input.GetKey(sprintKey) && !staminaFullUsed)
@@ -203,46 +205,19 @@ public class Player : MonoBehaviourPunCallbacks
                 hudfixe.Clean();
             }
         }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Inventory inventory = gameObject.GetComponent<Inventory>();
 
-            if (inventory != null)
+        /*if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            inventory.SwapItems(0, 1);
+            if (inventory.mItems[0] == null)
             {
-                inventory.SwapItems(0, 1);
-                if (inventory.mItems[0] == null)
-                {
-                    EquippedWeapon = null;
-                }
-                else
-                {
-                    GameObject weaponPrefab = Resources.Load<GameObject>(inventory.mItems[0].Name);
-                    if (weaponPrefab == null)
-                    {
-                        return;
-                    }
-                    Vector3 pos;
-                    pos.z = 0;
-                    pos.y = 0;
-                    pos.x = 0;
-                    GameObject weaponObject = PhotonNetwork.Instantiate(weaponPrefab.name, pos, Quaternion.identity);
-                    Weapon weaponItem = weaponObject.GetComponent<Weapon>();
-                    Destroy(weaponPrefab);
-                    if (weaponItem == null)
-                    {
-                        Destroy(weaponObject);
-                        return;
-                    }
-                    EquipWeapon(weaponItem, weaponObject, false);
-                }
-                HUD.GetComponent<HUD>().Clean();
-                HUDFixe.GetComponent<HUDFixe>().Clean();
+                EquippedWeapon = null;
             }
-            else
-            {
-            }
-                
-        }
+            EquippedWeapon = inventory.mItems[0].GameObject.GetComponent<Weapon>();
+            HUD.GetComponent<HUD>().Clean();
+            HUDFixe.GetComponent<HUDFixe>().Clean();
+        }*/
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             LootHUD.SetActive(false);
@@ -281,12 +256,18 @@ public class Player : MonoBehaviourPunCallbacks
                     aim.laserStartAndStop();
             }
         }
+
         if (inventory.mItems != null)
         {
             if (inventory.mItems[0] == null)
             {
                 EquippedWeapon = null;
 
+            }
+
+            if (inventory.mItems[0] != null && inventory.mItems[0].GameObject != EquippedWeapon.gameObject)
+            {
+                EquippedWeapon = inventory.mItems[0].GameObject.GetComponent<Weapon>();
             }
         }
     }

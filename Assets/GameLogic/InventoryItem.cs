@@ -8,6 +8,7 @@ public interface IInventoryItem
     string Name { get; }
     Sprite Image { get; }
     bool IsPlayer { get; }
+    GameObject GameObject { get; }
 
     bool SetIsPlayer(bool type = true);
     void OnPickup();

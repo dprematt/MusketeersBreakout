@@ -61,6 +61,11 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         }
     }
 
+    public GameObject GameObject
+    {
+        get { return gameObject; }
+    }
+
     public bool IsAttacking
     {
         get { return _isAttacking; }

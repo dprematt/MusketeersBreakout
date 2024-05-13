@@ -20,19 +20,16 @@ public class HUDFixe : MonoBehaviour
 
     public void Clean()
     {
-        Debug.Log("CLEAN HUD");
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Inventory inventory = player.GetComponent<Inventory>();
         for (int i = 0; i < 2; i++)
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
         }
-        Debug.Log("HUD CLEAN: inventory count = " + inventory.Count());
         for (int i = 0; i < 2; i++)
         {
             if (inventory.mItems[i] != null)
             {
-                Debug.Log("HUD CLEAN: item loot name = " + inventory.mItems[i].Name);
                 InventoryScript_InsertItemAt(this, new InventoryEventArgs(inventory.mItems[i], i));
             }
         }
@@ -90,8 +87,6 @@ public class HUDFixe : MonoBehaviour
         {
             return;
         }
-        Debug.Log("event item inserted hud");
-        Debug.Log(e.Item.Name);
         Transform inventoryPanel = transform.Find("Inventory");
         Image image = inventoryPanel.GetChild(e.Index).GetChild(0).GetChild(0).GetComponent<Image>();
         Button button = inventoryPanel.GetChild(e.Index).GetChild(0).GetComponent<Button>();
@@ -105,8 +100,6 @@ public class HUDFixe : MonoBehaviour
 
     private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
     {
-        Debug.Log("event item added hud");
-        Debug.Log(e.Item.Name);
         Transform inventoryPanel = transform.Find("Inventory");
         foreach (Transform slot in inventoryPanel)
         {

@@ -39,14 +39,12 @@ public class Inventory : MonoBehaviour
         }
         AddItem(weapon);
         //weaponObject.SetActive(false);
-        Debug.Log("INVENTORY ADD ENEMY WEAPON: item name = " + weapon.name);
     }
     public void AddWeapon(string weaponName)
     {
         GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
         if (weaponPrefab == null)
         {
-            Debug.LogError("Weapon not found in folder Resources : " + weaponName);
             return;
         }
         Vector3 pos;
@@ -61,18 +59,12 @@ public class Inventory : MonoBehaviour
         Destroy(weaponPrefab);
         if (weaponItem == null)
         {
-            Debug.LogError("Weapon doesn't implement IInventoryItem interface: " + weaponName);
             Destroy(weaponObject);
             return;
         }
-        Debug.Log("INVENTORY ADD WEAPON: item name = " + weaponItem.name);
         
         //AddItem(weaponItem);
-        if (Count() == 0)
-        {
-            Debug.Log("CALL TO EQUI WEAPON FROM INVENTORY");
-            playerScript.EquipWeapon(weaponItem, weaponObject, true);
-        }
+        playerScript.EquipWeapon(weaponItem, weaponObject, true);
     }
 
     public int Count()
@@ -96,7 +88,6 @@ public class Inventory : MonoBehaviour
     }
     public int Add(IInventoryItem item)
     {
-        Debug.Log("inventory ADD: in function Add item name = " + item.Name);
         for (int i = 0; i < mItems.Length; i++)
         {
             if (mItems[i] == null)
@@ -153,14 +144,30 @@ public class Inventory : MonoBehaviour
 
     public void SwapItems(int index1, int index2)
     {
-        Debug.Log("SWAP ITEMS");
+        if (index1 >= 0 && index1 < mItems.Length)
+        {
+            IInventoryItem item1 = mItems[index1];
+            if (item1 != null && item1.GameObject != null)
+            {
+                item1.GameObject.SetActive(false);
+            }
+        }
+
+        if (index2 >= 0 && index2 < mItems.Length)
+        {
+            IInventoryItem item2 = mItems[index2];
+            if (item2 != null && item2.GameObject != null)
+            {
+                item2.GameObject.SetActive(true);
+            }
+        }
+
         IInventoryItem temp = mItems[index1];
         InsertAt(mItems[index2], index1);
         InsertAt(temp, index2);
     }
     public void SwapItemsLoot(int index1, int index2, Inventory lootInventory)
     {
-        Debug.Log("SWAP ITEMS LOOT: item 1 id = " + index1 + "item 2 id = " + index2);
         IInventoryItem temp = mItems[index1];
         InsertAt(lootInventory.mItems[index2], index1);
         lootInventory.InsertAt(temp, index2);
@@ -195,12 +202,9 @@ public class Inventory : MonoBehaviour
     }
     public void AddItem(IInventoryItem item)
     {
-        Debug.Log("inventory: in function AddItem item name = " + item.Name);
         if (Count() == 0)
         {
-            Debug.Log("inventory: AddItem count == 0");
             mItems = new IInventoryItem[9];
-            Debug.Log("on call l'event add");
             Add(item);
             Print_Inventory();
             //item.OnPickup();
@@ -212,7 +216,6 @@ public class Inventory : MonoBehaviour
         }
         if (Count() < SLOTS)
         {
-            Debug.Log("ADD ITEM: item count = " + Count());
             Add(item);
             //item.OnPickup();
             if (ItemAdded != null)
@@ -235,13 +238,10 @@ public class Inventory : MonoBehaviour
 
     public void DisplayLoot(Inventory playerInventory)
     {
-        Debug.Log("DISPLAY LOOT");
-        Debug.Log(Count());
         for (int i = 0; i < 9; i++)
         {
             if (mItems[i] != null)
             {
-                Debug.Log(mItems[i].Name);
                 ItemInsertedAt(this, new InventoryEventArgs(mItems[i], i));
             }
         }
@@ -269,11 +269,8 @@ public class Inventory : MonoBehaviour
         newPos.x += 2;
         var loot = Instantiate(LootPrefab, newPos, gameObject.transform.rotation);
         loot.GetComponentInChildren<Inventory>().loot = true;
-        Debug.Log("INVENTORY DROP ITEM: print inventory call");
         Print_Inventory();
         loot.GetComponentInChildren<Inventory>().AddItem(mItems[id]);
-        Debug.Log("after add item in drop item");
         RemoveAt(id);
-        Debug.Log(Count());
     }
 }

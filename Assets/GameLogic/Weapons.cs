@@ -27,6 +27,11 @@ public abstract class Weapons : MonoBehaviourPun, IInventoryItem
     public virtual void Attack()
     {
     }
+
+    public GameObject GameObject
+    {
+        get { return gameObject; }
+    }
     public virtual int UpgradeLevel(int levels)
     {
         Level += levels;
