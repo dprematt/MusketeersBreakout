@@ -13,39 +13,79 @@ using UnityEngine;
     public bool WeaponChoice = false;
     public Animator anim;
     public ParticleSystem bloodParticles;
+    bool isPlaced = false;
 
     public float detectionRadius = 10f;
 
     public float rotationSpeed = 5f;
 
     public Transform[] points;
+    public List<Vector3> biomesPositions = new List<Vector3>();
     int current;
+
     private void Start()
     {
         health = maxHealth;
+       
+        //_generator = FindObjectOfType<generator>();
 
-        /*List<IInventoryItem> items = new List<IInventoryItem>();
-        Halberd halberd = new Halberd();
-        halberd._Image = Resources.Load("Sprites/halberd") as Sprite;
-        halberd.weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
-        halberd.weaponSpawnPoint = gameObject.transform;
-        halberd.IsPlayer = false;
-        halberd.audioSource = GetComponent<AudioSource>();
-        items.Add(halberd);
-        Sword sword = new Sword();
-        // sword._Image = Resources.Load("Sprites/sword") as Sprite;
-        sword.weaponPrefab = Resources.Load("Prefabs/WeaponProx") as GameObject;
-        sword.weaponSpawnPoint = gameObject.transform;
-        sword.IsPlayer = false;
-        sword.audioSource = GetComponent<AudioSource>();
-        items.Add(sword);
-        inventory = new Inventory(9, items, false);*/
 
-        current = 0;
+        //current = 0;
+    }
+
+    bool IsInsideSquare(Vector3 biome, Vector3 enemy)
+    {
+        float squareSize = 100f;
+        float halfSize = squareSize / 2f;
+
+        Debug.Log("biome coo = " + biome + " enemy = " + enemy);
+        bool insideX = Mathf.Abs(enemy.x - biome.x) <= halfSize;
+        Debug.Log("inside x = " + insideX);
+        //bool insideY = Mathf.Abs(enemy.y - biome.y) <= halfSize;
+        bool insideZ = Mathf.Abs(enemy.z - biome.z) <= halfSize;
+        Debug.Log("inside y = " + insideZ);
+
+        return insideX && insideZ;
     }
 
     void Update() 
     {
+        if (isPlaced == false)
+        {
+            Debug.Log("is placed = " + isPlaced);
+            if (biomesPositions.Count != 0)
+            { 
+                Debug.Log("BIOME POS COUNT = " + biomesPositions.Count);
+                if (biomesPositions == null)
+                {
+                    Debug.Log("biome pos is null..");
+                }
+                float randomBiome = Random.Range(0f, 5.0001f);
+                float randomNumber = Random.Range(0f, 5.0001f);
+                gameObject.transform.position = biomesPositions[ (int) randomBiome];
+                Debug.Log("BIOME FOUND");
+                inventory = new Inventory(9, null, false);
+                inventory.AddEnemyWeapon("Sword");
+                inventory.AddEnemyWeapon("Gun");
+                if (randomNumber < 2)
+                    {
+                        Debug.Log("BIOME désert");
+                        health = 100;
+                    }
+                else if (randomNumber < 4)
+                    {
+                        Debug.Log("BIOME jungle");
+                        speed = 15;
+                    }
+                else if (randomNumber < 6)
+                    {
+                        Debug.Log("BIOME neige");
+                        speed = 10;
+                        health = 30;
+                    }
+                isPlaced = true;
+            }
+        }
         if (target == null)
         {
             anim.SetBool("isWalking", true);
@@ -77,11 +117,23 @@ using UnityEngine;
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
 
             transform.position += transform.forward * speed * Time.deltaTime;
+            if (inventory.mItems[0].Name == "Sword")
+            {
+                inventory.SwapItems(0, 1);
+            }
+            inventory.mItems[0].Attack();
+            Debug.Log("enemy range attack");
         }
-        /*else
+        else
         {
             anim.SetBool("isWalking", false);
-            if (WeaponChoice == false)
+            if (inventory.mItems[0].Name == "Gun")
+            {
+                inventory.SwapItems(0, 1);
+            }
+            Debug.Log("enemy melee attack");
+            inventory.mItems[0].Attack();
+            /*if (WeaponChoice == false)
             {
                 inventory.mItems[0].Attack();
                 WeaponChoice = true;
@@ -90,8 +142,8 @@ using UnityEngine;
             {
                 inventory.mItems[inventory.mItems.Count - 1].Attack();
                 WeaponChoice = false;
-            }
-        }*/
+            }*/
+        }
     }
 
     private void OnTriggerEnter(Collider other)

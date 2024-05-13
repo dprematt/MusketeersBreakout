@@ -7,7 +7,6 @@ using System.Linq;
 public static class Skeleton
 {
     public enum NormalizeMode { Local, Global }
-
     public static (float[,], List<Vector2>) GenerateSkeleton(int mapWidth, int mapHeight, float scale, int octaves, float persistance, float lacunarity, Vector2 offset, NormalizeMode normalizeMode, int seed) {
         System.Random prng = new System.Random(seed);
         Vector2[] octaveOffsets = new Vector2[octaves];

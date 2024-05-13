@@ -107,7 +107,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
                 return;
             }
         }
-
+        Debug.Log("attack ?");
 /*        if (anim.GetInteger("intAttackPhase") > 0 && other.gameObject != holder && isAttacking)
         {
             if (IsPlayer && other.CompareTag("EnemyBody"))
