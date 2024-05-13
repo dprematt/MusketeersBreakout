@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.010905812, g: 0.1033935, b: 0.19712085, a: 1}
+  m_IndirectSpecularColor: {r: 0.07177738, g: 0.19153425, b: 0.28522307, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2417,11 +2417,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detailsLevel:
   - lod: 0
-    visibleDstThreshold: 75
-  - lod: 1
-    visibleDstThreshold: 150
-  - lod: 2
-    visibleDstThreshold: 200
+    visibleDstThreshold: 25000
+  - lod: 0
+    visibleDstThreshold: 25000
+  - lod: 0
+    visibleDstThreshold: 25000
   viewer: {fileID: 1264809108}
   mapMaterial: {fileID: 2100000, guid: 035e57fafe64bfe4c884924755a6a2bb, type: 2}
   grassMaterial: {fileID: 0}
