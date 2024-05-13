@@ -7223,6 +7223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health_Text_: {fileID: 8046730942431530230}
+  bloodParticles: {fileID: -6681432496318675080}
 --- !u!114 &-1379219858753776991
 MonoBehaviour:
   m_ObjectHideFlags: 0
