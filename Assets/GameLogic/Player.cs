@@ -117,6 +117,8 @@ public class Player : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
+        HUDFixe hudfixe2 = HUDFixe.GetComponent<HUDFixe>();
+        hudfixe2.Clean();
         if (lineRenderer == null)
         {
             lineRenderer = GetComponent<LineRenderer>();
