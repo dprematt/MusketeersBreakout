@@ -64,14 +64,14 @@ public class Shield : MonoBehaviourPun, IInventoryItem
 
     public void OnTriggerEnter(Collider col)
     {
-        // if (isProtecting)
-        // {
-        //     Bullet bullet = col.GetComponent<Bullet>();
-        //     if (bullet != null)
-        //     {
-        //         bullet.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
-        //     }
-        // }
+        /*if (isProtecting)
+        {
+            Bullet bullet = col.GetComponent<Bullet>();
+            if (bullet != null)
+            {
+                bullet.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
+            }
+        }*/
     }
 
     Transform FindDeepChild(Transform parent, string nom)

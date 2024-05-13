@@ -117,6 +117,8 @@ public class Player : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
+        HUDFixe hudfixe2 = HUDFixe.GetComponent<HUDFixe>();
+        hudfixe2.Clean();
         if (lineRenderer == null)
         {
             lineRenderer = GetComponent<LineRenderer>();
@@ -390,9 +392,9 @@ public class Player : MonoBehaviourPunCallbacks
         if (bullet != null && bullet.shooter != null && bullet.shooter.ActorNumber != photonView.Owner.ActorNumber)
         {
             if (hasShield && shieldComp.isProtecting)
-                {
-                    return;
-                }
+            {
+                return;
+            }
             TakeDamage(10);
             bullet.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
         }
