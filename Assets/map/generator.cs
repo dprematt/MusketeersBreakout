@@ -641,6 +641,7 @@ using System.Linq;
             EnemySquare enemySquare = FindAnyObjectByType<EnemySquare>();
             EnemyShape enemyShape = FindAnyObjectByType<EnemyShape>();
             Enemy enemy = FindAnyObjectByType<Enemy>();
+            Debug.Log("ENEMY GENERATOR GIVE BIOME POS");
             if (enemySquare != null)
                 enemySquare.biomesPositions = biomesPositions;
             if (enemyShape != null)

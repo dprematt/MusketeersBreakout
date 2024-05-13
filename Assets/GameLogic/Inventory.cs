@@ -215,7 +215,10 @@ public class Inventory : MonoBehaviour
             Debug.Log("ADD ITEM: item count = " + Count());
             Add(item);
             //item.OnPickup();
-            ItemAdded(this, new InventoryEventArgs(item));
+            if (ItemAdded != null)
+            {
+                ItemAdded(this, new InventoryEventArgs(item));
+            }
         }
     }
 
