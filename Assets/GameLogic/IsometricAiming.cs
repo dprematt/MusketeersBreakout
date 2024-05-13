@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using Photon.Pun;
 
-public class IsometricAiming : MonoBehaviour
+public class IsometricAiming : MonoBehaviourPun
 {
     #region Datamembers
 
@@ -194,7 +195,7 @@ public class IsometricAiming : MonoBehaviour
 
             audioSource.PlayOneShot(attackSound);
 
-            RaycastHit hit;
+            /*RaycastHit hit;
             if (Physics.Raycast(prefabSpawn.position, prefabSpawn.forward, out hit, Mathf.Infinity, laserMask))
             {
                 Debug.Log(hit.transform.name);
@@ -204,10 +205,15 @@ public class IsometricAiming : MonoBehaviour
                 {
                     enemy.TakeDamage(damages);
                 }
-            }
+            }*/
 
-            //var projectile = Instantiate(projectilePrefab, prefabSpawn.position, Quaternion.identity);
-            //projectile.transform.forward = aimedTransform.forward;
+            var projectile = PhotonNetwork.Instantiate(projectilePrefab.name, prefabSpawn.position, Quaternion.identity);
+            projectile.transform.forward = aimedTransform.forward;
+            if (projectile.GetComponent<Bullet>() != null)
+            {
+                int shooterID = photonView.Owner.ActorNumber;
+                projectile.GetComponent<Bullet>().photonView.RPC("SetShooter", RpcTarget.AllBuffered, shooterID);
+            }
         }
     }
 

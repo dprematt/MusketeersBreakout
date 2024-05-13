@@ -59,7 +59,7 @@ public class Spear : Weapons
             NewPos.z -= 1;
             Damage = 3;
             var bullet = Instantiate(bulletPrefab, NewPos, pm.characterModel.rotation);
-            bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
+            //bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
         }
     }
     public override void Attack()

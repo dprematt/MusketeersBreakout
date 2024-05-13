@@ -107,7 +107,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
                 return;
             }
         }
-        Debug.Log("attack ?");
 /*        if (anim.GetInteger("intAttackPhase") > 0 && other.gameObject != holder && isAttacking)
         {
             if (IsPlayer && other.CompareTag("EnemyBody"))
@@ -213,7 +212,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public void whenPickUp(GameObject newHolder, Transform hand)
     {
-        Debug.Log("Arme mise dans les main du joueur");
         holder = newHolder;
         isPlayer = holder.CompareTag("Player") ? true : false;
         int holderID = newHolder.GetPhotonView().ViewID;
@@ -237,9 +235,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             playerComp = holder.GetComponent<Player>();
         isLooted = true;
     }
-
-
-
 
     public void setAnim()
     {
