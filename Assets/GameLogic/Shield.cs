@@ -62,15 +62,16 @@ public class Shield : MonoBehaviourPun, IInventoryItem
         get { return _Image; }
     }
 
-    public void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider col)
     {
-        if (isProtecting)
+        /*if (isProtecting)
         {
-            if (other.CompareTag("Bullet"))
+            Bullet bullet = col.GetComponent<Bullet>();
+            if (bullet != null)
             {
-                Destroy(other.gameObject);
+                bullet.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
             }
-        }
+        }*/
     }
 
     Transform FindDeepChild(Transform parent, string nom)

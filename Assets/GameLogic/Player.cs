@@ -203,12 +203,10 @@ public class Player : MonoBehaviourPunCallbacks
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Debug.Log("KEY CODE alpha1");
             Inventory inventory = gameObject.GetComponent<Inventory>();
 
             if (inventory != null)
             {
-                Debug.Log("key code alpha1 found inventory not null");
                 inventory.SwapItems(0, 1);
                 if (inventory.mItems[0] == null)
                 {
@@ -219,7 +217,6 @@ public class Player : MonoBehaviourPunCallbacks
                     GameObject weaponPrefab = Resources.Load<GameObject>(inventory.mItems[0].Name);
                     if (weaponPrefab == null)
                     {
-                        Debug.LogError("ALPHA 1: Weapon not found in folder Resources : " + inventory.mItems[0].Name);
                         return;
                     }
                     Vector3 pos;
@@ -231,12 +228,9 @@ public class Player : MonoBehaviourPunCallbacks
                     Destroy(weaponPrefab);
                     if (weaponItem == null)
                     {
-                        Debug.LogError("Weapon doesn't implement IInventoryItem interface: " + inventory.mItems[0].Name);
                         Destroy(weaponObject);
                         return;
                     }
-                    Debug.Log("before equip weapon call in alpha 1");
-                    Debug.Log("weapon item name = " + weaponItem.Name);
                     EquipWeapon(weaponItem, weaponObject, false);
                 }
                 HUD.GetComponent<HUD>().Clean();
@@ -244,7 +238,6 @@ public class Player : MonoBehaviourPunCallbacks
             }
             else
             {
-                Debug.Log("key code w found but inventory null");
             }
                 
         }
@@ -396,6 +389,10 @@ public class Player : MonoBehaviourPunCallbacks
         Bullet bullet = col.GetComponent<Bullet>();
         if (bullet != null && bullet.shooter != null && bullet.shooter.ActorNumber != photonView.Owner.ActorNumber)
         {
+            if (hasShield && shieldComp.isProtecting)
+            {
+                return;
+            }
             TakeDamage(10);
             bullet.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
         }
@@ -412,6 +409,10 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (weaponComp.isLooted && weaponComp.holder != gameObject && weaponComp.IsAttacking)
             {
+                if (hasShield && shieldComp.isProtecting)
+                {
+                    return;
+                }
                 TakeDamage(weaponComp.damages);
             }
 

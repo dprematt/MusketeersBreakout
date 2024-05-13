@@ -99,14 +99,15 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public void OnTriggerEnter(Collider other)
     {
-        if (anim.GetInteger("intAttackPhase") > 0 && other.CompareTag("Shield"))
+/*        if (anim.GetInteger("intAttackPhase") > 0 && other.CompareTag("Shield"))
         {
             Shield shieldComp = other.gameObject.GetComponent<Shield>();
             if (shieldComp.isProtecting)
             {
                 return;
             }
-        }
+        }*/
+
 /*        if (anim.GetInteger("intAttackPhase") > 0 && other.gameObject != holder && isAttacking)
         {
             if (IsPlayer && other.CompareTag("EnemyBody"))
