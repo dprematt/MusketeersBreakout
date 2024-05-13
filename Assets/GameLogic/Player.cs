@@ -201,6 +201,53 @@ public class Player : MonoBehaviourPunCallbacks
                 hudfixe.Clean();
             }
         }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Debug.Log("KEY CODE alpha1");
+            Inventory inventory = gameObject.GetComponent<Inventory>();
+
+            if (inventory != null)
+            {
+                Debug.Log("key code alpha1 found inventory not null");
+                inventory.SwapItems(0, 1);
+                if (inventory.mItems[0] == null)
+                {
+                    EquippedWeapon = null;
+                }
+                else
+                {
+                    GameObject weaponPrefab = Resources.Load<GameObject>(inventory.mItems[0].Name);
+                    if (weaponPrefab == null)
+                    {
+                        Debug.LogError("ALPHA 1: Weapon not found in folder Resources : " + inventory.mItems[0].Name);
+                        return;
+                    }
+                    Vector3 pos;
+                    pos.z = 0;
+                    pos.y = 0;
+                    pos.x = 0;
+                    GameObject weaponObject = PhotonNetwork.Instantiate(weaponPrefab.name, pos, Quaternion.identity);
+                    Weapon weaponItem = weaponObject.GetComponent<Weapon>();
+                    Destroy(weaponPrefab);
+                    if (weaponItem == null)
+                    {
+                        Debug.LogError("Weapon doesn't implement IInventoryItem interface: " + inventory.mItems[0].Name);
+                        Destroy(weaponObject);
+                        return;
+                    }
+                    Debug.Log("before equip weapon call in alpha 1");
+                    Debug.Log("weapon item name = " + weaponItem.Name);
+                    EquipWeapon(weaponItem, weaponObject, false);
+                }
+                HUD.GetComponent<HUD>().Clean();
+                HUDFixe.GetComponent<HUDFixe>().Clean();
+            }
+            else
+            {
+                Debug.Log("key code w found but inventory null");
+            }
+                
+        }
         if (Input.GetKeyDown(KeyCode.E))
         {
             LootHUD.SetActive(false);
@@ -238,6 +285,14 @@ public class Player : MonoBehaviourPunCallbacks
 
                 if (Input.GetMouseButtonUp(1))
                     aim.laserStartAndStop();
+            }
+        }
+        if (inventory.mItems != null)
+        {
+            if (inventory.mItems[0] == null)
+            {
+                EquippedWeapon = null;
+
             }
         }
     }
@@ -322,13 +377,19 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-    public void EquipWeapon(Weapon weaponComp, GameObject weaponObject)
+
+    public void UnequipWeapon()
+    {
+
+    }
+    public void EquipWeapon(Weapon weaponComp, GameObject weaponObject, bool toAdd)
     {
         Debug.Log("EQUIP WEAPON");
-        inventory.AddItem(weaponComp);
+        if (weaponComp != null && toAdd == true)
+            inventory.AddItem(weaponComp);
         Transform hand = FindDeepChild(transform, "jointItemR");
         weaponComp.whenPickUp(gameObject, hand);
-        if (inventory.PocketCount() == 2)
+        if (inventory.PocketCount() > 1 && toAdd == true)
         {
             Debug.Log("Pocket full");
             weaponObject.SetActive(false);
@@ -372,7 +433,7 @@ public class Player : MonoBehaviourPunCallbacks
                 if (!weaponComp.isLooted)
                 {
                     Debug.Log(weaponComp.Name);
-                    EquipWeapon(weaponComp, weapon);
+                    EquipWeapon(weaponComp, weapon, true);
                 }
             }
             else

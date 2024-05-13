@@ -45,7 +45,7 @@ public class Inventory : MonoBehaviour
         if (Count() == 0)
         {
             Debug.Log("CALL TO EQUI WEAPON FROM INVENTORY");
-            playerScript.EquipWeapon(weaponItem, weaponObject);
+            playerScript.EquipWeapon(weaponItem, weaponObject, true);
         }
     }
 
