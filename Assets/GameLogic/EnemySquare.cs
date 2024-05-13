@@ -64,12 +64,12 @@ using UnityEngine;
                 float randomNumber = Random.Range(0f, 5.0001f);
                 gameObject.transform.position = biomesPositions[ (int) randomBiome];
                 Debug.Log("BIOME FOUND");
-                inventory = new Inventory(9, null, false);
-                inventory.AddEnemyWeapon("Sword");
-                inventory.AddEnemyWeapon("Gun");
+                // inventory = new Inventory(9, null, false);
+                // inventory.AddEnemyWeapon("Sword");
+                // inventory.AddEnemyWeapon("Gun");
                 if (randomNumber < 2)
                     {
-                        Debug.Log("BIOME désert");
+                        Debug.Log("BIOME dï¿½sert");
                         health = 100;
                     }
                 else if (randomNumber < 4)

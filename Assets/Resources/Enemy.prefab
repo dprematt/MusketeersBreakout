@@ -15753,6 +15753,8 @@ MonoBehaviour:
   rotationSpeed: 5
   weaponList: []
   nextAttack: 0
+  Sword: {fileID: 103164478061917215, guid: cc6e26147b439e142939d1bc16efa20d, type: 3}
+  Knife: {fileID: 9122537649499774259, guid: 71b83acdc503fd74fae9d2cafce410c6, type: 3}
   eventListener: {fileID: 0}
 --- !u!199 &-1213841984179507511
 ParticleSystemRenderer:

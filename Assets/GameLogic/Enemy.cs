@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
  public class Enemy : MonoBehaviour
 {
@@ -26,21 +27,43 @@ using UnityEngine;
     public float nextAttack = 0f;
     private float delay = 1.5f;
 
+    public GameObject Sword;
+     public GameObject Knife;
+
+
     public EventListener eventListener;
 
     bool isPlaced = false;
 
     private void Start()
     {
-        
         health = maxHealth;
+        weaponList.Add(PhotonNetwork.Instantiate(Sword.name, transform.position, Quaternion.identity).GetComponent<Weapon>());
+        weaponList.Add(PhotonNetwork.Instantiate(Knife.name, transform.position, Quaternion.identity).GetComponent<Weapon>());
+
+        weaponList[0].positionX = 0.00086f;
+        weaponList[0].positionY = 0.00059f;
+        weaponList[0].positionZ = -0.00067f;
+        weaponList[0].rotationX = 0f;
+        weaponList[0].rotationY = -90f;
+        weaponList[0].rotationZ = 0f;
+
+        weaponList[1].positionX = 0.00108f;
+        weaponList[1].positionY = 0.00139f;
+        weaponList[1].positionZ = -0.0004f;
+        weaponList[1].rotationX = 0f;
+        weaponList[1].rotationY = 90f;
+        weaponList[1].rotationZ = 180f;
+
+        inventory = new Inventory(9, null, false);
+        inventory.AddEnemyWeapon(weaponList[0]);
+        inventory.AddEnemyWeapon(weaponList[1]);
 
         eventListener = GetComponent<EventListener>();
-
         Transform hand = FindDeepChild(transform, "hand.R");
         foreach (Weapon weapon in weaponList)
         {
-            weapon.whenPickUp(gameObject, hand);
+            weapon.whenPickUp(gameObject);
         }
         if (weaponList.Count > 1)
         {
@@ -48,6 +71,7 @@ using UnityEngine;
         }
         weaponList[0].setAnim();
         eventListener.weaponComp = weaponList[0];
+
     }
 
     void Update()
@@ -65,9 +89,9 @@ using UnityEngine;
                 Vector3 pos = biomesPositions[(int)randomBiome];
                 pos.y += 300;
                 gameObject.transform.position = pos;
-                inventory = new Inventory(9, null, false);
-                inventory.AddEnemyWeapon("Sword");
-                inventory.AddEnemyWeapon("Gun");
+                // inventory = new Inventory(9, null, false);
+                // inventory.AddEnemyWeapon("Sword");
+                // inventory.AddEnemyWeapon("Gun");
                 if (randomNumber < 2)
                 {
                     health = 100;

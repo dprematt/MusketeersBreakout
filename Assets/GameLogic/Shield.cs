@@ -62,15 +62,16 @@ public class Shield : MonoBehaviourPun, IInventoryItem
         get { return _Image; }
     }
 
-    public void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider col)
     {
-        if (isProtecting)
-        {
-            if (other.CompareTag("Bullet"))
-            {
-                Destroy(other.gameObject);
-            }
-        }
+        // if (isProtecting)
+        // {
+        //     Bullet bullet = col.GetComponent<Bullet>();
+        //     if (bullet != null)
+        //     {
+        //         bullet.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
+        //     }
+        // }
     }
 
     Transform FindDeepChild(Transform parent, string nom)
@@ -98,18 +99,16 @@ public class Shield : MonoBehaviourPun, IInventoryItem
         isLooted = true;
     }*/
 
-    public void whenPickUp(GameObject newHolder, Transform hand)
+    public void whenPickUp(GameObject newHolder)
     {
         holder = newHolder;
         isPlayer = holder.CompareTag("Player") ? true : false;
         int holderID = newHolder.GetPhotonView().ViewID;
-        Vector3 relativePosition = hand.position;
-        transform.parent = hand;
-        photonView.RPC("SyncPickUp", RpcTarget.All, holderID, relativePosition, rotationX, rotationY, rotationZ);
+        photonView.RPC("SyncPickUp", RpcTarget.All, holderID, rotationX, rotationY, rotationZ);
     }
 
     [PunRPC]
-    private void SyncPickUp(int holderID, Vector3 relativePosition, float rotX, float rotY, float rotZ)
+    private void SyncPickUp(int holderID, float rotX, float rotY, float rotZ)
     {
         GameObject holderObject = PhotonView.Find(holderID).gameObject;
         holder = holderObject;

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System;
 
 public class Weapon : MonoBehaviourPun, IInventoryItem
 {
@@ -99,14 +100,15 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public void OnTriggerEnter(Collider other)
     {
-        if (anim.GetInteger("intAttackPhase") > 0 && other.CompareTag("Shield"))
+/*        if (anim.GetInteger("intAttackPhase") > 0 && other.CompareTag("Shield"))
         {
             Shield shieldComp = other.gameObject.GetComponent<Shield>();
             if (shieldComp.isProtecting)
             {
                 return;
             }
-        }
+        }*/
+
 /*        if (anim.GetInteger("intAttackPhase") > 0 && other.gameObject != holder && isAttacking)
         {
             if (IsPlayer && other.CompareTag("EnemyBody"))
@@ -210,24 +212,23 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         IsAttacking = false;
     }
 
-    public void whenPickUp(GameObject newHolder, Transform hand)
+    public void whenPickUp(GameObject newHolder)
     {
         holder = newHolder;
         isPlayer = holder.CompareTag("Player") ? true : false;
+        String hand = isPlayer ? "jointItemL" : "hand.R";
         int holderID = newHolder.GetPhotonView().ViewID;
-        Vector3 relativePosition = hand.position;
-        transform.parent = hand;
-        photonView.RPC("SyncPickUp", RpcTarget.All, holderID, relativePosition, rotationX, rotationY, rotationZ);
+        photonView.RPC("SyncPickUp", RpcTarget.All, holderID, rotationX, rotationY, rotationZ, hand);
     }
 
      [PunRPC]
-    private void SyncPickUp(int holderID, Vector3 relativePosition, float rotX, float rotY, float rotZ)
+    private void SyncPickUp(int holderID, float rotX, float rotY, float rotZ, String hand)
     {
         GameObject holderObject = PhotonView.Find(holderID).gameObject;
         holder = holderObject;
         anim = holder.GetComponentInChildren<Animator>();
         isPlayer = holder.CompareTag("Player");
-        transform.parent = FindDeepChild(holderObject.transform, "jointItemL");
+        transform.parent = FindDeepChild(holderObject.transform, hand);
         transform.localPosition = new Vector3(positionX, positionY, positionZ);
         transform.localRotation = Quaternion.Euler(rotX, rotY, rotZ);
 

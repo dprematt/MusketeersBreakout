@@ -16,30 +16,30 @@ public class Inventory : MonoBehaviour
     public event EventHandler<InventoryEventArgs> ItemInsertedAt;
     public event EventHandler<InventoryEventArgs> ItemRemoved;
 
-    public void AddEnemyWeapon(string weaponName)
+    public void AddEnemyWeapon(Weapon weapon)
     {
-        GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
-        if (weaponPrefab == null)
+        //GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
+        // if (weaponPrefab == null)
+        // {
+        //     Debug.LogError("ENEMY Weapon not found in folder Resources : " + weaponName);
+        //     return;
+        // }
+        // Vector3 pos;
+        // pos.z = 0;
+        // pos.y = 0;
+        // pos.x = 0;
+        //GameObject weaponObject = PhotonNetwork.Instantiate(weaponPrefab.name, pos, Quaternion.identity);
+        //Weapon weaponItem = weaponObject.GetComponent<Weapon>();
+        //Destroy(weaponPrefab);
+        if (weapon == null)
         {
-            Debug.LogError("ENEMY Weapon not found in folder Resources : " + weaponName);
+            //Debug.LogError("ENEMY Weapon doesn't implement IInventoryItem interface: " + weapon);
+            // Destroy(weaponObject);
             return;
         }
-        Vector3 pos;
-        pos.z = 0;
-        pos.y = 0;
-        pos.x = 0;
-        GameObject weaponObject = PhotonNetwork.Instantiate(weaponPrefab.name, pos, Quaternion.identity);
-        Weapon weaponItem = weaponObject.GetComponent<Weapon>();
-        Destroy(weaponPrefab);
-        if (weaponItem == null)
-        {
-            Debug.LogError("ENEMY Weapon doesn't implement IInventoryItem interface: " + weaponName);
-            Destroy(weaponObject);
-            return;
-        }
-        AddItem(weaponItem);
-        weaponObject.SetActive(false);
-        Debug.Log("INVENTORY ADD ENEMY WEAPON: item name = " + weaponItem.name);
+        AddItem(weapon);
+        //weaponObject.SetActive(false);
+        Debug.Log("INVENTORY ADD ENEMY WEAPON: item name = " + weapon.name);
     }
     public void AddWeapon(string weaponName)
     {

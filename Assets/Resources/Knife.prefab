@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1155412363699375739}
   - component: {fileID: 8920619137996990417}
   - component: {fileID: 8516634287432761782}
+  - component: {fileID: 4022379947606866764}
   m_Layer: 0
   m_Name: Knife
   m_TagString: WeaponKnife
@@ -131,7 +132,7 @@ MonoBehaviour:
   rotationZ: 0
   isLongRange: 0
   countAttackClick: 0
-  isAttacking: 0
+  _isAttacking: 0
 --- !u!82 &8920619137996990417
 AudioSource:
   m_ObjectHideFlags: 0
@@ -246,7 +247,24 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 4022379947606866764}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &4022379947606866764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9122537649499774259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
