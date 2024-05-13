@@ -701,16 +701,6 @@ public class generator : MonoBehaviourPun
                 threadInfo.callback(threadInfo.parameter);
             }
         }
-         EnemySquare enemySquare = FindAnyObjectByType<EnemySquare>();
-            EnemyShape enemyShape = FindAnyObjectByType<EnemyShape>();
-            Enemy enemy = FindAnyObjectByType<Enemy>();
-            Debug.Log("ENEMY GENERATOR GIVE BIOME POS");
-            if (enemySquare != null)
-                enemySquare.biomesPositions = biomesPositions;
-            if (enemyShape != null)
-                enemyShape.biomesPositions = biomesPositions;
-            if (enemy != null)
-                enemy.biomesPositions = biomesPositions;
     }
 
     private void OnValidate()
