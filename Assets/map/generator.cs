@@ -38,7 +38,6 @@ public class generator : MonoBehaviourPun
     float[,] colorMap = new float[mapChunkSize, mapChunkSize];
     public Vector3[] _spawnCoords = new Vector3[20];
 
-
     public bool useFallOf;
 
     public float meshHeightMult;
@@ -59,19 +58,25 @@ public class generator : MonoBehaviourPun
     private object _heightMapLock = new object();
     private GameObject BiomesParent;
     public Biome[] Biomes;
+    public GameObject[] objectsToPlace;
+    public int[] quantitiesToPlace = new int[] { 2, 3, 3 };
+
+
+    private Dictionary<string, List<Vector3>> biomeSpecificPositions = new Dictionary<string, List<Vector3>>();
 
     float mapSize = 1500f;
     float safeZone = 100f;
     public static List<Vector3> biomesPositions = new List<Vector3>();
     int numberOfPrefabsToCreate = 2;
     public List<Vector3> guardiansSpawn = new List<Vector3>();
-
     public GameObject ennemyType1;
     public GameObject ennemyType2;
     public GameObject ennemyType3;
 
+    private System.Random prng;
 
-    private void Start()
+
+    void Start()
     {
         BiomesParent = new GameObject("Biomes");
         BiomesParent.transform.parent = transform; 
@@ -80,7 +85,9 @@ public class generator : MonoBehaviourPun
 
         SetSeedFromRoomProperties();
         PlaceExtractionZones();
+        InitializeRandom();
         Invoke("DrawMap", randomDelay);
+        Invoke("PlaceWeaponsInBiomes", randomDelay + 1);
     }
 
     void OnDrawGizmos() {
@@ -102,6 +109,7 @@ public class generator : MonoBehaviourPun
 
     public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize)
     {
+        InitializeRandom();
         Vector3[] extractionZonePositions  = {
             new Vector3(-730, 0, -775),
             new Vector3(-730, 0, 775),
@@ -131,8 +139,8 @@ public class generator : MonoBehaviourPun
                 while (!validPosition && attempts < maxAttempts)
                 {
                     attempts++;
-                    float x = UnityEngine.Random.Range(chunkCenter.x - chunkHalfSize, chunkCenter.x + chunkHalfSize);
-                    float z = UnityEngine.Random.Range(chunkCenter.y - chunkHalfSize, chunkCenter.y + chunkHalfSize);
+                    float x = this.prng.Next((int)(chunkCenter.x - chunkHalfSize), (int)(chunkCenter.x + chunkHalfSize));
+                    float z = this.prng.Next((int)(chunkCenter.y - chunkHalfSize), (int)(chunkCenter.y + chunkHalfSize));
 
                     int xIndex = Mathf.FloorToInt(x - (chunkCenter.x - chunkHalfSize));
                     int zIndex = Mathf.FloorToInt(z - (chunkCenter.y - chunkHalfSize));
@@ -153,7 +161,7 @@ public class generator : MonoBehaviourPun
                             validPosition = true;
                             placedPrefabs[prefabType.type].Add(position);
                             int[] Y = new int[] { -90, 90, 180, -180, 0 };
-                            int randomIndex = UnityEngine.Random.Range(0, Y.Length);
+                            int randomIndex = this.prng.Next(Y.Length);
                             GameObject instance = Instantiate(prefabType.prefab, position, Quaternion.identity);
                             instance.transform.Rotate(0.0f, Y[randomIndex], 0.0f);
                             instance.transform.SetParent(worldObjectsParent.transform);
@@ -165,19 +173,6 @@ public class generator : MonoBehaviourPun
     }
 
 
-
-    bool IsTooCloseToBiomes(Vector3 position, List<Vector3> biomesPositions, float buffer)
-    {
-        foreach (Vector3 biomePosition in biomesPositions)
-        {
-            if ((position - biomePosition).sqrMagnitude < buffer * buffer)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     void PlaceBiomesGuardians()
     {
         GameObject guardiansParent = GameObject.Find("Guardians") ?? new GameObject("Guardians");
@@ -188,7 +183,6 @@ public class generator : MonoBehaviourPun
             {
                 GameObject guardians = PhotonNetwork.Instantiate(ennemyType1.name, guardiansCoord, Quaternion.identity);
                 guardians.transform.SetParent(guardiansParent.transform);
-
             }
         }
     }
@@ -197,14 +191,14 @@ public class generator : MonoBehaviourPun
     {
         if (PhotonNetwork.IsMasterClient)
         {
+            InitializeRandom();
             biomesPositions.Clear();
+            biomeSpecificPositions.Clear();
             GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
-
-            System.Random prng = new System.Random(seed);
 
             foreach (Biome biome in Biomes)
             {
-                List<Vector3> biomeSpecificPositions = new List<Vector3>();
+                List<Vector3> specificBiomePositions = new List<Vector3>();
 
                 for (int i = 0; i < numberOfPrefabsToCreate; i++)
                 {
@@ -215,12 +209,12 @@ public class generator : MonoBehaviourPun
                     do
                     {
                         if (plateCenters.Count == 0) break;
-                        int index = prng.Next(0, plateCenters.Count);
+                        int index = this.prng.Next(0, plateCenters.Count);
                         center = plateCenters[index];
                         plateCenters.RemoveAt(index);
 
-                        float x = center.x + prng.Next(-20, 20);
-                        float z = center.y + prng.Next(-20, 20);
+                        float x = center.x + this.prng.Next(-20, 20);
+                        float z = center.y + this.prng.Next(-20, 20);
                         Vector3 position = new Vector3(x, 0, z);
 
                         float borderBuffer = 100;
@@ -240,12 +234,12 @@ public class generator : MonoBehaviourPun
 
                         bool isTooCloseToOtherBiomes = 
                             biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 200) ||
-                            biomeSpecificPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 1000);
+                            specificBiomePositions.Any(biomePos => Vector3.Distance(position, biomePos) < 1000);
 
                         if (!isInBorderBuffer && !isInCornerChunk && !isTooCloseToOtherBiomes && IsPositionOnFlatArea(position, center))
                         {
                             biomesPositions.Add(position);
-                            biomeSpecificPositions.Add(position);
+                            specificBiomePositions.Add(position);
                             GameObject instance = PhotonNetwork.Instantiate(biome.prefab.name, position, Quaternion.identity);
                             instance.transform.SetParent(biomesParent.transform);
                             validPosition = true;
@@ -254,8 +248,73 @@ public class generator : MonoBehaviourPun
                         attempts++;
                     } while (!validPosition && attempts < 100);
                 }
+
+                if (!biomeSpecificPositions.ContainsKey(biome.type))
+                {
+                    biomeSpecificPositions[biome.type] = specificBiomePositions;
+                }
             }
         }
+    }
+
+
+    void PlaceWeaponsInBiomes()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            InitializeRandom();
+            List<Vector3> placedPositions = new List<Vector3>();
+
+            foreach (var biomeEntry in biomeSpecificPositions)
+            {
+                List<Vector3> biomePositions = biomeEntry.Value;
+
+                for (int i = 0; i < objectsToPlace.Length; i++)
+                {
+                    GameObject objectToPlace = objectsToPlace[i];
+                    int quantity = quantitiesToPlace[i];
+
+                    for (int j = 0; j < quantity; j++)
+                    {
+                        bool validPosition = false;
+                        int attempts = 0;
+                        int maxAttempts = 100;
+
+                        while (!validPosition && attempts < maxAttempts)
+                        {
+                            attempts++;
+                            int positionIndex = this.prng.Next(biomePositions.Count);
+                            Vector3 biomePosition = biomePositions[positionIndex];
+                            float x = biomePosition.x + this.prng.Next(-20, 20);
+                            float z = biomePosition.z + this.prng.Next(-20, 20);
+                            Vector3 position = new Vector3(x, 0.45f, z);
+
+                            if (IsPositionValid(position, placedPositions))
+                            {
+                                placedPositions.Add(position);
+                                GameObject instance = PhotonNetwork.Instantiate(objectToPlace.name, position, Quaternion.identity);
+                                instance.transform.SetParent(BiomesParent.transform);
+                                validPosition = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    bool IsPositionValid(Vector3 position, List<Vector3> placedPositions)
+    {
+        foreach (var placedPosition in placedPositions)
+        {
+            if (Vector3.Distance(position, placedPosition) < 10)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
 
@@ -375,6 +434,11 @@ public class generator : MonoBehaviourPun
         {
             seed = (int)seedValue;
         }
+    }
+
+    private void InitializeRandom()
+    {
+        prng = new System.Random(seed);
     }
 
     public void PlaceExtractionZones()
