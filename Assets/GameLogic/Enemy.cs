@@ -13,6 +13,8 @@ using UnityEngine;
     public bool WeaponChoice = false;
     public Animator anim;
     public ParticleSystem bloodParticles;
+    public List<Vector3> biomesPositions = new List<Vector3>();
+
 
     public float detectionRadius = 10f;
 
