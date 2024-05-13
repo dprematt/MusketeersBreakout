@@ -5,19 +5,16 @@ using UnityEngine;
 public class Endless : MonoBehaviour
 {
     const float scale = 1;
-    const float viewerMoveThresholdForChunkUpdate = 25f;
-    const float sqrViewerMoveThresholdForChunkUpdate = viewerMoveThresholdForChunkUpdate * viewerMoveThresholdForChunkUpdate;
     public static float maxViewDist;
 
     public LODInfo[] detailsLevel;
-    public Transform viewer;
     public static Vector2 viewerPosition;
     Vector2 oldViewerPosition;
 
     public Material mapMaterial;
     public Material grassMaterial;
     static generator _generator;
-    int chunkSize;  
+    int chunkSize;
     int chunkVisibleViewDist;
     Dictionary<Vector2, Chunk> chunkDict = new Dictionary<Vector2, Chunk>();
 
@@ -31,7 +28,7 @@ public class Endless : MonoBehaviour
         maxViewDist = detailsLevel[detailsLevel.Length - 1].visibleDstThreshold;
         chunkSize = generator.mapChunkSize - 1;
         chunkVisibleViewDist = Mathf.RoundToInt(maxViewDist / chunkSize);
-        UpdateVisibleChunk();
+        GenerateAllChunks();
     }
 
     IEnumerator SetupPrefabsAndTerrain()
@@ -39,68 +36,30 @@ public class Endless : MonoBehaviour
         yield return new WaitUntil(() => _generator.CurrentMapData.heightMap != null);
     }
 
-    private void Update()
+    private void GenerateAllChunks()
     {
-        GameObject player = GameObject.Find("Player(Clone)");
-        if (player != null)
-        {
-            viewer = player.transform;
-        }
-        else
-        {
-        }
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
-
-        viewerPosition = new Vector2(
-            Mathf.Clamp(viewerPosition.x, -550, 550),
-            Mathf.Clamp(viewerPosition.y, -550, 550)
-        );
-
-        if ((oldViewerPosition - viewerPosition).sqrMagnitude > sqrViewerMoveThresholdForChunkUpdate)
-        {
-            oldViewerPosition = viewerPosition;
-            UpdateVisibleChunk();
-        }
-    }
-
-
-    void UpdateVisibleChunk()
-    {
-        int centralChunkCoordX = Mathf.RoundToInt(viewerPosition.x / chunkSize);
-        int centralChunkCoordY = Mathf.RoundToInt(viewerPosition.y / chunkSize);
-
-        int mapRadius = 750;
-        int startChunkX = centralChunkCoordX - Mathf.CeilToInt((float)mapRadius / chunkSize);
-        int endChunkX = centralChunkCoordX + Mathf.CeilToInt((float)mapRadius / chunkSize);
-        int startChunkY = centralChunkCoordY - Mathf.CeilToInt((float)mapRadius / chunkSize);
-        int endChunkY = centralChunkCoordY + Mathf.CeilToInt((float)mapRadius / chunkSize);
-
-        for (int i = 0; i < chunkVisibleLastUpdate.Count; i++)
-        {
-            chunkVisibleLastUpdate[i].SetVisible(false);
-        }
-        chunkVisibleLastUpdate.Clear();
+        int startChunkX = -(int)(placementAreaSize.x / 2 / chunkSize);
+        int endChunkX = (int)(placementAreaSize.x / 2 / chunkSize);
+        int startChunkY = -(int)(placementAreaSize.y / 2 / chunkSize);
+        int endChunkY = (int)(placementAreaSize.y / 2 / chunkSize);
 
         for (int yOffset = startChunkY; yOffset <= endChunkY; yOffset++)
         {
             for (int xOffset = startChunkX; xOffset <= endChunkX; xOffset++)
             {
                 Vector2 viewedChunkCoord = new Vector2(xOffset, yOffset);
-
-                if (chunkDict.ContainsKey(viewedChunkCoord))
+                if (!chunkDict.ContainsKey(viewedChunkCoord))
                 {
-                    chunkDict[viewedChunkCoord].UpdateChunk();
-                    if (chunkDict[viewedChunkCoord].isVisible())
-                    {
-                        chunkVisibleLastUpdate.Add(chunkDict[viewedChunkCoord]);
-                    }
-                }
-                else
-                {
-                    chunkDict.Add(viewedChunkCoord, new Chunk(viewedChunkCoord, chunkSize, detailsLevel, transform, mapMaterial, grassMaterial));
+                    chunkDict[viewedChunkCoord] = new Chunk(viewedChunkCoord, chunkSize, detailsLevel, transform, mapMaterial, grassMaterial);
                 }
             }
         }
+    }
+
+
+    private void Update()
+    {
+        // Plus besoin de code lié à la position du viewer.
     }
 
     public class Chunk
@@ -147,7 +106,7 @@ public class Endless : MonoBehaviour
             meshObject.transform.position = positionV3 * scale;
             meshObject.transform.parent = parent;
             meshObject.transform.localScale = Vector3.one * scale;
-            SetVisible(false);
+            SetVisible(true);
 
             lodMeshes = new LODMesh[detailsLevel.Length];
 
@@ -185,7 +144,7 @@ public class Endless : MonoBehaviour
             if (mapDataReceived)
             {
                 float viewerDstFromNearestEdge = Mathf.Sqrt(bounds.SqrDistance(viewerPosition));
-                bool visible = viewerDstFromNearestEdge <= maxViewDist;
+                bool visible = true;
 
                 if (visible)
                 {
@@ -222,7 +181,7 @@ public class Endless : MonoBehaviour
                     }
                     chunkVisibleLastUpdate.Add(this);
                 }
-                SetVisible(visible);
+                SetVisible(true);
             }
         }
 

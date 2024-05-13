@@ -346,21 +346,23 @@ public class generator : MonoBehaviourPun
         float normalizedWaterHeight = 0.0001f / meshHeightMult;
         int beachThickness = 50;
 
-        float mapHalfSize = mapChunkSize * 7 / 2;
+        // Limites globales de la carte
+        float mapHalfWidth = mapChunkSize * 7 / 2;
+        float mapHalfHeight = mapChunkSize * 7 / 2;
 
-        float leftMapBorder = -mapHalfSize;
-        float rightMapBorder = mapHalfSize;
-
+        // Détails des frontières du chunk
         float chunkTopBorder = chunkCenter.y + (mapChunkSize / 2);
         float chunkBottomBorder = chunkCenter.y - (mapChunkSize / 2);
         float chunkRightBorder = chunkCenter.x + (mapChunkSize / 2);
         float chunkLeftBorder = chunkCenter.x - (mapChunkSize / 2);
 
-        bool isTopBorderChunk = chunkTopBorder > 720;
-        bool isBottomBorderChunk = chunkBottomBorder < -720;
-        bool isLeftBorderChunk = chunkLeftBorder < leftMapBorder + beachThickness;
-        bool isRightBorderChunk = chunkRightBorder > rightMapBorder - beachThickness;
+        // Conditions ajustées pour la génération des plages
+        bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - beachThickness);
+        bool isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + beachThickness);
+        bool isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + beachThickness);
+        bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - beachThickness);
 
+        // Appliquez les plages uniquement sur les frontières extérieures
         if (isTopBorderChunk)
         {
             ApplyBeachToTopOrBottom(beachThickness, chunkCenter, normalizedWaterHeight, true);
@@ -375,11 +377,14 @@ public class generator : MonoBehaviourPun
         {
             ApplyBeachToLeftOrRightBorder(beachThickness, chunkCenter, normalizedWaterHeight, true);
         }
+
         if (isRightBorderChunk)
         {
             ApplyBeachToLeftOrRightBorder(beachThickness, chunkCenter, normalizedWaterHeight, false);
         }
     }
+
+
 
 
     private void ApplyBeachToTopOrBottom(int beachThickness, Vector2 chunkCenter, float normalizedWaterHeight, bool isTopBorder)
@@ -431,8 +436,8 @@ public class generator : MonoBehaviourPun
         if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("mapSeed", out object seedValue))
         {
             seed = (int)seedValue;
+            instance.prng = new System.Random(seed);
         }
-        instance.prng = new System.Random(seed);
     }
 
     private void InitializeRandom()
