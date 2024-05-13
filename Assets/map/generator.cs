@@ -83,7 +83,7 @@ public class generator : MonoBehaviourPun
         float randomDelay = UnityEngine.Random.Range(3f, 4f);
         worldObjectsParent = new GameObject("WorldObjectsParent");
 
-        SetSeedFromRoomProperties();
+        SetSeedFromRoomProperties(this);
         PlaceExtractionZones();
         InitializeRandom();
         Invoke("DrawMap", randomDelay);
@@ -107,7 +107,7 @@ public class generator : MonoBehaviourPun
         Gizmos.DrawLine(new Vector3(leftBorder, 0, bottomBorder), new Vector3(rightBorder, 0, bottomBorder));
     }
 
-    public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize)
+    public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize, System.Random prng)
     {
         InitializeRandom();
         Vector3[] extractionZonePositions  = {
@@ -139,8 +139,8 @@ public class generator : MonoBehaviourPun
                 while (!validPosition && attempts < maxAttempts)
                 {
                     attempts++;
-                    float x = this.prng.Next((int)(chunkCenter.x - chunkHalfSize), (int)(chunkCenter.x + chunkHalfSize));
-                    float z = this.prng.Next((int)(chunkCenter.y - chunkHalfSize), (int)(chunkCenter.y + chunkHalfSize));
+                    float x = prng.Next((int)(chunkCenter.x - chunkHalfSize), (int)(chunkCenter.x + chunkHalfSize));
+                    float z = prng.Next((int)(chunkCenter.y - chunkHalfSize), (int)(chunkCenter.y + chunkHalfSize));
 
                     int xIndex = Mathf.FloorToInt(x - (chunkCenter.x - chunkHalfSize));
                     int zIndex = Mathf.FloorToInt(z - (chunkCenter.y - chunkHalfSize));
@@ -161,7 +161,7 @@ public class generator : MonoBehaviourPun
                             validPosition = true;
                             placedPrefabs[prefabType.type].Add(position);
                             int[] Y = new int[] { -90, 90, 180, -180, 0 };
-                            int randomIndex = this.prng.Next(Y.Length);
+                            int randomIndex = prng.Next(Y.Length);
                             GameObject instance = Instantiate(prefabType.prefab, position, Quaternion.identity);
                             instance.transform.Rotate(0.0f, Y[randomIndex], 0.0f);
                             instance.transform.SetParent(worldObjectsParent.transform);
@@ -187,115 +187,109 @@ public class generator : MonoBehaviourPun
         }
     }
 
-    void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight)
-    {
-        if (PhotonNetwork.IsMasterClient)
+    void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight, System.Random prng)
+{
+        InitializeRandom();
+        biomesPositions.Clear();
+        biomeSpecificPositions.Clear();
+        GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
+
+        foreach (Biome biome in Biomes)
         {
-            InitializeRandom();
-            biomesPositions.Clear();
-            biomeSpecificPositions.Clear();
-            GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
+            List<Vector3> specificBiomePositions = new List<Vector3>();
 
-            foreach (Biome biome in Biomes)
+            for (int i = 0; i < numberOfPrefabsToCreate; i++)
             {
-                List<Vector3> specificBiomePositions = new List<Vector3>();
+                Vector2 center;
+                bool validPosition = false;
+                int attempts = 0;
 
-                for (int i = 0; i < numberOfPrefabsToCreate; i++)
+                do
                 {
-                    Vector2 center;
-                    bool validPosition = false;
-                    int attempts = 0;
+                    if (plateCenters.Count == 0) break;
+                    int index = prng.Next(0, plateCenters.Count);
+                    center = plateCenters[index];
+                    plateCenters.RemoveAt(index);
 
-                    do
+                    float x = center.x + prng.Next(-20, 20);
+                    float z = center.y + prng.Next(-20, 20);
+                    Vector3 position = new Vector3(x, 0, z);
+
+                    float borderBuffer = 100;
+                    float cornerBuffer = mapChunkSize;
+
+                    bool isInCornerChunk = 
+                        (position.x < (topLeft.x + cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
+                        (position.x > (bottomRight.x - cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
+                        (position.x < (topLeft.x + cornerBuffer) && position.z < (bottomRight.y + cornerBuffer)) ||
+                        (position.x > (bottomRight.x - cornerBuffer) && position.z < (bottomRight.y + cornerBuffer));
+
+                    bool isInBorderBuffer = 
+                        position.x < (topLeft.x + borderBuffer) || 
+                        position.x > (bottomRight.x - borderBuffer) ||
+                        position.z < (bottomRight.y + borderBuffer) || 
+                        position.z > (topLeft.y - borderBuffer);
+
+                    bool isTooCloseToOtherBiomes = 
+                        biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 200) ||
+                        specificBiomePositions.Any(biomePos => Vector3.Distance(position, biomePos) < 1000);
+
+                    if (!isInBorderBuffer && !isInCornerChunk && !isTooCloseToOtherBiomes && IsPositionOnFlatArea(position, center))
                     {
-                        if (plateCenters.Count == 0) break;
-                        int index = this.prng.Next(0, plateCenters.Count);
-                        center = plateCenters[index];
-                        plateCenters.RemoveAt(index);
+                        biomesPositions.Add(position);
+                        specificBiomePositions.Add(position);
+                        GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
+                        instance.transform.SetParent(biomesParent.transform);
+                        validPosition = true;
+                    }
 
-                        float x = center.x + this.prng.Next(-20, 20);
-                        float z = center.y + this.prng.Next(-20, 20);
-                        Vector3 position = new Vector3(x, 0, z);
+                    attempts++;
+                } while (!validPosition && attempts < 100);
+            }
 
-                        float borderBuffer = 100;
-                        float cornerBuffer = mapChunkSize;
-
-                        bool isInCornerChunk = 
-                            (position.x < (topLeft.x + cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
-                            (position.x > (bottomRight.x - cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
-                            (position.x < (topLeft.x + cornerBuffer) && position.z < (bottomRight.y + cornerBuffer)) ||
-                            (position.x > (bottomRight.x - cornerBuffer) && position.z < (bottomRight.y + cornerBuffer));
-
-                        bool isInBorderBuffer = 
-                            position.x < (topLeft.x + borderBuffer) || 
-                            position.x > (bottomRight.x - borderBuffer) ||
-                            position.z < (bottomRight.y + borderBuffer) || 
-                            position.z > (topLeft.y - borderBuffer);
-
-                        bool isTooCloseToOtherBiomes = 
-                            biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 200) ||
-                            specificBiomePositions.Any(biomePos => Vector3.Distance(position, biomePos) < 1000);
-
-                        if (!isInBorderBuffer && !isInCornerChunk && !isTooCloseToOtherBiomes && IsPositionOnFlatArea(position, center))
-                        {
-                            biomesPositions.Add(position);
-                            specificBiomePositions.Add(position);
-                            GameObject instance = PhotonNetwork.Instantiate(biome.prefab.name, position, Quaternion.identity);
-                            instance.transform.SetParent(biomesParent.transform);
-                            validPosition = true;
-                        }
-
-                        attempts++;
-                    } while (!validPosition && attempts < 100);
-                }
-
-                if (!biomeSpecificPositions.ContainsKey(biome.type))
-                {
-                    biomeSpecificPositions[biome.type] = specificBiomePositions;
-                }
+            if (!biomeSpecificPositions.ContainsKey(biome.type))
+            {
+                biomeSpecificPositions[biome.type] = specificBiomePositions;
             }
         }
     }
 
 
-    void PlaceWeaponsInBiomes()
-    {
-        if (PhotonNetwork.IsMasterClient)
+    void PlaceWeaponsInBiomes(System.Random prng)
+{
+        InitializeRandom();
+        List<Vector3> placedPositions = new List<Vector3>();
+
+        foreach (var biomeEntry in biomeSpecificPositions)
         {
-            InitializeRandom();
-            List<Vector3> placedPositions = new List<Vector3>();
+            List<Vector3> biomePositions = biomeEntry.Value;
 
-            foreach (var biomeEntry in biomeSpecificPositions)
+            for (int i = 0; i < objectsToPlace.Length; i++)
             {
-                List<Vector3> biomePositions = biomeEntry.Value;
+                GameObject objectToPlace = objectsToPlace[i];
+                int quantity = quantitiesToPlace[i];
 
-                for (int i = 0; i < objectsToPlace.Length; i++)
+                for (int j = 0; j < quantity; j++)
                 {
-                    GameObject objectToPlace = objectsToPlace[i];
-                    int quantity = quantitiesToPlace[i];
+                    bool validPosition = false;
+                    int attempts = 0;
+                    int maxAttempts = 100;
 
-                    for (int j = 0; j < quantity; j++)
+                    while (!validPosition && attempts < maxAttempts)
                     {
-                        bool validPosition = false;
-                        int attempts = 0;
-                        int maxAttempts = 100;
+                        attempts++;
+                        int positionIndex = prng.Next(biomePositions.Count);
+                        Vector3 biomePosition = biomePositions[positionIndex];
+                        float x = biomePosition.x + prng.Next(-20, 20);
+                        float z = biomePosition.z + prng.Next(-20, 20);
+                        Vector3 position = new Vector3(x, 0.45f, z);
 
-                        while (!validPosition && attempts < maxAttempts)
+                        if (IsPositionValid(position, placedPositions))
                         {
-                            attempts++;
-                            int positionIndex = this.prng.Next(biomePositions.Count);
-                            Vector3 biomePosition = biomePositions[positionIndex];
-                            float x = biomePosition.x + this.prng.Next(-20, 20);
-                            float z = biomePosition.z + this.prng.Next(-20, 20);
-                            Vector3 position = new Vector3(x, 0.45f, z);
-
-                            if (IsPositionValid(position, placedPositions))
-                            {
-                                placedPositions.Add(position);
-                                GameObject instance = PhotonNetwork.Instantiate(objectToPlace.name, position, Quaternion.identity);
-                                instance.transform.SetParent(BiomesParent.transform);
-                                validPosition = true;
-                            }
+                            placedPositions.Add(position);
+                            GameObject instance = Instantiate(objectToPlace, position, Quaternion.identity);
+                            instance.transform.SetParent(BiomesParent.transform);
+                            validPosition = true;
                         }
                     }
                 }
@@ -428,12 +422,17 @@ public class generator : MonoBehaviourPun
         }
     }
 
-    public static void SetSeedFromRoomProperties()
+    public System.Random getPRNG() {
+        return prng;
+    }
+
+    public static void SetSeedFromRoomProperties(generator instance)
     {
         if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("mapSeed", out object seedValue))
         {
             seed = (int)seedValue;
         }
+        instance.prng = new System.Random(seed);
     }
 
     private void InitializeRandom()
@@ -484,7 +483,7 @@ public class generator : MonoBehaviourPun
             }
         }
 
-        PlaceBiomesInFlatAreas(allPlateCenters, topLeft, bottomRight);
+        PlaceBiomesInFlatAreas(allPlateCenters, topLeft, bottomRight, prng);
 
         Vector2 center = Vector2.zero + offSet;
         var currentMapData = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center, normalizeMode, seed);
@@ -498,7 +497,7 @@ public class generator : MonoBehaviourPun
         }
         else if (drawMode == DrawMode.colorMap)
         {
-            // Ne rien faire pour colorMap, car la couleur a Ã©tÃ© supprimÃ©e.
+            // Ne rien faire pour colorMap, car la couleur a été supprimée.
         }
         else if (drawMode == DrawMode.mesh)
         {
@@ -511,6 +510,7 @@ public class generator : MonoBehaviourPun
         PlaceBiomesGuardians();
         CurrentMapData = new MapData(currentMapData.Item1, colorMap);
     }
+
 
     public void selectPos(float[,] colorMap)
     {
@@ -701,16 +701,6 @@ public class generator : MonoBehaviourPun
                 threadInfo.callback(threadInfo.parameter);
             }
         }
-         EnemySquare enemySquare = FindAnyObjectByType<EnemySquare>();
-            EnemyShape enemyShape = FindAnyObjectByType<EnemyShape>();
-            Enemy enemy = FindAnyObjectByType<Enemy>();
-            Debug.Log("ENEMY GENERATOR GIVE BIOME POS");
-            if (enemySquare != null)
-                enemySquare.biomesPositions = biomesPositions;
-            if (enemyShape != null)
-                enemyShape.biomesPositions = biomesPositions;
-            if (enemy != null)
-                enemy.biomesPositions = biomesPositions;
     }
 
     private void OnValidate()

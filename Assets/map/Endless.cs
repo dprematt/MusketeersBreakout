@@ -161,14 +161,13 @@ public class Endless : MonoBehaviour
         {
             return bounds.Contains(new Vector3(localPosition.x, 0, localPosition.z));
         }
-
         void OnMapDataReceived(MapData mapData)
         {
             this.mapdata = mapData;
             mapDataReceived = true;
             UpdateMesh();
             Vector2 chunkCenter = this.ChunkCenter;
-            _generator.PlacePrefabsInChunk(chunkCenter, mapData.heightMap, 240);
+            _generator.PlacePrefabsInChunk(chunkCenter, mapData.heightMap, 240, _generator.getPRNG());
             UpdateChunk();
         }
 
