@@ -16,6 +16,8 @@ public class HealthManager : MonoBehaviourPunCallbacks
     public Text Health_Text_;
     PlayFabInventory PFInventory_;
 
+    public ParticleSystem bloodParticles;
+
     private void Start()
     {
 
@@ -82,6 +84,7 @@ public class HealthManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void DamageInstance(int Damage)
     {
+        bloodParticles.Play();
         Health_ -= Damage;
     }
 

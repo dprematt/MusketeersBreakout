@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.023529064, g: 0.24699414, b: 0.4651342, a: 1}
+  m_IndirectSpecularColor: {r: 0.010905812, g: 0.1033935, b: 0.19712085, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -860,7 +860,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1920, y: 1080}
+  m_SizeDelta: {x: 2560, y: 1440}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &394972403
 MonoBehaviour:
@@ -1658,6 +1658,37 @@ MonoBehaviour:
   sceneViewId: 10
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!1 &635430144
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 635430145}
+  m_Layer: 0
+  m_Name: Guardians
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &635430145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635430144}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 40
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &635770244
 GameObject:
   m_ObjectHideFlags: 0
@@ -2363,6 +2394,11 @@ MonoBehaviour:
     prefab: {fileID: 109927449571210476, guid: a1d9e97f06f6e2340bb4d2114caa2589, type: 3}
   - type: neige
     prefab: {fileID: 5794360217216551788, guid: 4166b722c5a1809d087d3584b69fceba, type: 3}
+  objectsToPlace:
+  - {fileID: 6082017216327338335, guid: 591889e335de55940abaa28713e9495c, type: 3}
+  - {fileID: 103164478061917215, guid: cc6e26147b439e142939d1bc16efa20d, type: 3}
+  - {fileID: 7378223783999177461, guid: 455be2d759bc1524d8f932ed1d58d68f, type: 3}
+  quantitiesToPlace: 020000000300000003000000
   guardiansSpawn: []
   ennemyType1: {fileID: 8489976182974415840, guid: e2db8a0f84c5732489ba3eef08de905c, type: 3}
   ennemyType2: {fileID: 8489976182974415840, guid: 561279bd1f7579d45bfe1f36d4338cbf, type: 3}

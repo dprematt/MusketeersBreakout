@@ -164,7 +164,7 @@ MonoBehaviour:
   rotationZ: 0
   isLongRange: 1
   countAttackClick: 0
-  isAttacking: 0
+  _isAttacking: 0
 --- !u!114 &8834260518423199894
 MonoBehaviour:
   m_ObjectHideFlags: 0
