@@ -76,7 +76,7 @@ public class Gun : Weapons
             Damage = 6;
             var bullet = Instantiate(bulletPrefab, NewPos, pm.characterModel.rotation);
             bullet.GetComponent<Rigidbody>().velocity = pm.characterModel.forward * bulletSpeed;
-            bullet.GetComponent<Bullet>().Initialize(pm.characterModel, Range, Damage);
+            //bullet.GetComponent<Bullet>().Initialize(pm.characterModel, Range, Damage);
         }
     }
     public void Update()

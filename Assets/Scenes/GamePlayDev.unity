@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.07177738, g: 0.19153425, b: 0.28522307, a: 1}
+  m_IndirectSpecularColor: {r: 0.023529064, g: 0.24699488, b: 0.46513295, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2492,7 +2492,8 @@ MonoBehaviour:
   BowPrefab_: {fileID: 5490983116922971870, guid: bdd621ae8a04bd24aaabe1d81d2ee66c, type: 3}
   CrossBowPrefab_: {fileID: 7378223783999177461, guid: 455be2d759bc1524d8f932ed1d58d68f, type: 3}
   GunPrefab_: {fileID: 6082017216327338335, guid: 591889e335de55940abaa28713e9495c, type: 3}
-  SpearPrefab_: {fileID: 103164478061917215, guid: cc6e26147b439e142939d1bc16efa20d, type: 3}
+  SwordPrefab: {fileID: 103164478061917215, guid: cc6e26147b439e142939d1bc16efa20d, type: 3}
+  ShieldPrefab_: {fileID: 1953706618697791136, guid: a25f21c2ee128a84ab16e00a780d6ba3, type: 3}
 --- !u!1 &896457400
 GameObject:
   m_ObjectHideFlags: 0

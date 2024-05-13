@@ -54,13 +54,10 @@ using UnityEngine;
     {
         if (isPlaced == false)
         {
-            Debug.Log("is placed = " + isPlaced);
             if (biomesPositions.Count != 0)
             {
-                Debug.Log("BIOME POS COUNT = " + biomesPositions.Count);
                 if (biomesPositions == null)
                 {
-                    Debug.Log("biome pos is null..");
                 }
                 float randomBiome = Random.Range(0f, 5.0001f);
                 float randomNumber = Random.Range(0f, 5.0001f);
@@ -68,23 +65,19 @@ using UnityEngine;
                 Vector3 pos = biomesPositions[(int)randomBiome];
                 pos.y += 300;
                 gameObject.transform.position = pos;
-                Debug.Log("BIOME FOUND");
                 inventory = new Inventory(9, null, false);
                 inventory.AddEnemyWeapon("Sword");
                 inventory.AddEnemyWeapon("Gun");
                 if (randomNumber < 2)
                 {
-                    Debug.Log("BIOME désert");
                     health = 100;
                 }
                 else if (randomNumber < 4)
                 {
-                    Debug.Log("BIOME jungle");
                     speed = 15;
                 }
                 else if (randomNumber < 6)
                 {
-                    Debug.Log("BIOME neige");
                     speed = 10;
                     health = 30;
                 }
@@ -138,11 +131,21 @@ using UnityEngine;
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        Weapon weaponComp = other.GetComponent<Weapon>();
+        if (weaponComp != null)
+        {
+            if (weaponComp.isLooted && weaponComp.holder != gameObject && weaponComp.IsAttacking && weaponComp.holder.CompareTag("Player"))
+            {
+                TakeDamage(weaponComp.damages);
+            }
+        }
+
+        if (other.gameObject.CompareTag("Player"))
         {
             target = other.transform;
         }
     }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))

@@ -62,15 +62,16 @@ public class Shield : MonoBehaviourPun, IInventoryItem
         get { return _Image; }
     }
 
-    public void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider col)
     {
-        if (isProtecting)
+        /*if (isProtecting)
         {
-            if (other.CompareTag("Bullet"))
+            Bullet bullet = col.GetComponent<Bullet>();
+            if (bullet != null)
             {
-                Destroy(other.gameObject);
+                bullet.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
             }
-        }
+        }*/
     }
 
     Transform FindDeepChild(Transform parent, string nom)
@@ -87,7 +88,7 @@ public class Shield : MonoBehaviourPun, IInventoryItem
         return null;
     }
 
-    public void whenPickUp(GameObject newHolder, Transform hand)
+/*    public void whenPickUp(GameObject newHolder, Transform hand)
     {
         holder = newHolder;
         isPlayer = holder.CompareTag("Player") ? true : false;
@@ -96,9 +97,38 @@ public class Shield : MonoBehaviourPun, IInventoryItem
         transform.localRotation = Quaternion.Euler(rotationX, rotationY, rotationZ);
         anim = holder.GetComponentInChildren<Animator>();
         isLooted = true;
+    }*/
+
+    public void whenPickUp(GameObject newHolder, Transform hand)
+    {
+        holder = newHolder;
+        isPlayer = holder.CompareTag("Player") ? true : false;
+        int holderID = newHolder.GetPhotonView().ViewID;
+        Vector3 relativePosition = hand.position;
+        transform.parent = hand;
+        photonView.RPC("SyncPickUp", RpcTarget.All, holderID, relativePosition, rotationX, rotationY, rotationZ);
+    }
+
+    [PunRPC]
+    private void SyncPickUp(int holderID, Vector3 relativePosition, float rotX, float rotY, float rotZ)
+    {
+        GameObject holderObject = PhotonView.Find(holderID).gameObject;
+        holder = holderObject;
+        anim = holder.GetComponentInChildren<Animator>();
+        isPlayer = holder.CompareTag("Player");
+        transform.parent = FindDeepChild(holderObject.transform, "jointItemL");
+        transform.localPosition = new Vector3(positionX, positionY, positionZ);
+        transform.localRotation = Quaternion.Euler(rotX, rotY, rotZ);
+        isLooted = true;
     }
 
     public void setProtectionMode(bool mode)
+    {
+        photonView.RPC("setProtectionModeSync", RpcTarget.All, mode);
+    }
+
+    [PunRPC]
+    public void setProtectionModeSync(bool mode)
     {
         if (mode != isProtecting && anim.GetInteger("intAttackPhase") == 0)
         {

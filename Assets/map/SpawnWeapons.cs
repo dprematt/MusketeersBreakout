@@ -8,7 +8,8 @@ public class SpawnWeapons : MonoBehaviour
     public GameObject BowPrefab_;
     public GameObject CrossBowPrefab_;
     public GameObject GunPrefab_;
-    public GameObject SpearPrefab_;
+    public GameObject SwordPrefab;
+    public GameObject ShieldPrefab_;
 
     // Start is called before the first frame update
     public void InstanciateWeapons(Vector3 position)
@@ -17,13 +18,15 @@ public class SpawnWeapons : MonoBehaviour
         {  
             position.y -= 10;
             position.x += 10;
-            PhotonNetwork.Instantiate(SpearPrefab_.name, position, Quaternion.identity);
+            PhotonNetwork.Instantiate(SwordPrefab.name, position, Quaternion.identity);
             position.z += 10;
-            PhotonNetwork.Instantiate(SpearPrefab_.name, position, Quaternion.identity);
+            PhotonNetwork.Instantiate(SwordPrefab.name, position, Quaternion.identity);
             position.z += 10;
-            PhotonNetwork.Instantiate(SpearPrefab_.name, position, Quaternion.identity);
+            PhotonNetwork.Instantiate(GunPrefab_.name, position, Quaternion.identity);
             position.z += 10;
-            PhotonNetwork.Instantiate(SpearPrefab_.name, position, Quaternion.identity);
+            PhotonNetwork.Instantiate(GunPrefab_.name, position, Quaternion.identity);
+            position.z += 10;
+            PhotonNetwork.Instantiate(ShieldPrefab_.name, position, Quaternion.identity);
             //Bow_Object_.name = "Bow";
         }
     }

@@ -203,12 +203,10 @@ public class Player : MonoBehaviourPunCallbacks
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Debug.Log("KEY CODE alpha1");
             Inventory inventory = gameObject.GetComponent<Inventory>();
 
             if (inventory != null)
             {
-                Debug.Log("key code alpha1 found inventory not null");
                 inventory.SwapItems(0, 1);
                 if (inventory.mItems[0] == null)
                 {
@@ -219,7 +217,6 @@ public class Player : MonoBehaviourPunCallbacks
                     GameObject weaponPrefab = Resources.Load<GameObject>(inventory.mItems[0].Name);
                     if (weaponPrefab == null)
                     {
-                        Debug.LogError("ALPHA 1: Weapon not found in folder Resources : " + inventory.mItems[0].Name);
                         return;
                     }
                     Vector3 pos;
@@ -231,12 +228,9 @@ public class Player : MonoBehaviourPunCallbacks
                     Destroy(weaponPrefab);
                     if (weaponItem == null)
                     {
-                        Debug.LogError("Weapon doesn't implement IInventoryItem interface: " + inventory.mItems[0].Name);
                         Destroy(weaponObject);
                         return;
                     }
-                    Debug.Log("before equip weapon call in alpha 1");
-                    Debug.Log("weapon item name = " + weaponItem.Name);
                     EquipWeapon(weaponItem, weaponObject, false);
                 }
                 HUD.GetComponent<HUD>().Clean();
@@ -244,7 +238,6 @@ public class Player : MonoBehaviourPunCallbacks
             }
             else
             {
-                Debug.Log("key code w found but inventory null");
             }
                 
         }
@@ -263,7 +256,6 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (inventory.PocketCount() > 0)
         {
-            Debug.Log("UPDATE ATTACK PLAYER: equipped weapon name = " + EquippedWeapon.name);
             if (!EquippedWeapon.isLongRange && Input.GetMouseButtonDown(0))
             {
                 EquippedWeapon.Attack();
@@ -348,7 +340,6 @@ public class Player : MonoBehaviourPunCallbacks
     }
     void OnCollisionEnter(Collision col)
     {
-        Debug.Log("on trigger enter");
         Inventory loot = col.gameObject.GetComponent<Inventory>();
         if (loot != null)
         {
@@ -357,19 +348,13 @@ public class Player : MonoBehaviourPunCallbacks
                 Debug.Log("do we need to activate ?");
                 if (!LootHUD.activeSelf)
                 {
-                    Debug.Log("activated");
                     LootHUD.SetActive(true);
                 }
                 else
                 {
-                    Debug.Log("not activated");
                     return;
                 }
-                Debug.Log("size before init");
-                Debug.Log(loot.Count());
                 LootHUD.GetComponent<LootHUD>().init(ref loot);
-                Debug.Log("size after init");
-                Debug.Log(loot.Count());
                 LootHUD.GetComponent<LootHUD>().Clean();
                 loot.DisplayLoot(inventory);
 
@@ -377,26 +362,22 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-
     public void UnequipWeapon()
     {
 
     }
     public void EquipWeapon(Weapon weaponComp, GameObject weaponObject, bool toAdd)
     {
-        Debug.Log("EQUIP WEAPON");
         if (weaponComp != null && toAdd == true)
             inventory.AddItem(weaponComp);
         Transform hand = FindDeepChild(transform, "jointItemR");
         weaponComp.whenPickUp(gameObject, hand);
         if (inventory.PocketCount() > 1 && toAdd == true)
         {
-            Debug.Log("Pocket full");
             weaponObject.SetActive(false);
         }
         else
         {
-            Debug.Log("Pocket Empty");
             weaponComp.setAnim();
             currentWeapon = 0;
             eventListener.weaponComp = weaponComp;
@@ -405,10 +386,20 @@ public class Player : MonoBehaviourPunCallbacks
     }
     void OnTriggerEnter(Collider col)
     {
+        Bullet bullet = col.GetComponent<Bullet>();
+        if (bullet != null && bullet.shooter != null && bullet.shooter.ActorNumber != photonView.Owner.ActorNumber)
+        {
+            if (hasShield && shieldComp.isProtecting)
+            {
+                return;
+            }
+            TakeDamage(10);
+            bullet.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
+        }
+
         if (col.CompareTag("ExtractionZone"))
         {
             PFInventory_.PlayerWin();
-            Debug.Log("Joueur rentré dans la zone d'extraction");
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel("Menu");
         }
@@ -418,6 +409,10 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (weaponComp.isLooted && weaponComp.holder != gameObject && weaponComp.IsAttacking)
             {
+                if (hasShield && shieldComp.isProtecting)
+                {
+                    return;
+                }
                 TakeDamage(weaponComp.damages);
             }
 

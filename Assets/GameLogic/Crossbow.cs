@@ -59,7 +59,7 @@ public class CrossBow : Weapons
             Damage = 5;
             var bullet = Instantiate(bulletPrefab, NewPos, pm.characterModel.rotation);
             bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.forward * bulletSpeed;
-            bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
+            //bullet.GetComponent<Bullet>().Initialize(bulletSpawnPoint, Range, Damage);
         }
     }
 

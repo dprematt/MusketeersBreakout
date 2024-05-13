@@ -8750,7 +8750,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1060567884515893715}
   - component: {fileID: 7577156130198172039}
-  m_Layer: 0
+  - component: {fileID: 1631581414734774882}
+  - component: {fileID: 5806390416407928255}
+  m_Layer: 9
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8993,6 +8995,34 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.000062866835, y: 0.00009591319, z: 0.00069901673}
     m_Extent: {x: 0.0044631064, y: 0.010455042, z: 0.004582419}
   m_DirtyAABB: 0
+--- !u!136 &1631581414734774882
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6304127001893885926}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!136 &5806390416407928255
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6304127001893885926}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &6364559782277523262
 GameObject:
   m_ObjectHideFlags: 0
@@ -10909,7 +10939,6 @@ GameObject:
   - component: {fileID: 4333867798900555667}
   - component: {fileID: 1311753358829301974}
   - component: {fileID: 6123249281649367426}
-  - component: {fileID: 3062668265298199943}
   - component: {fileID: 1046479926215681898}
   - component: {fileID: 6813569006514032907}
   - component: {fileID: -4951191275531630021}
@@ -10978,20 +11007,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!136 &3062668265298199943
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8489976182974415840}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!135 &1046479926215681898
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -15733,6 +15748,7 @@ MonoBehaviour:
   WeaponChoice: 0
   anim: {fileID: 1311753358829301974}
   bloodParticles: {fileID: 6813569006514032907}
+  biomesPositions: []
   detectionRadius: 10
   rotationSpeed: 5
   weaponList: []
