@@ -36,6 +36,8 @@ public class HUDFixe : MonoBehaviour
                 InventoryScript_InsertItemAt(this, new InventoryEventArgs(inventory.mItems[i], i));
             }
         }
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
     public void init()
     {
@@ -54,6 +56,8 @@ public class HUDFixe : MonoBehaviour
             Image image = slot.GetChild(0).GetChild(0).GetComponent<Image>();
             image.enabled = false;
         }
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
         /*foreach (Transform slot in inventoryPanel)
         {
             slot.GetChild(0).GetChild(0).GetComponent<Image>().enabled = false;
@@ -95,6 +99,8 @@ public class HUDFixe : MonoBehaviour
         image.enabled = true;
         image.sprite = e.Item.Image;
         button.onClick.AddListener(e.Item.Attack);
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 
     private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
@@ -115,6 +121,8 @@ public class HUDFixe : MonoBehaviour
             }
         }
         Clean();
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
     private void InventoryScript_ItemRemoved(object sender, InventoryEventArgs e)
     {
@@ -134,6 +142,8 @@ public class HUDFixe : MonoBehaviour
         image.sprite = null;
         image.enabled = false;
         button.onClick.RemoveAllListeners();
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
           //  }
         //}
     }
