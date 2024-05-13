@@ -33,7 +33,7 @@ public class UIManagerCommand : MonoBehaviour
         return key == playerMovements.jumpKey ||
                key == playerMovements.sprintKey ||
                key == playerMovements.HUDKey ||
-               key == KeyCode.Tab ||
+               key == KeyCode.Escape||
                key == playerMovements.dodgeKey;
     }
 
