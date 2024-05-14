@@ -8,6 +8,9 @@ using Photon.Pun;
     [SerializeField]
     public float health, maxHealth = 10f;
     public float speed = 5f;
+    public float moveSpeed = 5f;
+    private float distanceMoved = 0f;
+    private Vector3 randomDirection;
     public float minDist = 3f;
     public Transform target;
     public Inventory inventory;
@@ -15,6 +18,7 @@ using Photon.Pun;
     public Animator anim;
     public ParticleSystem bloodParticles;
     public List<Vector3> biomesPositions = new List<Vector3>();
+    private Vector3 moveDirection;
 
 
     public float detectionRadius = 10f;
@@ -115,7 +119,7 @@ using Photon.Pun;
 
         if (target == null)
         {
-            anim.SetBool("isWalking", false);
+            MoveRandomly();
             return;
         }
 
@@ -153,6 +157,32 @@ using Photon.Pun;
             }
         }
     }
+
+    private void MoveRandomly()
+{
+    if (moveDirection == Vector3.zero)
+    {
+        moveDirection = Random.onUnitSphere;
+        moveDirection.y = 0f;
+        distanceMoved = 0f;
+
+        anim.SetBool("isWalking", true);
+    }
+
+    transform.position += moveDirection * moveSpeed * Time.deltaTime;
+    distanceMoved += moveSpeed * Time.deltaTime;
+
+    if (distanceMoved >= 5f)
+    {
+        moveDirection = Vector3.zero;
+        anim.SetBool("isWalking", false);
+    }
+    if (moveDirection != Vector3.zero)
+    {
+        transform.LookAt(transform.position + moveDirection);
+    }
+}
+
     private void OnTriggerEnter(Collider other)
     {
         Weapon weaponComp = other.GetComponent<Weapon>();
