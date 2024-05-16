@@ -84,9 +84,6 @@ using Photon.Pun;
         {
             if (biomesPositions.Count != 0)
             {
-                if (biomesPositions == null)
-                {
-                }
                 float randomBiome = Random.Range(0f, 5.0001f);
                 float randomNumber = Random.Range(0f, 5.0001f);
                 gameObject.transform.position = biomesPositions[(int)randomBiome];
@@ -98,14 +95,17 @@ using Photon.Pun;
                 // inventory.AddEnemyWeapon("Gun");
                 if (randomNumber < 2)
                 {
+                    Debug.Log("BIOME DESERT");
                     health = 100;
                 }
                 else if (randomNumber < 4)
                 {
+                    Debug.Log("BIOME JUNGLE");
                     speed = 15;
                 }
                 else if (randomNumber < 6)
                 {
+                    Debug.Log("BIOME NEIGE");
                     speed = 10;
                     health = 30;
                 }

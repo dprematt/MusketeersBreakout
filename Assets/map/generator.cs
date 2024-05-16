@@ -706,15 +706,15 @@ public class generator : MonoBehaviourPun
                 threadInfo.callback(threadInfo.parameter);
             }
         }
-            EnemySquare enemySquare = FindAnyObjectByType<EnemySquare>();
-            EnemyShape enemyShape = FindAnyObjectByType<EnemyShape>();
-            Enemy enemy = FindAnyObjectByType<Enemy>();
-            if (enemySquare != null)
-                enemySquare.biomesPositions = biomesPositions;
-            if (enemyShape != null)
-                enemyShape.biomesPositions = biomesPositions;
-            if (enemy != null)
-                enemy.biomesPositions = biomesPositions;
+        Enemy[] enemies = FindObjectsOfType<Enemy>();
+
+        if (enemies != null)
+        {
+            foreach (Enemy guardian in enemies)
+            {
+                guardian.biomesPositions = biomesPositions;
+            }
+        }
     }
 
     private void OnValidate()
