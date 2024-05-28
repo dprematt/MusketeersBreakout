@@ -7,7 +7,7 @@ using Photon.Pun;
 
 public class OnEventCallBacks : MonoBehaviourPunCallbacks
 {
-    public GameObject LobbyPanel_, RoomPanel_;
+    public GameObject LobbyPanel_, RoomPanel_, FriendPannel_;
     public Text Room_;
 
     public RoomManager RoomItemPrefab_;
@@ -26,6 +26,7 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.JoinLobby();
         LobbyPanel_.SetActive(true);
+        FriendPannel_.SetActive(true);
         Debug.Log("ConnectedToMaster Photon");
     }
 
