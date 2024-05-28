@@ -21,13 +21,13 @@ public class Endless : MonoBehaviour
     Vector2 placementAreaSize = new Vector2(1500, 1500);
     static List<Chunk> chunkVisibleLastUpdate = new List<Chunk>();
 
-    private void Start()
-    {
+    private void Start() {
         _generator = FindObjectOfType<generator>();
         StartCoroutine(SetupPrefabsAndTerrain());
         maxViewDist = detailsLevel[detailsLevel.Length - 1].visibleDstThreshold;
         chunkSize = generator.mapChunkSize - 1;
         chunkVisibleViewDist = Mathf.RoundToInt(maxViewDist / chunkSize);
+        placementAreaSize = new Vector2(chunkSize * 5, chunkSize * 5);
         GenerateAllChunks();
     }
 

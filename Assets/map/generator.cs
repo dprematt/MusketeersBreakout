@@ -90,39 +90,39 @@ public class generator : MonoBehaviourPun
         Invoke("PlaceWeaponsInBiomes", randomDelay + 1);
     }
 
-    void OnDrawGizmos() {
-        float mapChunkSize = 241;
-        float topBorder = 3.5f * mapChunkSize;
-        float bottomBorder = -topBorder;
-        float leftBorder = -topBorder;
-        float rightBorder = topBorder;
+    // void OnDrawGizmos() {
+    //     float mapChunkSize = 241;
+    //     float topBorder = 3.5f * mapChunkSize;
+    //     float bottomBorder = -topBorder;
+    //     float leftBorder = -topBorder;
+    //     float rightBorder = topBorder;
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(new Vector3(leftBorder, 0, topBorder), new Vector3(leftBorder, 0, bottomBorder));
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(new Vector3(rightBorder, 0, topBorder), new Vector3(rightBorder, 0, bottomBorder));
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(new Vector3(leftBorder, 0, topBorder), new Vector3(rightBorder, 0, topBorder));
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(new Vector3(leftBorder, 0, bottomBorder), new Vector3(rightBorder, 0, bottomBorder));
-    }
+    //     Gizmos.color = Color.yellow;
+    //     Gizmos.DrawLine(new Vector3(leftBorder, 0, topBorder), new Vector3(leftBorder, 0, bottomBorder));
+    //     Gizmos.color = Color.green;
+    //     Gizmos.DrawLine(new Vector3(rightBorder, 0, topBorder), new Vector3(rightBorder, 0, bottomBorder));
+    //     Gizmos.color = Color.red;
+    //     Gizmos.DrawLine(new Vector3(leftBorder, 0, topBorder), new Vector3(rightBorder, 0, topBorder));
+    //     Gizmos.color = Color.blue;
+    //     Gizmos.DrawLine(new Vector3(leftBorder, 0, bottomBorder), new Vector3(rightBorder, 0, bottomBorder));
+    // }
 
     public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize, System.Random prng)
     {
         InitializeRandom();
         Vector3[] extractionZonePositions  = {
-            new Vector3(-730, 0, -775),
-            new Vector3(-730, 0, 775),
-            new Vector3(730, 0, -775),
-            new Vector3(730, 0, 775)
+            new Vector3(-480, 0, -540),
+            new Vector3(-480, 0, 540),
+            new Vector3(480, 0, -540),
+            new Vector3(480, 0, 540)
         };
         int[] prefabCounts = new int[] { 2, 5, 5, 5 };
         float chunkHalfSize = chunkSize / 2f;
 
-        float mapLeftBorder = -3.5f * mapChunkSize + 100f;
-        float mapRightBorder = 3.5f * mapChunkSize - 100f;
-        float mapTopBorder = 3.5f * mapChunkSize - 100f;
-        float mapBottomBorder = -3.5f * mapChunkSize + 100f;
+        float mapLeftBorder = -2.5f * mapChunkSize + 100f;
+        float mapRightBorder = 2.5f * mapChunkSize - 100f;
+        float mapTopBorder = 2.5f * mapChunkSize - 100f;
+        float mapBottomBorder = -2.5f * mapChunkSize + 100f;
 
         Dictionary<string, List<Vector3>> placedPrefabs = new Dictionary<string, List<Vector3>>();
 
@@ -217,6 +217,8 @@ public class generator : MonoBehaviourPun
 
                     float borderBuffer = 100;
                     float cornerBuffer = mapChunkSize;
+                    topLeft = new Vector2(-2.5f * mapChunkSize, 2.5f * mapChunkSize);
+                    bottomRight = new Vector2(2.5f * mapChunkSize, -2.5f * mapChunkSize);
 
                     bool isInCornerChunk = 
                         (position.x < (topLeft.x + cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
@@ -232,7 +234,7 @@ public class generator : MonoBehaviourPun
 
                     bool isTooCloseToOtherBiomes = 
                         biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 200) ||
-                        specificBiomePositions.Any(biomePos => Vector3.Distance(position, biomePos) < 1000);
+                        specificBiomePositions.Any(biomePos => Vector3.Distance(position, biomePos) < 500);
 
                     if (!isInBorderBuffer && !isInCornerChunk && !isTooCloseToOtherBiomes && IsPositionOnFlatArea(position, center))
                     {
@@ -346,44 +348,29 @@ public class generator : MonoBehaviourPun
         float normalizedWaterHeight = 0.0001f / meshHeightMult;
         int beachThickness = 50;
 
-        // Limites globales de la carte
-        float mapHalfWidth = mapChunkSize * 7 / 2;
-        float mapHalfHeight = mapChunkSize * 7 / 2;
+        // Dimensions réduites de la carte
+        float mapHalfWidth = mapChunkSize * 2.5f; // 5 chunks / 2
+        float mapHalfHeight = mapChunkSize * 2.5f;
 
-        // Détails des frontières du chunk
         float chunkTopBorder = chunkCenter.y + (mapChunkSize / 2);
         float chunkBottomBorder = chunkCenter.y - (mapChunkSize / 2);
         float chunkRightBorder = chunkCenter.x + (mapChunkSize / 2);
         float chunkLeftBorder = chunkCenter.x - (mapChunkSize / 2);
 
-        // Conditions ajustées pour la génération des plages
-        bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - beachThickness);
-        bool isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + beachThickness);
-        bool isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + beachThickness);
-        bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - beachThickness);
+        bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - beachThickness) && chunkCenter.y < mapHalfHeight;
+        bool isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + beachThickness) && chunkCenter.y > -mapHalfHeight;
+        bool isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + beachThickness) && chunkCenter.x > -mapHalfWidth;
+        bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - beachThickness) && chunkCenter.x < mapHalfWidth;
 
-        // Appliquez les plages uniquement sur les frontières extérieures
         if (isTopBorderChunk)
-        {
             ApplyBeachToTopOrBottom(beachThickness, chunkCenter, normalizedWaterHeight, true);
-        }
-
         if (isBottomBorderChunk)
-        {
             ApplyBeachToTopOrBottom(beachThickness, chunkCenter, normalizedWaterHeight, false);
-        }
-
         if (isLeftBorderChunk)
-        {
             ApplyBeachToLeftOrRightBorder(beachThickness, chunkCenter, normalizedWaterHeight, true);
-        }
-
         if (isRightBorderChunk)
-        {
             ApplyBeachToLeftOrRightBorder(beachThickness, chunkCenter, normalizedWaterHeight, false);
-        }
     }
-
 
 
 
@@ -449,10 +436,10 @@ public class generator : MonoBehaviourPun
     {
         int i = 1;
         Vector3[] cornerPositions = {
-            new Vector3(-730, 0, -775),
-            new Vector3(-730, 0, 775),
-            new Vector3(730, 0, -775),
-            new Vector3(730, 0, 775)
+            new Vector3(-480, 0, -540),
+            new Vector3(-480, 0, 540),
+            new Vector3(480, 0, -540),
+            new Vector3(480, 0, 540)
         };
 
         foreach (Vector3 position in cornerPositions)

@@ -82,13 +82,13 @@ public static class Skeleton
         }
 
         float flatHeight = 0.4f;
-        int numberOfPlates = 4;
+        int numberOfPlates = 3;
         List<Vector2> plateCenters = new List<Vector2>();
 
         System.Random localPrng = new System.Random(seed + (int)offset.x * 1000 + (int)offset.y);
         while (plateCenters.Count < numberOfPlates) {
             Vector2 newCenter = new Vector2(localPrng.Next(20, mapWidth - 20) + offset.x, localPrng.Next(20, mapHeight - 20) + offset.y);
-            if (!plateCenters.Any(center => Vector2.Distance(center, newCenter) < 70)) {
+            if (!plateCenters.Any(center => Vector2.Distance(center, newCenter) < 60)) {
                 plateCenters.Add(newCenter);
             }
         }
