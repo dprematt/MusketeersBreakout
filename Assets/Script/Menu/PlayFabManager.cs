@@ -98,6 +98,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
             BoutonDeconnexion_.SetActive(true);
             Bienvenue_.text = "Bienvenue " + username + " !!!";
             Debug.Log("Username: " + username);
+            SavePhotonId();
         }
     }
 
@@ -115,6 +116,27 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         BoutonConnexion_.SetActive(true);
         ObjectBienvenue_.SetActive(false);
         BoutonPlay_.SetActive(false);
+    }
+
+    public void SavePhotonId()
+    {
+        var request = new UpdateUserDataRequest
+        {
+            Data = new System.Collections.Generic.Dictionary<string, string>
+            {
+                { "PhotonID", PhotonNetwork.LocalPlayer.UserId }
+            }
+        };
+
+        PlayFabClientAPI.UpdateUserData(request, OnVariableEnregistree, OnPlayFabError);
+    }
+
+    private void OnVariableEnregistree(UpdateUserDataResult result)
+    {
+    }
+
+    private void OnPlayFabError(PlayFabError error)
+    {
     }
 
 }
