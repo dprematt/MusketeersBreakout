@@ -6,7 +6,6 @@ using PlayFab.ClientModels;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
-using UnityEditor.VersionControl;
 
 public class FriendsManager : MonoBehaviourPunCallbacks
 {
@@ -139,6 +138,7 @@ public class FriendsManager : MonoBehaviourPunCallbacks
             string state = friend.IsOnline ? "online" : "disconnected";
             newFriend.SetState(state);
             FriendItemList_.Add(newFriend);
+            Debug.Log("Friend : " + friend.UserId + " Connected state : " + friend.IsOnline);
         }
         Debug.Log("Friend array After OnFriendListUpdate : " + friendUsernames.ToArray());
     }
@@ -199,3 +199,4 @@ public class FriendsManager : MonoBehaviourPunCallbacks
         Debug.Log("Error GET List: " + error.ErrorMessage);
     }
 }
+
