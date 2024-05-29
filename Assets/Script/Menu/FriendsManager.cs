@@ -19,25 +19,30 @@ public class FriendsManager : MonoBehaviourPunCallbacks
     public List<string> friendUsernames = new List<string>();
     
     private float lastFindFriendsTime;
+
+    bool hasGottenFriendsList = false;
     
     void Start()
     {
         lastFindFriendsTime = Time.time; 
-        GetFriendsList();
     }
 
     void Update()
     {
+        if (gameObject.activeSelf && !hasGottenFriendsList) {
+            GetFriendsList();
+            hasGottenFriendsList = true;
+        }
         if (Time.time - lastFindFriendsTime >= 10f)
         {
             PhotonNetwork.FindFriends(friendUsernames.ToArray());
-            lastFindFriendsTime = Time.time; // Met à jour le temps du dernier appel
+            lastFindFriendsTime = Time.time;
         }
     }
 
     public void OnClickAddButton()
     {
-        AddFriendByUsername(Name_.text, false);
+        AddFriendByUsername(Name_.text);
     }
 
     public void OnClickRemoveButton(string Name)
@@ -46,33 +51,29 @@ public class FriendsManager : MonoBehaviourPunCallbacks
     }
 
     //////////////////////////////////////////////////////////////////////////////////////// ADD
-    public Friend AddFriendByUsername(string friendUsername, bool GetFunc)
+    public void AddFriendByUsername(string friendUsername)
     {
-        if (!friendUsernames.Contains(friendUsername))
+        var request = new GetAccountInfoRequest
         {
-            friendUsernames.Add(friendUsername);
-        }
-        Friend newfriend = Instantiate(FriendPrefab_, ContentObject_).GetComponent<Friend>();
-        if (GetFunc == false)
-        {
-            var request = new GetAccountInfoRequest
-            {
-                Username = friendUsername
-            };
-            PhotonNetwork.FindFriends(friendUsernames.ToArray());
+            Username = friendUsername
+        };
 
-            PlayFabClientAPI.GetAccountInfo(request, OnGetAccountInfoForAddSuccess, OnGetAccountInfoError);
-        }
-        return newfriend;
+        PlayFabClientAPI.GetAccountInfo(request, OnGetAccountInfoForAddSuccess, OnGetAccountInfoError);
+
     }
 
     private void OnGetAccountInfoForAddSuccess(GetAccountInfoResult result)
     {
+        Debug.Log("ADD Friend");
         var friendPlayFabId = result.AccountInfo.PlayFabId;
         var addFriendRequest = new AddFriendRequest
         {
             FriendPlayFabId = friendPlayFabId
         };
+        if (!friendUsernames.Contains(result.AccountInfo.Username))
+        {
+            friendUsernames.Add(result.AccountInfo.Username);
+        }
 
 
         PlayFabClientAPI.AddFriend(addFriendRequest, OnAddFriendSuccess, OnAddFriendError);
@@ -86,6 +87,8 @@ public class FriendsManager : MonoBehaviourPunCallbacks
     private void OnAddFriendSuccess(AddFriendResult result)
     {
         Debug.Log("Friend added successfully!");
+        Debug.Log("Friend array : " + friendUsernames.ToArray());
+        PhotonNetwork.FindFriends(friendUsernames.ToArray());
     }
 
     private void OnAddFriendError(PlayFabError error)
@@ -101,20 +104,13 @@ public class FriendsManager : MonoBehaviourPunCallbacks
             Username = friendUsername
         };
 
-        if (friendUsernames.Contains(friendUsername))
-        {
-            friendUsernames.Remove(friendUsername);
-        }
-
-        foreach (Friend item in FriendItemList_)
-        {
-            if (item.usernameText.text == friendUsername) {
-                Destroy(item.gameObject);
-                break;
-            }
-        }
-
-        PhotonNetwork.FindFriends(friendUsernames.ToArray());
+        // foreach (Friend item in FriendItemList_)
+        // {
+        //     if (item.usernameText.text == friendUsername) {
+        //         Destroy(item.gameObject);
+        //         break;
+        //     }
+        // }
 
         PlayFabClientAPI.GetAccountInfo(request, OnGetAccountInfoForRemoveSuccess, OnGetAccountInfoError);
     }
@@ -136,28 +132,38 @@ public class FriendsManager : MonoBehaviourPunCallbacks
 
         foreach (Photon.Realtime.FriendInfo friend in friendList)
         {
-            Friend newFriend = AddFriendByUsername(friend.UserId, true);
+            Debug.Log("ADD Item :" + friend.UserId);
+            //AddFriendByUsername(friend.UserId);
+            Friend newFriend = Instantiate(FriendPrefab_, ContentObject_).GetComponent<Friend>();
             newFriend.SetUsername(friend.UserId);
             string state = friend.IsOnline ? "online" : "disconnected";
             newFriend.SetState(state);
             FriendItemList_.Add(newFriend);
         }
+        Debug.Log("Friend array After OnFriendListUpdate : " + friendUsernames.ToArray());
     }
 
     private void OnGetAccountInfoForRemoveSuccess(GetAccountInfoResult result)
     {
+        Debug.Log("RM Friend");
         var friendPlayFabId = result.AccountInfo.PlayFabId;
         var removeFriendRequest = new RemoveFriendRequest
         {
             FriendPlayFabId = friendPlayFabId
         };
+        if (friendUsernames.Contains(result.AccountInfo.Username))
+        {
+            friendUsernames.Remove(result.AccountInfo.Username);
+        }
 
         PlayFabClientAPI.RemoveFriend(removeFriendRequest, OnRemoveFriendSuccess, OnRemoveFriendError);
     }
 
     private void OnRemoveFriendSuccess(RemoveFriendResult result)
     {
+        PhotonNetwork.FindFriends(friendUsernames.ToArray());
         Debug.Log("Friend removed successfully!");
+        Debug.Log("Friend array : " + friendUsernames.ToArray());
     }
 
     private void OnRemoveFriendError(PlayFabError error)
@@ -171,12 +177,20 @@ public class FriendsManager : MonoBehaviourPunCallbacks
         PlayFabClientAPI.GetFriendsList(new GetFriendsListRequest(), OnGetFriendsListSuccess, OnErrorGet);
     }
 
+    private void FillFriendList(string name)
+    {
+        if (!friendUsernames.Contains(name))
+        {
+            friendUsernames.Add(name);
+        }
+    }
+
     private void OnGetFriendsListSuccess(GetFriendsListResult result)
     {
         Debug.Log("Friends list retrieved");
         foreach (var friend in result.Friends)
         {
-            AddFriendByUsername(friend.Username, true);
+            FillFriendList(friend.Username);
         }
     }
 
