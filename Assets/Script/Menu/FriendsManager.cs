@@ -7,7 +7,6 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Codice.CM.Common;
 using System.Linq;
 
 public class FriendsManager : MonoBehaviourPunCallbacks
@@ -26,6 +25,9 @@ public class FriendsManager : MonoBehaviourPunCallbacks
 
     List<List<string>> Data = new List<List<string>>();
     List<string> PhotonIDS = new List<string>();
+
+    private Queue<string> friendQueuePlayfab = new Queue<string>();
+    private Queue<string> friendQueuePhoton = new Queue<string>();
     
     private float lastFindFriendsTime;
 
@@ -44,7 +46,12 @@ public class FriendsManager : MonoBehaviourPunCallbacks
         }
         if (Time.time - lastFindFriendsTime >= 10f)
         {
-            //PhotonNetwork.FindFriends(friendUsernames.ToArray());
+            List<string> tmp = new List<string>();
+            for (int i = 0; i < Data.Count(); i++) {
+                if (Data[i][2] != null)
+                    tmp.Add(Data[i][2]);
+            }
+            PhotonNetwork.FindFriends(tmp.ToArray());
             lastFindFriendsTime = Time.time;
         }
     }
@@ -64,12 +71,12 @@ public class FriendsManager : MonoBehaviourPunCallbacks
         }
         tmp.Add(Name_.text);
         Data.Add(tmp);
-        GetPlayfabIDbyUsername(ID);
+        GetPlayfabIDbyUsername(ID, false);
         for (int i = 0; i < Data.Count(); i++)
         {
             if (Data[i].Contains(Name_.text))
             {
-                GetUserData(Data[i][1]);
+                GetUserData(Data[i][1], false);
                 break;
             }
         }
@@ -108,33 +115,29 @@ public class FriendsManager : MonoBehaviourPunCallbacks
 
     private void OnAddFriendSuccess(AddFriendResult result)
     {
-        List<string> PhotonID = new List<string>();
-        for (int i = 0; i < Data.Count(); i++)
-        {
-            if (Data[i][2] != null) {
-                PhotonID.Add(Data[i][2]);
+        List<string> tmp = new List<string>();
+            for (int i = 0; i < Data.Count(); i++) {
+                if (Data[i][2] != null)
+                    tmp.Add(Data[i][2]);
             }
-        }
-        PhotonNetwork.FindFriends(PhotonID.ToArray());
+        PhotonNetwork.FindFriends(tmp.ToArray());
         Debug.Log("Friend added successfully!");
-        Debug.Log("Friend array : " + PhotonID.ToArray());
+        Debug.Log("Friend array : " + tmp.ToArray());
     }
 
     private void OnRemoveFriendSuccess(RemoveFriendResult result)
     {
-        List<string> PhotonID = new List<string>();
-        for (int i = 0; i < Data.Count(); i++)
-        {
-            if (Data[i][2] != null) {
-                PhotonID.Add(Data[i][2]);
+        List<string> tmp = new List<string>();
+            for (int i = 0; i < Data.Count(); i++) {
+                if (Data[i][2] != null)
+                    tmp.Add(Data[i][2]);
             }
-        }
-        PhotonNetwork.FindFriends(PhotonID.ToArray());
+        PhotonNetwork.FindFriends(tmp.ToArray());
         Debug.Log("Friend removed successfully!");
-        Debug.Log("Friend array : " + PhotonID.ToArray());
+        Debug.Log("Friend array : " + tmp.ToArray());
     }
 
-    public void GetUserData(string playFabId)
+    public void GetUserData(string playFabId, bool SourceGet)
     {
  
         Current_Player_PlayFabID_ = playFabId;
@@ -142,21 +145,40 @@ public class FriendsManager : MonoBehaviourPunCallbacks
         {
             PlayFabId = playFabId
         };
-
-        PlayFabClientAPI.GetUserData(request, GetPhotonID, OnError);
+        Debug.Log("CurrentPlayerPlayfabID : " + Current_Player_PlayFabID_);
+        if(SourceGet == true)
+            PlayFabClientAPI.GetUserData(request, GetPhotonID, OnErrorGetPhoton);
+        else
+            PlayFabClientAPI.GetUserData(request, GetPhotonID, OnError);
     }
 
     private void GetPhotonID(GetUserDataResult result)
     {
+
+        if (result.Data == null)
+    {
+        Debug.Log("result.Data is null");
+        return;
+    }
+
+    if (result.Data.Count == 0)
+    {
+        Debug.Log("result.Data is empty");
+        return;
+    }
+
+    Debug.Log("result.Data count: " + result.Data.Count);
         string ID = null;
         foreach (var entry in result.Data)
         {
+            Debug.Log("Entry key :" + entry.Value.Value);
             if (entry.Key == "PhotonID") {
                 ID = entry.Value.Value;
                 Debug.Log("Friend Photon ID : " + entry.Key);
                 break;
             }
         }
+        Debug.Log("GETPHOTONID");
         if (ID == null) {
             Debug.Log("Photon ID Null for player " + Current_Player_PlayFabID_);
             return;
@@ -176,116 +198,187 @@ public class FriendsManager : MonoBehaviourPunCallbacks
             Debug.Log("Current_Player_PlayFabID_ null");
             return;
         }
-
         Current_Player_PlayFabID_ = null;
+
+        if (friendQueuePhoton.Count > 0)
+        {
+            string nextFriend = friendQueuePhoton.Dequeue();
+            StartCoroutine(ProcessFriendPhoton(nextFriend));
+        }
     }
 
-    private void GetPlayfabIDbyUsername(string username)
+    public override void OnFriendListUpdate(List<Photon.Realtime.FriendInfo> friendList)
+    {
+        // foreach (var friend in friendList)
+        // {
+        //     string friendUsername = friend.UserId;
+        //     bool isOnline = friend.IsOnline;
+        //     Debug.Log($"Friend: {friendUsername}, Status: {(isOnline ? "Online" : "Offline")}");
+        // 
+
+        foreach (Friend item in FriendItemList_)
+        {
+            Destroy(item.gameObject);
+        }
+        FriendItemList_.Clear();
+
+        foreach (Photon.Realtime.FriendInfo friend in friendList)
+        {
+            Debug.Log("ADD Item :" + friend.UserId);
+            Friend newFriend = Instantiate(FriendPrefab_, ContentObject_).GetComponent<Friend>();
+            for (int i = 0; i < Data.Count(); i++) {
+                if (Data[i].Contains(friend.UserId)) {
+                    newFriend.SetUsername(Data[i][0]);
+                    string state = friend.IsOnline ? "online" : "disconnected";
+                    newFriend.SetState(state);
+                    break;
+                }
+            }
+            FriendItemList_.Add(newFriend);
+            Debug.Log("Friend : " + friend.UserId + " Connected state : " + friend.IsOnline);
+        }
+        Debug.Log("Friend array After OnFriendListUpdate : " + friendUsernames.ToArray());
+    }
+
+    private void GetPlayfabIDbyUsername(string username, bool SourceGet)
     {
         Current_Player_Name_ = username;
         var request = new GetAccountInfoRequest
         {
             Username = username
         };
-
-        PlayFabClientAPI.GetAccountInfo(request, GetPlayFabID, OnError);
+        if (SourceGet == true)
+            PlayFabClientAPI.GetAccountInfo(request, GetPlayFabID, OnErrorGetPlayfab);
+        else
+            PlayFabClientAPI.GetAccountInfo(request, GetPlayFabID, OnError);
     }
 
     private void GetPlayFabID(GetAccountInfoResult result)
     {
         string ID = result.AccountInfo.PlayFabId;
-        if (ID == null) {
-            Debug.Log("PlayFabID ID Null for player " + Current_Player_PlayFabID_);
+        
+        if (ID == null)
+        {
+            Debug.Log("PlayFabID ID Null for player " + Current_Player_Name_);
         }
 
-        if (Current_Player_Name_ != null) {
+        if (Current_Player_Name_ != null)
+        {
+            //Debug.Log("ID GetPlayFabID: " + ID + " Username : " + Current_Player_Name_);
             for (int i = 0; i < Data.Count; i++)
             {
                 if (Data[i].Contains(Current_Player_Name_))
                 {
-                    if (ID != null) {
+                    if (ID != null)
+                    {
                         Data[i].Add(ID);
                         break;
                     }
                 }
             }
-        } else {
+        }
+        else
+        {
             Debug.Log("Current_Player_Name_ null");
         }
-
+        
 
         Current_Player_Name_ = null;
 
+        // Continue processing the next friend in the queue
+        if (friendQueuePlayfab.Count > 0)
+        {
+            string nextFriend = friendQueuePlayfab.Dequeue();
+            StartCoroutine(ProcessFriendPlayfab(nextFriend));
+        }
     }
 
+    private void OnErrorGetPlayfab(PlayFabError error)
+    {
+        Debug.LogError("Error: " + error.GenerateErrorReport());
+        
+        // Continue processing the next friend in the queue even if there's an error
+        if (friendQueuePlayfab.Count > 0)
+        {
+            string nextFriend = friendQueuePlayfab.Dequeue();
+            StartCoroutine(ProcessFriendPlayfab(nextFriend));
+        }
+    }
 
+    private void OnErrorGetPhoton(PlayFabError error)
+    {
+        Debug.LogError("Error: " + error.GenerateErrorReport());
+        
+        // Continue processing the next friend in the queue even if there's an error
+        if (friendQueuePhoton.Count > 0)
+        {
+            string nextFriend = friendQueuePhoton.Dequeue();
+            StartCoroutine(ProcessFriendPhoton(nextFriend));
+        }
+    }
 
-    //////////////////////////////////////////////////////////////////////////////////////// REMOVE
+    private IEnumerator ProcessFriendPlayfab(string username)
+    {
+        GetPlayfabIDbyUsername(username, true);
+        yield return new WaitUntil(() => Current_Player_Name_ == null);
+    }
 
-
-    // public override void OnFriendListUpdate(List<Photon.Realtime.FriendInfo> friendList)
-    // {
-    //     // foreach (var friend in friendList)
-    //     // {
-    //     //     string friendUsername = friend.UserId;
-    //     //     bool isOnline = friend.IsOnline;
-    //     //     Debug.Log($"Friend: {friendUsername}, Status: {(isOnline ? "Online" : "Offline")}");
-    //     // 
-
-    //     foreach (Friend item in FriendItemList_)
-    //     {
-    //         Destroy(item.gameObject);
-    //     }
-    //     FriendItemList_.Clear();
-
-    //     foreach (Photon.Realtime.FriendInfo friend in friendList)
-    //     {
-    //         Debug.Log("ADD Item :" + friend.UserId);
-    //         GetUserData(friend.UserId);
-    //         //AddFriendByUsername(friend.UserId);
-    //         Friend newFriend = Instantiate(FriendPrefab_, ContentObject_).GetComponent<Friend>();
-    //         newFriend.SetUsername(friend.UserId);
-    //         string state = friend.IsOnline ? "online" : "disconnected";
-    //         newFriend.SetState(state);
-    //         FriendItemList_.Add(newFriend);
-    //         Debug.Log("Friend : " + friend.UserId + " Connected state : " + friend.IsOnline);
-    //     }
-    //     Debug.Log("Friend array After OnFriendListUpdate : " + friendUsernames.ToArray());
-    // }
-
-
-    //////////////////////////////////////////////////////////////////////////////////////// GET
+    private IEnumerator ProcessFriendPhoton(string username)
+    {
+        GetUserData(username, true);
+        yield return new WaitUntil(() => Current_Player_PlayFabID_ == null);
+    }
 
     private void OnGetFriendsListSuccess(GetFriendsListResult result)
     {
-        Debug.Log("Friends list retrieved");
-        List<string> tmp = new List<string>();
-
         foreach (var friend in result.Friends)
         {
-            tmp.Clear();
+            List<string> tmp = new List<string>();
             tmp.Add(friend.Username);
             if (tmp != null)
                 Data.Add(tmp);
             else
                 Debug.Log("List<strin> tmp null. friend.username = " + friend.Username);
-            Debug.Log("Friend : " + friend.Username + " added in list");
-            GetPlayfabIDbyUsername(friend.Username);
+            friendQueuePlayfab.Enqueue(friend.Username);
         }
-        // for (int i = 0; i < Data.Count; i++)
-        // {
-        //     GetUserData(Data[i][1]);
-        // }
-        PrintData();
+
+        if (friendQueuePlayfab.Count > 0)
+        {
+            string firstFriend = friendQueuePlayfab.Dequeue();
+            StartCoroutine(ProcessFriendPlayfab(firstFriend));
+        }
+        
+
     }
 
-    private void PrintData()
+    public void PrintData()
     {
+        for (int i = 0; i < Data.Count(); i++)
+        {
+            if (Data[i][1] != null) {
+                friendQueuePhoton.Enqueue(Data[i][1]);
+                Debug.Log("ADD PLAYFAB ID : " + Data[i][1]);
+            }
+        }
+
+        if (friendQueuePhoton.Count > 0)
+        {
+            string firstFriend = friendQueuePhoton.Dequeue();
+            StartCoroutine(ProcessFriendPhoton(firstFriend));
+        }
+        Debug.Log("PrintData");
         for (int i = 0; i < Data.Count; i++)
         {
-            for (int x = 0; x < Data[i].Count(); x++)
+            for (int x = 0; x < Data[i].Count(); x++) {
                 Debug.Log("Index i : " + i + " Index x : " + x + " Value : " + Data[i][x]);
+            }
+
+            
         }
+        // Debug.Log(Data.Count);
+        // Debug.Log(Data[0][0]);
+        // Debug.Log(Data[1][0]);
+        // Debug.Log(Data[2][1]);
     }
 
     private void OnError(PlayFabError error)

@@ -124,8 +124,10 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         {
             Data = new System.Collections.Generic.Dictionary<string, string>
             {
-                { "PhotonID", PhotonNetwork.LocalPlayer.UserId }
-            }
+                { "PhotonID", PhotonNetwork.LocalPlayer.UserId },
+                
+            },
+            Permission = UserDataPermission.Public
         };
 
         PlayFabClientAPI.UpdateUserData(request, OnVariableEnregistree, OnPlayFabError);
