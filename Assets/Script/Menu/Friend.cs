@@ -8,7 +8,18 @@ public class Friend : MonoBehaviour
     // Start is called before the first frame update
     public Text usernameText;
 
+    FriendsManager manager;
     public Text state_;
+
+    public void Start()
+    {
+        manager = FindObjectOfType<FriendsManager>();
+    }
+
+    public void OnClickDelete()
+    {
+        manager.OnClickRemoveButton(usernameText.text);
+    }
 
     public void SetUsername(string username)
     {

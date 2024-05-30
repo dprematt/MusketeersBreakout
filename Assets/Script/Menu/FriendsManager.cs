@@ -71,21 +71,24 @@ public class FriendsManager : MonoBehaviourPunCallbacks
         }
         tmp.Add(Name_.text);
         Data.Add(tmp);
-        GetPlayfabIDbyUsername(ID, false);
-        for (int i = 0; i < Data.Count(); i++)
+        friendQueuePlayfab.Enqueue(Name_.text);
+    
+        if (friendQueuePlayfab.Count > 0)
         {
-            if (Data[i].Contains(Name_.text))
-            {
-                GetUserData(Data[i][1], false);
-                break;
-            }
+            string firstFriend = friendQueuePlayfab.Dequeue();
+            StartCoroutine(ProcessFriendPlayfab(firstFriend));
         }
 
-        var addFriendRequest = new AddFriendRequest
-        {
-            FriendPlayFabId = ID
-        };
-        PlayFabClientAPI.AddFriend(addFriendRequest, OnAddFriendSuccess, OnError);
+        // for (int i = 0; i < Data.Count(); i++)
+        // {
+        //     if (Data[i].Contains(Name_.text))
+        //     {
+        //         GetUserData(Data[i][1], false);
+        //         break;
+        //     }
+        // }
+
+        
     }
 
     public void OnClickRemoveButton(string Name)
@@ -96,6 +99,15 @@ public class FriendsManager : MonoBehaviourPunCallbacks
             if (Data[i].Contains(Name)) {
                 ID = Data[i][1];
                 Data.RemoveAt(i);
+                break;
+            }
+        }
+
+        foreach (Friend friend in FriendItemList_)
+        {
+            if (friend.usernameText.text == Name) {
+                Destroy(friend.gameObject);
+                FriendItemList_.Remove(friend);
                 break;
             }
         }
@@ -264,7 +276,7 @@ public class FriendsManager : MonoBehaviourPunCallbacks
 
         if (Current_Player_Name_ != null)
         {
-            //Debug.Log("ID GetPlayFabID: " + ID + " Username : " + Current_Player_Name_);
+            Debug.Log("ID GetPlayFabID: " + ID + " Username : " + Current_Player_Name_);
             for (int i = 0; i < Data.Count; i++)
             {
                 if (Data[i].Contains(Current_Player_Name_))
@@ -281,6 +293,12 @@ public class FriendsManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("Current_Player_Name_ null");
         }
+
+        var addFriendRequest = new AddFriendRequest
+        {
+            FriendPlayFabId = ID
+        };
+        PlayFabClientAPI.AddFriend(addFriendRequest, OnAddFriendSuccess, OnError);
         
 
         Current_Player_Name_ = null;
