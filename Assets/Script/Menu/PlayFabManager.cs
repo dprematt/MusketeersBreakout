@@ -14,7 +14,10 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
 
     public GameObject BoutonPlay_, BoutonInscription_, BoutonConnexion_, ObjectBienvenue_, BoutonDeconnexion_;
 
+    public GameObject Login_, Register_, Welcome_;
     public Text Bienvenue_;
+
+    public Text Error_;
 
     //Fonction qui permet de register un user
     public void Register()
@@ -31,9 +34,12 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("Register success");
             GetPlayerUsername(result.PlayFabId);
+            Register_.SetActive(false);
+            Welcome_.SetActive(true);
         }, error =>
         {
             Debug.Log("Error while registering : " + error.ErrorMessage);
+            Error_.text = error.ErrorMessage;
         });
     }
 
@@ -62,6 +68,8 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         // Access the PlayFabID from the authentication result
         string playFabId = result.PlayFabId;
         Debug.Log("PlayFab ID: " + playFabId);
+        Login_.SetActive(false);
+        Welcome_.SetActive(true);
         
         // After getting the PlayFab ID, you can proceed to get the player's username
         GetPlayerUsername(playFabId);
@@ -69,6 +77,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
 
     public void OnLoginFailure(PlayFabError error)
     {
+        Error_.text = error.ErrorMessage;
         Debug.LogError("Login failed: " + error.GenerateErrorReport());
     }
 
@@ -105,6 +114,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
     private void OnGetAccountInfoFailure(PlayFabError error)
     {
         Debug.LogError("GetAccountInfo request failed: " + error.GenerateErrorReport());
+        Error_.text = error.GenerateErrorReport();
     }
 
     public void OnClickDeconnexion()
