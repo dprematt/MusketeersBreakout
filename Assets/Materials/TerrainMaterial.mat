@@ -44,6 +44,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 431ea94aee7389f42b42cfe060176814, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _GrassTex:
+        m_Texture: {fileID: 2800000, guid: b900361e13e6eaa44963cb851faf3ed3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: aa701e5be2dbcd24aad4fb9c3ca284da, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -52,12 +56,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MountainTex:
+        m_Texture: {fileID: 2800000, guid: 7f00d79e8f56b1b47b2b2f34c1d22cf6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SandTex:
+        m_Texture: {fileID: 2800000, guid: 02b230a6dbc126f49ac17778565ed96e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SecondTex:
@@ -84,6 +96,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 7c3a8e8b6e2bce26195e5058573415e9, type: 3}
         m_Scale: {x: 15, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _WaterTex:
+        m_Texture: {fileID: 2800000, guid: aa701e5be2dbcd24aad4fb9c3ca284da, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _WindDistortionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -104,11 +120,14 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HeightMultiplier: 0.1
+    - _GrassHeight: 0.85
+    - _HeightMultiplier: 1
     - _Metallic: 0
     - _Mode: 0
+    - _MountainHeight: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _SandHeight: 0.3
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _Splat0_Height: 0.25
@@ -122,6 +141,7 @@ Material:
     - _Threshold4: 1.12
     - _TranslucentGain: 0.5
     - _UVSec: 0
+    - _WaterHeight: 0.1
     - _WindStrength: 1
     - _ZWrite: 1
     m_Colors:

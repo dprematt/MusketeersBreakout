@@ -15742,6 +15742,7 @@ MonoBehaviour:
   health: 0
   maxHealth: 10
   speed: 5
+  moveSpeed: 5
   minDist: 3
   target: {fileID: 0}
   inventory: {fileID: 0}
