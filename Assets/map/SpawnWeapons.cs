@@ -11,6 +11,8 @@ public class SpawnWeapons : MonoBehaviour
     public GameObject SwordPrefab;
     public GameObject ShieldPrefab_;
 
+    public GameObject Ennemy_;
+
     // Start is called before the first frame update
     public void InstanciateWeapons(Vector3 position)
     {
@@ -27,6 +29,12 @@ public class SpawnWeapons : MonoBehaviour
             PhotonNetwork.Instantiate(GunPrefab_.name, position, Quaternion.identity);
             position.z += 10;
             PhotonNetwork.Instantiate(ShieldPrefab_.name, position, Quaternion.identity);
+            position.z += 10;
+            PhotonNetwork.Instantiate(Ennemy_.name, position, Quaternion.identity);
+            position.z += 10;
+            PhotonNetwork.Instantiate(Ennemy_.name, position, Quaternion.identity);
+            position.z += 10;
+            PhotonNetwork.Instantiate(Ennemy_.name, position, Quaternion.identity);
             //Bow_Object_.name = "Bow";
         }
     }
