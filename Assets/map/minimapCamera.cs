@@ -1,35 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class minimapCamera : MonoBehaviour
+public class MinimapCamera : MonoBehaviourPunCallbacks
 {
-    public GameObject player;
-    
+    public Camera minimapCamera;
 
     void Start()
     {
-        player = gameObject.transform.parent.gameObject;
-
-        if (player == null)
+        if (!photonView.IsMine)
         {
-            Debug.LogError("Impossible de trouver le joueur.s");
+            minimapCamera.gameObject.SetActive(false);
+            return;
         }
-        Debug.Log("PAYER = " + player.name);
+
+        if (minimapCamera == null)
+        {
+            Debug.LogError("MinimapCamera n'est pas assignée.");
+        }
+        else
+        {
+            Debug.Log("MinimapCamera assignée pour " + gameObject.name);
+        }
     }
 
     void LateUpdate()
     {
-        player = gameObject.transform.parent.gameObject;
+        if (!photonView.IsMine)
+            return;
 
-        if (player == null)
-            Debug.LogError("JOUEUR NUL");
-        else if (player != null)
+        if (minimapCamera != null)
         {
-            Vector3 newPos = player.transform.position;
-            newPos.y = transform.position.y;
-            transform.position = newPos;
-            transform.rotation = Quaternion.Euler(90f, player.transform.eulerAngles.y, 0f);
+            Vector3 newPos = transform.position;
+            newPos.y = minimapCamera.transform.position.y;
+            minimapCamera.transform.position = newPos;
+            minimapCamera.transform.rotation = Quaternion.Euler(90f, transform.eulerAngles.y, 0f);
         }
     }
 }
