@@ -343,6 +343,77 @@ public class generator : MonoBehaviourPun
         return true;
     }
 
+    private void GenerateBeaches(Vector2 chunkCenter)
+    {
+        float normalizedWaterHeight = 0.0001f / meshHeightMult;
+        int beachThickness = 50;
+
+        // Dimensions réduites de la carte
+        float mapHalfWidth = mapChunkSize * 2.5f; // 5 chunks / 2
+        float mapHalfHeight = mapChunkSize * 2.5f;
+
+        float chunkTopBorder = chunkCenter.y + (mapChunkSize / 2);
+        float chunkBottomBorder = chunkCenter.y - (mapChunkSize / 2);
+        float chunkRightBorder = chunkCenter.x + (mapChunkSize / 2);
+        float chunkLeftBorder = chunkCenter.x - (mapChunkSize / 2);
+
+        bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - beachThickness) && chunkCenter.y < mapHalfHeight;
+        bool isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + beachThickness) && chunkCenter.y > -mapHalfHeight;
+        bool isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + beachThickness) && chunkCenter.x > -mapHalfWidth;
+        bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - beachThickness) && chunkCenter.x < mapHalfWidth;
+
+        if (isTopBorderChunk)
+            ApplyBeachToTopOrBottom(beachThickness, chunkCenter, normalizedWaterHeight, true);
+        if (isBottomBorderChunk)
+            ApplyBeachToTopOrBottom(beachThickness, chunkCenter, normalizedWaterHeight, false);
+        if (isLeftBorderChunk)
+            ApplyBeachToLeftOrRightBorder(beachThickness, chunkCenter, normalizedWaterHeight, true);
+        if (isRightBorderChunk)
+            ApplyBeachToLeftOrRightBorder(beachThickness, chunkCenter, normalizedWaterHeight, false);
+    }
+
+
+
+    private void ApplyBeachToTopOrBottom(int beachThickness, Vector2 chunkCenter, float normalizedWaterHeight, bool isTopBorder)
+    {
+        float chunkBorderStartZ = isTopBorder ? chunkCenter.y - (mapChunkSize / 2) : chunkCenter.y + (mapChunkSize / 2);
+        float chunkBorderEndZ = chunkBorderStartZ + (isTopBorder ? beachThickness : -beachThickness);
+
+        lock (_heightMapLock)
+        {
+            for (int x = 0; x < mapChunkSize; x++)
+            {
+                for (int z = 0; z < mapChunkSize; z++)
+                {
+                    float worldZ = chunkCenter.y - (mapChunkSize / 2) + z;
+
+                    if (isTopBorder ? (worldZ >= chunkBorderStartZ && worldZ <= chunkBorderEndZ) :
+                                    (worldZ <= chunkBorderStartZ && worldZ >= chunkBorderEndZ))
+                    {
+                        CurrentMapData.heightMap[x, z] = normalizedWaterHeight;
+                    }
+                }
+            }
+        }
+    }
+
+    private void ApplyBeachToLeftOrRightBorder(int beachThickness, Vector2 chunkCenter, float normalizedWaterHeight, bool isLeftBorder)
+    {
+        int startX = isLeftBorder ? 0 : mapChunkSize - beachThickness;
+        int endX = isLeftBorder ? beachThickness : mapChunkSize;
+
+        lock (_heightMapLock)
+        {
+            for (int x = startX; x < endX; x++)
+            {
+                for (int z = 0; z < mapChunkSize; z++)
+                {
+                    CurrentMapData.heightMap[x, z] = normalizedWaterHeight;
+                }
+            }
+        }
+    }
+
     public System.Random getPRNG() {
         return prng;
     }
@@ -562,6 +633,7 @@ public class generator : MonoBehaviourPun
         }
 
         CurrentMapData = new MapData(map, colorMap);
+        GenerateBeaches(center);
 
         return CurrentMapData;
     }
