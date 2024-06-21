@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class MinimapCamera : MonoBehaviourPunCallbacks
+public class minimapCamera : MonoBehaviourPunCallbacks
 {
     public Camera minimapCamera;
     public float cameraHeight = 50f; // The height at which the camera will be placed above the player
