@@ -59,7 +59,6 @@ public class Endless : MonoBehaviour
 
     private void Update()
     {
-        // Plus besoin de code lié à la position du viewer.
     }
 
     public class Chunk
@@ -82,8 +81,9 @@ public class Endless : MonoBehaviour
         int previousLOD;
         int previousLODIndex = -1;
 
-        int waterThickness = 30; // Épaisseur de la zone de sable
-        int sandThickness = 20; // Épaisseur de la zone d'eau
+        int waterThickness = 30;
+        int sandThickness = 20;
+
         public Vector2 ChunkCenter
         {
             get
@@ -136,85 +136,103 @@ public class Endless : MonoBehaviour
         }
 
         private void ApplyBeachesIfNeeded()
-{
-    float normalizedWaterHeight = 0.15f; // Hauteur de l'eau normalisée
-    float normalizedSandHeight = 0.1f; // Hauteur du sable normalisée
-
-    // Dimensions réduites de la carte
-    float mapHalfWidth = generator.mapChunkSize * 2.5f; // 5 chunks / 2
-    float mapHalfHeight = generator.mapChunkSize * 2.5f;
-
-    float chunkTopBorder = bounds.center.y + (bounds.size.y / 2);
-    float chunkBottomBorder = bounds.center.y - (bounds.size.y / 2);
-    float chunkRightBorder = bounds.center.x + (bounds.size.x / 2);
-    float chunkLeftBorder = bounds.center.x - (bounds.size.x / 2);
-
-    bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - sandThickness - waterThickness) && bounds.center.y < mapHalfHeight;
-    bool isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + sandThickness + waterThickness) && bounds.center.y > -mapHalfHeight;
-    bool isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + sandThickness + waterThickness) && bounds.center.x > -mapHalfWidth;
-    bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - sandThickness - waterThickness) && bounds.center.x < mapHalfWidth;
-
-    if (isTopBorderChunk)
-        ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, normalizedWaterHeight, normalizedSandHeight, true);
-    if (isBottomBorderChunk)
-        ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, normalizedWaterHeight, normalizedSandHeight, false);
-    if (isLeftBorderChunk)
-        ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, normalizedWaterHeight, normalizedSandHeight, true);
-    if (isRightBorderChunk)
-        ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, normalizedWaterHeight, normalizedSandHeight, false);
-}
-
-private void ApplyBeachAndSandToTopOrBottom(int waterThickness, int sandThickness, float normalizedWaterHeight, float normalizedSandHeight, bool isTopBorder)
-{
-    float chunkBorderStartZ = isTopBorder ? bounds.center.y - (bounds.size.y / 2) : bounds.center.y + (bounds.size.y / 2);
-    float sandEndZ = chunkBorderStartZ + (isTopBorder ? waterThickness : -waterThickness);
-    float beachEndZ = sandEndZ + (isTopBorder ? sandThickness : -sandThickness);
-
-    for (int x = 0; x < generator.mapChunkSize; x++)
-    {
-        for (int z = 0; z < generator.mapChunkSize; z++)
         {
-            float worldZ = bounds.center.y - (bounds.size.y / 2) + z;
+            float mapHalfWidth = generator.mapChunkSize * 2.5f;
+            float mapHalfHeight = generator.mapChunkSize * 2.5f;
 
-            if (isTopBorder ? (worldZ >= chunkBorderStartZ && worldZ < sandEndZ) :
-                            (worldZ <= chunkBorderStartZ && worldZ > sandEndZ))
+            float chunkTopBorder = bounds.center.y + (bounds.size.y / 2);
+            float chunkBottomBorder = bounds.center.y - (bounds.size.y / 2);
+            float chunkRightBorder = bounds.center.x + (bounds.size.x / 2);
+            float chunkLeftBorder = bounds.center.x - (bounds.size.x / 2);
+
+            bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - waterThickness) && bounds.center.y < mapHalfHeight;
+            bool isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + waterThickness) && bounds.center.y > -mapHalfHeight;
+            bool isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + waterThickness) && bounds.center.x > -mapHalfWidth;
+            bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - waterThickness) && bounds.center.x < mapHalfWidth;
+
+            if (isTopBorderChunk)
+                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, false);
+            if (isBottomBorderChunk)
+                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, false);
+            if (isLeftBorderChunk)
+                ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, true);
+            if (isRightBorderChunk)
+                ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, false);
+
+            isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - sandThickness - waterThickness) && bounds.center.y < mapHalfHeight;
+            isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + sandThickness + waterThickness) && bounds.center.y > -mapHalfHeight;
+            isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + sandThickness + waterThickness) && bounds.center.x > -mapHalfWidth;
+            isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - sandThickness - waterThickness) && bounds.center.x < mapHalfWidth;
+
+            if (isTopBorderChunk)
+                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, true);
+            if (isBottomBorderChunk)
+            ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, true);
+        }
+
+        private void ApplyBeachAndSandToTopOrBottom(int waterThickness, int sandThickness, bool isTopBorder, bool isWater)
+        {
+            float chunkBorderStartZ = isTopBorder ? bounds.center.y - (bounds.size.y / 2) : bounds.center.y + (bounds.size.y / 2);
+            float sandEndZ = chunkBorderStartZ + (isTopBorder ? waterThickness : -waterThickness);
+            float beachEndZ = sandEndZ + (isTopBorder ? sandThickness : -sandThickness);
+            float mapHalfHeight = generator.mapChunkSize * 2.5f;
+
+            for (int x = 0; x < generator.mapChunkSize; x++)
             {
-                mapdata.heightMap[x, z] = normalizedSandHeight;
-            }
-            else if (isTopBorder ? (worldZ >= sandEndZ && worldZ < beachEndZ) :
-                                (worldZ <= sandEndZ && worldZ > beachEndZ))
-            {
-                mapdata.heightMap[x, z] = normalizedWaterHeight;
+                for (int z = 0; z < generator.mapChunkSize; z++)
+                {
+                    float worldZ = bounds.center.y - (bounds.size.y / 2) + z;
+
+                    if ((isTopBorder && worldZ > mapHalfHeight - 30) || (!isTopBorder && worldZ < -mapHalfHeight + 30))
+                    {
+                        continue;
+                    }
+
+                    if (isWater)
+                    {
+                        if (isTopBorder ? (worldZ >= chunkBorderStartZ && worldZ < sandEndZ) :
+                                        (worldZ <= chunkBorderStartZ && worldZ > sandEndZ))
+                        {
+                            mapdata.heightMap[x, z] = 0.1f;
+                        }
+                    }
+                    else
+                    {
+                        if (isTopBorder ? (worldZ >= sandEndZ && worldZ < beachEndZ) :
+                                        (worldZ <= sandEndZ && worldZ > beachEndZ))
+                        {
+                            mapdata.heightMap[x, z] = 0.15f;
+                        }
+                    }
+                }
             }
         }
-    }
-}
 
-private void ApplyBeachAndSandToLeftOrRightBorder(int waterThickness, int sandThickness, float normalizedWaterHeight, float normalizedSandHeight, bool isLeftBorder)
-{
-    float chunkBorderStartX = isLeftBorder ? bounds.center.x - (bounds.size.x / 2) : bounds.center.x + (bounds.size.x / 2);
-    float sandEndX = chunkBorderStartX + (isLeftBorder ? waterThickness : -waterThickness);
-    float beachEndX = sandEndX + (isLeftBorder ? sandThickness : -sandThickness);
-
-    for (int x = 0; x < generator.mapChunkSize; x++)
-    {
-        for (int z = 0; z < generator.mapChunkSize; z++)
+        private void ApplyBeachAndSandToLeftOrRightBorder(int waterThickness, int sandThickness, bool isLeftBorder)
         {
-            float worldX = bounds.center.x - (bounds.size.x / 2) + x;
+            float chunkBorderStartX = isLeftBorder ? bounds.center.x - (bounds.size.x / 2) : bounds.center.x + (bounds.size.x / 2);
+            float sandEndX = chunkBorderStartX + (isLeftBorder ? waterThickness : -waterThickness);
+            float beachEndX = sandEndX + (isLeftBorder ? sandThickness : -sandThickness);
 
-            if (isLeftBorder ? (worldX >= chunkBorderStartX && worldX < sandEndX) :
-                            (worldX <= chunkBorderStartX && worldX > sandEndX))
+            for (int x = 0; x < generator.mapChunkSize; x++)
             {
-                mapdata.heightMap[x, z] = normalizedSandHeight;
-            }
-            else if (isLeftBorder ? (worldX >= sandEndX && worldX < beachEndX) :
-                                (worldX <= sandEndX && worldX > beachEndX))
-            {
-                mapdata.heightMap[x, z] = normalizedWaterHeight;
+                for (int z = 0; z < generator.mapChunkSize; z++)
+                {
+                    float worldX = bounds.center.x - (bounds.size.x / 2) + x;
+
+                    if (isLeftBorder ? (worldX >= chunkBorderStartX && worldX < sandEndX) :
+                                    (worldX <= chunkBorderStartX && worldX > sandEndX))
+                    {
+                        mapdata.heightMap[x, z] = 0.1f;
+                    }
+                    else if (isLeftBorder ? (worldX >= sandEndX && worldX < beachEndX) :
+                                        (worldX <= sandEndX && worldX > beachEndX))
+                    {
+                        mapdata.heightMap[x, z] = 0.15f;
+                    }
+                }
             }
         }
-    }
-}
 
 
         private void UpdateMesh()
