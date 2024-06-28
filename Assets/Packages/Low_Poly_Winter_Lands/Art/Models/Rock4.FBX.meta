@@ -1,0 +1,870 @@
+fileFormatVersion: 2
+guid: edee3c8e6d3b21e4282f057bebd929c3
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Bip001
+    100002: Bip001 Footsteps
+    100004: Bip001 Head
+    100006: Bip001 HeadNub
+    100008: Bip001 L Calf
+    100010: Bip001 L Clavicle
+    100012: Bip001 L Finger0
+    100014: Bip001 L Finger0Nub
+    100016: Bip001 L Foot
+    100018: Bip001 L Forearm
+    100020: Bip001 L Hand
+    100022: Bip001 L Thigh
+    100024: Bip001 L Toe0
+    100026: Bip001 L Toe01
+    100028: Bip001 L Toe02
+    100030: Bip001 L Toe0Nub
+    100032: Bip001 L UpperArm
+    100034: Bip001 Neck
+    100036: Bip001 Pelvis
+    100038: Bip001 R Calf
+    100040: Bip001 R Clavicle
+    100042: Bip001 R Finger0
+    100044: Bip001 R Finger0Nub
+    100046: Bip001 R Foot
+    100048: Bip001 R Forearm
+    100050: Bip001 R Hand
+    100052: Bip001 R Thigh
+    100054: Bip001 R Toe0
+    100056: Bip001 R Toe01
+    100058: Bip001 R Toe02
+    100060: Bip001 R Toe0Nub
+    100062: Bip001 R UpperArm
+    100064: Bip001 Spine
+    100066: Bip001 Spine1
+    100068: Bip001 Spine2
+    100070: Bip001 Spine3
+    100072: Box001
+    100074: Box011
+    100076: Box012
+    100078: Box014
+    100080: Box017
+    100082: Box023
+    100084: Box024
+    100086: Box025
+    100088: Box026
+    100090: Box027
+    100092: Box028
+    100094: Box029
+    100096: Box030
+    100098: Box031
+    100100: Box032
+    100102: Box033
+    100104: Box034
+    100106: Box035
+    100108: Box036
+    100110: Box037
+    100112: Box038
+    100114: Box039
+    100116: Box040
+    100118: Box041
+    100120: Box042
+    100122: Box043
+    100124: Box044
+    100126: Box045
+    100128: Box046
+    100130: Box047
+    100132: Box048
+    100134: Box049
+    100136: Box050
+    100138: Box051
+    100140: Box052
+    100142: Box053
+    100144: Box054
+    100146: Box055
+    100148: Box056
+    100150: Box057
+    100152: Box058
+    100154: Box059
+    100156: Box060
+    100158: Box061
+    100160: Box062
+    100162: Box063
+    100164: Box064
+    100166: Box065
+    100168: Box066
+    100170: Box067
+    100172: Box068
+    100174: Box069
+    100176: Box070
+    100178: Box071
+    100180: Box072
+    100182: Box073
+    100184: Box074
+    100186: Box075
+    100188: Box076
+    100190: Box078
+    100192: Box080
+    100194: Bridge_segment
+    100196: Campfire
+    100198: Castle_balcony_1
+    100200: Castle_balcony_2
+    100202: Castle_building
+    100204: Castle_core
+    100206: Castle_tower_1
+    100208: Castle_tower_2
+    100210: Castle_tower_3
+    100212: Castle_tower_4
+    100214: Castle_wall_1
+    100216: Castle_wall_2
+    100218: Cliff_1
+    100220: Cliff_2
+    100222: Cliff_3
+    100224: Cylinder001
+    100226: Cylinder002
+    100228: Cylinder003
+    100230: Cylinder004
+    100232: Cylinder005
+    100234: Cylinder006
+    100236: Cylinder007
+    100238: Cylinder008
+    100240: Cylinder009
+    100242: Cylinder010
+    100244: Cylinder011
+    100246: Cylinder012
+    100248: Cylinder013
+    100250: Cylinder014
+    100252: Cylinder015
+    100254: Cylinder016
+    100256: Cylinder017
+    100258: Cylinder018
+    100260: Cylinder019
+    100262: Fence1
+    100264: Fence2
+    100266: Fir_tree
+    100268: GeoSphere001
+    100270: GeoSphere015
+    100272: House_009
+    100274: House_3
+    100276: House_4
+    100278: House_5
+    100280: House_7
+    100282: House_8
+    100284: Lamp_post
+    100286: Road_sign1
+    100288: Road_sign2
+    100290: Road_sign3
+    100292: Rock1
+    100294: Rock2
+    100296: Rock3
+    100298: Rock4
+    100300: //RootNode
+    100302: Rock_10
+    100304: Rock_9
+    100306: Rock_arch
+    100308: Sky001
+    100310: Stairs
+    100312: Stone1
+    100314: Stone10
+    100316: Stone11
+    100318: Stone12
+    100320: Stone13
+    100322: Stone14
+    100324: Stone15
+    100326: Stone2
+    100328: Stone3
+    100330: Stone4
+    100332: Stone5
+    100334: Stone6
+    100336: Stone7
+    100338: Stone8
+    100340: Stone9
+    100342: Tree_1
+    100344: Tree_2
+    100346: Window_1
+    100348: Window_2
+    100350: Window_3
+    100352: Wooden_barrel
+    400000: Bip001
+    400002: Bip001 Footsteps
+    400004: Bip001 Head
+    400006: Bip001 HeadNub
+    400008: Bip001 L Calf
+    400010: Bip001 L Clavicle
+    400012: Bip001 L Finger0
+    400014: Bip001 L Finger0Nub
+    400016: Bip001 L Foot
+    400018: Bip001 L Forearm
+    400020: Bip001 L Hand
+    400022: Bip001 L Thigh
+    400024: Bip001 L Toe0
+    400026: Bip001 L Toe01
+    400028: Bip001 L Toe02
+    400030: Bip001 L Toe0Nub
+    400032: Bip001 L UpperArm
+    400034: Bip001 Neck
+    400036: Bip001 Pelvis
+    400038: Bip001 R Calf
+    400040: Bip001 R Clavicle
+    400042: Bip001 R Finger0
+    400044: Bip001 R Finger0Nub
+    400046: Bip001 R Foot
+    400048: Bip001 R Forearm
+    400050: Bip001 R Hand
+    400052: Bip001 R Thigh
+    400054: Bip001 R Toe0
+    400056: Bip001 R Toe01
+    400058: Bip001 R Toe02
+    400060: Bip001 R Toe0Nub
+    400062: Bip001 R UpperArm
+    400064: Bip001 Spine
+    400066: Bip001 Spine1
+    400068: Bip001 Spine2
+    400070: Bip001 Spine3
+    400072: Box001
+    400074: Box011
+    400076: Box012
+    400078: Box014
+    400080: Box017
+    400082: Box023
+    400084: Box024
+    400086: Box025
+    400088: Box026
+    400090: Box027
+    400092: Box028
+    400094: Box029
+    400096: Box030
+    400098: Box031
+    400100: Box032
+    400102: Box033
+    400104: Box034
+    400106: Box035
+    400108: Box036
+    400110: Box037
+    400112: Box038
+    400114: Box039
+    400116: Box040
+    400118: Box041
+    400120: Box042
+    400122: Box043
+    400124: Box044
+    400126: Box045
+    400128: Box046
+    400130: Box047
+    400132: Box048
+    400134: Box049
+    400136: Box050
+    400138: Box051
+    400140: Box052
+    400142: Box053
+    400144: Box054
+    400146: Box055
+    400148: Box056
+    400150: Box057
+    400152: Box058
+    400154: Box059
+    400156: Box060
+    400158: Box061
+    400160: Box062
+    400162: Box063
+    400164: Box064
+    400166: Box065
+    400168: Box066
+    400170: Box067
+    400172: Box068
+    400174: Box069
+    400176: Box070
+    400178: Box071
+    400180: Box072
+    400182: Box073
+    400184: Box074
+    400186: Box075
+    400188: Box076
+    400190: Box078
+    400192: Box080
+    400194: Bridge_segment
+    400196: Campfire
+    400198: Castle_balcony_1
+    400200: Castle_balcony_2
+    400202: Castle_building
+    400204: Castle_core
+    400206: Castle_tower_1
+    400208: Castle_tower_2
+    400210: Castle_tower_3
+    400212: Castle_tower_4
+    400214: Castle_wall_1
+    400216: Castle_wall_2
+    400218: Cliff_1
+    400220: Cliff_2
+    400222: Cliff_3
+    400224: Cylinder001
+    400226: Cylinder002
+    400228: Cylinder003
+    400230: Cylinder004
+    400232: Cylinder005
+    400234: Cylinder006
+    400236: Cylinder007
+    400238: Cylinder008
+    400240: Cylinder009
+    400242: Cylinder010
+    400244: Cylinder011
+    400246: Cylinder012
+    400248: Cylinder013
+    400250: Cylinder014
+    400252: Cylinder015
+    400254: Cylinder016
+    400256: Cylinder017
+    400258: Cylinder018
+    400260: Cylinder019
+    400262: Fence1
+    400264: Fence2
+    400266: Fir_tree
+    400268: GeoSphere001
+    400270: GeoSphere015
+    400272: House_009
+    400274: House_3
+    400276: House_4
+    400278: House_5
+    400280: House_7
+    400282: House_8
+    400284: Lamp_post
+    400286: Road_sign1
+    400288: Road_sign2
+    400290: Road_sign3
+    400292: Rock1
+    400294: Rock2
+    400296: Rock3
+    400298: Rock4
+    400300: //RootNode
+    400302: Rock_10
+    400304: Rock_9
+    400306: Rock_arch
+    400308: Sky001
+    400310: Stairs
+    400312: Stone1
+    400314: Stone10
+    400316: Stone11
+    400318: Stone12
+    400320: Stone13
+    400322: Stone14
+    400324: Stone15
+    400326: Stone2
+    400328: Stone3
+    400330: Stone4
+    400332: Stone5
+    400334: Stone6
+    400336: Stone7
+    400338: Stone8
+    400340: Stone9
+    400342: Tree_1
+    400344: Tree_2
+    400346: Window_1
+    400348: Window_2
+    400350: Window_3
+    400352: Wooden_barrel
+    2100000: No Name
+    2100002: 'Material #0'
+    2100004: 'Material #1658'
+    2100006: 'Material #1714'
+    2100008: 'Material #1478'
+    2100010: 'Material #1467'
+    2100012: 'Material #1422'
+    2100014: 'Material #1636'
+    2300000: Box001
+    2300002: Box011
+    2300004: Box012
+    2300006: Box014
+    2300008: Box017
+    2300010: Box023
+    2300012: Box024
+    2300014: Box025
+    2300016: Box026
+    2300018: Box027
+    2300020: Box028
+    2300022: Box029
+    2300024: Box030
+    2300026: Box031
+    2300028: Box032
+    2300030: Box033
+    2300032: Box034
+    2300034: Box035
+    2300036: Box036
+    2300038: Box037
+    2300040: Box038
+    2300042: Box039
+    2300044: Box040
+    2300046: Box041
+    2300048: Box042
+    2300050: Box043
+    2300052: Box044
+    2300054: Box045
+    2300056: Box046
+    2300058: Box047
+    2300060: Box048
+    2300062: Box049
+    2300064: Box050
+    2300066: Box051
+    2300068: Box052
+    2300070: Box053
+    2300072: Box054
+    2300074: Box055
+    2300076: Box056
+    2300078: Box057
+    2300080: Box058
+    2300082: Box059
+    2300084: Box060
+    2300086: Box061
+    2300088: Box062
+    2300090: Box063
+    2300092: Box064
+    2300094: Box065
+    2300096: Box066
+    2300098: Box067
+    2300100: Box068
+    2300102: Box069
+    2300104: Box070
+    2300106: Box071
+    2300108: Box072
+    2300110: Box073
+    2300112: Box074
+    2300114: Box075
+    2300116: Box076
+    2300118: Box078
+    2300120: Box080
+    2300122: Bridge_segment
+    2300124: Campfire
+    2300126: Castle_balcony_1
+    2300128: Castle_balcony_2
+    2300130: Castle_building
+    2300132: Castle_core
+    2300134: Castle_tower_1
+    2300136: Castle_tower_2
+    2300138: Castle_tower_3
+    2300140: Castle_tower_4
+    2300142: Castle_wall_1
+    2300144: Castle_wall_2
+    2300146: Cliff_1
+    2300148: Cliff_2
+    2300150: Cliff_3
+    2300152: Cylinder001
+    2300154: Cylinder002
+    2300156: Cylinder003
+    2300158: Cylinder004
+    2300160: Cylinder005
+    2300162: Cylinder006
+    2300164: Cylinder007
+    2300166: Cylinder008
+    2300168: Cylinder009
+    2300170: Cylinder010
+    2300172: Cylinder011
+    2300174: Cylinder012
+    2300176: Cylinder013
+    2300178: Cylinder014
+    2300180: Cylinder015
+    2300182: Cylinder016
+    2300184: Cylinder017
+    2300186: Cylinder018
+    2300188: Cylinder019
+    2300190: Fence1
+    2300192: Fence2
+    2300194: Fir_tree
+    2300196: GeoSphere001
+    2300198: GeoSphere015
+    2300200: House_009
+    2300202: House_3
+    2300204: House_4
+    2300206: House_5
+    2300208: House_7
+    2300210: House_8
+    2300212: Lamp_post
+    2300214: Road_sign1
+    2300216: Road_sign2
+    2300218: Road_sign3
+    2300220: Rock1
+    2300222: Rock2
+    2300224: Rock3
+    2300226: Rock4
+    2300228: Rock_10
+    2300230: Rock_9
+    2300232: Rock_arch
+    2300234: Stairs
+    2300236: Stone1
+    2300238: Stone10
+    2300240: Stone11
+    2300242: Stone12
+    2300244: Stone13
+    2300246: Stone14
+    2300248: Stone15
+    2300250: Stone2
+    2300252: Stone3
+    2300254: Stone4
+    2300256: Stone5
+    2300258: Stone6
+    2300260: Stone7
+    2300262: Stone8
+    2300264: Stone9
+    2300266: Tree_1
+    2300268: Tree_2
+    2300270: Window_1
+    2300272: Window_2
+    2300274: Window_3
+    2300276: Wooden_barrel
+    2300278: //RootNode
+    3300000: Box001
+    3300002: Box011
+    3300004: Box012
+    3300006: Box014
+    3300008: Box017
+    3300010: Box023
+    3300012: Box024
+    3300014: Box025
+    3300016: Box026
+    3300018: Box027
+    3300020: Box028
+    3300022: Box029
+    3300024: Box030
+    3300026: Box031
+    3300028: Box032
+    3300030: Box033
+    3300032: Box034
+    3300034: Box035
+    3300036: Box036
+    3300038: Box037
+    3300040: Box038
+    3300042: Box039
+    3300044: Box040
+    3300046: Box041
+    3300048: Box042
+    3300050: Box043
+    3300052: Box044
+    3300054: Box045
+    3300056: Box046
+    3300058: Box047
+    3300060: Box048
+    3300062: Box049
+    3300064: Box050
+    3300066: Box051
+    3300068: Box052
+    3300070: Box053
+    3300072: Box054
+    3300074: Box055
+    3300076: Box056
+    3300078: Box057
+    3300080: Box058
+    3300082: Box059
+    3300084: Box060
+    3300086: Box061
+    3300088: Box062
+    3300090: Box063
+    3300092: Box064
+    3300094: Box065
+    3300096: Box066
+    3300098: Box067
+    3300100: Box068
+    3300102: Box069
+    3300104: Box070
+    3300106: Box071
+    3300108: Box072
+    3300110: Box073
+    3300112: Box074
+    3300114: Box075
+    3300116: Box076
+    3300118: Box078
+    3300120: Box080
+    3300122: Bridge_segment
+    3300124: Campfire
+    3300126: Castle_balcony_1
+    3300128: Castle_balcony_2
+    3300130: Castle_building
+    3300132: Castle_core
+    3300134: Castle_tower_1
+    3300136: Castle_tower_2
+    3300138: Castle_tower_3
+    3300140: Castle_tower_4
+    3300142: Castle_wall_1
+    3300144: Castle_wall_2
+    3300146: Cliff_1
+    3300148: Cliff_2
+    3300150: Cliff_3
+    3300152: Cylinder001
+    3300154: Cylinder002
+    3300156: Cylinder003
+    3300158: Cylinder004
+    3300160: Cylinder005
+    3300162: Cylinder006
+    3300164: Cylinder007
+    3300166: Cylinder008
+    3300168: Cylinder009
+    3300170: Cylinder010
+    3300172: Cylinder011
+    3300174: Cylinder012
+    3300176: Cylinder013
+    3300178: Cylinder014
+    3300180: Cylinder015
+    3300182: Cylinder016
+    3300184: Cylinder017
+    3300186: Cylinder018
+    3300188: Cylinder019
+    3300190: Fence1
+    3300192: Fence2
+    3300194: Fir_tree
+    3300196: GeoSphere001
+    3300198: GeoSphere015
+    3300200: House_009
+    3300202: House_3
+    3300204: House_4
+    3300206: House_5
+    3300208: House_7
+    3300210: House_8
+    3300212: Lamp_post
+    3300214: Road_sign1
+    3300216: Road_sign2
+    3300218: Road_sign3
+    3300220: Rock1
+    3300222: Rock2
+    3300224: Rock3
+    3300226: Rock4
+    3300228: Rock_10
+    3300230: Rock_9
+    3300232: Rock_arch
+    3300234: Stairs
+    3300236: Stone1
+    3300238: Stone10
+    3300240: Stone11
+    3300242: Stone12
+    3300244: Stone13
+    3300246: Stone14
+    3300248: Stone15
+    3300250: Stone2
+    3300252: Stone3
+    3300254: Stone4
+    3300256: Stone5
+    3300258: Stone6
+    3300260: Stone7
+    3300262: Stone8
+    3300264: Stone9
+    3300266: Tree_1
+    3300268: Tree_2
+    3300270: Window_1
+    3300272: Window_2
+    3300274: Window_3
+    3300276: Wooden_barrel
+    3300278: //RootNode
+    4300000: GeoSphere001
+    4300002: Stone1
+    4300004: Stone2
+    4300006: Stone3
+    4300008: Stone4
+    4300010: Stone5
+    4300012: Stone6
+    4300014: Stone7
+    4300016: Stone8
+    4300018: Stone9
+    4300020: Stone10
+    4300022: Stone11
+    4300024: Stone12
+    4300026: Stone13
+    4300028: Box001
+    4300030: GeoSphere015
+    4300032: Stone14
+    4300034: Stone15
+    4300036: Box011
+    4300038: Box012
+    4300040: Cylinder001
+    4300042: Cylinder002
+    4300044: Cylinder003
+    4300046: House_3
+    4300048: House_4
+    4300050: House_5
+    4300052: House_7
+    4300054: House_8
+    4300056: Lamp_post
+    4300058: Road_sign1
+    4300060: Road_sign2
+    4300062: Road_sign3
+    4300064: Rock_10
+    4300066: Rock_9
+    4300068: Window_3
+    4300070: Window_2
+    4300072: Window_1
+    4300074: Wooden_barrel
+    4300076: Campfire
+    4300078: Castle_core
+    4300080: Castle_building
+    4300082: Castle_balcony_1
+    4300084: Castle_balcony_2
+    4300086: Castle_tower_1
+    4300088: Castle_tower_2
+    4300090: Castle_tower_3
+    4300092: Castle_tower_4
+    4300094: Castle_wall_1
+    4300096: Castle_wall_2
+    4300098: Bridge_segment
+    4300100: Cliff_1
+    4300102: Cliff_2
+    4300104: Cliff_3
+    4300106: Box014
+    4300108: Tree_1
+    4300110: Tree_2
+    4300112: Stairs
+    4300114: House_009
+    4300116: Rock4
+    4300118: Rock3
+    4300120: Cylinder004
+    4300122: Cylinder005
+    4300124: Cylinder006
+    4300126: Box017
+    4300128: Rock_arch
+    4300130: Rock2
+    4300132: Rock1
+    4300134: Cylinder007
+    4300136: Cylinder008
+    4300138: Cylinder009
+    4300140: Cylinder010
+    4300142: Box023
+    4300144: Cylinder011
+    4300146: Cylinder012
+    4300148: Cylinder013
+    4300150: Box024
+    4300152: Cylinder014
+    4300154: Cylinder015
+    4300156: Box025
+    4300158: Cylinder016
+    4300160: Box026
+    4300162: Cylinder017
+    4300164: Cylinder018
+    4300166: Cylinder019
+    4300168: Box027
+    4300170: Box028
+    4300172: Box029
+    4300174: Box030
+    4300176: Box031
+    4300178: Box032
+    4300180: Box033
+    4300182: Box034
+    4300184: Box035
+    4300186: Box036
+    4300188: Box037
+    4300190: Box038
+    4300192: Box039
+    4300194: Box040
+    4300196: Box041
+    4300198: Box042
+    4300200: Box043
+    4300202: Box044
+    4300204: Box045
+    4300206: Box046
+    4300208: Box047
+    4300210: Box048
+    4300212: Box049
+    4300214: Box050
+    4300216: Box051
+    4300218: Box052
+    4300220: Box053
+    4300222: Box054
+    4300224: Box055
+    4300226: Box056
+    4300228: Box057
+    4300230: Box058
+    4300232: Box059
+    4300234: Box060
+    4300236: Box061
+    4300238: Box062
+    4300240: Box063
+    4300242: Box064
+    4300244: Box065
+    4300246: Box066
+    4300248: Box067
+    4300250: Box068
+    4300252: Box069
+    4300254: Box070
+    4300256: Box071
+    4300258: Box072
+    4300260: Box073
+    4300262: Box074
+    4300264: Box075
+    4300266: Box076
+    4300268: Box078
+    4300270: Fir_tree
+    4300272: Box080
+    4300274: Fence2
+    4300276: Fence1
+    9500000: //RootNode
+    2186277476908879412: ImportLogs
+  externalObjects: {}
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
