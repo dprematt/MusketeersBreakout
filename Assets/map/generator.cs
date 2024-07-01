@@ -187,8 +187,8 @@ public class generator : MonoBehaviourPun
         }
     }
 
-    void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight, System.Random prng)
-{
+    public void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, System.Random prng)
+    {
         InitializeRandom();
         biomesPositions.Clear();
         biomeSpecificPositions.Clear();
@@ -198,55 +198,43 @@ public class generator : MonoBehaviourPun
         {
             List<Vector3> specificBiomePositions = new List<Vector3>();
 
-            for (int i = 0; i < numberOfPrefabsToCreate; i++)
+            for (int i = 0; i < 2; i++) // Limiter à 2 biomes de chaque type
             {
-                Vector2 center;
-                bool validPosition = false;
-                int attempts = 0;
+                if (plateCenters.Count == 0) break;
+                int index = prng.Next(0, plateCenters.Count);
+                Vector2 center = plateCenters[index];
+                plateCenters.RemoveAt(index);
 
-                do
+                Vector3 position = new Vector3(center.x, 0, center.y);
+
+                float borderBuffer = 100;
+                float cornerBuffer = mapChunkSize;
+                Vector2 topLeft = new Vector2(-2.5f * mapChunkSize, 2.5f * mapChunkSize);
+                Vector2 bottomRight = new Vector2(2.5f * mapChunkSize, -2.5f * mapChunkSize);
+
+                bool isInCornerChunk =
+                    (position.x < (topLeft.x + cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
+                    (position.x > (bottomRight.x - cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
+                    (position.x < (topLeft.x + cornerBuffer) && position.z < (bottomRight.y + cornerBuffer)) ||
+                    (position.x > (bottomRight.x - cornerBuffer) && position.z < (bottomRight.y + cornerBuffer));
+
+                bool isInBorderBuffer =
+                    position.x < (topLeft.x + borderBuffer) ||
+                    position.x > (bottomRight.x - borderBuffer) ||
+                    position.z < (bottomRight.y + borderBuffer) ||
+                    position.z > (topLeft.y - borderBuffer);
+
+                bool isTooCloseToOtherBiomes =
+                    biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 200) ||
+                    specificBiomePositions.Any(biomePos => Vector3.Distance(position, biomePos) < 500);
+
+                if (!isInBorderBuffer && !isInCornerChunk && !isTooCloseToOtherBiomes)
                 {
-                    if (plateCenters.Count == 0) break;
-                    int index = prng.Next(0, plateCenters.Count);
-                    center = plateCenters[index];
-                    plateCenters.RemoveAt(index);
-
-                    float x = center.x + prng.Next(-20, 20);
-                    float z = center.y + prng.Next(-20, 20);
-                    Vector3 position = new Vector3(x, 0, z);
-
-                    float borderBuffer = 100;
-                    float cornerBuffer = mapChunkSize;
-                    topLeft = new Vector2(-2.5f * mapChunkSize, 2.5f * mapChunkSize);
-                    bottomRight = new Vector2(2.5f * mapChunkSize, -2.5f * mapChunkSize);
-
-                    bool isInCornerChunk = 
-                        (position.x < (topLeft.x + cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
-                        (position.x > (bottomRight.x - cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
-                        (position.x < (topLeft.x + cornerBuffer) && position.z < (bottomRight.y + cornerBuffer)) ||
-                        (position.x > (bottomRight.x - cornerBuffer) && position.z < (bottomRight.y + cornerBuffer));
-
-                    bool isInBorderBuffer = 
-                        position.x < (topLeft.x + borderBuffer) || 
-                        position.x > (bottomRight.x - borderBuffer) ||
-                        position.z < (bottomRight.y + borderBuffer) || 
-                        position.z > (topLeft.y - borderBuffer);
-
-                    bool isTooCloseToOtherBiomes = 
-                        biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 200) ||
-                        specificBiomePositions.Any(biomePos => Vector3.Distance(position, biomePos) < 500);
-
-                    if (!isInBorderBuffer && !isInCornerChunk && !isTooCloseToOtherBiomes && IsPositionOnFlatArea(position, center))
-                    {
-                        biomesPositions.Add(position);
-                        specificBiomePositions.Add(position);
-                        GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
-                        instance.transform.SetParent(biomesParent.transform);
-                        validPosition = true;
-                    }
-
-                    attempts++;
-                } while (!validPosition && attempts < 100);
+                    biomesPositions.Add(position);
+                    specificBiomePositions.Add(position);
+                    GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
+                    instance.transform.SetParent(biomesParent.transform);
+                }
             }
 
             if (!biomeSpecificPositions.ContainsKey(biome.type))
@@ -255,6 +243,31 @@ public class generator : MonoBehaviourPun
             }
         }
     }
+
+    bool IsPositionOnFlatArea(Vector3 position, float[,] heightMap, int mapChunkSize)
+    {
+        int posX = Mathf.RoundToInt(position.x);
+        int posY = Mathf.RoundToInt(position.z);
+
+        int radius = 3; // Vérifier une zone de 3x3 autour de la position
+
+        for (int x = posX - radius; x <= posX + radius; x++)
+        {
+            for (int y = posY - radius; y <= posY + radius; y++)
+            {
+                if (x >= 0 && x < mapChunkSize && y >= 0 && y < mapChunkSize)
+                {
+                    if (Mathf.Abs(heightMap[x, y] - 0.4f) > 0.05f)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
 
 
     void PlaceWeaponsInBiomes(System.Random prng)
@@ -313,36 +326,6 @@ public class generator : MonoBehaviourPun
         return true;
     }
 
-
-    bool IsPositionOnFlatArea(Vector3 position, Vector2 center)
-    {
-        float distance = Vector2.Distance(new Vector2(position.x, position.z), center);
-        float perlinNoise = Mathf.PerlinNoise(position.x * 0.1f, position.z * 0.1f) * 20f;
-        return distance <= 60 + perlinNoise;
-    }
-
-    bool IsAreaFlat(Vector3 position, float[,] heightMap, int areaSize, float maxSlope)
-    {
-        int startX = Mathf.Max(0, Mathf.FloorToInt(position.x) - areaSize / 2);
-        int startZ = Mathf.Max(0, Mathf.FloorToInt(position.z) - areaSize / 2);
-        int endX = Mathf.Min(heightMap.GetLength(0) - 1, Mathf.FloorToInt(position.x) + areaSize / 2);
-        int endZ = Mathf.Min(heightMap.GetLength(1) - 1, Mathf.FloorToInt(position.z) + areaSize / 2);
-
-        float centerHeight = heightMap[Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.z)];
-
-        for (int x = startX; x <= endX; x++)
-        {
-            for (int z = startZ; z <= endZ; z++)
-            {
-                if (Mathf.Abs(heightMap[x, z] - centerHeight) > maxSlope)
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     public System.Random getPRNG() {
         return prng;
     }
@@ -365,10 +348,10 @@ public class generator : MonoBehaviourPun
     {
         int i = 1;
         Vector3[] cornerPositions = {
-            new Vector3(-480, 0, -540),
-            new Vector3(-480, 0, 540),
-            new Vector3(480, 0, -540),
-            new Vector3(480, 0, 540)
+            new Vector3(-536, 4.5f, -556),
+            new Vector3(-410, 4.5f, 556),
+            new Vector3(424, 4.5f, -557),
+            new Vector3(536, 4.5f, 557)
         };
 
         foreach (Vector3 position in cornerPositions)
@@ -380,17 +363,17 @@ public class generator : MonoBehaviourPun
             }
             i += 1;
             Vector3 newPosition = zoneInstance.transform.position;
-            newPosition.y = 2;
             zoneInstance.transform.position = newPosition;
         }
     }
 
     public void DrawMap()
     {
-        Vector2 topLeft = new Vector2(-3.5f * mapChunkSize, 3.5f * mapChunkSize);
-        Vector2 bottomRight = new Vector2(3.5f * mapChunkSize, -3.5f * mapChunkSize);
+        Vector2 topLeft = new Vector2(-2.5f * mapChunkSize, 2.5f * mapChunkSize);
+        Vector2 bottomRight = new Vector2(2.5f * mapChunkSize, -2.5f * mapChunkSize);
 
         List<Vector2> allPlateCenters = new List<Vector2>();
+        float[,] heightMap = null;
 
         for (float x = topLeft.x; x <= bottomRight.x; x += mapChunkSize)
         {
@@ -398,13 +381,15 @@ public class generator : MonoBehaviourPun
             {
                 var (map, plateCenters) = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, new Vector2(x, y) + offSet, normalizeMode, seed);
                 allPlateCenters.AddRange(plateCenters);
+                heightMap = map;
 
                 Vector2 chunkCoord = new Vector2(x, y);
-                chunkDataMap[chunkCoord] = new MapData(map, colorMap);
+                chunkDataMap[chunkCoord] = new MapData(map, null);
             }
         }
 
-        PlaceBiomesInFlatAreas(allPlateCenters, topLeft, bottomRight, prng);
+        System.Random prng = new System.Random(seed);
+        PlaceBiomesInFlatAreas(allPlateCenters, prng);
 
         Vector2 center = Vector2.zero + offSet;
         var currentMapData = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center, normalizeMode, seed);
@@ -429,9 +414,8 @@ public class generator : MonoBehaviourPun
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunkSize)));
         }
         PlaceBiomesGuardians();
-        CurrentMapData = new MapData(currentMapData.Item1, colorMap);
+        CurrentMapData = new MapData(currentMapData.Item1, null);
     }
-
 
     public void selectPos(float[,] colorMap)
     {
@@ -539,7 +523,7 @@ public class generator : MonoBehaviourPun
 
     MapData SkeletonGenerator(Vector2 center)
     {
-        var (map, plateCenters) = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode, seed);
+        var (map, _) = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode, seed);
 
         for (int i = 0; i < mapChunkSize; i++)
         {
