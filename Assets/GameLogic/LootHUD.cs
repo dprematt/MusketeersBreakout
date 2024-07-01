@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Photon.Pun;
 
 
-public class LootHUD : MonoBehaviour
+
+public class LootHUD : MonoBehaviourPunCallbacks
 {
     private Transform selectedSlot;
     private Vector3 startPos;
@@ -16,7 +18,17 @@ public class LootHUD : MonoBehaviour
 
     void Start()
     {
+        if (photonView.IsMine)
+        {
+            photonView.RPC("KillHud", RpcTarget.Others);
+        }
         //gameObject.SetActive(false);
+    }
+
+    [PunRPC]
+    public void KillHud()
+    {
+        gameObject.SetActive(false);
     }
 
     public void Clean()
@@ -25,6 +37,8 @@ public class LootHUD : MonoBehaviour
         GameObject loot = GameObject.FindGameObjectWithTag("LootHUD");
         LootHUD lootHUD = loot.GetComponent<LootHUD>();
         Inventory inventory = lootHUD.inventory;
+        if (inventory == null)
+            return;
         for (int i = 0; i < 9; i++)
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));

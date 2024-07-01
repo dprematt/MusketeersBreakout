@@ -165,7 +165,7 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 staminaFullUsed = true;
             }
-        } 
+        }
         else if (Input.GetKeyDown(jumpKey) && !staminaFullUsed && (isGrounded || !hasDoubleJumped))
         {
             if (stamina > 0)
@@ -226,7 +226,8 @@ public class Player : MonoBehaviourPunCallbacks
         if (hasShield && Input.GetMouseButton(1))
         {
             shieldComp.setProtectionMode(true);
-        } else if (hasShield && Input.GetMouseButtonUp(1))
+        }
+        else if (hasShield && Input.GetMouseButtonUp(1))
         {
             shieldComp.setProtectionMode(false);
         }
@@ -319,7 +320,10 @@ public class Player : MonoBehaviourPunCallbacks
 
     public void DeactivateLoot()
     {
-        LootHUD.SetActive(false);
+        if (LootHUD)
+        {
+            LootHUD.SetActive(false);
+        }
     }
     void OnCollisionEnter(Collision col)
     {
@@ -328,6 +332,8 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (loot.loot == true)
             {
+                if (LootHUD == null)
+                    return;
                 Debug.Log("do we need to activate ?");
                 if (!LootHUD.activeSelf)
                 {
@@ -536,11 +542,11 @@ public class Player : MonoBehaviourPunCallbacks
         }
         if (Input.GetKeyDown(dodgeKey) && isGrounded && !anim.GetBool("isDodging"))
         {
-        Vector3 dodgeDirection = characterModel.forward;
-        rb.AddForce(dodgeDirection.normalized * 50f * movementMultiplier, ForceMode.Acceleration);
+            Vector3 dodgeDirection = characterModel.forward;
+            rb.AddForce(dodgeDirection.normalized * 50f * movementMultiplier, ForceMode.Acceleration);
             anim.SetBool("isDodging", true);
-        } 
-        else if(anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1 && !anim.IsInTransition(0) && anim.GetBool("isDodging"))
+        }
+        else if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1 && !anim.IsInTransition(0) && anim.GetBool("isDodging"))
         {
             anim.SetBool("isDodging", false);
         }
@@ -556,7 +562,7 @@ public class Player : MonoBehaviourPunCallbacks
             rb.AddForce(moveDirection.normalized * moveSpeed * movementMultiplier * airMultiplier, ForceMode.Acceleration);
         }
     }
-   public Transform FindDeepChild(Transform parent, string name)
+    public Transform FindDeepChild(Transform parent, string name)
     {
         foreach (Transform child in parent)
         {

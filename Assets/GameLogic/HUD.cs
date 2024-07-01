@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Photon.Pun;
 
 
-public class HUD : MonoBehaviour
+public class HUD : MonoBehaviourPunCallbacks
 {
     private Transform selectedSlot;
     private Vector3 startPos;
@@ -15,7 +16,17 @@ public class HUD : MonoBehaviour
 
     void Start()
     {
+        if (photonView.IsMine)
+        {
+            photonView.RPC("KillHud", RpcTarget.Others);
+        }
         //gameObject.SetActive(false);
+    }
+
+    [PunRPC]
+    public void KillHud()
+    {
+        gameObject.SetActive(false);
     }
 
     public void Clean()
@@ -110,15 +121,15 @@ public class HUD : MonoBehaviour
         Transform inventoryPanel = transform.Find("Inventory");
         //string tag = "Slot" + e.Index;
         //foreach (Transform slot in inventoryPanel)
-       // {
-         //   if (slot.CompareTag(tag))
+        // {
+        //   if (slot.CompareTag(tag))
         //{
         Image image = inventoryPanel.GetChild(e.Index).GetChild(0).GetChild(0).GetComponent<Image>();
         Button button = inventoryPanel.GetChild(e.Index).GetChild(0).GetComponent<Button>();
         image.sprite = null;
         image.enabled = false;
         button.onClick.RemoveAllListeners();
-          //  }
+        //  }
         //}
     }
     // Update is called once per frame
@@ -251,7 +262,7 @@ public class HUD : MonoBehaviour
         inventory = player.GetComponent<Inventory>();
         //
         GameObject loot = GameObject.FindGameObjectWithTag("LootHUD");
-      
+
         //
         char id_1_c = slot1.tag[slot1.tag.Length - 1];
         int id_1 = int.Parse(id_1_c.ToString());

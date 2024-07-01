@@ -266,4 +266,43 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             }
         }
     }
+
+    public void DeactivateAllObjects()
+    {
+        if (gameObject != null)
+        {
+            // Ensure the current client is the owner or a master client
+            if (photonView.IsMine || PhotonNetwork.IsMasterClient)
+                photonView.RPC("DeactivateObject", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    void DeactivateObject()
+    {
+        gameObject.SetActive(false);
+    }
+
+    private void SetTag(string newTag)
+    {
+        this.gameObject.tag = newTag;
+        Debug.Log("Tag set to: " + newTag);
+    }
+
+    // Public method to request tag change, called by any client
+    public void RequestTagChange(string newTag)
+    {
+        // Ensure the request is only made by the owner
+        if (photonView.IsMine)
+        {
+            photonView.RPC("SyncTag", RpcTarget.All, newTag);
+        }
+    }
+
+    // RPC method to synchronize the tag across all clients
+    [PunRPC]
+    public void SyncTag(string newTag)
+    {
+        SetTag(newTag);
+    }
 }

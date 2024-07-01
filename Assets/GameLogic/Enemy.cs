@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
- public class Enemy : MonoBehaviourPun
+public class Enemy : MonoBehaviourPun
 {
     [SerializeField]
     public float health, maxHealth = 10f;
@@ -90,9 +90,6 @@ using Photon.Pun;
                 Vector3 pos = biomesPositions[(int)randomBiome];
                 pos.y += 300;
                 gameObject.transform.position = pos;
-                // inventory = new Inventory(9, null, false);
-                // inventory.AddEnemyWeapon("Sword");
-                // inventory.AddEnemyWeapon("Gun");
                 if (randomNumber < 2)
                 {
                     Debug.Log("BIOME DESERT");
@@ -159,29 +156,29 @@ using Photon.Pun;
     }
 
     private void MoveRandomly()
-{
-    if (moveDirection == Vector3.zero)
     {
-        moveDirection = Random.onUnitSphere;
-        moveDirection.y = 0f;
-        distanceMoved = 0f;
+        if (moveDirection == Vector3.zero)
+        {
+            moveDirection = Random.onUnitSphere;
+            moveDirection.y = 0f;
+            distanceMoved = 0f;
 
-        anim.SetBool("isWalking", true);
-    }
+            anim.SetBool("isWalking", true);
+        }
 
-    transform.position += moveDirection * moveSpeed * Time.deltaTime;
-    distanceMoved += moveSpeed * Time.deltaTime;
+        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        distanceMoved += moveSpeed * Time.deltaTime;
 
-    if (distanceMoved >= 5f)
-    {
-        moveDirection = Vector3.zero;
-        anim.SetBool("isWalking", false);
+        if (distanceMoved >= 5f)
+        {
+            moveDirection = Vector3.zero;
+            anim.SetBool("isWalking", false);
+        }
+        if (moveDirection != Vector3.zero)
+        {
+            transform.LookAt(transform.position + moveDirection);
+        }
     }
-    if (moveDirection != Vector3.zero)
-    {
-        transform.LookAt(transform.position + moveDirection);
-    }
-}
 
     private void OnTriggerEnter(Collider other)
     {

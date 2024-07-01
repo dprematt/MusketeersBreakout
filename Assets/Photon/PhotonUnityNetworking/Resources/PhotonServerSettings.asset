@@ -56,6 +56,11 @@ MonoBehaviour:
   - setProtectionModeSync
   - Particles
   - SwapItemsSync
+  - DeactivateObject
+  - DestroyObject
+  - KillHud
+  - SyncTag
+  - UpdateItems
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

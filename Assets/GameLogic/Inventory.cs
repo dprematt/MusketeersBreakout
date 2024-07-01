@@ -5,12 +5,15 @@ using PlayFab;
 using PlayFab.ClientModels;
 using Photon.Pun;
 using PlayFab.CloudScriptModels;
-public class Inventory : MonoBehaviour
+
+public class Inventory : MonoBehaviourPunCallbacks
 {
     public int SLOTS;
+    PhotonView view;
     public IInventoryItem[] mItems;
     public bool loot = false;
     public bool test = false;
+    public string LastItemName;
 
     public event EventHandler<InventoryEventArgs> ItemAdded;
     public event EventHandler<InventoryEventArgs> ItemInsertedAt;
@@ -62,7 +65,7 @@ public class Inventory : MonoBehaviour
             Destroy(weaponObject);
             return;
         }
-        
+
         //AddItem(weaponItem);
         playerScript.EquipWeapon(weaponItem, weaponObject, true);
     }
@@ -131,6 +134,7 @@ public class Inventory : MonoBehaviour
     public void Start()
     {
         SLOTS = 9;
+        view = GetComponent<PhotonView>();
         if (mItems == null)
         {
             mItems = new IInventoryItem[9];
@@ -202,6 +206,20 @@ public class Inventory : MonoBehaviour
     }
     public void AddItem(IInventoryItem item)
     {
+        if (loot == true)
+        {
+            GameObject newItem = PhotonNetwork.Instantiate(item.Name, gameObject.transform.position, gameObject.transform.rotation);
+            if (mItems == null)
+                mItems = new IInventoryItem[9];
+            Weapon weapon = newItem.GetComponent<Weapon>();
+            Add(weapon);
+            if (ItemAdded != null)
+            {
+                ItemAdded(this, new InventoryEventArgs(weapon));
+            }
+            Destroy(newItem);
+            return;
+        }
         if (Count() == 0)
         {
             mItems = new IInventoryItem[9];
@@ -229,10 +247,12 @@ public class Inventory : MonoBehaviour
     {
         if (Count() == 0 && loot == true)
         {
+            Debug.Log("INVENTORY/ IN DESTROY LOOT");
             //mItems.Clear();
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            player.GetComponent<Player>().DeactivateLoot();
-            Destroy(gameObject);
+            //GameObject player = GameObject.FindGameObjectWithTag("Player");
+            //player.GetComponent<Player>().DeactivateLoot();
+            view = gameObject.GetComponent<PhotonView>();
+            view.RPC("DestroyObject", RpcTarget.All);
         }
     }
 
@@ -242,12 +262,16 @@ public class Inventory : MonoBehaviour
         {
             if (mItems[i] != null)
             {
+                if (loot == true)
+                {
+                    Debug.Log("ITEM IN LOOT id = " + i + " name = " + mItems[i].Name);
+                }
                 ItemInsertedAt(this, new InventoryEventArgs(mItems[i], i));
             }
         }
     }
-        public void OnCollisionEnter(Collision collision)
-        {
+    public void OnCollisionEnter(Collision collision)
+    {
         /*if (loot == true)
         {
             Inventory playerInventory = collision.collider.GetComponent<Inventory>();
@@ -262,15 +286,84 @@ public class Inventory : MonoBehaviour
             }
         }*/
     }
+
+    [PunRPC]
+    public void UpdateItems(string name)
+    {
+        if (loot)
+        {
+            GameObject weaponPrefab = GameObject.FindGameObjectWithTag("TempObjTag");
+            if (weaponPrefab == null)
+            {
+                Debug.Log("INVENTORY: Weapon Prefab == null");
+                return;
+            }
+            //Destroy(weaponPrefab);
+            if (weaponPrefab.TryGetComponent(out Weapon weapon))
+            {
+                if (mItems == null)
+                    mItems = new IInventoryItem[9];
+                Add(weapon);
+                ItemAdded?.Invoke(this, new InventoryEventArgs(weapon));
+                weaponPrefab.SetActive(false);
+                //Destroy(weaponPrefab);
+                //weapon.DeactivateAllObjects();
+            }
+            else
+            {
+                Debug.LogWarning("New item does not have a Weapon component.");
+            }
+
+            Debug.Log("IN UPDATE ITEMS: items count = " + Count());
+            //PhotonNetwork.Destroy(newItem);
+        }
+    }
+
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(LastItemName);
+        }
+        else
+        {
+            LastItemName = (string)stream.ReceiveNext();
+        }
+    }
+
+    public void ApplyNetworkUpdate(string name)
+    {
+        Debug.Log(gameObject);
+        Debug.Log(gameObject.GetComponent<PhotonView>());
+        view = gameObject.GetComponent<PhotonView>();
+        if (view.IsMine)
+        {
+            view.RPC("UpdateItems", RpcTarget.All, name);
+        }
+    }
     public void DropItem(int id)
     {
         GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
         Vector3 newPos = gameObject.transform.position;
         newPos.x += 2;
-        var loot = Instantiate(LootPrefab, newPos, gameObject.transform.rotation);
+        GameObject loot = PhotonNetwork.Instantiate("Prefabs/Loot", newPos, gameObject.transform.rotation);
         loot.GetComponentInChildren<Inventory>().loot = true;
-        Print_Inventory();
-        loot.GetComponentInChildren<Inventory>().AddItem(mItems[id]);
+        Inventory lootInventory = loot.GetComponentInChildren<Inventory>();
+        //loot.GetComponentInChildren<Inventory>().AddItem(mItems[id]);
+        Debug.Log("photon view state = " + loot.GetComponentInChildren<PhotonView>().ViewID);
+        LastItemName = mItems[id].Name;
+        GameObject newItem = PhotonNetwork.Instantiate(mItems[id].Name, transform.position, transform.rotation);
+        newItem.GetComponent<Weapon>().RequestTagChange("TempObjTag");
+        lootInventory.ApplyNetworkUpdate("TempObjTag");
         RemoveAt(id);
+    }
+
+    [PunRPC]
+    public void DestroyObject()
+    {
+
+        Debug.Log("INVENTORY: in DESTROY OBJECT via punRPC");
+        PhotonNetwork.Destroy(this.gameObject);
     }
 }
