@@ -141,20 +141,6 @@ public class HUD : MonoBehaviourPunCallbacks
         //offset = (Vector2)selectedSlot.position - eventData.position;
     }
 
-    /* private int FindSlotId(Transform slot)
-     {
-         int counter = 0;
-         Transform inventoryPanel = transform.Find("Inventory");
-         foreach (Transform s in inventoryPanel)
-         {
-             if (slot == s)
-             {
-                 return counter;
-             }
-             counter++;
-         }
-         return -1;
-     }*/
     private void OnBeginDrag(PointerEventData eventData)
     {
         selectedSlot = eventData.pointerPress.transform.parent;
@@ -268,7 +254,7 @@ public class HUD : MonoBehaviourPunCallbacks
         int id_1 = int.Parse(id_1_c.ToString());
         char id_2_c = slot2.tag[slot2.tag.Length - 1];
         int id_2 = int.Parse(id_2_c.ToString());
-        if ((slot1.position.y <= slot2.position.y + 10) && ((slot1.position.y >= slot2.position.y - 10)))
+        if (slot2.position.y >= -30)
         {
             inventory.SwapItems(id_1, id_2);
             //slot1.position = endPos;
