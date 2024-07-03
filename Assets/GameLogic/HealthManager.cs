@@ -12,7 +12,7 @@ using UnityEditor;
 public class HealthManager : MonoBehaviourPunCallbacks
 {
 
-    float Health_ = 100;
+    public float Health_ = 100;
     public Text Health_Text_;
     PlayFabInventory PFInventory_;
 
@@ -62,6 +62,11 @@ public class HealthManager : MonoBehaviourPunCallbacks
         {
             if (Damage < Health_)
             {
+                Player player = gameObject.GetComponent<Player>();
+                if (player != null)
+                {
+                    player.dmgTaken += Damage;
+                }
                 photonView.RPC("DamageInstance", RpcTarget.All, Damage);
             }
             else

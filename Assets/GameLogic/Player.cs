@@ -14,6 +14,10 @@ public class Player : MonoBehaviourPunCallbacks
     public int health_up;
     public int max_xp;
     public bool Demo = false;
+    public int kills = 0;
+    public int lootedChests = 0;
+    public int dmgTaken = 0;
+    public int dmgDone = 0;
 
     [Header("Movement")]
     public float moveSpeed = 6f;
@@ -34,14 +38,14 @@ public class Player : MonoBehaviourPunCallbacks
     [SerializeField] float groundDrag = 6f;
     [SerializeField] float airDrag = 2f;
 
-    [SerializeField] float health, maxHealth = 10f;
+    [SerializeField] public float health, maxHealth = 10f;
 
     [SerializeField] private float maxStamina = 100f;
     public float stamina;
     public static event System.Action<float, float> OnStaminaChanged;
 
     private bool staminaFullUsed;
-    private HealthManager HealthManager;
+    public HealthManager HealthManager;
     private PlayFabInventory PFInventory_;
 
     public Inventory inventory;
@@ -294,27 +298,38 @@ public class Player : MonoBehaviourPunCallbacks
     }
     public int UpdateXp(int new_xp)
     {
-        xp += new_xp;
-        XpProgressBar.fillAmount = (float)(xp / max_xp);
-        xpText2D.text = "XP " + xp.ToString() + " / " + max_xp.ToString();
+        if (photonView.IsMine)
+        {
+            xp += new_xp;
+            kills += 1;
+            XpProgressBar.fillAmount = (float)(xp / max_xp);
+            xpText2D.text = "XP " + xp.ToString() + " / " + max_xp.ToString();
+            return xp;
+        }
         return xp;
     }
     public void UpdateLevel()
     {
-        level = level + 1;
-        xp = xp - max_xp;
-        HealthManager.HealthUp(health_up);
-        health_up = health_up + 5;
-        max_xp = max_xp + 10;
-        XpProgressBar.fillAmount = (float)(xp / max_xp);
-        xpText2D.text = "XP " + xp.ToString() + " / " + max_xp.ToString();
-        levelText2D.text = "LEVEL " + level.ToString();
+        if (photonView.IsMine)
+        {
+            level = level + 1;
+            xp = xp - max_xp;
+            HealthManager.HealthUp(health_up);
+            health_up = health_up + 5;
+            max_xp = max_xp + 10;
+            XpProgressBar.fillAmount = (float)(xp / max_xp);
+            xpText2D.text = "XP " + xp.ToString() + " / " + max_xp.ToString();
+            levelText2D.text = "LEVEL " + level.ToString();
+        }
     }
     public void CheckXp()
     {
-        if (xp >= max_xp)
+        if (!photonView.IsMine)
         {
-            UpdateLevel();
+            if (xp >= max_xp)
+            {
+                UpdateLevel();
+            }
         }
     }
 

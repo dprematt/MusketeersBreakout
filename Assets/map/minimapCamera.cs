@@ -42,7 +42,7 @@ public class minimapCamera : MonoBehaviourPunCallbacks
             newPos.y = transform.position.y + cameraHeight;
             camera.transform.position = newPos;
             camera.transform.rotation = Quaternion.Euler(90f, transform.eulerAngles.y, 0f);
-            Debug.Log("MinimapCamera position mise à jour pour " + gameObject.name + " à " + newPos);
+            //Debug.Log("MinimapCamera position mise à jour pour " + gameObject.name + " à " + newPos);
         }
     }
 }

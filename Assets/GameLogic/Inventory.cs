@@ -267,6 +267,16 @@ public class Inventory : MonoBehaviourPunCallbacks
                     Debug.Log("ITEM IN LOOT id = " + i + " name = " + mItems[i].Name);
                 }
                 ItemInsertedAt(this, new InventoryEventArgs(mItems[i], i));
+                GameObject playerGo = GameObject.FindGameObjectWithTag("Player");
+
+                if (playerGo == null)
+                {
+                    Debug.Log("player == null");
+                    return;
+                }
+
+                Player player = playerGo.GetComponent<Player>();
+                player.lootedChests += 1;
             }
         }
     }

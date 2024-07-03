@@ -114,19 +114,38 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             }
         }*/
 
-/*        if (anim.GetInteger("intAttackPhase") > 0 && other.gameObject != holder && isAttacking)
+      if (anim.GetInteger("intAttackPhase") > 0 && other.gameObject != holder && IsAttacking)
         {
-            if (IsPlayer && other.CompareTag("EnemyBody"))
+            Debug.Log("IN ATTACK FIRST IF");
+            
+            if (IsPlayer && other.CompareTag("Enemy"))
             {
+                Debug.Log("IN ATTACK SECOND IF");
                 other.gameObject.GetComponentInParent<Enemy>().TakeDamage(damages);
                 Debug.Log("Hit !!!");
+                Player player = gameObject.GetComponentInParent<Player>();
+                if (player != null)
+                {
+                    player.dmgDone += player.EquippedWeapon.damages;
+                }
             }
             else if (holder.CompareTag("Enemy") && other.CompareTag("Player"))
             {
                 other.gameObject.GetComponent<Player>().TakeDamage(damages);
             }
-            isAttacking = false;
-        }*/
+            else
+            {
+                Player player = gameObject.GetComponentInParent<Player>();
+                if (player != null)
+                {
+                    player.dmgDone += player.EquippedWeapon.damages;
+                }
+                Debug.Log("IN ATTACK SECOND IF");
+                other.gameObject.GetComponentInParent<Enemy>().TakeDamage(damages);
+                Debug.Log("Hit !!!");
+            }
+            IsAttacking = false;
+        }
     }
 
     Transform FindDeepChild(Transform parent, string nom)

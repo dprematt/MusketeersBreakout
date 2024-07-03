@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Photon.Pun;
-
+using TMPro;
 
 public class HUD : MonoBehaviourPunCallbacks
 {
+    [Header("UI")]
     private Transform selectedSlot;
     private Vector3 startPos;
     private Vector3 endPos;
@@ -27,6 +28,148 @@ public class HUD : MonoBehaviourPunCallbacks
     public void KillHud()
     {
         gameObject.SetActive(false);
+    }
+
+    public void SetStatDmg()
+    {
+        Transform Stats = transform.Find("Stats");
+
+        GameObject playerGo = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerGo == null)
+        {
+            Debug.Log("player == null");
+            return;
+        }
+        
+        Player player = playerGo.GetComponent<Player>();
+        if (Stats != null)
+        {
+            Transform AtqStats = Stats.Find("AtqText");
+            if (AtqStats != null)
+            {
+                TextMeshProUGUI textComp = AtqStats.GetComponent<TextMeshProUGUI>();
+                if (textComp != null)
+                {
+                    if (player.EquippedWeapon != null)
+                        textComp.text = "dmg = " + player.EquippedWeapon.damages;
+                }
+                else
+                {
+                    Debug.Log("HUD: textComp == null");
+                }
+            }
+            else
+            {
+                Debug.Log("AtqText == Null");
+            }
+            Transform HpStats = Stats.Find("HpText");
+            if (AtqStats != null)
+            {
+                TextMeshProUGUI textComp = HpStats.GetComponent<TextMeshProUGUI>();
+                if (textComp != null)
+                {
+                    textComp.text = "HP = " + player.HealthManager.Health_;
+                }
+                else
+                {
+                    Debug.Log("HUD: textComp == null");
+                }
+            }
+            else
+            {
+                Debug.Log("hpText == Null");
+            }
+            Transform SpeedStats = Stats.Find("SpeedText");
+            if (AtqStats != null)
+            {
+                TextMeshProUGUI textComp = SpeedStats.GetComponent<TextMeshProUGUI>();
+                if (textComp != null)
+                {
+                    textComp.text = "Speed = " + player.moveSpeed;
+                }
+                else
+                {
+                    Debug.Log("HUD: textComp == null");
+                }
+            }
+            else
+            {
+                Debug.Log("speedText == Null");
+            }
+            Transform KillsStats = Stats.Find("KillsText");
+            if (AtqStats != null)
+            {
+                TextMeshProUGUI textComp = KillsStats.GetComponent<TextMeshProUGUI>();
+                if (textComp != null)
+                {
+                    textComp.text = "Kills = " + player.kills;
+                }
+                else
+                {
+                    Debug.Log("HUD: textComp == null");
+                }
+            }
+            else
+            {
+                Debug.Log("KillsText == Null");
+            }
+            Transform LootStats = Stats.Find("LootsText");
+            if (AtqStats != null)
+            {
+                TextMeshProUGUI textComp = LootStats.GetComponent<TextMeshProUGUI>();
+                if (textComp != null)
+                {
+                    textComp.text = "Loots = " + player.lootedChests;
+                }
+                else
+                {
+                    Debug.Log("HUD: textComp == null");
+                }
+            }
+            else
+            {
+                Debug.Log("LootsText == Null");
+            }
+            Transform DmgTakenStats = Stats.Find("DmgTakenText");
+            if (AtqStats != null)
+            {
+                TextMeshProUGUI textComp = DmgTakenStats.GetComponent<TextMeshProUGUI>();
+                if (textComp != null)
+                {
+                    textComp.text = "Dmg Taken = " + player.dmgTaken;
+                }
+                else
+                {
+                    Debug.Log("HUD: textComp == null");
+                }
+            }
+            else
+            {
+                Debug.Log("DmgTakenText == Null");
+            }
+            Transform DmgDoneStats = Stats.Find("DmgDoneText");
+            if (AtqStats != null)
+            {
+                TextMeshProUGUI textComp = DmgDoneStats.GetComponent<TextMeshProUGUI>();
+                if (textComp != null)
+                {
+                    textComp.text = "Dmg Done = " + player.dmgDone;
+                }
+                else
+                {
+                    Debug.Log("HUD: textComp == null");
+                }
+            }
+            else
+            {
+                Debug.Log("DmgDoneText == Null");
+            }
+        }
+        else
+        {
+            Debug.Log("HUD: stats == null");
+        }
     }
 
     public void Clean()
@@ -276,5 +419,6 @@ public class HUD : MonoBehaviourPunCallbacks
 
     void Update()
     {
+        SetStatDmg();
     }
 }
