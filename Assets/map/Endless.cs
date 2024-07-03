@@ -135,40 +135,40 @@ public class Endless : MonoBehaviour
             UpdateChunk();
         }
 
-        private void ApplyBeachesIfNeeded()
-        {
-            float mapHalfWidth = generator.mapChunkSize * 2.5f;
-            float mapHalfHeight = generator.mapChunkSize * 2.5f;
+    private void ApplyBeachesIfNeeded()
+    {
+        float mapHalfWidth = generator.mapChunkSize * 2.5f;
+        float mapHalfHeight = generator.mapChunkSize * 2.5f;
 
-            float chunkTopBorder = bounds.center.y + (bounds.size.y / 2);
-            float chunkBottomBorder = bounds.center.y - (bounds.size.y / 2);
-            float chunkRightBorder = bounds.center.x + (bounds.size.x / 2);
-            float chunkLeftBorder = bounds.center.x - (bounds.size.x / 2);
+        float chunkTopBorder = bounds.center.y + (bounds.size.y / 2);
+        float chunkBottomBorder = bounds.center.y - (bounds.size.y / 2);
+        float chunkRightBorder = bounds.center.x + (bounds.size.x / 2);
+        float chunkLeftBorder = bounds.center.x - (bounds.size.x / 2);
 
-            bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - waterThickness) && bounds.center.y < mapHalfHeight;
-            bool isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + waterThickness) && bounds.center.y > -mapHalfHeight;
-            bool isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + waterThickness) && bounds.center.x > -mapHalfWidth;
-            bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - waterThickness) && bounds.center.x < mapHalfWidth;
+        bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - waterThickness) && bounds.center.y < mapHalfHeight;
+        bool isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + waterThickness) && bounds.center.y > -mapHalfHeight;
+        bool isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + waterThickness) && bounds.center.x > -mapHalfWidth;
+        bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - waterThickness) && bounds.center.x < mapHalfWidth;
 
-            if (isTopBorderChunk)
-                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, false);
-            if (isBottomBorderChunk)
-                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, false);
-            if (isLeftBorderChunk)
-                ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, true);
-            if (isRightBorderChunk)
-                ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, false);
+        if (isTopBorderChunk)
+            ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, false);
+        if (isBottomBorderChunk)
+            ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, false);
+        if (isLeftBorderChunk)
+            ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, true);
+        if (isRightBorderChunk)
+            ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, false);
 
-            isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - sandThickness - waterThickness) && bounds.center.y < mapHalfHeight;
-            isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + sandThickness + waterThickness) && bounds.center.y > -mapHalfHeight;
-            isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + sandThickness + waterThickness) && bounds.center.x > -mapHalfWidth;
-            isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - sandThickness - waterThickness) && bounds.center.x < mapHalfWidth;
+        isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - sandThickness - waterThickness) && bounds.center.y < mapHalfHeight;
+        isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + sandThickness + waterThickness) && bounds.center.y > -mapHalfHeight;
+        isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + sandThickness + waterThickness) && bounds.center.x > -mapHalfWidth;
+        isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - sandThickness - waterThickness) && bounds.center.x < mapHalfWidth;
 
-            if (isTopBorderChunk)
-                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, true);
-            if (isBottomBorderChunk)
+        if (isTopBorderChunk)
+            ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, true);
+        if (isBottomBorderChunk)
             ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, true);
-        }
+    }
 
         private void ApplyBeachAndSandToTopOrBottom(int waterThickness, int sandThickness, bool isTopBorder, bool isWater)
         {
@@ -176,6 +176,8 @@ public class Endless : MonoBehaviour
             float sandEndZ = chunkBorderStartZ + (isTopBorder ? waterThickness : -waterThickness);
             float beachEndZ = sandEndZ + (isTopBorder ? sandThickness : -sandThickness);
             float mapHalfHeight = generator.mapChunkSize * 2.5f;
+
+            System.Random prng = _generator.getPRNG(); // Get a random number generator
 
             for (int x = 0; x < generator.mapChunkSize; x++)
             {
@@ -190,16 +192,18 @@ public class Endless : MonoBehaviour
 
                     if (isWater)
                     {
-                        if (isTopBorder ? (worldZ >= chunkBorderStartZ && worldZ < sandEndZ) :
-                                        (worldZ <= chunkBorderStartZ && worldZ > sandEndZ))
+                        float randomness = (float)prng.NextDouble() * 10f - 5f; // Adjust the range of randomness as needed
+                        if (isTopBorder ? (worldZ >= chunkBorderStartZ && worldZ < sandEndZ + randomness) :
+                                        (worldZ <= chunkBorderStartZ && worldZ > sandEndZ + randomness))
                         {
                             mapdata.heightMap[x, z] = 0.1f;
                         }
                     }
                     else
                     {
-                        if (isTopBorder ? (worldZ >= sandEndZ && worldZ < beachEndZ) :
-                                        (worldZ <= sandEndZ && worldZ > beachEndZ))
+                        float randomness = (float)prng.NextDouble() * 10f - 5f; // Adjust the range of randomness as needed
+                        if (isTopBorder ? (worldZ >= sandEndZ + randomness && worldZ < beachEndZ + randomness) :
+                                        (worldZ <= sandEndZ + randomness && worldZ > beachEndZ + randomness))
                         {
                             mapdata.heightMap[x, z] = 0.15f;
                         }
@@ -214,19 +218,22 @@ public class Endless : MonoBehaviour
             float sandEndX = chunkBorderStartX + (isLeftBorder ? waterThickness : -waterThickness);
             float beachEndX = sandEndX + (isLeftBorder ? sandThickness : -sandThickness);
 
+            System.Random prng = _generator.getPRNG(); // Get a random number generator
+
             for (int x = 0; x < generator.mapChunkSize; x++)
             {
                 for (int z = 0; z < generator.mapChunkSize; z++)
                 {
                     float worldX = bounds.center.x - (bounds.size.x / 2) + x;
 
-                    if (isLeftBorder ? (worldX >= chunkBorderStartX && worldX < sandEndX) :
-                                    (worldX <= chunkBorderStartX && worldX > sandEndX))
+                    float randomness = (float)prng.NextDouble() * 10f - 5f; // Adjust the range of randomness as needed
+                    if (isLeftBorder ? (worldX >= chunkBorderStartX && worldX < sandEndX + randomness) :
+                                    (worldX <= chunkBorderStartX && worldX > sandEndX + randomness))
                     {
                         mapdata.heightMap[x, z] = 0.1f;
                     }
-                    else if (isLeftBorder ? (worldX >= sandEndX && worldX < beachEndX) :
-                                        (worldX <= sandEndX && worldX > beachEndX))
+                    else if (isLeftBorder ? (worldX >= sandEndX + randomness && worldX < beachEndX + randomness) :
+                                        (worldX <= sandEndX + randomness && worldX > beachEndX + randomness))
                     {
                         mapdata.heightMap[x, z] = 0.15f;
                     }
