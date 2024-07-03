@@ -231,10 +231,13 @@ public class generator : MonoBehaviourPun
                         position.z < (bottomRight.y + borderBuffer) ||
                         position.z > (topLeft.y - borderBuffer);
 
-                    bool isTooCloseToOtherBiomes =
+                    bool isTooCloseToSameBiomes =
                         biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 500 && biomeSpecificPositions[biome.type].Any(biomePos => Vector3.Distance(position, biomePos) < 500));
 
-                    if (!isInBorderBuffer && !isTooCloseToOtherBiomes)
+                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 100);
+
+
+                    if (!isInBorderBuffer && !isTooCloseToSameBiomes && !isTooCloseToOtherBiomes)
                     {
                         biomesPositions.Add(position);
 
