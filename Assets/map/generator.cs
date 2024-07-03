@@ -89,24 +89,6 @@ public class generator : MonoBehaviourPun
         Invoke("DrawMap", randomDelay);
         Invoke("PlaceWeaponsInBiomes", randomDelay + 1);
     }
-
-    // void OnDrawGizmos() {
-    //     float mapChunkSize = 241;
-    //     float topBorder = 3.5f * mapChunkSize;
-    //     float bottomBorder = -topBorder;
-    //     float leftBorder = -topBorder;
-    //     float rightBorder = topBorder;
-
-    //     Gizmos.color = Color.yellow;
-    //     Gizmos.DrawLine(new Vector3(leftBorder, 0, topBorder), new Vector3(leftBorder, 0, bottomBorder));
-    //     Gizmos.color = Color.green;
-    //     Gizmos.DrawLine(new Vector3(rightBorder, 0, topBorder), new Vector3(rightBorder, 0, bottomBorder));
-    //     Gizmos.color = Color.red;
-    //     Gizmos.DrawLine(new Vector3(leftBorder, 0, topBorder), new Vector3(rightBorder, 0, topBorder));
-    //     Gizmos.color = Color.blue;
-    //     Gizmos.DrawLine(new Vector3(leftBorder, 0, bottomBorder), new Vector3(rightBorder, 0, bottomBorder));
-    // }
-
     public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize, System.Random prng)
     {
         InitializeRandom();
@@ -187,86 +169,96 @@ public class generator : MonoBehaviourPun
         }
     }
 
-    public void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, System.Random prng)
+    void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight, System.Random prng)
     {
+        Debug.Log("Début de PlaceBiomesInFlatAreas");
         InitializeRandom();
         biomesPositions.Clear();
         biomeSpecificPositions.Clear();
-        GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
 
         foreach (Biome biome in Biomes)
         {
-            List<Vector3> specificBiomePositions = new List<Vector3>();
-
-            for (int i = 0; i < 2; i++) // Limiter à 2 biomes de chaque type
-            {
-                if (plateCenters.Count == 0) break;
-                int index = prng.Next(0, plateCenters.Count);
-                Vector2 center = plateCenters[index];
-                plateCenters.RemoveAt(index);
-
-                Vector3 position = new Vector3(center.x, 0, center.y);
-
-                float borderBuffer = 100;
-                float cornerBuffer = mapChunkSize;
-                Vector2 topLeft = new Vector2(-2.5f * mapChunkSize, 2.5f * mapChunkSize);
-                Vector2 bottomRight = new Vector2(2.5f * mapChunkSize, -2.5f * mapChunkSize);
-
-                bool isInCornerChunk =
-                    (position.x < (topLeft.x + cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
-                    (position.x > (bottomRight.x - cornerBuffer) && position.z > (topLeft.y - cornerBuffer)) ||
-                    (position.x < (topLeft.x + cornerBuffer) && position.z < (bottomRight.y + cornerBuffer)) ||
-                    (position.x > (bottomRight.x - cornerBuffer) && position.z < (bottomRight.y + cornerBuffer));
-
-                bool isInBorderBuffer =
-                    position.x < (topLeft.x + borderBuffer) ||
-                    position.x > (bottomRight.x - borderBuffer) ||
-                    position.z < (bottomRight.y + borderBuffer) ||
-                    position.z > (topLeft.y - borderBuffer);
-
-                bool isTooCloseToOtherBiomes =
-                    biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 200) ||
-                    specificBiomePositions.Any(biomePos => Vector3.Distance(position, biomePos) < 500);
-
-                if (!isInBorderBuffer && !isInCornerChunk && !isTooCloseToOtherBiomes)
-                {
-                    biomesPositions.Add(position);
-                    specificBiomePositions.Add(position);
-                    GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
-                    instance.transform.SetParent(biomesParent.transform);
-                }
-            }
-
-            if (!biomeSpecificPositions.ContainsKey(biome.type))
-            {
-                biomeSpecificPositions[biome.type] = specificBiomePositions;
-            }
+            biomeSpecificPositions.Add(biome.type, new List<Vector3>());
         }
-    }
 
-    bool IsPositionOnFlatArea(Vector3 position, float[,] heightMap, int mapChunkSize)
-    {
-        int posX = Mathf.RoundToInt(position.x);
-        int posY = Mathf.RoundToInt(position.z);
+        GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
+        Debug.Log($"Nombre de plateCenters: {plateCenters.Count}");
 
-        int radius = 3; // Vérifier une zone de 3x3 autour de la position
-
-        for (int x = posX - radius; x <= posX + radius; x++)
+        if (plateCenters.Count < Biomes.Length * 2)
         {
-            for (int y = posY - radius; y <= posY + radius; y++)
+            Debug.LogWarning("Pas assez de zones plates pour placer tous les biomes.");
+            return;
+        }
+
+        Dictionary<string, int> biomeCount = new Dictionary<string, int>();
+        foreach (Biome biome in Biomes)
+        {
+            biomeCount.Add(biome.type, 0);
+        }
+
+        int totalBiomesNeeded = Biomes.Length * 2;
+        int biomesPlaced = 0;
+
+        while (biomesPlaced < totalBiomesNeeded)
+        {
+            foreach (Biome biome in Biomes)
             {
-                if (x >= 0 && x < mapChunkSize && y >= 0 && y < mapChunkSize)
+                if (biomeCount[biome.type] >= 2)
                 {
-                    if (Mathf.Abs(heightMap[x, y] - 0.4f) > 0.05f)
+                    continue;
+                }
+
+                for (int i = 0; i < 2; i++)
+                {
+                    if (plateCenters.Count == 0)
                     {
-                        return false;
+                        break;
+                    }
+
+                    int index = prng.Next(0, plateCenters.Count);
+                    Vector2 center = plateCenters[index];
+                    plateCenters.RemoveAt(index);
+
+                    float x = center.x + prng.Next(-1, 1);
+                    float y = biome.type == "désert" || biome.type == "neige" ? 0.7f : -0.9f;
+                    float z = center.y + prng.Next(-1, 1);
+                    Vector3 position = new Vector3(x, y, z);
+
+                    float borderBuffer = 100;
+                    bool isInBorderBuffer =
+                        position.x < (topLeft.x + borderBuffer) ||
+                        position.x > (bottomRight.x - borderBuffer) ||
+                        position.z < (bottomRight.y + borderBuffer) ||
+                        position.z > (topLeft.y - borderBuffer);
+
+                    bool isTooCloseToSameBiomes =
+                        biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 500 && biomeSpecificPositions[biome.type].Any(biomePos => Vector3.Distance(position, biomePos) < 500));
+
+                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 100);
+
+
+                    if (!isInBorderBuffer && !isTooCloseToSameBiomes && !isTooCloseToOtherBiomes)
+                    {
+                        biomesPositions.Add(position);
+
+                        biomeSpecificPositions[biome.type].Add(position);
+
+                        GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
+                        instance.transform.SetParent(biomesParent.transform);
+                        biomeCount[biome.type] += 1;
+                        biomesPlaced += 1;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"La position {position} est trop proche d'autres biomes du même type ou en dehors des limites.");
                     }
                 }
             }
         }
 
-        return true;
+        Debug.Log("Fin de PlaceBiomesInFlatAreas");
     }
+
 
 
 
@@ -369,11 +361,13 @@ public class generator : MonoBehaviourPun
 
     public void DrawMap()
     {
-        Vector2 topLeft = new Vector2(-2.5f * mapChunkSize, 2.5f * mapChunkSize);
+      Vector2 topLeft = new Vector2(-2.5f * mapChunkSize, 2.5f * mapChunkSize);
         Vector2 bottomRight = new Vector2(2.5f * mapChunkSize, -2.5f * mapChunkSize);
 
         List<Vector2> allPlateCenters = new List<Vector2>();
         float[,] heightMap = null;
+
+        System.Random prng = new System.Random(seed);
 
         for (float x = topLeft.x; x <= bottomRight.x; x += mapChunkSize)
         {
@@ -388,8 +382,7 @@ public class generator : MonoBehaviourPun
             }
         }
 
-        System.Random prng = new System.Random(seed);
-        PlaceBiomesInFlatAreas(allPlateCenters, prng);
+        PlaceBiomesInFlatAreas(allPlateCenters, topLeft, bottomRight, prng);
 
         Vector2 center = Vector2.zero + offSet;
         var currentMapData = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center, normalizeMode, seed);
