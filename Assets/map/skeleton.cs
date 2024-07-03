@@ -62,7 +62,6 @@ public static class Skeleton
 
         normalizeMode = NormalizeMode.Global;
 
-        // Normalisation des hauteurs
         if (normalizeMode == NormalizeMode.Local) {
             for (int y = 0; y < mapHeight; y++) {
                 for (int x = 0; x < mapWidth; x++) {
@@ -71,8 +70,7 @@ public static class Skeleton
             } 
         }
         else {
-            for (int y = 0; y < mapHeight; y++)
-            {
+            for (int y = 0; y < mapHeight; y++) {
                 for (int x = 0; x < mapWidth; x++)
                 {
                     float normalizeHeight = (skeleton[x, y] + 1) / (2 * maxPossibleHeight / 1.5f);
@@ -82,13 +80,13 @@ public static class Skeleton
         }
 
         float flatHeight = 0.4f;
-        int numberOfPlates = 3;
+        int numberOfPlates = 4;
         List<Vector2> plateCenters = new List<Vector2>();
 
-        System.Random localPrng = new System.Random(seed + (int)offset.x * 1000 + (int)offset.y);
+        System.Random localPrng = new System.Random(seed);
         while (plateCenters.Count < numberOfPlates) {
             Vector2 newCenter = new Vector2(localPrng.Next(20, mapWidth - 20) + offset.x, localPrng.Next(20, mapHeight - 20) + offset.y);
-            if (!plateCenters.Any(center => Vector2.Distance(center, newCenter) < 60)) {
+            if (!plateCenters.Any(center => Vector2.Distance(center, newCenter) < 70)) {
                 plateCenters.Add(newCenter);
             }
         }
