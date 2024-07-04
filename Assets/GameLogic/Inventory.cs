@@ -252,7 +252,12 @@ public class Inventory : MonoBehaviourPunCallbacks
             //GameObject player = GameObject.FindGameObjectWithTag("Player");
             //player.GetComponent<Player>().DeactivateLoot();
             view = gameObject.GetComponent<PhotonView>();
-            view.RPC("DestroyObject", RpcTarget.All);
+            if (view != null)
+                view.RPC("DestroyObject", RpcTarget.All);
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 

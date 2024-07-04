@@ -12,11 +12,13 @@ public class EventListener : MonoBehaviour
 
     public void AnimEvent()
     {
-        weaponComp.CheckAttackPhase();
+        if (weaponComp != null)
+            weaponComp.CheckAttackPhase();
     }
 
     public void HitEvent()
     {
-        weaponComp.IsAttacking = true;
+        if (weaponComp != null)
+            weaponComp.IsAttacking = true;
     }
 }

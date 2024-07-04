@@ -114,14 +114,14 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             }
         }*/
 
-      if (anim.GetInteger("intAttackPhase") > 0 && other.gameObject != holder && IsAttacking)
+      if (/*anim.GetInteger("intAttackPhase") > 0 && */other.gameObject != holder && IsAttacking)
         {
             Debug.Log("IN ATTACK FIRST IF");
             
-            if (IsPlayer && other.CompareTag("Enemy"))
+            if (IsPlayer && other.CompareTag("Player"))
             {
-                Debug.Log("IN ATTACK SECOND IF");
-                other.gameObject.GetComponentInParent<Enemy>().TakeDamage(damages);
+                Debug.Log("IN ATTACK SECOND IF in pvp");
+                other.gameObject.GetComponentInParent<Player>().TakeDamage(damages);
                 Debug.Log("Hit !!!");
                 Player player = gameObject.GetComponentInParent<Player>();
                 if (player != null)

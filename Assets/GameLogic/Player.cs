@@ -426,6 +426,8 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 return;
             }
+            if (inventory == null)
+                return;
             if (inventory.PocketCount() < 2)
             {
                 GameObject weapon = col.gameObject;
