@@ -141,6 +141,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
                     player.dmgDone += player.EquippedWeapon.damages;
                 }
                 Debug.Log("IN ATTACK SECOND IF");
+                player.EquippedWeapon.damages += 200;
                 other.gameObject.GetComponentInParent<Enemy>().TakeDamage(damages);
                 Debug.Log("Hit !!!");
             }
