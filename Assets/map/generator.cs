@@ -92,7 +92,7 @@ public class generator : MonoBehaviourPun
     public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize, System.Random prng)
     {
         InitializeRandom();
-        Vector3[] extractionZonePositions  = {
+        Vector3[] extractionZonePositions = {
             new Vector3(-480, 0, -540),
             new Vector3(-480, 0, 540),
             new Vector3(480, 0, -540),
@@ -150,9 +150,15 @@ public class generator : MonoBehaviourPun
                         }
                     }
                 }
+
+                if (attempts >= maxAttempts)
+                {
+                    Debug.LogWarning($"Failed to place prefab {prefabType.type} after {maxAttempts} attempts.");
+                }
             }
         }
     }
+
 
 
     void PlaceBiomesGuardians()
@@ -259,24 +265,23 @@ public class generator : MonoBehaviourPun
         Debug.Log("Fin de PlaceBiomesInFlatAreas");
     }
 
-
-
-
-    void PlaceWeaponsInBiomes(System.Random prng)
-{
+    public void PlaceWeaponsInBiomes()
+    {
+        // Initialiser le générateur de nombres aléatoires avec la graine définie
         InitializeRandom();
+
+        // Liste pour suivre les positions déjà utilisées
         List<Vector3> placedPositions = new List<Vector3>();
 
+        // Parcourir chaque biome
         foreach (var biomeEntry in biomeSpecificPositions)
         {
             List<Vector3> biomePositions = biomeEntry.Value;
 
-            for (int i = 0; i < objectsToPlace.Length; i++)
+            // Placer trois exemplaires de chaque objet dans chaque biome
+            foreach (var objectToPlace in objectsToPlace)
             {
-                GameObject objectToPlace = objectsToPlace[i];
-                int quantity = quantitiesToPlace[i];
-
-                for (int j = 0; j < quantity; j++)
+                for (int j = 0; j < 3; j++)
                 {
                     bool validPosition = false;
                     int attempts = 0;
@@ -285,12 +290,16 @@ public class generator : MonoBehaviourPun
                     while (!validPosition && attempts < maxAttempts)
                     {
                         attempts++;
+                        // Sélectionner une position aléatoire dans le biome
                         int positionIndex = prng.Next(biomePositions.Count);
                         Vector3 biomePosition = biomePositions[positionIndex];
+
+                        // Ajouter une petite variation pour éviter des positions trop exactes
                         float x = biomePosition.x + prng.Next(-20, 20);
                         float z = biomePosition.z + prng.Next(-20, 20);
-                        Vector3 position = new Vector3(x, 0.45f, z);
+                        Vector3 position = new Vector3(x, 2, z);  // Ajuster l'axe Y selon vos besoins
 
+                        // Vérifier si la position est valide
                         if (IsPositionValid(position, placedPositions))
                         {
                             placedPositions.Add(position);
@@ -299,24 +308,30 @@ public class generator : MonoBehaviourPun
                             validPosition = true;
                         }
                     }
+
+                    if (!validPosition)
+                    {
+                        Debug.LogWarning($"Failed to place {objectToPlace.name} in biome {biomeEntry.Key} after {maxAttempts} attempts.");
+                    }
                 }
             }
         }
     }
 
-
-
-    bool IsPositionValid(Vector3 position, List<Vector3> placedPositions)
+    private bool IsPositionValid(Vector3 position, List<Vector3> placedPositions)
     {
+        // Vérifier si la position est suffisamment éloignée des positions déjà utilisées
         foreach (var placedPosition in placedPositions)
         {
-            if (Vector3.Distance(position, placedPosition) < 10)
+            if (Vector3.Distance(position, placedPosition) < 5.0f)
             {
                 return false;
             }
         }
         return true;
     }
+
+
 
     public System.Random getPRNG() {
         return prng;

@@ -41597,6 +41597,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ship_02
       objectReference: {fileID: 0}
+    - target: {fileID: 5019184048097567435, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
+      propertyPath: m_TagString
+      value: ExtractionZone
+      objectReference: {fileID: 0}
     - target: {fileID: 8357801936476393688, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
       propertyPath: m_RootOrder
       value: 37
