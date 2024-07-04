@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7460489006764366840}
   m_Layer: 0
   m_Name: ExtractionZone
-  m_TagString: Untagged
+  m_TagString: ExtractionZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41596,6 +41596,10 @@ PrefabInstance:
     - target: {fileID: 5019184048097567435, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
       propertyPath: m_Name
       value: Ship_02
+      objectReference: {fileID: 0}
+    - target: {fileID: 5019184048097567435, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
+      propertyPath: m_TagString
+      value: ExtractionZone
       objectReference: {fileID: 0}
     - target: {fileID: 8357801936476393688, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
       propertyPath: m_RootOrder
