@@ -120,6 +120,7 @@ public class Endless : MonoBehaviour
             _generator.RequestMapData(position, OnMapDataReceived);
         }
 
+
         bool IsPositionInChunk(Vector3 localPosition)
         {
             return bounds.Contains(new Vector3(localPosition.x, 0, localPosition.z));
