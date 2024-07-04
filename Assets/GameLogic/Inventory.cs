@@ -248,6 +248,17 @@ public class Inventory : MonoBehaviourPunCallbacks
         if (Count() == 0 && loot == true)
         {
             Debug.Log("INVENTORY/ IN DESTROY LOOT");
+            GameObject playerGo = GameObject.FindGameObjectWithTag("Player");
+            if (playerGo != null)
+            {
+                Player player = playerGo.GetComponent<Player>();
+                player.UpdateXp(5);
+                player.CheckXp();
+            }
+            else
+            {
+                Debug.Log("player == null");
+            }
             //mItems.Clear();
             //GameObject player = GameObject.FindGameObjectWithTag("Player");
             //player.GetComponent<Player>().DeactivateLoot();

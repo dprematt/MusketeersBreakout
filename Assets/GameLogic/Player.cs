@@ -97,7 +97,7 @@ public class Player : MonoBehaviourPunCallbacks
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         health = maxHealth;
-        xp = 0;
+        xp = 1;
         level = 1;
         max_xp = 20;
         health_up = 30;
@@ -301,7 +301,10 @@ public class Player : MonoBehaviourPunCallbacks
         if (photonView.IsMine)
         {
             xp += new_xp;
-            kills += 1;
+            Debug.Log("xp = " + xp);
+            Debug.Log(new_xp);
+            if (new_xp != 5)
+                kills += 1;
             XpProgressBar.fillAmount = (float)(xp / max_xp);
             xpText2D.text = "XP " + xp.ToString() + " / " + max_xp.ToString();
             return xp;
@@ -324,7 +327,7 @@ public class Player : MonoBehaviourPunCallbacks
     }
     public void CheckXp()
     {
-        if (!photonView.IsMine)
+        if (photonView.IsMine)
         {
             if (xp >= max_xp)
             {
