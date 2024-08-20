@@ -131,9 +131,15 @@ public class Endless : MonoBehaviour
             mapDataReceived = true;
             UpdateMesh();
             Vector2 chunkCenter = this.ChunkCenter;
-            _generator.PlacePrefabsInChunk(chunkCenter, mapData.heightMap, 240, _generator.getPRNG());
+            int seed = CalculateSeedForChunk(chunkCenter);
+            _generator.PlacePrefabsInChunk(chunkCenter, mapData.heightMap, 240, new System.Random(seed));
             ApplyBeachesIfNeeded();
             UpdateChunk();
+        }
+
+        int CalculateSeedForChunk(Vector2 chunkCenter)
+        {
+            return chunkCenter.GetHashCode(); // Ou une autre méthode déterministe pour obtenir une graine constante basée sur la position du chunk
         }
 
     private void ApplyBeachesIfNeeded()
