@@ -226,7 +226,26 @@ public class generator : MonoBehaviourPun
                     plateCenters.RemoveAt(index);
 
                     float x = center.x + prng.Next(-1, 1);
-                    float y = biome.type == "désert" || biome.type == "neige" ? 0.7f : -0.9f;
+                    float y = 0f;
+                    
+                    switch(biome.type) {
+                        case ("désert") :
+                            y = 0.7f;
+                            break;
+                        case ("neige") :
+                            y = 0.7f;
+                            break;
+                        case ("médieval") :
+                            y = 0.8f;
+                            break;
+                        case ("jungle") :
+                            y = -0.9f;
+                            break;
+                        default: 
+                            break;
+                        
+
+                    }
                     float z = center.y + prng.Next(-1, 1);
                     Vector3 position = new Vector3(x, y, z);
 
