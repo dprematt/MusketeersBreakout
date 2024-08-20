@@ -241,6 +241,9 @@ public class generator : MonoBehaviourPun
                         case ("jungle") :
                             y = -0.9f;
                             break;
+                        case ("village"):
+                            y = 0.2f;
+                            break;
                         default: 
                             break;
                         
