@@ -384,6 +384,31 @@ public class Inventory : MonoBehaviourPunCallbacks
         lootInventory.ApplyNetworkUpdate("TempObjTag");
         RemoveAt(id);
     }
+    
+    // public void DropToto(string name)
+    // {
+    //     Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1");
+    //     GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
+    //     Vector3 newPos = gameObject.transform.position;
+    //     newPos.x += 2;
+    //     Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2");
+    //     GameObject loot = PhotonNetwork.Instantiate("Prefabs/Loot", newPos, gameObject.transform.rotation);
+    //     loot.GetComponentInChildren<Inventory>().loot = true;
+    //     Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3");
+
+    //     Inventory lootInventory = loot.GetComponentInChildren<Inventory>();
+    //     Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4");
+
+    //     //loot.GetComponentInChildren<Inventory>().AddItem(mItems[id]);
+    //     Debug.Log("photon view state = " + loot.GetComponentInChildren<PhotonView>().ViewID);
+    //     GameObject newItem = PhotonNetwork.Instantiate(name, transform.position, transform.rotation);
+    //     newItem.GetComponent<Weapon>().RequestTagChange("TempObjTag");
+    //     Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5");
+
+    //     lootInventory.ApplyNetworkUpdate("TempObjTag");
+    //     Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6");
+
+    // }
 
     [PunRPC]
     public void DestroyObject()

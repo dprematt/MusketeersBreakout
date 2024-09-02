@@ -1389,6 +1389,8 @@ MonoBehaviour:
     prefab: {fileID: 6448609904409173692, guid: c6e18964d0adec709bfeaab7711055cf, type: 3}
   - type: village
     prefab: {fileID: 6699814241859253687, guid: be780a648ade82abdb5e9fb5e37e479f, type: 3}
+  - type: loot
+    prefab: {fileID: 7118206971098175201, guid: e59221211b43d2204ab31d7c29427808, type: 3}
   objectsToPlace:
   - {fileID: 6082017216327338335, guid: 591889e335de55940abaa28713e9495c, type: 3}
   - {fileID: 103164478061917215, guid: cc6e26147b439e142939d1bc16efa20d, type: 3}

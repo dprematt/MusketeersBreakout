@@ -61,7 +61,6 @@ public class generator : MonoBehaviourPun
     public GameObject[] objectsToPlace;
     public int[] quantitiesToPlace = new int[] { 2, 3, 3 };
 
-
     private Dictionary<string, List<Vector3>> biomeSpecificPositions = new Dictionary<string, List<Vector3>>();
 
     float mapSize = 1500f;
@@ -75,6 +74,7 @@ public class generator : MonoBehaviourPun
 
     private System.Random prng;
 
+    private bool hasSpawn = false;
 
     void Start()
     {
@@ -84,8 +84,9 @@ public class generator : MonoBehaviourPun
         worldObjectsParent = new GameObject("WorldObjectsParent");
 
         SetSeedFromRoomProperties(this);
-        PlaceExtractionZones();
         InitializeRandom();
+        PlaceExtractionZones();
+        DropWeaponsInChest();
         Invoke("DrawMap", randomDelay);
         Invoke("PlaceWeaponsInBiomes", randomDelay + 1);
     }
@@ -243,6 +244,9 @@ public class generator : MonoBehaviourPun
                             break;
                         case ("village"):
                             y = 0.2f;
+                            break;
+                        case ("loot"):
+                            y = 0.8f;
                             break;
                         default: 
                             break;
@@ -580,6 +584,69 @@ public class generator : MonoBehaviourPun
         return CurrentMapData;
     }
 
+    // public void ApplyNetworkUpdate(string name)
+    // {
+    //     view = gameObject.GetComponent<PhotonView>();
+    //     if (view.IsMine)
+    //     {
+    //         view.RPC("UpdateItems", RpcTarget.All, name);
+    //     }
+    // }
+    public void DropWeaponsInChest()
+    {
+        // if (!hasSpawn) {
+        //     GameObject[] allChests = GameObject.FindGameObjectsWithTag("TOTO");
+
+        //     for (int i = 0; i < allChests.Length; i ++) {
+        //         Inventory lootInventory = allChests[i].GetComponentInChildren<Inventory>();
+        //         Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        //         lootInventory.DropToto("Sword");
+        //         Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7");
+
+
+        //     }
+        //     hasSpawn = true;
+        // }
+    }
+
+    // [PunRPC]
+    // public void UpdateItems(string name)
+    // {
+    //     GameObject weaponPrefab = GameObject.FindGameObjectWithTag("TempObjTag");
+    //     if (weaponPrefab == null)
+    //     {
+    //         Debug.Log("INVENTORY: Weapon Prefab == null");
+    //         return;
+    //     }
+    //     if (weaponPrefab.TryGetComponent(out Weapon weapon))
+    //     {
+    //         if (mItems == null)
+    //             mItems = new IInventoryItem[9];
+    //         Add(weapon);
+    //         ItemAdded?.Invoke(this, new InventoryEventArgs(weapon));
+    //         weaponPrefab.SetActive(false);
+    //     }
+    //     else
+    //     {
+    //         Debug.LogWarning("New item does not have a Weapon component.");
+    //     }
+
+    //     Debug.Log("IN UPDATE ITEMS: items count = " + Count());
+    // }
+
+    // public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    // {
+    //     if (stream.IsWriting)
+    //     {
+    //         stream.SendNext(LastItemName);
+    //     }
+    //     else
+    //     {
+    //         LastItemName = (string)stream.ReceiveNext();
+    //     }
+    // }
+
+
     public void RequestMapData(Vector2 center, Action<MapData> callback)
     {
         ThreadStart threadStart = delegate
@@ -670,6 +737,7 @@ public class generator : MonoBehaviourPun
         }
     }
 }
+    
 
 [System.Serializable]
 public struct TerrainType
