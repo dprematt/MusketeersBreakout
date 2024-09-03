@@ -594,19 +594,22 @@ public class generator : MonoBehaviourPun
     // }
     public void DropWeaponsInChest()
     {
-        // if (!hasSpawn) {
-        //     GameObject[] allChests = GameObject.FindGameObjectsWithTag("TOTO");
+        GameObject[] allChests = GameObject.FindGameObjectsWithTag("TOTO");
 
-        //     for (int i = 0; i < allChests.Length; i ++) {
-        //         Inventory lootInventory = allChests[i].GetComponentInChildren<Inventory>();
-        //         Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        //         lootInventory.DropToto("Sword");
-        //         Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7");
+        Debug.Log("DropWeaponInChest objects found");
+        if (allChests == null)
+            Debug.Log("allchests == null");
+        else
+            Debug.Log("allchests length" + allChests.Length);
+        for (int i = 0; i < allChests.Length; i ++) {
+            Debug.Log("DropWeaponInChest 0");
 
-
-        //     }
-        //     hasSpawn = true;
-        // }
+            Inventory lootInventory = allChests[i].GetComponentInChildren<Inventory>();
+                 Debug.Log("DropWeaponInChest 1");
+                lootInventory.loot = true;
+                lootInventory.DropToto("Sword");
+                 Debug.Log("DropWeaponInChest end");
+        }
     }
 
     // [PunRPC]
