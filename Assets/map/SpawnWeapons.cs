@@ -30,11 +30,12 @@ public class SpawnWeapons : MonoBehaviour
             position.z += 10;
             PhotonNetwork.Instantiate(ShieldPrefab_.name, position, Quaternion.identity);
             position.z += 10;
+            position.y += 10;
             PhotonNetwork.Instantiate(Ennemy_.name, position, Quaternion.identity);
             position.z += 10;
-            PhotonNetwork.Instantiate(Ennemy_.name, position, Quaternion.identity);
-            position.z += 10;
-            PhotonNetwork.Instantiate(Ennemy_.name, position, Quaternion.identity);
+            // PhotonNetwork.Instantiate(Ennemy_.name, position, Quaternion.identity);
+            // position.z += 10;
+            // PhotonNetwork.Instantiate(Ennemy_.name, position, Quaternion.identity);
             //Bow_Object_.name = "Bow";
         }
     }

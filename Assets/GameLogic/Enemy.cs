@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviourPun
 {
@@ -20,6 +21,7 @@ public class Enemy : MonoBehaviourPun
     public List<Vector3> biomesPositions = new List<Vector3>();
     private Vector3 moveDirection;
 
+    public Text Health_;
 
     public float detectionRadius = 10f;
 
@@ -75,40 +77,40 @@ public class Enemy : MonoBehaviourPun
         }
         weaponList[0].setAnim();
         eventListener.weaponComp = weaponList[0];
-
+        Health_.text = health.ToString() + "HP";
     }
 
     void Update()
     {
-        if (isPlaced == false)
-        {
-            if (biomesPositions.Count != 0)
-            {
-                float randomBiome = Random.Range(0f, 5.0001f);
-                float randomNumber = Random.Range(0f, 5.0001f);
-                gameObject.transform.position = biomesPositions[(int)randomBiome];
-                Vector3 pos = biomesPositions[(int)randomBiome];
-                pos.y += 300;
-                gameObject.transform.position = pos;
-                if (randomNumber < 2)
-                {
-                    Debug.Log("BIOME DESERT");
-                    health = 100;
-                }
-                else if (randomNumber < 4)
-                {
-                    Debug.Log("BIOME JUNGLE");
-                    speed = 15;
-                }
-                else if (randomNumber < 6)
-                {
-                    Debug.Log("BIOME NEIGE");
-                    speed = 10;
-                    health = 30;
-                }
-                isPlaced = true;
-            }
-        }
+        // if (isPlaced == false)
+        // {
+        //     if (biomesPositions.Count != 0)
+        //     {
+        //         float randomBiome = Random.Range(0f, 5.0001f);
+        //         float randomNumber = Random.Range(0f, 5.0001f);
+        //         gameObject.transform.position = biomesPositions[(int)randomBiome];
+        //         Vector3 pos = biomesPositions[(int)randomBiome];
+        //         pos.y += 300;
+        //         gameObject.transform.position = pos;
+        //         if (randomNumber < 2)
+        //         {
+        //             Debug.Log("BIOME DESERT");
+        //             health = 100;
+        //         }
+        //         else if (randomNumber < 4)
+        //         {
+        //             Debug.Log("BIOME JUNGLE");
+        //             speed = 15;
+        //         }
+        //         else if (randomNumber < 6)
+        //         {
+        //             Debug.Log("BIOME NEIGE");
+        //             speed = 10;
+        //             health = 30;
+        //         }
+        //         isPlaced = true;
+        //     }
+        // }
         /*        if (weaponList.Count > 0 &&  weaponList[currentWeapon].anim.GetCurrentAnimatorStateInfo(0).IsName("hit1"))
                 {
                     weaponList[currentWeapon].anim.SetBool("hit1", false);
@@ -205,26 +207,34 @@ public class Enemy : MonoBehaviourPun
         }
     }
 
+
     public int TakeDamage(float damageAmount)
     {
-        health -= damageAmount;
+        
         bloodParticles.Play();
-
+        photonView.RPC("Damage_instance", RpcTarget.All, damageAmount);
         if (health <= 0)
         {
             GameObject player = GameObject.FindWithTag("Player");
             Player playerMov = player.GetComponent<Player>();
             playerMov.UpdateXp(10);
-            Vector3 newPos = gameObject.transform.position;
-            newPos.x += 2;
-            GameObject loot = PhotonNetwork.Instantiate("Prefabs/Loot", newPos, gameObject.transform.rotation);
-            //var loot = Instantiate(LootPrefab, gameObject.transform.position, gameObject.transform.rotation);
+            GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
+            var loot = Instantiate(LootPrefab, gameObject.transform.position, gameObject.transform.rotation);
             loot.GetComponentInChildren<Inventory>().Initialize(9, inventory.mItems, true);
             PhotonNetwork.Destroy(gameObject);
             photonView.RPC("Particles", RpcTarget.All);
             return 1;
         }
         return 0;
+    }
+
+    [PunRPC]
+    public void Damage_instance(float damageAmount) // ADD
+    {
+        health -= 2;
+        Health_.text = health.ToString() + "HP";
+        if (health <= 0)
+            Destroy(gameObject);
     }
 
     [PunRPC]
