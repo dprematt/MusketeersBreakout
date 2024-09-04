@@ -403,5 +403,13 @@ public class FriendsManager : MonoBehaviourPunCallbacks
     {
         Debug.LogError("Error: " + error.GenerateErrorReport());
     }
+
+    public void OnClick()
+    {
+        if (gameObject.activeSelf)
+            gameObject.SetActive(false);
+        else
+            gameObject.SetActive(true);
+    }
 }
 
