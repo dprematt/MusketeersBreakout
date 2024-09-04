@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -113,3 +113,5 @@ MonoBehaviour:
   weaponSpawnPoint: {fileID: 0}
   weaponPrefab: {fileID: 7661578362052809882, guid: da6be78ea175afe40b006cd9e8f15c28, type: 3}
   _Image: {fileID: 21300000, guid: 5c3c2913d6a96974ebad5b8cb4cbf973, type: 3}
+  shootingSound: {fileID: 0}
+  audioSource: {fileID: 0}

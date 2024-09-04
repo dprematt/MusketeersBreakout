@@ -270,7 +270,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -362,6 +362,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extractionZonePrefab: {fileID: 8195994125897338424, guid: c43593d2b8ded3a9cbd3db1aac4ac683, type: 3}
+  PlayerPrefab_: {fileID: 0}
+  LoadScreen_: {fileID: 0}
+  Hud_: {fileID: 0}
+  LootHud_: {fileID: 0}
   drawMode: 2
   levelOfDetail: 1
   normalizeMode: 0
@@ -370,8 +374,28 @@ MonoBehaviour:
   persistance: 0.367
   lacunarity: 2
   autoUpdate: 1
-  seed: 0
   offSet: {x: 0, y: 0}
+  _spawnCoords:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
   useFallOf: 1
   meshHeightMult: 20
   meshHeightCurve:
@@ -407,10 +431,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  prefabTypes:
-  - {fileID: 3997192538817553815, guid: 4b20b14b0dbb180fe9c2a28844868f17, type: 3}
-  - {fileID: 5794360217216551788, guid: 82830d73840d636c1abb7578ff20e35b, type: 3}
-  - {fileID: 109927449571210476, guid: 6253a3cc942217d849c1d580fb777863, type: 3}
   regions:
   - name: deepwater
     height: 0.2
@@ -430,6 +450,14 @@ MonoBehaviour:
     height: 1
   - name: toto
     height: 0.55
+  prefabNature: []
+  Biomes: []
+  objectsToPlace: []
+  quantitiesToPlace: 020000000300000003000000
+  guardiansSpawn: []
+  ennemyType1: {fileID: 0}
+  ennemyType2: {fileID: 0}
+  ennemyType3: {fileID: 0}
 --- !u!114 &797710330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,10 +470,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11a607c1d31cbbf72ae1975e8895a331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabTypes:
-  - {fileID: 3997192538817553815, guid: 4b20b14b0dbb180fe9c2a28844868f17, type: 3}
-  - {fileID: 109927449571210476, guid: 6253a3cc942217d849c1d580fb777863, type: 3}
-  - {fileID: 5794360217216551788, guid: 82830d73840d636c1abb7578ff20e35b, type: 3}
   detailsLevel:
   - lod: 0
     visibleDstThreshold: 75
@@ -453,7 +477,6 @@ MonoBehaviour:
     visibleDstThreshold: 150
   - lod: 2
     visibleDstThreshold: 200
-  viewer: {fileID: 194865352}
   mapMaterial: {fileID: 2100000, guid: 035e57fafe64bfe4c884924755a6a2bb, type: 2}
   grassMaterial: {fileID: 2100000, guid: 767dbc30f734e51469a09216ffc92f35, type: 2}
 --- !u!114 &797710331
