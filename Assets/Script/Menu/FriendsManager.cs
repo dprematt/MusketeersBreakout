@@ -8,6 +8,7 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Linq;
+using UnityEngine.TextCore.Text;
 
 public class FriendsManager : MonoBehaviourPunCallbacks
 {
@@ -32,6 +33,8 @@ public class FriendsManager : MonoBehaviourPunCallbacks
     private float lastFindFriendsTime;
 
     bool hasGottenFriendsList = false;
+
+    public GameObject Chat;
     
     void Start()
     {
@@ -44,6 +47,8 @@ public class FriendsManager : MonoBehaviourPunCallbacks
             PlayFabClientAPI.GetFriendsList(new GetFriendsListRequest(), OnGetFriendsListSuccess, OnError);
             hasGottenFriendsList = true;
         }
+
+        //Dans cette fonction il faut d'abord aller rechercher tous les Photon ID grâce à la liste des usernames en utilisant ProcessFriendPlayfab
         if (Time.time - lastFindFriendsTime >= 10f)
         {
             List<string> tmp = new List<string>();
@@ -406,6 +411,8 @@ public class FriendsManager : MonoBehaviourPunCallbacks
 
     public void OnClick()
     {
+        if (Chat.activeSelf)
+            Chat.SetActive(false);
         if (gameObject.activeSelf)
             gameObject.SetActive(false);
         else
