@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class Friend : MonoBehaviour
@@ -9,7 +10,8 @@ public class Friend : MonoBehaviour
     public Text usernameText;
 
     FriendsManager manager;
-    public Text state_;
+    public GameObject Disconnected;
+    public GameObject Connected;
 
     public void Start()
     {
@@ -28,6 +30,12 @@ public class Friend : MonoBehaviour
 
     public void SetState(string state)
     {
-        state_.text = state;
+        if (state == "online") {
+            Disconnected.SetActive(false);
+            Connected.SetActive(true);
+        } else {
+            Disconnected.SetActive(true);
+            Connected.SetActive(false);
+        }
     }
 }
