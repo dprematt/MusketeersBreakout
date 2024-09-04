@@ -318,6 +318,7 @@ public class Inventory : MonoBehaviourPunCallbacks
     {
         if (loot)
         {
+            Debug.Log("item is loot");
             GameObject weaponPrefab = GameObject.FindGameObjectWithTag("TempObjTag");
             if (weaponPrefab == null)
             {
@@ -327,10 +328,12 @@ public class Inventory : MonoBehaviourPunCallbacks
             //Destroy(weaponPrefab);
             if (weaponPrefab.TryGetComponent(out Weapon weapon))
             {
+                Debug.Log("weapon added");
                 if (mItems == null)
                     mItems = new IInventoryItem[9];
                 Add(weapon);
                 ItemAdded?.Invoke(this, new InventoryEventArgs(weapon));
+                Debug.Log("update items: weapon added");
                 weaponPrefab.SetActive(false);
                 //Destroy(weaponPrefab);
                 //weapon.DeactivateAllObjects();
@@ -365,6 +368,7 @@ public class Inventory : MonoBehaviourPunCallbacks
         view = gameObject.GetComponent<PhotonView>();
         if (view.IsMine)
         {
+            Debug.Log("apply network update: view is mine");
             view.RPC("UpdateItems", RpcTarget.All, name);
         }
     }
@@ -390,7 +394,7 @@ public class Inventory : MonoBehaviourPunCallbacks
         Debug.Log("DropTOTO 1");
         
         GameObject newItem = PhotonNetwork.Instantiate(name, transform.position, transform.rotation);
-         AddItem(newItem.GetComponent<Weapon>());
+        // AddItem(newItem.GetComponent<Weapon>());
         Debug.Log("DropTOTO 2");
 
         // Debug.Log("photon view state = " + loot.GetComponentInChildren<PhotonView>().ViewID);
