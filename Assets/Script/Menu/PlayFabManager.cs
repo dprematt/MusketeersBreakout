@@ -175,7 +175,8 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
             };
 
             PlayFabClientAPI.SendAccountRecoveryEmail(request, OnRecoveryEmailSent, OnError);
-        }
+        } else 
+            Error_.text = "Error sending mail, verify that you correctly put the email address";
     }
 
     private void OnRecoveryEmailSent(SendAccountRecoveryEmailResult result)
@@ -185,7 +186,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
 
     private void OnError(PlayFabError error)
     {
-        Error_.text = "Error sending mail, verify that you correctly put the email address";
+        Error_.text = error.GenerateErrorReport();
         Debug.LogError("Login failed: " + error.GenerateErrorReport());
     }
 
