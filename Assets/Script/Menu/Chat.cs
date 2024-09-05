@@ -8,6 +8,7 @@ public class Chat : MonoBehaviour
     // Start is called before the first frame update
 
     public Text Message;
+    public Text Name;
     void Start()
     {
         GetComponent<RectTransform>().SetAsFirstSibling();

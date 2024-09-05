@@ -92,7 +92,7 @@ public class FriendsManager : MonoBehaviourPunCallbacks
         //         break;
         //     }
         // }
-
+        Name_.text = "";
         
     }
 

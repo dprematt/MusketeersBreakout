@@ -11,21 +11,56 @@ public class ChatManager : MonoBehaviour
 
     public InputField inputField;
 
-    public GameObject Message; 
+    public GameObject LMessage;
+    public GameObject MyLMessage; 
+    
+    public GameObject MMessage;
+    public GameObject MyMMessage; 
+
+    public GameObject BMessage;
+    public GameObject MyBMessage; 
 
     public GameObject Content;
     // Start is called before the first frame update
     public void SendMessage()
     {
-        GetComponent<PhotonView>().RPC("GetMessage", RpcTarget.All, (PhotonNetwork.NickName + " : " + inputField.text));
+        GetComponent<PhotonView>().RPC("GetMessage", RpcTarget.All, PhotonNetwork.NickName, inputField.text);
         inputField.text = "";
     }
 
     [PunRPC]
-    public void GetMessage(string ReceiveMessage)
+    public void GetMessage(string name, string ReceiveMessage)
     {
-        GameObject M = Instantiate(Message, Vector3.zero, Quaternion.identity, Content.transform);
+        // Vérifie si le message provient de l'utilisateur local
+        GameObject M = null;
+
+        if (name == PhotonNetwork.NickName)
+        {
+            // Instancier "MyMessage" si le message est envoyé par l'utilisateur local
+            if (ReceiveMessage.Length <= 30) {
+                M = Instantiate(MyLMessage, Vector3.zero, Quaternion.identity, Content.transform);
+            }
+            else if (ReceiveMessage.Length <= 90) {
+                M = Instantiate(MyMMessage, Vector3.zero, Quaternion.identity, Content.transform);
+            }
+            else {
+                M = Instantiate(MyBMessage, Vector3.zero, Quaternion.identity, Content.transform);
+            }
+        }
+        else
+        {
+            if (ReceiveMessage.Length <= 23) {
+                M = Instantiate(LMessage, Vector3.zero, Quaternion.identity, Content.transform);
+            }
+            else if (ReceiveMessage.Length <= 90) {
+                M = Instantiate(MMessage, Vector3.zero, Quaternion.identity, Content.transform);
+            }
+            else {
+                M = Instantiate(BMessage, Vector3.zero, Quaternion.identity, Content.transform);
+            }
+        }
         M.GetComponent<Chat>().Message.text = ReceiveMessage;
+        M.GetComponent<Chat>().Name.text = name;
     }
 
     public void OnClick()
