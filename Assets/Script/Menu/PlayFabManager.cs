@@ -6,6 +6,8 @@ using PlayFab.ClientModels;
 using UnityEngine.UI;
 using Photon.Realtime;
 using Photon.Pun;
+using System.Text.RegularExpressions;
+
 
 public class PlayFabManager : MonoBehaviourPunCallbacks
 {
@@ -70,7 +72,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         Debug.Log("PlayFab ID: " + playFabId);
         Login_.SetActive(false);
         Welcome_.SetActive(true);
-        
+
         // After getting the PlayFab ID, you can proceed to get the player's username
         GetPlayerUsername(playFabId);
     }
@@ -135,7 +137,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
             Data = new System.Collections.Generic.Dictionary<string, string>
             {
                 { "PhotonID", PhotonNetwork.LocalPlayer.UserId },
-                
+
             },
             Permission = UserDataPermission.Public
         };
@@ -149,6 +151,42 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
 
     private void OnPlayFabError(PlayFabError error)
     {
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        if (string.IsNullOrEmpty(email))
+            return false;
+
+        // Expression régulière pour vérifier une adresse e-mail
+        string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+        return Regex.IsMatch(email, emailPattern);
+    }
+
+    public void SendPasswordRecovery()
+    {
+        if (IsValidEmail(Email_.text))
+        {
+
+            var request = new SendAccountRecoveryEmailRequest
+            {
+                Email = Email_.text,
+                TitleId = PlayFabSettings.TitleId // Assurez-vous d'avoir configuré votre Title ID
+            };
+
+            PlayFabClientAPI.SendAccountRecoveryEmail(request, OnRecoveryEmailSent, OnError);
+        }
+    }
+
+    private void OnRecoveryEmailSent(SendAccountRecoveryEmailResult result)
+    {
+        Debug.Log("Email de récupération envoyé avec succès !");
+    }
+
+    private void OnError(PlayFabError error)
+    {
+        Error_.text = "Error sending mail, verify that you correctly put the email address";
+        Debug.LogError("Login failed: " + error.GenerateErrorReport());
     }
 
 }
