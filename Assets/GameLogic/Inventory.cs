@@ -389,7 +389,7 @@ public class Inventory : MonoBehaviourPunCallbacks
         RemoveAt(id);
     }
     
-     public void DropToto(string name)
+     public void DropWeapons(string name)
      {
         Debug.Log("DropTOTO 1");
         

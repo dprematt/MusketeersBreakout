@@ -86,9 +86,7 @@ public class generator : MonoBehaviourPun
         SetSeedFromRoomProperties(this);
         InitializeRandom();
         PlaceExtractionZones();
-        DropWeaponsInChest();
         Invoke("DrawMap", randomDelay);
-        Invoke("PlaceWeaponsInBiomes", randomDelay + 1);
     }
     public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize, System.Random prng)
     {
@@ -287,61 +285,8 @@ public class generator : MonoBehaviourPun
                 }
             }
         }
-
+        DropWeaponsInChest();
         Debug.Log("Fin de PlaceBiomesInFlatAreas");
-    }
-
-    public void PlaceWeaponsInBiomes()
-    {
-        // Initialiser le générateur de nombres aléatoires avec la graine définie
-        InitializeRandom();
-
-        // Liste pour suivre les positions déjà utilisées
-        List<Vector3> placedPositions = new List<Vector3>();
-
-        // Parcourir chaque biome
-        foreach (var biomeEntry in biomeSpecificPositions)
-        {
-            List<Vector3> biomePositions = biomeEntry.Value;
-
-            // Placer trois exemplaires de chaque objet dans chaque biome
-            foreach (var objectToPlace in objectsToPlace)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    bool validPosition = false;
-                    int attempts = 0;
-                    int maxAttempts = 100;
-
-                    while (!validPosition && attempts < maxAttempts)
-                    {
-                        attempts++;
-                        // Sélectionner une position aléatoire dans le biome
-                        int positionIndex = prng.Next(biomePositions.Count);
-                        Vector3 biomePosition = biomePositions[positionIndex];
-
-                        // Ajouter une petite variation pour éviter des positions trop exactes
-                        float x = biomePosition.x + prng.Next(-20, 20);
-                        float z = biomePosition.z + prng.Next(-20, 20);
-                        Vector3 position = new Vector3(x, 2, z);  // Ajuster l'axe Y selon vos besoins
-
-                        // Vérifier si la position est valide
-                        if (IsPositionValid(position, placedPositions))
-                        {
-                            placedPositions.Add(position);
-                            GameObject instance = Instantiate(objectToPlace, position, Quaternion.identity);
-                            instance.transform.SetParent(BiomesParent.transform);
-                            validPosition = true;
-                        }
-                    }
-
-                    if (!validPosition)
-                    {
-                        Debug.LogWarning($"Failed to place {objectToPlace.name} in biome {biomeEntry.Key} after {maxAttempts} attempts.");
-                    }
-                }
-            }
-        }
     }
 
     private bool IsPositionValid(Vector3 position, List<Vector3> placedPositions)
@@ -594,23 +539,40 @@ public class generator : MonoBehaviourPun
     // }
     public void DropWeaponsInChest()
     {
-        GameObject[] allChests = GameObject.FindGameObjectsWithTag("TOTO");
+        GameObject[] allLootZone = GameObject.FindGameObjectsWithTag("LootZoneTag");
 
-        Debug.Log("DropWeaponInChest objects found");
-        if (allChests == null)
-            Debug.Log("allchests == null");
-        else
-            Debug.Log("allchests length" + allChests.Length);
-        for (int i = 0; i < allChests.Length; i ++) {
-            Debug.Log("DropWeaponInChest 0");
+        if (allLootZone == null || allLootZone.Length == 0) {
+            Debug.Log("ALL LOOT ZONE ARRAY EMPTY");
+            return;
+        } else {
+            Debug.Log("ALL LOOT ZONE ARRAY NOT EMPTY ===> " + allLootZone.Length);
+        }
 
-            Inventory lootInventory = allChests[i].GetComponentInChildren<Inventory>();
-                 Debug.Log("DropWeaponInChest 1");
-                lootInventory.loot = true;
-                lootInventory.DropToto("Sword");
-                 Debug.Log("DropWeaponInChest end");
+        string[] allWeapons = { "Sword", "Gun", "Dagger" };
+        System.Random random = new System.Random();
+        int randomWeaponIndex = random.Next(allWeapons.Length);
+        string chosenWeapon = allWeapons[randomWeaponIndex];
+
+        foreach (var lootzone in allLootZone)
+        {
+            foreach (Transform child in lootzone.transform)
+            {
+                if (child.tag == "Chest")
+                {
+                    Debug.Log("DropWeaponInChest objects found");
+                    Inventory lootInventory = child.GetComponentInChildren<Inventory>();
+                    if (lootInventory != null)
+                    {
+                        Debug.Log("DropWeaponInChest 1");
+                        lootInventory.loot = true;
+                        lootInventory.DropWeapons(chosenWeapon);
+                        Debug.Log("Weapon dropped: " + chosenWeapon);
+                    }
+                }
+            }
         }
     }
+
 
     // [PunRPC]
     // public void UpdateItems(string name)
