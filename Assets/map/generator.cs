@@ -31,7 +31,6 @@ public class generator : MonoBehaviourPun
     [Range(0, 1)]
     public float persistance;
     public float lacunarity;
-    public bool autoUpdate;
     public Vector2 offSet;
     private SpawnWeapons SpawnWeapons_;
 
@@ -58,8 +57,7 @@ public class generator : MonoBehaviourPun
     private object _heightMapLock = new object();
     private GameObject BiomesParent;
     public Biome[] Biomes;
-    public GameObject[] objectsToPlace;
-    public int[] quantitiesToPlace = new int[] { 2, 3, 3 };
+    private int[] quantitiesToPlace = new int[] { 2, 3, 3 };
 
     private Dictionary<string, List<Vector3>> biomeSpecificPositions = new Dictionary<string, List<Vector3>>();
 
@@ -173,134 +171,131 @@ public class generator : MonoBehaviourPun
             }
         }
     }
+void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight, System.Random prng)
+{
+    Debug.Log("Début de PlaceBiomesInFlatAreas");
+    InitializeRandom();
+    biomesPositions.Clear();
+    biomeSpecificPositions.Clear();
 
-    void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight, System.Random prng)
+    foreach (Biome biome in Biomes)
     {
-        Debug.Log("Début de PlaceBiomesInFlatAreas");
-        InitializeRandom();
-        biomesPositions.Clear();
-        biomeSpecificPositions.Clear();
+        biomeSpecificPositions.Add(biome.type, new List<Vector3>());
+    }
 
+    GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
+    Debug.Log($"Nombre de plateCenters: {plateCenters.Count}");
+
+    if (plateCenters.Count < Biomes.Length * 2)
+    {
+        Debug.LogWarning("Pas assez de zones plates pour placer tous les biomes.");
+        return;
+    }
+
+    Dictionary<string, int> biomeCount = new Dictionary<string, int>();
+    foreach (Biome biome in Biomes)
+    {
+        biomeCount.Add(biome.type, 0);
+    }
+
+    int totalBiomesNeeded = Biomes.Length * 2;
+    int biomesPlaced = 0;
+    float chunkSize = 241f;
+    float borderBuffer = 100f;
+
+    while (biomesPlaced < totalBiomesNeeded)
+    {
         foreach (Biome biome in Biomes)
         {
-            biomeSpecificPositions.Add(biome.type, new List<Vector3>());
-        }
-
-        GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
-        Debug.Log($"Nombre de plateCenters: {plateCenters.Count}");
-
-        if (plateCenters.Count < Biomes.Length * 2)
-        {
-            Debug.LogWarning("Pas assez de zones plates pour placer tous les biomes.");
-            return;
-        }
-
-        Dictionary<string, int> biomeCount = new Dictionary<string, int>();
-        foreach (Biome biome in Biomes)
-        {
-            biomeCount.Add(biome.type, 0);
-        }
-
-        int totalBiomesNeeded = Biomes.Length * 2;
-        int biomesPlaced = 0;
-
-        while (biomesPlaced < totalBiomesNeeded)
-        {
-            foreach (Biome biome in Biomes)
+            if (biomeCount[biome.type] >= 2)
             {
-                if (biomeCount[biome.type] >= 2)
+                continue;
+            }
+
+            bool biomePlaced = false;
+
+            while (!biomePlaced && plateCenters.Count > 0)
+            {
+                int index = prng.Next(0, plateCenters.Count);
+                Vector2 center = plateCenters[index];
+                plateCenters.RemoveAt(index);
+
+                // Vérifier si la zone est hors des limites
+                bool isOutOfBounds = center.x < topLeft.x || center.x > bottomRight.x || center.y < bottomRight.y || center.y > topLeft.y;
+
+                if (isOutOfBounds)
                 {
+                    Debug.LogWarning($"La zone à {center} est hors des limites de la carte.");
+                    continue;  // Essaye une autre zone
+                }
+
+                // Exclure les zones proches des coins
+                bool isInCorner = (center.x < topLeft.x + chunkSize && center.y > topLeft.y - chunkSize) || 
+                                  (center.x > bottomRight.x - chunkSize && center.y < bottomRight.y + chunkSize);
+
+                if (isInCorner)
+                {
+                    Debug.LogWarning($"La zone à {center} est proche d'un coin.");
                     continue;
                 }
 
-                for (int i = 0; i < 2; i++)
+                // Placement du biome au centre de la zone plate
+                float x = center.x;
+                float y = 0f;
+                switch (biome.type)
                 {
-                    if (plateCenters.Count == 0)
-                    {
+                    case ("désert"):
+                        y = 0.7f;
                         break;
-                    }
+                    case ("neige"):
+                        y = 0.7f;
+                        break;
+                    case ("médieval"):
+                        y = 0.8f;
+                        break;
+                    case ("jungle"):
+                        y = -0.9f;
+                        break;
+                    case ("village"):
+                        y = 0.2f;
+                        break;
+                    case ("loot"):
+                        y = 0.8f;
+                        break;
+                    default:
+                        break;
+                }
+                float z = center.y;
+                Vector3 position = new Vector3(x, y, z);
 
-                    int index = prng.Next(0, plateCenters.Count);
-                    Vector2 center = plateCenters[index];
-                    plateCenters.RemoveAt(index);
+                // Vérification de la distance
+                bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 200);
+                bool isTooCloseToSameBiomes =
+                    biomeSpecificPositions[biome.type].Any(biomePos => Vector3.Distance(position, biomePos) < 500);
 
-                    float x = center.x + prng.Next(-1, 1);
-                    float y = 0f;
-                    
-                    switch(biome.type) {
-                        case ("désert") :
-                            y = 0.7f;
-                            break;
-                        case ("neige") :
-                            y = 0.7f;
-                            break;
-                        case ("médieval") :
-                            y = 0.8f;
-                            break;
-                        case ("jungle") :
-                            y = -0.9f;
-                            break;
-                        case ("village"):
-                            y = 0.2f;
-                            break;
-                        case ("loot"):
-                            y = 0.8f;
-                            break;
-                        default: 
-                            break;
-                        
+                if (!isTooCloseToOtherBiomes && !isTooCloseToSameBiomes)
+                {
+                    biomesPositions.Add(position);
+                    biomeSpecificPositions[biome.type].Add(position);
 
-                    }
-                    float z = center.y + prng.Next(-1, 1);
-                    Vector3 position = new Vector3(x, y, z);
-
-                    float borderBuffer = 100;
-                    bool isInBorderBuffer =
-                        position.x < (topLeft.x + borderBuffer) ||
-                        position.x > (bottomRight.x - borderBuffer) ||
-                        position.z < (bottomRight.y + borderBuffer) ||
-                        position.z > (topLeft.y - borderBuffer);
-
-                    bool isTooCloseToSameBiomes =
-                        biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 500 && biomeSpecificPositions[biome.type].Any(biomePos => Vector3.Distance(position, biomePos) < 500));
-
-                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 100);
-
-
-                    if (!isInBorderBuffer && !isTooCloseToSameBiomes && !isTooCloseToOtherBiomes)
-                    {
-                        biomesPositions.Add(position);
-
-                        biomeSpecificPositions[biome.type].Add(position);
-
-                        GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
-                        instance.transform.SetParent(biomesParent.transform);
-                        biomeCount[biome.type] += 1;
-                        biomesPlaced += 1;
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"La position {position} est trop proche d'autres biomes du même type ou en dehors des limites.");
-                    }
+                    GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
+                    instance.transform.SetParent(biomesParent.transform);
+                    biomeCount[biome.type] += 1;
+                    biomesPlaced += 1;
+                    biomePlaced = true;
+                }
+                else
+                {
+                    Debug.LogWarning($"La position {position} est trop proche d'autres biomes ou du même type.");
                 }
             }
         }
-        DropWeaponsInChest();
-        Debug.Log("Fin de PlaceBiomesInFlatAreas");
     }
+    DropWeaponsInChest("LootZoneTag");
+    Debug.Log("Fin de PlaceBiomesInFlatAreas");
+}
 
-    private bool IsPositionValid(Vector3 position, List<Vector3> placedPositions)
-    {
-        // Vérifier si la position est suffisamment éloignée des positions déjà utilisées
-        foreach (var placedPosition in placedPositions)
-        {
-            if (Vector3.Distance(position, placedPosition) < 5.0f)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
+
 
 
 
@@ -529,17 +524,9 @@ public class generator : MonoBehaviourPun
         return CurrentMapData;
     }
 
-    // public void ApplyNetworkUpdate(string name)
-    // {
-    //     view = gameObject.GetComponent<PhotonView>();
-    //     if (view.IsMine)
-    //     {
-    //         view.RPC("UpdateItems", RpcTarget.All, name);
-    //     }
-    // }
-    public void DropWeaponsInChest()
+    public void DropWeaponsInChest(string tag)
     {
-        GameObject[] allLootZone = GameObject.FindGameObjectsWithTag("LootZoneTag");
+        GameObject[] allLootZone = GameObject.FindGameObjectsWithTag(tag);
 
         if (allLootZone == null || allLootZone.Length == 0) {
             Debug.Log("ALL LOOT ZONE ARRAY EMPTY");
@@ -550,8 +537,6 @@ public class generator : MonoBehaviourPun
 
         string[] allWeapons = { "Sword", "Gun", "Dagger" };
         System.Random random = new System.Random();
-        int randomWeaponIndex = random.Next(allWeapons.Length);
-        string chosenWeapon = allWeapons[randomWeaponIndex];
 
         foreach (var lootzone in allLootZone)
         {
@@ -563,6 +548,8 @@ public class generator : MonoBehaviourPun
                     Inventory lootInventory = child.GetComponentInChildren<Inventory>();
                     if (lootInventory != null)
                     {
+                        int randomWeaponIndex = random.Next(allWeapons.Length);
+                        string chosenWeapon = allWeapons[randomWeaponIndex];
                         Debug.Log("DropWeaponInChest 1");
                         lootInventory.loot = true;
                         lootInventory.DropWeapons(chosenWeapon);
@@ -572,45 +559,6 @@ public class generator : MonoBehaviourPun
             }
         }
     }
-
-
-    // [PunRPC]
-    // public void UpdateItems(string name)
-    // {
-    //     GameObject weaponPrefab = GameObject.FindGameObjectWithTag("TempObjTag");
-    //     if (weaponPrefab == null)
-    //     {
-    //         Debug.Log("INVENTORY: Weapon Prefab == null");
-    //         return;
-    //     }
-    //     if (weaponPrefab.TryGetComponent(out Weapon weapon))
-    //     {
-    //         if (mItems == null)
-    //             mItems = new IInventoryItem[9];
-    //         Add(weapon);
-    //         ItemAdded?.Invoke(this, new InventoryEventArgs(weapon));
-    //         weaponPrefab.SetActive(false);
-    //     }
-    //     else
-    //     {
-    //         Debug.LogWarning("New item does not have a Weapon component.");
-    //     }
-
-    //     Debug.Log("IN UPDATE ITEMS: items count = " + Count());
-    // }
-
-    // public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    // {
-    //     if (stream.IsWriting)
-    //     {
-    //         stream.SendNext(LastItemName);
-    //     }
-    //     else
-    //     {
-    //         LastItemName = (string)stream.ReceiveNext();
-    //     }
-    // }
-
 
     public void RequestMapData(Vector2 center, Action<MapData> callback)
     {

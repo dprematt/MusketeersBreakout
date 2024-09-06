@@ -10,13 +10,6 @@ public class editor : Editor
     public override void OnInspectorGUI() {
         generator gen = (generator)target;
         
-        if (DrawDefaultInspector())
-        {
-            if (gen.autoUpdate)
-            {
-                gen.DrawMap();
-            }
-        }
         if (GUILayout.Button("Generate")) {
             gen.DrawMap();
         }
