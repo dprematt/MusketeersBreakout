@@ -21,6 +21,7 @@ public class generator : MonoBehaviourPun
 
     public enum DrawMode { map, colorMap, mesh, fallOfMap }
 
+    public bool autoUpdate;
     public DrawMode drawMode;
     public const int mapChunkSize = 241;
     [Range(0, 6)]
