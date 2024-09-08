@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 986576145107233880}
   - component: {fileID: 5450188911344678391}
   - component: {fileID: 341384342256706387}
+  - component: {fileID: 6684295627932985064}
+  - component: {fileID: 6234182568278271906}
   m_Layer: 0
   m_Name: BananaTree_03_LOD0
   m_TagString: Untagged
@@ -29,6 +31,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8477322683275961716}
   m_RootOrder: 0
@@ -52,6 +55,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -95,6 +99,36 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.3, y: 2.0768735, z: 0.3}
   m_Center: {x: 0, y: 1.0181454, z: 0}
+--- !u!64 &6684295627932985064
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322944535989583911}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -1154196842753002988, guid: 3fc62af46ba776e4d8e72b58486f363d, type: 3}
+--- !u!54 &6234182568278271906
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322944535989583911}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &4899592898188711783
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,6 +139,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8477322683275961716}
   - component: {fileID: 9067468463367025584}
+  - component: {fileID: 7006169018813429246}
+  - component: {fileID: 9136313314321176654}
   m_Layer: 0
   m_Name: BananaTree_03
   m_TagString: Untagged
@@ -122,6 +158,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8044157266163282706}
   - {fileID: 4470344140875774225}
@@ -156,6 +193,36 @@ LODGroup:
     renderers:
     - renderer: {fileID: 2870240990762849306}
   m_Enabled: 1
+--- !u!64 &7006169018813429246
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4899592898188711783}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!54 &9136313314321176654
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4899592898188711783}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8194155601409936560
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,6 +234,8 @@ GameObject:
   - component: {fileID: 972163082404410708}
   - component: {fileID: 6392657764166751652}
   - component: {fileID: 2870240990762849306}
+  - component: {fileID: 4900213771998606806}
+  - component: {fileID: 3904464456045273250}
   m_Layer: 0
   m_Name: BananaTree_03_LOD2
   m_TagString: Untagged
@@ -184,6 +253,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8477322683275961716}
   m_RootOrder: 2
@@ -207,6 +277,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -237,6 +308,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &4900213771998606806
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8194155601409936560}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 2176548149890501553, guid: 3fc62af46ba776e4d8e72b58486f363d, type: 3}
+--- !u!54 &3904464456045273250
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8194155601409936560}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &9171884191774633481
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,6 +349,8 @@ GameObject:
   - component: {fileID: 4470344140875774225}
   - component: {fileID: 6734359789557741761}
   - component: {fileID: 3419192676704311952}
+  - component: {fileID: 4663394920963967265}
+  - component: {fileID: 8915940529341752782}
   m_Layer: 0
   m_Name: BananaTree_03_LOD1
   m_TagString: Untagged
@@ -265,6 +368,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8477322683275961716}
   m_RootOrder: 1
@@ -288,6 +392,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -318,3 +423,33 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &4663394920963967265
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9171884191774633481}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -8342701367947594739, guid: 3fc62af46ba776e4d8e72b58486f363d, type: 3}
+--- !u!54 &8915940529341752782
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9171884191774633481}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

@@ -73,6 +73,8 @@ public class generator : MonoBehaviourPun
 
     private System.Random prng;
 
+    public GameObject[] beachPrefabs;
+
     private bool hasSpawn = false;
 
     void Start()
@@ -86,6 +88,23 @@ public class generator : MonoBehaviourPun
         InitializeRandom();
         PlaceExtractionZones();
         Invoke("DrawMap", randomDelay);
+
+        PlacePrefabsInBeach();
+    }
+
+    public void PlacePrefabsInBeach() {
+        Vector2[,] intervals = new Vector2[,] {
+            { new Vector2(-565, 555), new Vector2(555, 565) },
+            { new Vector2(-565, 555), new Vector2(-555, -565) },
+            { new Vector2(-555, -565), new Vector2(565, -555) },
+            { new Vector2(555, -565), new Vector2(565, 555) }
+        };
+
+        for (int i = 0; i < intervals.GetLength(0); i++) {
+            for (int j = 0; j < beachPrefabs.GetLength(0); j++) {
+                PlaceGameObjectsWithMinDistance(intervals[i, 0],intervals[i, 1], 50, 5f, prng, beachPrefabs[j]);
+            }
+        }
     }
     public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize, System.Random prng)
     {
@@ -176,7 +195,6 @@ public class generator : MonoBehaviourPun
 {
     Debug.Log("Début de PlaceBiomesInFlatAreas");
     
-    // S'assurer que les listes sont correctement réinitialisées
     InitializeRandom();
     biomesPositions.Clear();
     biomeSpecificPositions.Clear();
@@ -186,14 +204,12 @@ public class generator : MonoBehaviourPun
         biomeSpecificPositions.Add(biome.type, new List<Vector3>());
     }
 
-    // Créer ou retrouver le parent des biomes
     GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
 
-    // Vérifier si suffisamment de plateCenters sont disponibles
     if (plateCenters.Count == 0)
     {
         Debug.LogError("Plus de zones plates disponibles pour le placement des biomes.");
-        return; // Arrêter pour éviter le crash
+        return;
     }
 
     if (plateCenters.Count < Biomes.Length * 2)
@@ -202,12 +218,11 @@ public class generator : MonoBehaviourPun
         return;
     }
 
-    // Nettoyer les anciens biomes seulement s'il y a des enfants
     if (biomesParent.transform.childCount > 0)
     {
         foreach (Transform child in biomesParent.transform)
         {
-            GameObject.Destroy(child.gameObject); // Nettoyer les anciens biomes
+            GameObject.Destroy(child.gameObject);
         }
     }
 
@@ -222,18 +237,16 @@ public class generator : MonoBehaviourPun
     float chunkSize = 241f;
     float borderBuffer = 150f;
 
-    // Limiter le nombre total de tentatives pour éviter les boucles infinies
     int maxAttempts = 1000;
     int attemptCount = 0;
 
-    // Placer les biomes
     while (biomesPlaced < totalBiomesNeeded && plateCenters.Count > 0)
     {
         foreach (Biome biome in Biomes)
         {
             if (biomeCount[biome.type] >= 2)
             {
-                continue; // Si déjà 2 biomes du même type sont placés, on passe au suivant
+                continue;
             }
 
             bool biomePlaced = false;
@@ -242,20 +255,17 @@ public class generator : MonoBehaviourPun
             {
                 attemptCount++;
 
-                // Limiter les tentatives pour éviter un crash
                 if (attemptCount >= maxAttempts)
                 {
                     Debug.LogError("Nombre maximum d'essais atteint, arrêt du placement.");
-                    return; // Arrêter pour éviter le crash
+                    return;
                 }
 
-                // Sélectionner une zone plate aléatoire
                 int index = prng.Next(0, plateCenters.Count);
                 Vector2 center = plateCenters[index];
                 plateCenters.RemoveAt(index);
 
-                // Vérifier si le biome est complètement à l'intérieur des limites
-                float biomeRadius = 30f; // Taille du biome
+                float biomeRadius = 30f;
                 bool isOutOfBounds = 
                     (center.x - biomeRadius < topLeft.x + borderBuffer || center.x + biomeRadius > bottomRight.x - borderBuffer ||
                     center.y - biomeRadius < bottomRight.y + borderBuffer || center.y + biomeRadius > topLeft.y - borderBuffer);
@@ -263,10 +273,9 @@ public class generator : MonoBehaviourPun
                 if (isOutOfBounds)
                 {
                     Debug.LogWarning($"Le biome à {center} est partiellement hors des limites de la carte.");
-                    continue;  // Essayer une autre zone
+                    continue;
                 }
 
-                // Exclure les zones proches des coins
                 bool isInCorner = (center.x < topLeft.x + chunkSize && center.y > topLeft.y - chunkSize) || 
                                   (center.x > bottomRight.x - chunkSize && center.y < bottomRight.y + chunkSize);
 
@@ -276,30 +285,25 @@ public class generator : MonoBehaviourPun
                     continue;
                 }
 
-                // Calculer la position finale
                 float x = center.x;
-                float y = GetBiomeHeight(biome.type); // Fonction pour définir la hauteur selon le type de biome
+                float y = GetBiomeHeight(biome.type);
                 float z = center.y;
                 Vector3 position = new Vector3(x, y, z);
 
-                // Vérifier la distance avec d'autres biomes
                 bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 200 * 200);
                 bool isTooCloseToSameBiomes = biomeSpecificPositions[biome.type].Any(biomePos => (position - biomePos).sqrMagnitude < 500 * 500);
 
-                // Placer le biome si la distance est correcte
                 if (!isTooCloseToOtherBiomes && !isTooCloseToSameBiomes)
                 {
                     biomesPositions.Add(position);
                     biomeSpecificPositions[biome.type].Add(position);
 
-                    // Créer le biome dans la scène
                     GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
                     instance.transform.SetParent(biomesParent.transform);
 
-                    // Mettre à jour le compteur de biomes
                     biomeCount[biome.type] += 1;
                     biomesPlaced += 1;
-                    biomePlaced = true; // Le biome a été placé avec succès
+                    biomePlaced = true;
                 }
                 else
                 {
@@ -309,12 +313,10 @@ public class generator : MonoBehaviourPun
         }
     }
 
-    // Finaliser le processus
     DropWeaponsInChest("LootZoneTag");
     Debug.Log("Fin de PlaceBiomesInFlatAreas");
 }
 
-// Fonction pour définir la hauteur du biome selon son type
 float GetBiomeHeight(string biomeType)
 {
     switch (biomeType)
@@ -422,6 +424,40 @@ float GetBiomeHeight(string biomeType)
         PlaceBiomesGuardians();
         CurrentMapData = new MapData(currentMapData.Item1, null);
     }
+
+    public void PlaceGameObjectsWithMinDistance(Vector2 startCoord, Vector2 endCoord, int objectCount, float minDistance, System.Random prng, GameObject prefab)
+    {
+        List<Vector3> placedObjects = new List<Vector3>();
+
+        while (placedObjects.Count < objectCount)
+        {
+            
+            float x = (float)prng.NextDouble() * (endCoord.x - startCoord.x) + startCoord.x;
+            float y = 0f;
+            float z = (float)prng.NextDouble() * (endCoord.y - startCoord.y) + startCoord.y;
+        
+            Vector3 newPosition = new Vector3(x, 0.22f, z);
+            bool isFarEnough = true;
+            foreach (var placedObject in placedObjects)
+            {
+                if (Vector3.Distance(newPosition, placedObject) < minDistance)
+                {
+                    isFarEnough = false;
+                    break;
+                }
+            }
+
+            if (isFarEnough)
+            {
+                GameObject instance = Instantiate(prefab, newPosition, Quaternion.identity);
+                placedObjects.Add(newPosition);
+            }
+        }
+
+        Debug.Log($"Placés {placedObjects.Count} objets avec une distance minimale de {minDistance} unités.");
+    }
+
+
 
     public void selectPos(float[,] colorMap)
     {

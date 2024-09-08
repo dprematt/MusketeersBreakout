@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3628745678303975448}
   - component: {fileID: 4190734012504919772}
+  - component: {fileID: -3323197153798511135}
+  - component: {fileID: 511844748674489287}
   m_Layer: 0
   m_Name: PalmTree_03
   m_TagString: Untagged
@@ -27,6 +29,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4295363520644825715}
   - {fileID: 2546285213170364529}
@@ -61,6 +64,36 @@ LODGroup:
     renderers:
     - renderer: {fileID: 5018650817304821394}
   m_Enabled: 1
+--- !u!64 &-3323197153798511135
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288438385714670091}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!54 &511844748674489287
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288438385714670091}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &809669454218788723
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,6 +105,8 @@ GameObject:
   - component: {fileID: 7595227556188506815}
   - component: {fileID: 6399144200569990818}
   - component: {fileID: 5018650817304821394}
+  - component: {fileID: 3979046012123974364}
+  - component: {fileID: 9128501777944671293}
   m_Layer: 0
   m_Name: PalmTree_03_LOD2
   m_TagString: Untagged
@@ -89,6 +124,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3628745678303975448}
   m_RootOrder: 2
@@ -112,6 +148,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -142,6 +179,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!54 &3979046012123974364
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 809669454218788723}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!64 &9128501777944671293
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 809669454218788723}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -526185415124705286, guid: 84708c441720ffd47ba1a1fd73f7afba, type: 3}
 --- !u!1 &3503844547197740257
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,6 +220,8 @@ GameObject:
   - component: {fileID: 2546285213170364529}
   - component: {fileID: 6030202660042250016}
   - component: {fileID: 2466859212331856597}
+  - component: {fileID: 7606440181038208545}
+  - component: {fileID: 7428439577337672643}
   m_Layer: 0
   m_Name: PalmTree_03_LOD1
   m_TagString: Untagged
@@ -170,6 +239,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3628745678303975448}
   m_RootOrder: 1
@@ -193,6 +263,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -223,6 +294,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!54 &7606440181038208545
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3503844547197740257}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!64 &7428439577337672643
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3503844547197740257}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2987085527787358140, guid: 84708c441720ffd47ba1a1fd73f7afba, type: 3}
 --- !u!1 &6096161532051765495
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,6 +336,8 @@ GameObject:
   - component: {fileID: 3487858373390882776}
   - component: {fileID: 8677240620402539945}
   - component: {fileID: 6737196011359952400}
+  - component: {fileID: 8435144876697008745}
+  - component: {fileID: 8884210834183854472}
   m_Layer: 0
   m_Name: PalmTree_03_LOD0
   m_TagString: Untagged
@@ -252,6 +355,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3628745678303975448}
   m_RootOrder: 0
@@ -275,6 +379,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -318,3 +423,33 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.3, y: 5.329583, z: 0.3}
   m_Center: {x: 0, y: 2.6440587, z: 0}
+--- !u!54 &8435144876697008745
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6096161532051765495}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!64 &8884210834183854472
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6096161532051765495}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6422659971057860855, guid: 84708c441720ffd47ba1a1fd73f7afba, type: 3}

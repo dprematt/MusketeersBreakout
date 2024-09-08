@@ -2742,6 +2742,14 @@ MonoBehaviour:
   ennemyType1: {fileID: 8489976182974415840, guid: e2db8a0f84c5732489ba3eef08de905c, type: 3}
   ennemyType2: {fileID: 8489976182974415840, guid: 561279bd1f7579d45bfe1f36d4338cbf, type: 3}
   ennemyType3: {fileID: 8489976182974415840, guid: 5528e200471fc7043b950ae9981f046b, type: 3}
+  beachPrefabs:
+  - {fileID: 4899592898188711783, guid: 737440b5c53d6984ebbd1129b8969cce, type: 3}
+  - {fileID: 5574625806012479410, guid: a2274b92eb3798246ac255fc164b1a06, type: 3}
+  - {fileID: 288438385714670091, guid: 4cd01e234d293be489071787d1c9ac26, type: 3}
+  - {fileID: 3848012789407290948, guid: 76278ce2b26d6d541bcdd45985fd4208, type: 3}
+  - {fileID: 2398804940244523425, guid: e76261df150f8fd4596996c8a6b52751, type: 3}
+  - {fileID: 950017179624286316, guid: 35a2594e7fafbd740affa31e9ae6e123, type: 3}
+  - {fileID: 8540650813480648908, guid: eca504712f949af48b741e7c32e3baeb, type: 3}
 --- !u!114 &850191868
 MonoBehaviour:
   m_ObjectHideFlags: 0

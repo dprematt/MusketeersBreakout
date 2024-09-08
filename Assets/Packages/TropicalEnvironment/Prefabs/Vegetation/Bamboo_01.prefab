@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1662142425720482738}
   - component: {fileID: 2261514191102213494}
+  - component: {fileID: 5206567751137277771}
+  - component: {fileID: 6220082009849015521}
   m_Layer: 0
   m_Name: Bamboo_01
   m_TagString: Untagged
@@ -27,6 +29,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2776527613575842908}
   - {fileID: 2267489059724202654}
@@ -61,6 +64,36 @@ LODGroup:
     renderers:
     - renderer: {fileID: 341605447722302030}
   m_Enabled: 1
+--- !u!64 &5206567751137277771
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2398804940244523425}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!54 &6220082009849015521
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2398804940244523425}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &4112524324712299506
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,6 +105,8 @@ GameObject:
   - component: {fileID: 2267489059724202654}
   - component: {fileID: 6244337032189265508}
   - component: {fileID: 3162262888236704030}
+  - component: {fileID: 2517726994488007970}
+  - component: {fileID: 2601695158109775669}
   m_Layer: 0
   m_Name: Bamboo_01_LOD1
   m_TagString: Untagged
@@ -89,6 +124,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1662142425720482738}
   m_RootOrder: 1
@@ -112,6 +148,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -142,6 +179,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!54 &2517726994488007970
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4112524324712299506}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!64 &2601695158109775669
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4112524324712299506}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 2430253982640596666, guid: f1d1a0d3448afe749bc5970043d4de98, type: 3}
 --- !u!1 &5504938218451137683
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,6 +220,8 @@ GameObject:
   - component: {fileID: 1157331532398057456}
   - component: {fileID: 2200615561794099519}
   - component: {fileID: 341605447722302030}
+  - component: {fileID: 7255974468057219180}
+  - component: {fileID: 5161952292982895244}
   m_Layer: 0
   m_Name: Bamboo_01_LOD2
   m_TagString: Untagged
@@ -170,6 +239,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1662142425720482738}
   m_RootOrder: 2
@@ -193,6 +263,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -223,6 +294,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!54 &7255974468057219180
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5504938218451137683}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!64 &5161952292982895244
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5504938218451137683}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4165359370856320599, guid: f1d1a0d3448afe749bc5970043d4de98, type: 3}
 --- !u!1 &6142114573637644726
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,6 +336,8 @@ GameObject:
   - component: {fileID: 8509072488001370225}
   - component: {fileID: 8057285174143531018}
   - component: {fileID: 1525830691690339629}
+  - component: {fileID: 3302774341410297309}
+  - component: {fileID: 450678265478687603}
   m_Layer: 0
   m_Name: Bamboo_01_LOD0
   m_TagString: Untagged
@@ -252,6 +355,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1662142425720482738}
   m_RootOrder: 0
@@ -275,6 +379,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -318,3 +423,33 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.25, y: 3.0703878, z: 0.3}
   m_Center: {x: 0, y: 1.5147991, z: -0.012042597}
+--- !u!54 &3302774341410297309
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6142114573637644726}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!64 &450678265478687603
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6142114573637644726}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4214143036480583595, guid: f1d1a0d3448afe749bc5970043d4de98, type: 3}
