@@ -9,11 +9,8 @@ public class editor : Editor
 {
     public override void OnInspectorGUI() {
         generator gen = (generator)target;
-        
-        if (DrawDefaultInspector())
-        {
-            if (gen.autoUpdate)
-            {
+        if (DrawDefaultInspector()) {
+            if (gen.autoUpdate) {
                 gen.DrawMap();
             }
         }
