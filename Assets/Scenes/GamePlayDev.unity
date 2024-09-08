@@ -2769,7 +2769,7 @@ MonoBehaviour:
     visibleDstThreshold: 25000
   - lod: 0
     visibleDstThreshold: 25000
-  mapMaterial: {fileID: 2100000, guid: e7fb9bfb718219a4593fe636d9946c45, type: 2}
+  mapMaterial: {fileID: 2100000, guid: bc3495917eaea3845b097ab2ba96e2ec, type: 2}
   grassMaterial: {fileID: 2100000, guid: 782070e10db102841949831a124a62b7, type: 2}
 --- !u!114 &850191869
 MonoBehaviour:
@@ -2853,7 +2853,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 850191866}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ced6c04525c7dfa48827f450a58e9b49, type: 3}
   m_Name: 

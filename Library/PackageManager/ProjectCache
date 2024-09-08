@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638610812649360266
-    m_Hash: 4243091705
+      ticks: 638614265998298055
+    m_Hash: 1000101722
   m_LockFileStatus:
     m_FilePath: C:/Users/mathi/OneDrive/Documents/GitHub/MusketeersBreakout/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638610812649564675
-    m_Hash: 990231759
+      ticks: 638614265998298055
+    m_Hash: 2580159385
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
@@ -117,6 +117,7 @@ m_ResolvedPackages:
     - 2.3.1
     - 2.4.3
     - 2.4.4
+    - 2.5.1
     compatible:
     - 2.0.5
     - 2.0.7
@@ -128,6 +129,7 @@ m_ResolvedPackages:
     - 2.3.1
     - 2.4.3
     - 2.4.4
+    - 2.5.1
     verified: 2.0.7
   dependencies: []
   resolvedDependencies: []
