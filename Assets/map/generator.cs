@@ -220,7 +220,7 @@ public class generator : MonoBehaviourPun
     int totalBiomesNeeded = Biomes.Length * 2;
     int biomesPlaced = 0;
     float chunkSize = 241f;
-    float borderBuffer = 100f;
+    float borderBuffer = 150f;
 
     // Limiter le nombre total de tentatives pour éviter les boucles infinies
     int maxAttempts = 1000;
@@ -310,7 +310,7 @@ public class generator : MonoBehaviourPun
     }
 
     // Finaliser le processus
-    // DropWeaponsInChest("LootZoneTag");
+    DropWeaponsInChest("LootZoneTag");
     Debug.Log("Fin de PlaceBiomesInFlatAreas");
 }
 

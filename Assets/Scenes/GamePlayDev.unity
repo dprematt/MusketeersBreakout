@@ -1439,6 +1439,7 @@ GameObject:
   - component: {fileID: 850191871}
   - component: {fileID: 850191872}
   - component: {fileID: 850191873}
+  - component: {fileID: 850191874}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Untagged
@@ -1463,6 +1464,7 @@ MonoBehaviour:
   LoadScreen_: {fileID: 1676060074}
   Hud_: {fileID: 0}
   LootHud_: {fileID: 0}
+  autoUpdate: 0
   drawMode: 0
   levelOfDetail: 1
   normalizeMode: 0
@@ -2853,6 +2855,20 @@ MonoBehaviour:
   sandMaterial: {fileID: 2100000, guid: 5932f2760d420ff4da6d82bd54fe830d, type: 2}
   grassMaterial: {fileID: 2100000, guid: 5d8af8f434f69794eabd684fb44b4fbf, type: 2}
   mountainMaterial: {fileID: 2100000, guid: a74af49949acb0945b8396d6fa7b0bc5, type: 2}
+--- !u!114 &850191874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850191866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 885cc973684f2fc01aad029546706a77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shark: {fileID: 919132149155446097, guid: ca38d4485fce19f4aa0d3d7bdd8b6cf2, type: 3}
+  speed: 5
 --- !u!1 &937626387
 GameObject:
   m_ObjectHideFlags: 0
