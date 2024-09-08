@@ -172,9 +172,11 @@ public class generator : MonoBehaviourPun
             }
         }
     }
-void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight, System.Random prng)
+   void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight, System.Random prng)
 {
     Debug.Log("Début de PlaceBiomesInFlatAreas");
+    
+    // S'assurer que les listes sont correctement réinitialisées
     InitializeRandom();
     biomesPositions.Clear();
     biomeSpecificPositions.Clear();
@@ -184,13 +186,29 @@ void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2
         biomeSpecificPositions.Add(biome.type, new List<Vector3>());
     }
 
+    // Créer ou retrouver le parent des biomes
     GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
-    Debug.Log($"Nombre de plateCenters: {plateCenters.Count}");
+
+    // Vérifier si suffisamment de plateCenters sont disponibles
+    if (plateCenters.Count == 0)
+    {
+        Debug.LogError("Plus de zones plates disponibles pour le placement des biomes.");
+        return; // Arrêter pour éviter le crash
+    }
 
     if (plateCenters.Count < Biomes.Length * 2)
     {
         Debug.LogWarning("Pas assez de zones plates pour placer tous les biomes.");
         return;
+    }
+
+    // Nettoyer les anciens biomes seulement s'il y a des enfants
+    if (biomesParent.transform.childCount > 0)
+    {
+        foreach (Transform child in biomesParent.transform)
+        {
+            GameObject.Destroy(child.gameObject); // Nettoyer les anciens biomes
+        }
     }
 
     Dictionary<string, int> biomeCount = new Dictionary<string, int>();
@@ -204,30 +222,48 @@ void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2
     float chunkSize = 241f;
     float borderBuffer = 100f;
 
-    while (biomesPlaced < totalBiomesNeeded)
+    // Limiter le nombre total de tentatives pour éviter les boucles infinies
+    int maxAttempts = 1000;
+    int attemptCount = 0;
+
+    // Placer les biomes
+    while (biomesPlaced < totalBiomesNeeded && plateCenters.Count > 0)
     {
         foreach (Biome biome in Biomes)
         {
             if (biomeCount[biome.type] >= 2)
             {
-                continue;
+                continue; // Si déjà 2 biomes du même type sont placés, on passe au suivant
             }
 
             bool biomePlaced = false;
 
-            while (!biomePlaced && plateCenters.Count > 0)
+            while (!biomePlaced && plateCenters.Count > 0 && attemptCount < maxAttempts)
             {
+                attemptCount++;
+
+                // Limiter les tentatives pour éviter un crash
+                if (attemptCount >= maxAttempts)
+                {
+                    Debug.LogError("Nombre maximum d'essais atteint, arrêt du placement.");
+                    return; // Arrêter pour éviter le crash
+                }
+
+                // Sélectionner une zone plate aléatoire
                 int index = prng.Next(0, plateCenters.Count);
                 Vector2 center = plateCenters[index];
                 plateCenters.RemoveAt(index);
 
-                // Vérifier si la zone est hors des limites
-                bool isOutOfBounds = center.x < topLeft.x || center.x > bottomRight.x || center.y < bottomRight.y || center.y > topLeft.y;
+                // Vérifier si le biome est complètement à l'intérieur des limites
+                float biomeRadius = 30f; // Taille du biome
+                bool isOutOfBounds = 
+                    (center.x - biomeRadius < topLeft.x + borderBuffer || center.x + biomeRadius > bottomRight.x - borderBuffer ||
+                    center.y - biomeRadius < bottomRight.y + borderBuffer || center.y + biomeRadius > topLeft.y - borderBuffer);
 
                 if (isOutOfBounds)
                 {
-                    Debug.LogWarning($"La zone à {center} est hors des limites de la carte.");
-                    continue;  // Essaye une autre zone
+                    Debug.LogWarning($"Le biome à {center} est partiellement hors des limites de la carte.");
+                    continue;  // Essayer une autre zone
                 }
 
                 // Exclure les zones proches des coins
@@ -240,50 +276,30 @@ void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2
                     continue;
                 }
 
-                // Placement du biome au centre de la zone plate
+                // Calculer la position finale
                 float x = center.x;
-                float y = 0f;
-                switch (biome.type)
-                {
-                    case ("désert"):
-                        y = 0.7f;
-                        break;
-                    case ("neige"):
-                        y = 0.7f;
-                        break;
-                    case ("médieval"):
-                        y = 0.8f;
-                        break;
-                    case ("jungle"):
-                        y = -0.9f;
-                        break;
-                    case ("village"):
-                        y = 0.2f;
-                        break;
-                    case ("loot"):
-                        y = 0.8f;
-                        break;
-                    default:
-                        break;
-                }
+                float y = GetBiomeHeight(biome.type); // Fonction pour définir la hauteur selon le type de biome
                 float z = center.y;
                 Vector3 position = new Vector3(x, y, z);
 
-                // Vérification de la distance
-                bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => Vector3.Distance(position, biomePos) < 200);
-                bool isTooCloseToSameBiomes =
-                    biomeSpecificPositions[biome.type].Any(biomePos => Vector3.Distance(position, biomePos) < 500);
+                // Vérifier la distance avec d'autres biomes
+                bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 200 * 200);
+                bool isTooCloseToSameBiomes = biomeSpecificPositions[biome.type].Any(biomePos => (position - biomePos).sqrMagnitude < 500 * 500);
 
+                // Placer le biome si la distance est correcte
                 if (!isTooCloseToOtherBiomes && !isTooCloseToSameBiomes)
                 {
                     biomesPositions.Add(position);
                     biomeSpecificPositions[biome.type].Add(position);
 
+                    // Créer le biome dans la scène
                     GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
                     instance.transform.SetParent(biomesParent.transform);
+
+                    // Mettre à jour le compteur de biomes
                     biomeCount[biome.type] += 1;
                     biomesPlaced += 1;
-                    biomePlaced = true;
+                    biomePlaced = true; // Le biome a été placé avec succès
                 }
                 else
                 {
@@ -292,11 +308,26 @@ void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2
             }
         }
     }
-    DropWeaponsInChest("LootZoneTag");
+
+    // Finaliser le processus
+    // DropWeaponsInChest("LootZoneTag");
     Debug.Log("Fin de PlaceBiomesInFlatAreas");
 }
 
-
+// Fonction pour définir la hauteur du biome selon son type
+float GetBiomeHeight(string biomeType)
+{
+    switch (biomeType)
+    {
+        case "désert": return 0.7f;
+        case "neige": return 0.7f;
+        case "médieval": return 0.8f;
+        case "jungle": return -0.9f;
+        case "village": return 0.2f;
+        case "loot": return 0.8f;
+        default: return 0f;
+    }
+}
 
 
 
