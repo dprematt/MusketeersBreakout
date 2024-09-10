@@ -121,6 +121,7 @@ public class Player : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
+        Debug.Log(gameObject.GetComponent<IsometricAiming>().maxAmmo);
         HUDFixe hudfixe2 = HUDFixe.GetComponent<HUDFixe>();
         hudfixe2.Clean();
         if (lineRenderer == null)
@@ -301,8 +302,6 @@ public class Player : MonoBehaviourPunCallbacks
         if (photonView.IsMine)
         {
             xp += new_xp;
-            Debug.Log("xp = " + xp);
-            Debug.Log(new_xp);
             if (new_xp != 5)
                 kills += 1;
             XpProgressBar.fillAmount = (float)(xp / max_xp);
@@ -352,7 +351,6 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 if (LootHUD == null)
                     return;
-                Debug.Log("do we need to activate ?");
                 if (!LootHUD.activeSelf)
                 {
                     LootHUD.SetActive(true);
@@ -436,7 +434,6 @@ public class Player : MonoBehaviourPunCallbacks
                 GameObject weapon = col.gameObject;
                 if (!weaponComp.isLooted)
                 {
-                    Debug.Log(weaponComp.Name);
                     EquipWeapon(weaponComp, weapon, true);
                 }
             }
@@ -476,6 +473,13 @@ public class Player : MonoBehaviourPunCallbacks
                     }
                 }
             }
+        }
+
+        if (col.gameObject.name == "AmmoBox")
+        {
+            IsometricAiming aim = gameObject.GetComponent<IsometricAiming>();
+            if (aim.maxAmmo < 1)
+                aim.maxAmmo++;
         }
     }
 

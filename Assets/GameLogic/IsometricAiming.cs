@@ -184,8 +184,14 @@ public class IsometricAiming : MonoBehaviourPun
 
         if (currentAmmo <= 0)
         {
-            StartCoroutine(Reload());
-            return;
+            if (maxAmmo > 0)
+            {
+                maxAmmo--;
+                StartCoroutine(Reload());
+                return;
+            }
+            else
+                return;
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -231,7 +237,7 @@ public class IsometricAiming : MonoBehaviourPun
 
         anim.SetBool("isReloading", false);
 
-        currentAmmo = maxAmmo;
+        currentAmmo = 1;
         isReloading = false;
     }
 
