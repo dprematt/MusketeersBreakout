@@ -59,13 +59,9 @@ public class generator : MonoBehaviourPun
     private GameObject BiomesParent;
     public Biome[] Biomes;
     private int[] quantitiesToPlace = new int[] { 2, 3, 3 };
-
-    private Dictionary<string, List<Vector3>> biomeSpecificPositions = new Dictionary<string, List<Vector3>>();
-
     float mapSize = 1500f;
     float safeZone = 100f;
     public static List<Vector3> biomesPositions = new List<Vector3>();
-    int numberOfPrefabsToCreate = 2;
     public List<Vector3> guardiansSpawn = new List<Vector3>();
     public GameObject ennemyType1;
     public GameObject ennemyType2;
@@ -75,6 +71,8 @@ public class generator : MonoBehaviourPun
 
     public GameObject[] beachPrefabs;
 
+    private BiomeManager biomeManager;
+
     private bool hasSpawn = false;
 
     void Start()
@@ -83,6 +81,8 @@ public class generator : MonoBehaviourPun
         BiomesParent.transform.parent = transform; 
         float randomDelay = UnityEngine.Random.Range(3f, 4f);
         worldObjectsParent = new GameObject("WorldObjectsParent");
+
+        biomeManager = new BiomeManager(Biomes, this); 
 
         SetSeedFromRoomProperties(this);
         InitializeRandom();
@@ -176,8 +176,6 @@ public class generator : MonoBehaviourPun
         }
     }
 
-
-
     void PlaceBiomesGuardians()
     {
         GameObject guardiansParent = GameObject.Find("Guardians") ?? new GameObject("Guardians");
@@ -191,148 +189,6 @@ public class generator : MonoBehaviourPun
             }
         }
     }
-   void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight, System.Random prng)
-{
-    Debug.Log("Début de PlaceBiomesInFlatAreas");
-    
-    InitializeRandom();
-    biomesPositions.Clear();
-    biomeSpecificPositions.Clear();
-
-    foreach (Biome biome in Biomes)
-    {
-        biomeSpecificPositions.Add(biome.type, new List<Vector3>());
-    }
-
-    GameObject biomesParent = GameObject.Find("Biomes") ?? new GameObject("Biomes");
-
-    if (plateCenters.Count == 0)
-    {
-        Debug.LogError("Plus de zones plates disponibles pour le placement des biomes.");
-        return;
-    }
-
-    if (plateCenters.Count < Biomes.Length * 2)
-    {
-        Debug.LogWarning("Pas assez de zones plates pour placer tous les biomes.");
-        return;
-    }
-
-    if (biomesParent.transform.childCount > 0)
-    {
-        foreach (Transform child in biomesParent.transform)
-        {
-            GameObject.Destroy(child.gameObject);
-        }
-    }
-
-    Dictionary<string, int> biomeCount = new Dictionary<string, int>();
-    foreach (Biome biome in Biomes)
-    {
-        biomeCount.Add(biome.type, 0);
-    }
-
-    int totalBiomesNeeded = Biomes.Length * 2;
-    int biomesPlaced = 0;
-    float chunkSize = 241f;
-    float borderBuffer = 150f;
-
-    int maxAttempts = 1000;
-    int attemptCount = 0;
-
-    while (biomesPlaced < totalBiomesNeeded && plateCenters.Count > 0)
-    {
-        foreach (Biome biome in Biomes)
-        {
-            if (biomeCount[biome.type] >= 2)
-            {
-                continue;
-            }
-
-            bool biomePlaced = false;
-
-            while (!biomePlaced && plateCenters.Count > 0 && attemptCount < maxAttempts)
-            {
-                attemptCount++;
-
-                if (attemptCount >= maxAttempts)
-                {
-                    Debug.LogError("Nombre maximum d'essais atteint, arrêt du placement.");
-                    return;
-                }
-
-                int index = prng.Next(0, plateCenters.Count);
-                Vector2 center = plateCenters[index];
-                plateCenters.RemoveAt(index);
-
-                float biomeRadius = 30f;
-                bool isOutOfBounds = 
-                    (center.x - biomeRadius < topLeft.x + borderBuffer || center.x + biomeRadius > bottomRight.x - borderBuffer ||
-                    center.y - biomeRadius < bottomRight.y + borderBuffer || center.y + biomeRadius > topLeft.y - borderBuffer);
-
-                if (isOutOfBounds)
-                {
-                    Debug.LogWarning($"Le biome à {center} est partiellement hors des limites de la carte.");
-                    continue;
-                }
-
-                bool isInCorner = (center.x < topLeft.x + chunkSize && center.y > topLeft.y - chunkSize) || 
-                                  (center.x > bottomRight.x - chunkSize && center.y < bottomRight.y + chunkSize);
-
-                if (isInCorner)
-                {
-                    Debug.LogWarning($"La zone à {center} est proche d'un coin.");
-                    continue;
-                }
-
-                float x = center.x;
-                float y = GetBiomeHeight(biome.type);
-                float z = center.y;
-                Vector3 position = new Vector3(x, y, z);
-
-                bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 200 * 200);
-                bool isTooCloseToSameBiomes = biomeSpecificPositions[biome.type].Any(biomePos => (position - biomePos).sqrMagnitude < 500 * 500);
-
-                if (!isTooCloseToOtherBiomes && !isTooCloseToSameBiomes)
-                {
-                    biomesPositions.Add(position);
-                    biomeSpecificPositions[biome.type].Add(position);
-
-                    GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
-                    DropWeaponsInChest(instance);
-                    instance.transform.SetParent(biomesParent.transform);
-
-                    biomeCount[biome.type] += 1;
-                    biomesPlaced += 1;
-                    biomePlaced = true;
-                }
-                else
-                {
-                    Debug.LogWarning($"La position {position} est trop proche d'autres biomes ou du même type.");
-                }
-            }
-        }
-    }
-
-    // DropWeaponsInChest("LootZoneTag");
-    Debug.Log("Fin de PlaceBiomesInFlatAreas");
-}
-
-float GetBiomeHeight(string biomeType)
-{
-    switch (biomeType)
-    {
-        case "désert": return 0.7f;
-        case "neige": return 0.7f;
-        case "médieval": return 0.8f;
-        case "jungle": return -0.9f;
-        case "village": return 0.2f;
-        case "loot": return 0.8f;
-        default: return 0f;
-    }
-}
-
-
 
     public System.Random getPRNG() {
         return prng;
@@ -347,7 +203,7 @@ float GetBiomeHeight(string biomeType)
         }
     }
 
-    private void InitializeRandom()
+    public void InitializeRandom()
     {
         prng = new System.Random(seed);
     }
@@ -398,7 +254,7 @@ float GetBiomeHeight(string biomeType)
             }
         }
 
-        PlaceBiomesInFlatAreas(allPlateCenters, topLeft, bottomRight, prng);
+        biomeManager.PlaceBiomesInFlatAreas(allPlateCenters, topLeft, bottomRight, prng);
 
         Vector2 center = Vector2.zero + offSet;
         var currentMapData = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center, normalizeMode, seed);
@@ -460,7 +316,6 @@ float GetBiomeHeight(string biomeType)
 
         Debug.Log($"Placés {placedObjects.Count} objets avec une distance minimale de {minDistance} unités.");
     }
-
 
 
     public void selectPos(float[,] colorMap)
@@ -630,7 +485,7 @@ float GetBiomeHeight(string biomeType)
                     new Vector3(10, 0, -5),
                     new Vector3(27, 0, -16),
                     new Vector3(25, 0, 3),
-                    new Vector3(13, 0, 13),j
+                    new Vector3(13, 0, 13),
                     new Vector3(4, 0, 3),
                     new Vector3(-13, 0,-13),
                     new Vector3(5, 0, -20),
@@ -786,38 +641,4 @@ float GetBiomeHeight(string biomeType)
             this.parameter = parameter;
         }
     }
-}
-    
-
-[System.Serializable]
-public struct TerrainType
-{
-    public string name;
-    public float height;
-}
-
-public struct MapData
-{
-    public readonly float[,] heightMap;
-    public readonly float[,] colorMap;
-
-    public MapData(float[,] heightMap, float[,] colorMap)
-    {
-        this.heightMap = heightMap;
-        this.colorMap = colorMap;
-    }
-}
-
-[System.Serializable]
-public struct Biome
-{
-    public string type;
-    public GameObject prefab;
-}
-
-[System.Serializable]
-public struct PrefabType
-{
-    public string type;
-    public GameObject prefab;
 }
