@@ -299,6 +299,7 @@ public class generator : MonoBehaviourPun
                     biomeSpecificPositions[biome.type].Add(position);
 
                     GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
+                    DropWeaponsInChest(instance);
                     instance.transform.SetParent(biomesParent.transform);
 
                     biomeCount[biome.type] += 1;
@@ -313,7 +314,7 @@ public class generator : MonoBehaviourPun
         }
     }
 
-    DropWeaponsInChest("LootZoneTag");
+    // DropWeaponsInChest("LootZoneTag");
     Debug.Log("Fin de PlaceBiomesInFlatAreas");
 }
 
@@ -427,6 +428,8 @@ float GetBiomeHeight(string biomeType)
 
     public void PlaceGameObjectsWithMinDistance(Vector2 startCoord, Vector2 endCoord, int objectCount, float minDistance, System.Random prng, GameObject prefab)
     {
+
+        GameObject beachParent = GameObject.Find("BeachObjet") ?? new GameObject("BeachObjet");
         List<Vector3> placedObjects = new List<Vector3>();
 
         while (placedObjects.Count < objectCount)
@@ -450,6 +453,7 @@ float GetBiomeHeight(string biomeType)
             if (isFarEnough)
             {
                 GameObject instance = Instantiate(prefab, newPosition, Quaternion.identity);
+                instance.transform.SetParent(beachParent.transform);
                 placedObjects.Add(newPosition);
             }
         }
@@ -592,39 +596,104 @@ float GetBiomeHeight(string biomeType)
         return CurrentMapData;
     }
 
-    public void DropWeaponsInChest(string tag)
+    public void DropWeaponsInChest(GameObject prefab)
     {
-        GameObject[] allLootZone = GameObject.FindGameObjectsWithTag(tag);
-
-        if (allLootZone == null || allLootZone.Length == 0) {
-            Debug.Log("ALL LOOT ZONE ARRAY EMPTY");
-            return;
-        } else {
-            Debug.Log("ALL LOOT ZONE ARRAY NOT EMPTY ===> " + allLootZone.Length);
-        }
-
         string[] allWeapons = { "Sword", "Gun", "Dagger" };
-        System.Random random = new System.Random();
+        string lootPrefabName = "Prefabs/Loot";
+        Vector3[] positions = new Vector3[0];
 
-        foreach (var lootzone in allLootZone)
-        {
-            foreach (Transform child in lootzone.transform)
-            {
-                if (child.tag == "Chest")
-                {
-                    Debug.Log("DropWeaponInChest objects found");
-                    Inventory lootInventory = child.GetComponentInChildren<Inventory>();
-                    if (lootInventory != null)
-                    {
-                        int randomWeaponIndex = random.Next(allWeapons.Length);
-                        string chosenWeapon = allWeapons[randomWeaponIndex];
-                        Debug.Log("DropWeaponInChest 1");
-                        lootInventory.loot = true;
-                        lootInventory.DropWeapons(chosenWeapon);
-                        Debug.Log("Weapon dropped: " + chosenWeapon);
-                    }
-                }
-            }
+        switch(prefab.name) {
+            case("LootZone(Clone)"):
+                positions = new Vector3[] {
+                    new Vector3(11, 0, 7),
+                    new Vector3(-12, 0, 7),
+                    new Vector3(-10, 0, -1),
+                    new Vector3(7, 0, 4),
+                    new Vector3(6, 0, -14)
+                };
+                break;
+            case("DesertBiome(Clone)"):
+                positions = new Vector3[] {
+                    new Vector3(-5, 0, -17),
+                    new Vector3(-30, 0, -17),
+                    new Vector3(-12, 0, 7),
+                    new Vector3(8, 0, -6),
+                    new Vector3(9, 0, -28),
+                    new Vector3(-13, 0,-29),
+                    new Vector3(-26, 0, -26),
+                    new Vector3(26, 0, -26),
+                    new Vector3(-43, 0, 19)
+                };
+                break;
+            case("JungleBiome(Clone)"):
+                positions = new Vector3[] {
+                    new Vector3(10, 0, -5),
+                    new Vector3(27, 0, -16),
+                    new Vector3(25, 0, 3),
+                    new Vector3(13, 0, 13),j
+                    new Vector3(4, 0, 3),
+                    new Vector3(-13, 0,-13),
+                    new Vector3(5, 0, -20),
+                    new Vector3(-13, 0, -27),
+                    new Vector3(31, 0, -23),
+                    new Vector3(-3, 0, -6)
+                };
+                break;
+            case("MedievalBiome(Clone)"):
+                positions = new Vector3[] {
+                    new Vector3(-117, 0, -118),
+                    new Vector3(-113, 0, -147),
+                    new Vector3(-63, 0, -140),
+                    new Vector3(-22, 0,  -152),
+                    new Vector3(-45, 0, -114),
+                    new Vector3(-5, 0, -110),
+                    new Vector3(5, 0, -20),
+                    new Vector3(-21,0 ,-52),
+                    new Vector3(-113, 0, -61),
+                    new Vector3(-138, 0, -165),
+                    new Vector3(-9, 0, -164)
+                };
+                break;
+            case("SnowBiome(Clone)"):
+                positions = new Vector3[] {
+                    new Vector3(0, 0, 3),
+                    new Vector3(10, 0, -10),
+                    new Vector3(-8,0,-6),
+                    new Vector3(14,0,4),
+                    new Vector3(15,0,-10),
+                    new Vector3(-4,0,-12),
+                    new Vector3(-9,0,2),
+                    new Vector3(1,0,10),
+                    new Vector3(15,0,4),
+                    new Vector3(21,0,-4)
+                };
+                break;
+            case("Village(Clone)"):
+                positions = new Vector3[] {
+                    new Vector3(-53,0,111),
+                    new Vector3(-72,0,124),
+                    new Vector3(-79,0,137),
+                    new Vector3(-51,0,143),
+                    new Vector3(-77,0,145)
+                };
+                break;
+            default:
+                break;
+        }
+        foreach (Vector3 pos in positions) {
+            System.Random random = new System.Random();
+            int randomWeaponIndex = random.Next(allWeapons.Length);
+            string chosenWeapon = allWeapons[randomWeaponIndex];
+
+            GameObject lootInstance = PhotonNetwork.Instantiate(lootPrefabName, prefab.transform.position, Quaternion.identity);
+
+            Inventory lootInventory = lootInstance.transform.GetChild(0).GetComponentInChildren<Inventory>();
+            lootInventory.loot = true;
+            lootInventory.DropWeapons(chosenWeapon);
+
+            lootInstance.transform.SetParent(prefab.transform, true);
+
+            lootInstance.transform.localPosition = pos;
         }
     }
 
