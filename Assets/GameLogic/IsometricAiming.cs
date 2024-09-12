@@ -15,6 +15,7 @@ public class IsometricAiming : MonoBehaviourPun
     [SerializeField] private bool ignoreHeight;
     [SerializeField] private Transform aimedTransform;
     [SerializeField] private Transform bodyTransform;
+    [SerializeField] public Camera ViewCamera;
 
     [Header("Laser")]
     [SerializeField] private LineRenderer laserRenderer;
@@ -179,7 +180,7 @@ public class IsometricAiming : MonoBehaviourPun
 
     private (bool success, Vector3 position) GetMousePosition()
     {
-        var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        var ray = ViewCamera.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, groundMask))
         {

@@ -90,6 +90,11 @@ public class Player : MonoBehaviourPunCallbacks
 
     public EventListener eventListener;
 
+    private Coroutine attackSlowdownCoroutine;
+
+    [SerializeField] public AudioClip blockingSound;
+    private AudioSource audioSource;
+
     private void Start()
     {
         HealthManager = GetComponent<HealthManager>();
@@ -117,6 +122,7 @@ public class Player : MonoBehaviourPunCallbacks
         cylinderTransform = transform;
         originalHeight = cylinderTransform.localScale.y;
         eventListener = GameObject.Find("PlayerBody").GetComponent<EventListener>();
+        audioSource = GetComponent<AudioSource>();
         //StartCoroutine(DamageOverTime());
     }
     private void Update()
@@ -396,6 +402,9 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (hasShield && shieldComp.isProtecting)
             {
+                shield.GetComponent<ParticleSystem>().Play();
+                audioSource.PlayOneShot(blockingSound);
+                anim.SetTrigger("hitted");
                 return;
             }
             TakeDamage(10);
@@ -416,6 +425,9 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 if (hasShield && shieldComp.isProtecting)
                 {
+                    shield.GetComponent<ParticleSystem>().Play();
+                    audioSource.PlayOneShot(blockingSound);
+                    anim.SetTrigger("hitted");
                     return;
                 }
                 TakeDamage(weaponComp.damages);
@@ -600,5 +612,25 @@ public class Player : MonoBehaviourPunCallbacks
                 return result;
         }
         return null;
+    }
+
+    public void StartAttackSlowdown(float duration, float speedMultiplier)
+    {
+        if (attackSlowdownCoroutine != null)
+        {
+            StopCoroutine(attackSlowdownCoroutine);
+        }
+        attackSlowdownCoroutine = StartCoroutine(SlowdownCoroutine(duration, speedMultiplier));
+    }
+
+    private IEnumerator SlowdownCoroutine(float duration, float speedMultiplier)
+    {
+        isAttacking = true;
+        float originalSpeed = moveSpeed;
+        moveSpeed *= speedMultiplier;
+        yield return new WaitForSeconds(duration);
+        moveSpeed = originalSpeed;
+        isAttacking = false;
+        attackSlowdownCoroutine = null;
     }
 }

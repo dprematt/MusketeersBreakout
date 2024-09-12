@@ -1,7 +1,7 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Environment.Instancing;
 
 public class Chunk
     {
@@ -37,7 +37,7 @@ public class Chunk
             }
         }
 
-        public Chunk(Vector2 coord, int size, LODInfo[] detailsLevel, Transform parent, Material material, Material grassMaterial, Generator generatorInstance)
+        public Chunk(Vector2 coord, int size, LODInfo[] detailsLevel, Transform parent, Material material, Material grassMaterial, Generator generatorInstance, Mesh[] instanceMeshes, Material[] instanceMaterials)
         {
             this._generator = generatorInstance;
             this.detailsLevel = detailsLevel;
@@ -55,7 +55,30 @@ public class Chunk
             meshObject.transform.position = positionV3 * 1;
             meshObject.transform.parent = parent;
             meshObject.transform.localScale = Vector3.one * 1;
-            SetVisible(true);
+            SetVisible(false);
+
+            MeshInstancesBehaviour meshInstancesBehaviour = meshObject.AddComponent<MeshInstancesBehaviour>();
+            meshInstancesBehaviour.UseSubMesh = false;
+            meshInstancesBehaviour.SubMeshIndex = 0;
+            meshInstancesBehaviour.Density = 1000f;
+
+            meshInstancesBehaviour.InstanceConfigurations = new InstanceConfiguration[instanceMeshes.Length];
+            meshInstancesBehaviour.InstanceConfigurations[0] = new InstanceConfiguration
+            {
+                Mesh = instanceMeshes[0],
+                Material = instanceMaterials[0],
+                Probability = 1f,
+                Scale = 1f,
+                NormalOffset = 0f
+            };
+            meshInstancesBehaviour.InstanceConfigurations[1] = new InstanceConfiguration
+            {
+                Mesh = instanceMeshes[1],
+                Material = instanceMaterials[1],
+                Probability = 0.1f,
+                Scale = 1f,
+                NormalOffset = 0f
+            };
 
             lodMeshes = new LODMesh[detailsLevel.Length];
 
@@ -66,11 +89,11 @@ public class Chunk
             _generator.RequestMapData(position, OnMapDataReceived);
         }
 
-
         bool IsPositionInChunk(Vector3 localPosition)
         {
             return bounds.Contains(new Vector3(localPosition.x, 0, localPosition.z));
         }
+
         void OnMapDataReceived(MapData mapData)
         {
             this.mapdata = mapData;
@@ -88,40 +111,40 @@ public class Chunk
             return chunkCenter.GetHashCode(); // Ou une autre méthode déterministe pour obtenir une graine constante basée sur la position du chunk
         }
 
-    private void ApplyBeachesIfNeeded()
-    {
-        float mapHalfWidth = mapChunkSize * 2.5f;
-        float mapHalfHeight = mapChunkSize * 2.5f;
+        private void ApplyBeachesIfNeeded()
+        {
+            float mapHalfWidth = mapChunkSize * 2.5f;
+            float mapHalfHeight = mapChunkSize * 2.5f;
 
-        float chunkTopBorder = bounds.center.y + (bounds.size.y / 2);
-        float chunkBottomBorder = bounds.center.y - (bounds.size.y / 2);
-        float chunkRightBorder = bounds.center.x + (bounds.size.x / 2);
-        float chunkLeftBorder = bounds.center.x - (bounds.size.x / 2);
+            float chunkTopBorder = bounds.center.y + (bounds.size.y / 2);
+            float chunkBottomBorder = bounds.center.y - (bounds.size.y / 2);
+            float chunkRightBorder = bounds.center.x + (bounds.size.x / 2);
+            float chunkLeftBorder = bounds.center.x - (bounds.size.x / 2);
 
-        bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - waterThickness) && bounds.center.y < mapHalfHeight;
-        bool isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + waterThickness) && bounds.center.y > -mapHalfHeight;
-        bool isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + waterThickness) && bounds.center.x > -mapHalfWidth;
-        bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - waterThickness) && bounds.center.x < mapHalfWidth;
+            bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - waterThickness) && bounds.center.y < mapHalfHeight;
+            bool isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + waterThickness) && bounds.center.y > -mapHalfHeight;
+            bool isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + waterThickness) && bounds.center.x > -mapHalfWidth;
+            bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - waterThickness) && bounds.center.x < mapHalfWidth;
 
-        if (isTopBorderChunk)
-            ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, false);
-        if (isBottomBorderChunk)
-            ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, false);
-        if (isLeftBorderChunk)
-            ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, true);
-        if (isRightBorderChunk)
-            ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, false);
+            if (isTopBorderChunk)
+                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, false);
+            if (isBottomBorderChunk)
+                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, false);
+            if (isLeftBorderChunk)
+                ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, true);
+            if (isRightBorderChunk)
+                ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, false);
 
-        isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - sandThickness - waterThickness) && bounds.center.y < mapHalfHeight;
-        isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + sandThickness + waterThickness) && bounds.center.y > -mapHalfHeight;
-        isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + sandThickness + waterThickness) && bounds.center.x > -mapHalfWidth;
-        isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - sandThickness - waterThickness) && bounds.center.x < mapHalfWidth;
+            isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - sandThickness - waterThickness) && bounds.center.y < mapHalfHeight;
+            isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + sandThickness + waterThickness) && bounds.center.y > -mapHalfHeight;
+            isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + sandThickness + waterThickness) && bounds.center.x > -mapHalfWidth;
+            isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - sandThickness - waterThickness) && bounds.center.x < mapHalfWidth;
 
-        if (isTopBorderChunk)
-            ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, true);
-        if (isBottomBorderChunk)
-            ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, true);
-    }
+            if (isTopBorderChunk)
+                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, true);
+            if (isBottomBorderChunk)
+                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, true);
+        }
 
         private void ApplyBeachAndSandToTopOrBottom(int waterThickness, int sandThickness, bool isTopBorder, bool isWater)
         {
@@ -194,12 +217,12 @@ public class Chunk
             }
         }
 
-
         private void UpdateMesh()
         {
             _generator.RequestMeshData(mapdata, previousLOD, (meshData) => {
                 meshFilter.mesh = meshData.CreateMesh();
                 meshCollider.sharedMesh = meshData.CreateMesh();
+                SetVisible(true);
             });
         }
 
@@ -244,7 +267,7 @@ public class Chunk
                         }
                     }
                 }
-                SetVisible(true);
+                //SetVisible(true);
             }
         }
 
