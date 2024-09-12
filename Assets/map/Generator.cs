@@ -24,7 +24,6 @@ public class Generator : MonoBehaviourPun
     public DrawMode drawMode;
     public const int mapChunkSize = 241;
     [Range(0, 6)]
-    public int levelOfDetail;
     public Skeleton.NormalizeMode normalizeMode;
     public float scale;
     public int octaves;
@@ -39,11 +38,6 @@ public class Generator : MonoBehaviourPun
 
     public float meshHeightMult;
     public AnimationCurve meshHeightCurve;
-    float[,] fallOfMap;
-
-    private bool prefabsPlaced = false;
-
-    public TerrainType[] regions;
     public static int seed = 0;
     public PrefabType[] prefabNature;
 
@@ -166,8 +160,6 @@ public class Generator : MonoBehaviourPun
 
             foreach (Vector3 guardiansCoord in guardiansSpawn)
             {
-                //GameObject guardians = PhotonNetwork.Instantiate(ennemyType1.name, guardiansCoord, Quaternion.identity);
-                //guardians.transform.SetParent(guardiansParent.transform);
             }
         }
     }
@@ -280,28 +272,47 @@ public class Generator : MonoBehaviourPun
             }
         }
 
+        // foreach (Vector3 vecteur in biomesPositions)
+        // {
+        //     Vector3 pos1 = new Vector3(vecteur.x + 60, vecteur.y + 10, vecteur.z);
+        //     Vector3 pos2 = new Vector3(vecteur.x + 60, vecteur.y + 10, vecteur.z + 5);
+        //     Vector3 pos3 = new Vector3(vecteur.x - 60, vecteur.y + 10, vecteur.z);
+        //     Vector3 pos4 = new Vector3(vecteur.x - 60, vecteur.y + 10, vecteur.z + 5);
+        //     Vector3 pos5 = new Vector3(vecteur.x, vecteur.y + 10, vecteur.z - 60);
+        //     Vector3 pos6 = new Vector3(vecteur.x + 5, vecteur.y + 10, vecteur.z - 60);
+        //     Vector3 pos7 = new Vector3(vecteur.x, vecteur.y + 10, vecteur.z + 60);
+        //     Vector3 pos8 = new Vector3(vecteur.x + 5, vecteur.y + 10, vecteur.z + 60);
+
+
+
+        //     guardiansSpawn.Add(pos1);
+        //     guardiansSpawn.Add(pos2);
+        //     guardiansSpawn.Add(pos3);
+        //     guardiansSpawn.Add(pos4);
+        //     guardiansSpawn.Add(pos5);
+        //     guardiansSpawn.Add(pos6);
+        //     guardiansSpawn.Add(pos7);
+        //     guardiansSpawn.Add(pos8);
+
+        // }
+
         foreach (Vector3 vecteur in biomesPositions)
         {
-            Vector3 pos1 = new Vector3(vecteur.x + 60, vecteur.y + 10, vecteur.z);
-            Vector3 pos2 = new Vector3(vecteur.x + 60, vecteur.y + 10, vecteur.z + 5);
-            Vector3 pos3 = new Vector3(vecteur.x - 60, vecteur.y + 10, vecteur.z);
-            Vector3 pos4 = new Vector3(vecteur.x - 60, vecteur.y + 10, vecteur.z + 5);
-            Vector3 pos5 = new Vector3(vecteur.x, vecteur.y + 10, vecteur.z - 60);
-            Vector3 pos6 = new Vector3(vecteur.x + 5, vecteur.y + 10, vecteur.z - 60);
-            Vector3 pos7 = new Vector3(vecteur.x, vecteur.y + 10, vecteur.z + 60);
-            Vector3 pos8 = new Vector3(vecteur.x + 5, vecteur.y + 10, vecteur.z + 60);
+            Vector3[] offsets = {
+                new Vector3(60, 10, 0),
+                new Vector3(60, 10, 5),
+                new Vector3(-60, 10, 0),
+                new Vector3(-60, 10, 5),
+                new Vector3(0, 10, -60),
+                new Vector3(5, 10, -60),
+                new Vector3(0, 10, 60),
+                new Vector3(5, 10, 60)
+            };
 
-
-
-            guardiansSpawn.Add(pos1);
-            guardiansSpawn.Add(pos2);
-            guardiansSpawn.Add(pos3);
-            guardiansSpawn.Add(pos4);
-            guardiansSpawn.Add(pos5);
-            guardiansSpawn.Add(pos6);
-            guardiansSpawn.Add(pos7);
-            guardiansSpawn.Add(pos8);
-
+            foreach (var offset in offsets)
+            {
+                guardiansSpawn.Add(vecteur + offset);
+            }
         }
 
         SpawnPlayer();
@@ -348,26 +359,6 @@ public class Generator : MonoBehaviourPun
     MapData SkeletonGenerator(Vector2 center)
     {
         var (map, _) = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode, seed);
-
-        for (int i = 0; i < mapChunkSize; i++)
-        {
-            for (int j = 0; j < mapChunkSize; j++)
-            {
-                float curHeight = map[j, i];
-
-                for (int k = 0; k < regions.Length; k++)
-                {
-                    if (curHeight >= regions[k].height)
-                    {
-                        colorMap[j, i] = curHeight;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-        }
 
         CurrentMapData = new MapData(map, colorMap);
 
