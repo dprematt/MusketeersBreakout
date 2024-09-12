@@ -19,6 +19,19 @@ public class Player : MonoBehaviourPunCallbacks
     public int dmgTaken = 0;
     public int dmgDone = 0;
 
+    [Header("Audio Clips")]
+    public Slider hudSlider;
+    public Slider dodgeSlider;
+    public Slider jumpSlider;
+    public AudioClip openHUDClip;
+    public AudioClip closeHUDClip;
+    public AudioClip dodgeClip;
+    public AudioClip jumpClip;
+    public AudioClip lootHUDClip;
+    private AudioSource hudSource;
+    private AudioSource dodgeSource;
+    private AudioSource jumpSource;
+
     [Header("Movement")]
     public float moveSpeed = 6f;
     public float movementMultiplier = 10f;
@@ -90,11 +103,6 @@ public class Player : MonoBehaviourPunCallbacks
 
     public EventListener eventListener;
 
-    private Coroutine attackSlowdownCoroutine;
-
-    [SerializeField] public AudioClip blockingSound;
-    private AudioSource audioSource;
-
     private void Start()
     {
         HealthManager = GetComponent<HealthManager>();
@@ -122,7 +130,28 @@ public class Player : MonoBehaviourPunCallbacks
         cylinderTransform = transform;
         originalHeight = cylinderTransform.localScale.y;
         eventListener = GameObject.Find("PlayerBody").GetComponent<EventListener>();
-        audioSource = GetComponent<AudioSource>();
+        hudSource = gameObject.AddComponent<AudioSource>();
+        dodgeSource = gameObject.AddComponent<AudioSource>();
+        jumpSource = gameObject.AddComponent<AudioSource>();
+        dodgeSource.clip = dodgeClip;
+        jumpSource.clip = jumpClip;
+        if (hudSlider != null)
+        {
+            hudSlider.onValueChanged.AddListener(SetHUDVolume);
+            hudSlider.value = hudSource.volume;
+        }
+
+        if (dodgeSlider != null)
+        {
+            dodgeSlider.onValueChanged.AddListener(SetDodgeVolume);
+            dodgeSlider.value = dodgeSource.volume;
+        }
+
+        if (jumpSlider != null)
+        {
+            jumpSlider.onValueChanged.AddListener(SetJumpVolume);
+            jumpSlider.value = jumpSource.volume;
+        }
         //StartCoroutine(DamageOverTime());
     }
     private void Update()
@@ -146,6 +175,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Input.GetKeyDown(jumpKey) && !staminaFullUsed)
         {
+            PlayJumpSound();
             Jump();
         }
 
@@ -206,10 +236,12 @@ public class Player : MonoBehaviourPunCallbacks
             if (HUD.activeSelf)
             {
                 HUD.SetActive(false);
+                PlayHUDSound(closeHUDClip);
             }
             else
             {
                 HUD.SetActive(true);
+                PlayHUDSound(openHUDClip);
                 HUD hud = HUD.GetComponent<HUD>();
                 hud.Clean();
                 HUDFixe hudfixe = HUDFixe.GetComponent<HUDFixe>();
@@ -231,6 +263,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            PlayHUDSound(lootHUDClip);
             LootHUD.SetActive(false);
         }
 
@@ -281,6 +314,52 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 EquippedWeapon = inventory.mItems[0].GameObject.GetComponent<Weapon>();
             }
+        }
+    }
+
+     public void SetVolume(float volume)
+    {
+        audioSource.volume = volume; // Ajuste le volume de l'audio source
+        Debug.Log("Volume réglé à : " + volume);
+    }
+
+    public void SetHUDVolume(float volume)
+    {
+        hudSource.volume = volume;
+        Debug.Log("Volume HUD réglé à : " + volume);
+    }
+
+    public void SetDodgeVolume(float volume)
+    {
+        dodgeSource.volume = volume;
+        Debug.Log("Volume Dodge réglé à : " + volume);
+    }
+
+    public void SetJumpVolume(float volume)
+    {
+        jumpSource.volume = volume;
+        Debug.Log("Volume Jump réglé à : " + volume);
+    }
+
+    private void PlayDodgeSound()
+    {
+        dodgeSource.PlayOneShot(dodgeSource.clip);
+    }
+
+    private void PlayJumpSound()
+    {
+        jumpSource.PlayOneShot(jumpSource.clip);
+    }
+    private void PlayHUDSound(AudioClip clip)
+    {
+        if (clip != null)
+        {
+            Debug.Log("Lecture du son : " + clip.name);
+            hudSource.PlayOneShot(clip);
+        }
+        else
+        {
+            Debug.LogWarning("Clip audio non assigné.");
         }
     }
     private IEnumerator DamageOverTime()
@@ -402,9 +481,6 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (hasShield && shieldComp.isProtecting)
             {
-                shield.GetComponent<ParticleSystem>().Play();
-                audioSource.PlayOneShot(blockingSound);
-                anim.SetTrigger("hitted");
                 return;
             }
             TakeDamage(10);
@@ -425,9 +501,6 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 if (hasShield && shieldComp.isProtecting)
                 {
-                    shield.GetComponent<ParticleSystem>().Play();
-                    audioSource.PlayOneShot(blockingSound);
-                    anim.SetTrigger("hitted");
                     return;
                 }
                 TakeDamage(weaponComp.damages);
@@ -581,6 +654,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
         if (Input.GetKeyDown(dodgeKey) && isGrounded && !anim.GetBool("isDodging"))
         {
+            PlayDodgeSound();
             Vector3 dodgeDirection = characterModel.forward;
             rb.AddForce(dodgeDirection.normalized * 50f * movementMultiplier, ForceMode.Acceleration);
             anim.SetBool("isDodging", true);
@@ -612,25 +686,5 @@ public class Player : MonoBehaviourPunCallbacks
                 return result;
         }
         return null;
-    }
-
-    public void StartAttackSlowdown(float duration, float speedMultiplier)
-    {
-        if (attackSlowdownCoroutine != null)
-        {
-            StopCoroutine(attackSlowdownCoroutine);
-        }
-        attackSlowdownCoroutine = StartCoroutine(SlowdownCoroutine(duration, speedMultiplier));
-    }
-
-    private IEnumerator SlowdownCoroutine(float duration, float speedMultiplier)
-    {
-        isAttacking = true;
-        float originalSpeed = moveSpeed;
-        moveSpeed *= speedMultiplier;
-        yield return new WaitForSeconds(duration);
-        moveSpeed = originalSpeed;
-        isAttacking = false;
-        attackSlowdownCoroutine = null;
     }
 }
