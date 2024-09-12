@@ -29,8 +29,10 @@ public class Player : MonoBehaviourPunCallbacks
     public AudioClip jumpClip;
     public AudioClip lootHUDClip;
     private AudioSource hudSource;
+    private AudioSource audioSource;
     private AudioSource dodgeSource;
     private AudioSource jumpSource;
+
 
     [Header("Movement")]
     public float moveSpeed = 6f;
@@ -103,6 +105,10 @@ public class Player : MonoBehaviourPunCallbacks
 
     public EventListener eventListener;
 
+    private Coroutine attackSlowdownCoroutine;
+
+    [SerializeField] public AudioClip blockingSound;
+
     private void Start()
     {
         HealthManager = GetComponent<HealthManager>();
@@ -129,8 +135,9 @@ public class Player : MonoBehaviourPunCallbacks
         xpText2D = xpProgressBarXp.GetComponent<Text>();
         cylinderTransform = transform;
         originalHeight = cylinderTransform.localScale.y;
-        eventListener = GameObject.Find("PlayerBody").GetComponent<EventListener>();
+        eventListener = transform.Find("PlayerBody").GetComponent<EventListener>();
         hudSource = gameObject.AddComponent<AudioSource>();
+        audioSource = gameObject.AddComponent<AudioSource>();
         dodgeSource = gameObject.AddComponent<AudioSource>();
         jumpSource = gameObject.AddComponent<AudioSource>();
         dodgeSource.clip = dodgeClip;
@@ -156,7 +163,6 @@ public class Player : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
-        Debug.Log(gameObject.GetComponent<IsometricAiming>().maxAmmo);
         HUDFixe hudfixe2 = HUDFixe.GetComponent<HUDFixe>();
         hudfixe2.Clean();
         if (lineRenderer == null)
@@ -317,13 +323,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-     public void SetVolume(float volume)
-    {
-        audioSource.volume = volume; // Ajuste le volume de l'audio source
-        Debug.Log("Volume réglé à : " + volume);
-    }
-
-    public void SetHUDVolume(float volume)
+     public void SetHUDVolume(float volume)
     {
         hudSource.volume = volume;
         Debug.Log("Volume HUD réglé à : " + volume);
@@ -481,6 +481,9 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (hasShield && shieldComp.isProtecting)
             {
+                shield.GetComponent<ParticleSystem>().Play();
+                audioSource.PlayOneShot(blockingSound);
+                anim.SetTrigger("hitted");
                 return;
             }
             TakeDamage(10);
@@ -501,6 +504,9 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 if (hasShield && shieldComp.isProtecting)
                 {
+                    shield.GetComponent<ParticleSystem>().Play();
+                    audioSource.PlayOneShot(blockingSound);
+                    anim.SetTrigger("hitted");
                     return;
                 }
                 TakeDamage(weaponComp.damages);
@@ -686,5 +692,24 @@ public class Player : MonoBehaviourPunCallbacks
                 return result;
         }
         return null;
+    }
+
+    public void StartAttackSlowdown(float duration, float speedMultiplier)
+    {
+        if (attackSlowdownCoroutine != null)
+        {
+            StopCoroutine(attackSlowdownCoroutine);
+        }
+        attackSlowdownCoroutine = StartCoroutine(SlowdownCoroutine(duration, speedMultiplier));
+    }
+    private IEnumerator SlowdownCoroutine(float duration, float speedMultiplier)
+    {
+        isAttacking = true;
+        float originalSpeed = moveSpeed;
+        moveSpeed *= speedMultiplier;
+        yield return new WaitForSeconds(duration);
+        moveSpeed = originalSpeed;
+        isAttacking = false;
+        attackSlowdownCoroutine = null;
     }
 }
