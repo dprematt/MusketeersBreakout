@@ -121,7 +121,7 @@ public class Player : MonoBehaviourPunCallbacks
         xpText2D = xpProgressBarXp.GetComponent<Text>();
         cylinderTransform = transform;
         originalHeight = cylinderTransform.localScale.y;
-        eventListener = GameObject.Find("PlayerBody").GetComponent<EventListener>();
+        eventListener = transform.Find("PlayerBody").GetComponent<EventListener>();
         audioSource = GetComponent<AudioSource>();
         //StartCoroutine(DamageOverTime());
     }
@@ -299,6 +299,7 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 PFInventory_.PlayerLose();
             }
+            Debug.Log("DEGAT DEGAT : " + Damage);
             HealthManager.Take_Damage((int)Damage);
             bloodParticles.Play();
         }
@@ -446,6 +447,7 @@ public class Player : MonoBehaviourPunCallbacks
                 GameObject weapon = col.gameObject;
                 if (!weaponComp.isLooted)
                 {
+                    Debug.Log("LAAAAAAAAAAAAAAAAAAA");
                     EquipWeapon(weaponComp, weapon, true);
                 }
             }
