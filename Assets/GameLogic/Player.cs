@@ -127,7 +127,6 @@ public class Player : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
-        Debug.Log(gameObject.GetComponent<IsometricAiming>().maxAmmo);
         HUDFixe hudfixe2 = HUDFixe.GetComponent<HUDFixe>();
         hudfixe2.Clean();
         if (lineRenderer == null)
@@ -299,7 +298,6 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 PFInventory_.PlayerLose();
             }
-            Debug.Log("DEGAT DEGAT : " + Damage);
             HealthManager.Take_Damage((int)Damage);
             bloodParticles.Play();
         }
@@ -447,7 +445,6 @@ public class Player : MonoBehaviourPunCallbacks
                 GameObject weapon = col.gameObject;
                 if (!weaponComp.isLooted)
                 {
-                    Debug.Log("LAAAAAAAAAAAAAAAAAAA");
                     EquipWeapon(weaponComp, weapon, true);
                 }
             }
