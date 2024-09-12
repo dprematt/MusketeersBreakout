@@ -1,67 +1,9 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Endless : MonoBehaviour
-{
-    const float scale = 1;
-    public static float maxViewDist;
-
-    public LODInfo[] detailsLevel;
-    public static Vector2 viewerPosition;
-    Vector2 oldViewerPosition;
-
-    public Material mapMaterial;
-    public Material grassMaterial;
-    static generator _generator;
-    int chunkSize;
-    int chunkVisibleViewDist;
-    Dictionary<Vector2, Chunk> chunkDict = new Dictionary<Vector2, Chunk>();
-
-    Vector2 placementAreaSize = new Vector2(1500, 1500);
-    static List<Chunk> chunkVisibleLastUpdate = new List<Chunk>();
-
-    private void Start() {
-        _generator = FindObjectOfType<generator>();
-        StartCoroutine(SetupPrefabsAndTerrain());
-        maxViewDist = detailsLevel[detailsLevel.Length - 1].visibleDstThreshold;
-        chunkSize = generator.mapChunkSize - 1;
-        chunkVisibleViewDist = Mathf.RoundToInt(maxViewDist / chunkSize);
-        placementAreaSize = new Vector2(chunkSize * 5, chunkSize * 5);
-        GenerateAllChunks();
-    }
-
-    IEnumerator SetupPrefabsAndTerrain()
-    {
-        yield return new WaitUntil(() => _generator.CurrentMapData.heightMap != null);
-    }
-
-    private void GenerateAllChunks()
-    {
-        int startChunkX = -(int)(placementAreaSize.x / 2 / chunkSize);
-        int endChunkX = (int)(placementAreaSize.x / 2 / chunkSize);
-        int startChunkY = -(int)(placementAreaSize.y / 2 / chunkSize);
-        int endChunkY = (int)(placementAreaSize.y / 2 / chunkSize);
-
-        for (int yOffset = startChunkY; yOffset <= endChunkY; yOffset++)
-        {
-            for (int xOffset = startChunkX; xOffset <= endChunkX; xOffset++)
-            {
-                Vector2 viewedChunkCoord = new Vector2(xOffset, yOffset);
-                if (!chunkDict.ContainsKey(viewedChunkCoord))
-                {
-                    chunkDict[viewedChunkCoord] = new Chunk(viewedChunkCoord, chunkSize, detailsLevel, transform, mapMaterial, grassMaterial);
-                }
-            }
-        }
-    }
-
-
-    private void Update()
-    {
-    }
-
-    public class Chunk
+public class Chunk
     {
         GameObject meshObject;
         Vector2 position;
@@ -84,6 +26,9 @@ public class Endless : MonoBehaviour
         int waterThickness = 30;
         int sandThickness = 20;
 
+        private Generator _generator;
+        public const int mapChunkSize = 241;
+
         public Vector2 ChunkCenter
         {
             get
@@ -92,8 +37,9 @@ public class Endless : MonoBehaviour
             }
         }
 
-        public Chunk(Vector2 coord, int size, LODInfo[] detailsLevel, Transform parent, Material material, Material grassMaterial)
+        public Chunk(Vector2 coord, int size, LODInfo[] detailsLevel, Transform parent, Material material, Material grassMaterial, Generator generatorInstance)
         {
+            this._generator = generatorInstance;
             this.detailsLevel = detailsLevel;
             position = coord * size;
             bounds = new Bounds(position, Vector2.one * size);
@@ -106,16 +52,16 @@ public class Endless : MonoBehaviour
             meshCollider = meshObject.AddComponent<MeshCollider>();
 
             meshRenderer.materials = new Material[] { material, grassMaterial };
-            meshObject.transform.position = positionV3 * scale;
+            meshObject.transform.position = positionV3 * 1;
             meshObject.transform.parent = parent;
-            meshObject.transform.localScale = Vector3.one * scale;
+            meshObject.transform.localScale = Vector3.one * 1;
             SetVisible(true);
 
             lodMeshes = new LODMesh[detailsLevel.Length];
 
             for (int i = 0; i < detailsLevel.Length; i++)
             {
-                lodMeshes[i] = new LODMesh(detailsLevel[i].lod, UpdateChunk);
+                lodMeshes[i] = new LODMesh(detailsLevel[i].lod, UpdateChunk, _generator);
             }
             _generator.RequestMapData(position, OnMapDataReceived);
         }
@@ -144,8 +90,8 @@ public class Endless : MonoBehaviour
 
     private void ApplyBeachesIfNeeded()
     {
-        float mapHalfWidth = generator.mapChunkSize * 2.5f;
-        float mapHalfHeight = generator.mapChunkSize * 2.5f;
+        float mapHalfWidth = mapChunkSize * 2.5f;
+        float mapHalfHeight = mapChunkSize * 2.5f;
 
         float chunkTopBorder = bounds.center.y + (bounds.size.y / 2);
         float chunkBottomBorder = bounds.center.y - (bounds.size.y / 2);
@@ -182,13 +128,13 @@ public class Endless : MonoBehaviour
             float chunkBorderStartZ = isTopBorder ? bounds.center.y - (bounds.size.y / 2) : bounds.center.y + (bounds.size.y / 2);
             float sandEndZ = chunkBorderStartZ + (isTopBorder ? waterThickness : -waterThickness);
             float beachEndZ = sandEndZ + (isTopBorder ? sandThickness : -sandThickness);
-            float mapHalfHeight = generator.mapChunkSize * 2.5f;
+            float mapHalfHeight = mapChunkSize * 2.5f;
 
             System.Random prng = _generator.getPRNG(); // Get a random number generator
 
-            for (int x = 0; x < generator.mapChunkSize; x++)
+            for (int x = 0; x < mapChunkSize; x++)
             {
-                for (int z = 0; z < generator.mapChunkSize; z++)
+                for (int z = 0; z < mapChunkSize; z++)
                 {
                     float worldZ = bounds.center.y - (bounds.size.y / 2) + z;
 
@@ -227,9 +173,9 @@ public class Endless : MonoBehaviour
 
             System.Random prng = _generator.getPRNG(); // Get a random number generator
 
-            for (int x = 0; x < generator.mapChunkSize; x++)
+            for (int x = 0; x < mapChunkSize; x++)
             {
-                for (int z = 0; z < generator.mapChunkSize; z++)
+                for (int z = 0; z < mapChunkSize; z++)
                 {
                     float worldX = bounds.center.x - (bounds.size.x / 2) + x;
 
@@ -261,7 +207,7 @@ public class Endless : MonoBehaviour
         {
             if (mapDataReceived)
             {
-                float viewerDstFromNearestEdge = Mathf.Sqrt(bounds.SqrDistance(viewerPosition));
+                float viewerDstFromNearestEdge = Mathf.Sqrt(bounds.SqrDistance(new Vector2(0,0)));
                 bool visible = true;
 
                 if (visible)
@@ -297,7 +243,6 @@ public class Endless : MonoBehaviour
                             lodMesh.RequestMesh(mapdata);
                         }
                     }
-                    chunkVisibleLastUpdate.Add(this);
                 }
                 SetVisible(true);
             }
@@ -313,39 +258,3 @@ public class Endless : MonoBehaviour
             return meshObject.activeSelf;
         }
     }
-
-    class LODMesh
-    {
-        public Mesh mesh;
-        public bool hasRequestedMesh;
-        public bool hasMesh;
-        int lod;
-        System.Action updateCallBack;
-
-        public LODMesh(int lod, System.Action updateCallback)
-        {
-            this.lod = lod;
-            this.updateCallBack = updateCallback;
-        }
-
-        void OnMeshDataReceived(meshData meshdata)
-        {
-            mesh = meshdata.CreateMesh();
-            hasMesh = true;
-            updateCallBack();
-        }
-
-        public void RequestMesh(MapData mapdata)
-        {
-            hasRequestedMesh = true;
-            _generator.RequestMeshData(mapdata, lod, OnMeshDataReceived);
-        }
-    }
-
-    [System.Serializable]
-    public struct LODInfo
-    {
-        public int lod;
-        public float visibleDstThreshold;
-    }
-}
