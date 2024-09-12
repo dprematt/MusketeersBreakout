@@ -34,15 +34,14 @@ public class HUD : MonoBehaviourPunCallbacks
     {
         Transform Stats = transform.Find("Stats");
 
-        GameObject playerGo = GameObject.FindGameObjectWithTag("Player");
+        Player player = gameObject.GetComponentInParent<Player>();
 
-        if (playerGo == null)
+        if (player == null)
         {
             Debug.Log("player == null");
             return;
         }
         
-        Player player = playerGo.GetComponent<Player>();
         if (Stats != null)
         {
             Transform AtqStats = Stats.Find("AtqText");
