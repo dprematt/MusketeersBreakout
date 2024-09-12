@@ -13,14 +13,14 @@ using System.Linq;
 public class BiomeManager : MonoBehaviourPun {
     private Biome[] Biomes;
 
-    private generator _generator;
+    private Generator _generator;
 
     public static List<Vector3> biomesPositions = new List<Vector3>();
 
     private Dictionary<string, List<Vector3>> biomeSpecificPositions = new Dictionary<string, List<Vector3>>();
 
 
-    public BiomeManager(Biome[] allBiomes, generator generatorInstance) {
+    public BiomeManager(Biome[] allBiomes, Generator generatorInstance) {
         this.Biomes = allBiomes;
         this._generator = generatorInstance;
     }

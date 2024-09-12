@@ -12,7 +12,7 @@ using System.Linq;
 
 
 public class PrefabsManager : MonoBehaviourPun {
-    private generator _generator;
+    private Generator _generator;
 
     private GameObject[] beachPrefabs;
 
@@ -23,7 +23,7 @@ public class PrefabsManager : MonoBehaviourPun {
 
     private GameObject worldObjectsParent;
 
-    public PrefabsManager(generator generatorInstance, GameObject[] allBeachPrefabs, PrefabType[] allPrefabsNature, GameObject worldObjectsParentInstance, System.Random prngInstance) {
+    public PrefabsManager(Generator generatorInstance, GameObject[] allBeachPrefabs, PrefabType[] allPrefabsNature, GameObject worldObjectsParentInstance, System.Random prngInstance) {
         this._generator = generatorInstance;
         this.beachPrefabs = allBeachPrefabs;
         // this.prefabNature = allPrefabsNature;

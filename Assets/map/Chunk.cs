@@ -26,7 +26,8 @@ public class Chunk
         int waterThickness = 30;
         int sandThickness = 20;
 
-        private generator _generator;
+        private Generator _generator;
+        public const int mapChunkSize = 241;
 
         public Vector2 ChunkCenter
         {
@@ -36,7 +37,7 @@ public class Chunk
             }
         }
 
-        public Chunk(Vector2 coord, int size, LODInfo[] detailsLevel, Transform parent, Material material, Material grassMaterial, generator generatorInstance)
+        public Chunk(Vector2 coord, int size, LODInfo[] detailsLevel, Transform parent, Material material, Material grassMaterial, Generator generatorInstance)
         {
             this._generator = generatorInstance;
             this.detailsLevel = detailsLevel;
@@ -89,8 +90,8 @@ public class Chunk
 
     private void ApplyBeachesIfNeeded()
     {
-        float mapHalfWidth = generator.mapChunkSize * 2.5f;
-        float mapHalfHeight = generator.mapChunkSize * 2.5f;
+        float mapHalfWidth = mapChunkSize * 2.5f;
+        float mapHalfHeight = mapChunkSize * 2.5f;
 
         float chunkTopBorder = bounds.center.y + (bounds.size.y / 2);
         float chunkBottomBorder = bounds.center.y - (bounds.size.y / 2);
@@ -127,13 +128,13 @@ public class Chunk
             float chunkBorderStartZ = isTopBorder ? bounds.center.y - (bounds.size.y / 2) : bounds.center.y + (bounds.size.y / 2);
             float sandEndZ = chunkBorderStartZ + (isTopBorder ? waterThickness : -waterThickness);
             float beachEndZ = sandEndZ + (isTopBorder ? sandThickness : -sandThickness);
-            float mapHalfHeight = generator.mapChunkSize * 2.5f;
+            float mapHalfHeight = mapChunkSize * 2.5f;
 
             System.Random prng = _generator.getPRNG(); // Get a random number generator
 
-            for (int x = 0; x < generator.mapChunkSize; x++)
+            for (int x = 0; x < mapChunkSize; x++)
             {
-                for (int z = 0; z < generator.mapChunkSize; z++)
+                for (int z = 0; z < mapChunkSize; z++)
                 {
                     float worldZ = bounds.center.y - (bounds.size.y / 2) + z;
 
@@ -172,9 +173,9 @@ public class Chunk
 
             System.Random prng = _generator.getPRNG(); // Get a random number generator
 
-            for (int x = 0; x < generator.mapChunkSize; x++)
+            for (int x = 0; x < mapChunkSize; x++)
             {
-                for (int z = 0; z < generator.mapChunkSize; z++)
+                for (int z = 0; z < mapChunkSize; z++)
                 {
                     float worldX = bounds.center.x - (bounds.size.x / 2) + x;
 

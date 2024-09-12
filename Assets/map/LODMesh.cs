@@ -11,9 +11,9 @@ class LODMesh
         int lod;
         System.Action updateCallBack;
 
-        generator _generator;
+        Generator _generator;
 
-        public LODMesh(int lod, System.Action updateCallback, generator generatorInstance)
+        public LODMesh(int lod, System.Action updateCallback, Generator generatorInstance)
         {
             this._generator = generatorInstance;
             this.lod = lod;

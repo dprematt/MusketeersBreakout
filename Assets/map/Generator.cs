@@ -11,7 +11,7 @@ using static System.Random;
 using System.Linq;
 
 
-public class generator : MonoBehaviourPun
+public class Generator : MonoBehaviourPun
 {
     public GameObject PlayerPrefab_;
     public GameObject LoadScreen_;
@@ -82,12 +82,10 @@ public class generator : MonoBehaviourPun
         biomeManager = new BiomeManager(Biomes, this); 
         prefabsManager = new PrefabsManager(this, beachPrefabs, prefabNature, worldObjectsParent, prng);
 
-
         Invoke("DrawMap", randomDelay);
 
         prefabsManager.PlacePrefabsInBeach();
         prefabsManager.PlaceExtractionZones();
-        // PlacePrefabsInBeach();
     }
 
     public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize, System.Random prng)
@@ -178,7 +176,7 @@ public class generator : MonoBehaviourPun
         return prng;
     }
 
-    public static void SetSeedFromRoomProperties(generator instance)
+    public static void SetSeedFromRoomProperties(Generator instance)
     {
         if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("mapSeed", out object seedValue))
         {
