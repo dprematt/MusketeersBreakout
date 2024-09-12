@@ -1459,7 +1459,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4575de162228a7cff8aa55047698f428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  extractionZonePrefab: {fileID: 8195994125897338424, guid: c43593d2b8ded3a9cbd3db1aac4ac683, type: 3}
   PlayerPrefab_: {fileID: 4756814486136092166, guid: b1d4021c9e3797d48a2d443ad5e7797d, type: 3}
   LoadScreen_: {fileID: 1676060074}
   Hud_: {fileID: 0}
@@ -1494,7 +1493,6 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  useFallOf: 1
   meshHeightMult: 8
   meshHeightCurve:
     serializedVersion: 2
@@ -1566,7 +1564,7 @@ MonoBehaviour:
     height: 1
   prefabNature:
   - type: maison
-    prefab: {fileID: 7109192342924118199, guid: 0e508bb2430beb248bec6d2ae9aa7d92, type: 3}
+    prefab: {fileID: 7109192342924118199, guid: a322e1c337255b5f9acd023439347a94, type: 3}
   - type: buisson
     prefab: {fileID: 5108440020204989015, guid: c7b729b604cac2c85a10f6c9a3e7bd7d, type: 3}
   - type: arbre
@@ -1606,6 +1604,8 @@ MonoBehaviour:
   - {fileID: 8540650813480648908, guid: eca504712f949af48b741e7c32e3baeb, type: 3}
   - {fileID: 7166749310632018577, guid: 2617be884a80d7c4a8e2936ae28777b3, type: 3}
   - {fileID: 9146539251753645375, guid: 7142ad6867b31704a884930fbe5d459f, type: 3}
+  - {fileID: 1298070150463187318, guid: f3d8f61997d4e4c4686bdc61bbb54eb0, type: 3}
+  - {fileID: 3211017350469061882, guid: 4851245de9e7d8e4fbd75a86b99e45a1, type: 3}
 --- !u!114 &850191868
 MonoBehaviour:
   m_ObjectHideFlags: 0

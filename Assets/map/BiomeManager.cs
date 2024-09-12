@@ -161,7 +161,7 @@ public class BiomeManager : MonoBehaviourPun {
             case "désert": return 0.7f;
             case "neige": return 0.7f;
             case "médieval": return 0.8f;
-            case "jungle": return -0.9f;
+            case "jungle": return -0.5f;
             case "village": return 0.2f;
             case "loot": return 0.8f;
             default: return 0f;
@@ -199,16 +199,16 @@ public class BiomeManager : MonoBehaviourPun {
                 break;
             case("JungleBiome(Clone)"):
                 positions = new Vector3[] {
-                    new Vector3(10, 0, -5),
-                    new Vector3(27, 0, -16),
-                    new Vector3(25, 0, 3),
-                    new Vector3(13, 0, 13),
-                    new Vector3(4, 0, 3),
-                    new Vector3(-13, 0,-13),
-                    new Vector3(5, 0, -20),
-                    new Vector3(-13, 0, -27),
-                    new Vector3(31, 0, -23),
-                    new Vector3(-3, 0, -6)
+                    new Vector3(10, 1, -5),
+                    new Vector3(27, 1, -16),
+                    new Vector3(25, 1, 3),
+                    new Vector3(13, 1, 13),
+                    new Vector3(4, 1, 3),
+                    new Vector3(-13, 1,-13),
+                    new Vector3(5, 1, -20),
+                    new Vector3(-13, 1, -27),
+                    new Vector3(31, 1, -23),
+                    new Vector3(-3, 1, -6)
                 };
                 break;
             case("MedievalBiome(Clone)"):

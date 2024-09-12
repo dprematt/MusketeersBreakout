@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Endless : MonoBehaviour
+public class ChunkGenerator : MonoBehaviour
 {
     const float scale = 1;
     public static float maxViewDist;
