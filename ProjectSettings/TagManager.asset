@@ -36,6 +36,8 @@ TagManager:
   - ExtractionZone
   - InventoryHUDFixe
   - TempObjTag
+  - LootZoneTag
+  - TOTO
   layers:
   - Default
   - TransparentFX
@@ -49,8 +51,8 @@ TagManager:
   - Enemy
   - Player
   - Shield
-  - 
-  - 
+  - InvisibleToMiniMap
+  - InvisibleToCamera
   - 
   - 
   - 

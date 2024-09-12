@@ -114,15 +114,11 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             }
         }*/
 
-      if (/*anim.GetInteger("intAttackPhase") > 0 && */other.gameObject != holder && IsAttacking)
+        if (/*anim.GetInteger("intAttackPhase") > 0 && */other.gameObject != holder && IsAttacking)
         {
-            Debug.Log("IN ATTACK FIRST IF");
-            
             if (IsPlayer && other.CompareTag("Player"))
             {
-                Debug.Log("IN ATTACK SECOND IF in pvp");
                 other.gameObject.GetComponentInParent<Player>().TakeDamage(damages);
-                Debug.Log("Hit !!!");
                 Player player = gameObject.GetComponentInParent<Player>();
                 if (player != null)
                 {
@@ -140,10 +136,8 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
                 {
                     player.dmgDone += player.EquippedWeapon.damages;
                 }
-                Debug.Log("IN ATTACK SECOND IF");
                 player.EquippedWeapon.damages += 200;
                 other.gameObject.GetComponentInParent<Enemy>().TakeDamage(damages);
-                Debug.Log("Hit !!!");
             }
             IsAttacking = false;
         }
@@ -181,6 +175,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             audioSource.PlayOneShot(attackSound);
             if (isPlayer) {
                 playerComp.stamina -= 30;
+                playerComp.StartAttackSlowdown(1f, 0.5f);
             }
         }
     }
@@ -196,6 +191,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
                 if (isPlayer)
                 {
                     playerComp.stamina -= 30;
+                    playerComp.StartAttackSlowdown(1f, 0.5f);
                 }
                 IsAttacking = false;
             }
@@ -213,6 +209,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
                 if (isPlayer)
                 {
                     playerComp.stamina -= 30;
+                    playerComp.StartAttackSlowdown(1f, 0.5f);
                 }
                 IsAttacking = false;
             }
@@ -306,7 +303,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
     private void SetTag(string newTag)
     {
         this.gameObject.tag = newTag;
-        Debug.Log("Tag set to: " + newTag);
     }
 
     // Public method to request tag change, called by any client

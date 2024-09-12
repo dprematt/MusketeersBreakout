@@ -10,6 +10,8 @@ public class ChunkGenerator : MonoBehaviour
     public LODInfo[] detailsLevel;
     public Material mapMaterial;
     public Material grassMaterial;
+    public Mesh[] instanceMeshes;
+    public Material[] instanceMaterials;
     static Generator _generator;
     int chunkSize;
     int chunkVisibleViewDist;
@@ -17,8 +19,8 @@ public class ChunkGenerator : MonoBehaviour
 
     public const int mapChunkSize = 241;
 
-
     Vector2 placementAreaSize = new Vector2(1500, 1500);
+
     private void Start() {
         _generator = FindObjectOfType<Generator>();
         StartCoroutine(SetupPrefabsAndTerrain());
@@ -48,12 +50,11 @@ public class ChunkGenerator : MonoBehaviour
                 Vector2 viewedChunkCoord = new Vector2(xOffset, yOffset);
                 if (!chunkDict.ContainsKey(viewedChunkCoord))
                 {
-                    chunkDict[viewedChunkCoord] = new Chunk(viewedChunkCoord, chunkSize, detailsLevel, transform, mapMaterial, grassMaterial, _generator);
+                    chunkDict[viewedChunkCoord] = new Chunk(viewedChunkCoord, chunkSize, detailsLevel, transform, mapMaterial, grassMaterial, _generator, instanceMeshes, instanceMaterials);
                 }
             }
         }
     }
-
 
     private void Update()
     {
