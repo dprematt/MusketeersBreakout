@@ -13,13 +13,12 @@ using System.Linq;
 
 public class generator : MonoBehaviourPun
 {
-    public GameObject extractionZonePrefab;
     public GameObject PlayerPrefab_;
     public GameObject LoadScreen_;
 
     public GameObject Hud_, LootHud_;
-
-    public enum DrawMode { map, colorMap, mesh, fallOfMap }
+    // public enum DrawMode { map, colorMap, mesh, fallOfMap }
+    public enum DrawMode { map}
 
     public bool autoUpdate;
     public DrawMode drawMode;
@@ -38,8 +37,6 @@ public class generator : MonoBehaviourPun
     float[,] colorMap = new float[mapChunkSize, mapChunkSize];
     public Vector3[] _spawnCoords = new Vector3[20];
 
-    public bool useFallOf;
-
     public float meshHeightMult;
     public AnimationCurve meshHeightCurve;
     float[,] fallOfMap;
@@ -55,12 +52,8 @@ public class generator : MonoBehaviourPun
     private Dictionary<Vector2, MapData> chunkDataMap = new Dictionary<Vector2, MapData>();
     public MapData CurrentMapData { get; private set; }
     private GameObject worldObjectsParent;
-    private object _heightMapLock = new object();
     private GameObject BiomesParent;
     public Biome[] Biomes;
-    private int[] quantitiesToPlace = new int[] { 2, 3, 3 };
-    float mapSize = 1500f;
-    float safeZone = 100f;
     public static List<Vector3> biomesPositions = new List<Vector3>();
     public List<Vector3> guardiansSpawn = new List<Vector3>();
     public GameObject ennemyType1;
@@ -72,40 +65,31 @@ public class generator : MonoBehaviourPun
     public GameObject[] beachPrefabs;
 
     private BiomeManager biomeManager;
+    private PrefabsManager prefabsManager;
+
 
     private bool hasSpawn = false;
 
     void Start()
     {
+        SetSeedFromRoomProperties(this);
+        InitializeRandom();
         BiomesParent = new GameObject("Biomes");
         BiomesParent.transform.parent = transform; 
         float randomDelay = UnityEngine.Random.Range(3f, 4f);
         worldObjectsParent = new GameObject("WorldObjectsParent");
 
         biomeManager = new BiomeManager(Biomes, this); 
+        prefabsManager = new PrefabsManager(this, beachPrefabs, prefabNature, worldObjectsParent, prng);
 
-        SetSeedFromRoomProperties(this);
-        InitializeRandom();
-        PlaceExtractionZones();
+
         Invoke("DrawMap", randomDelay);
 
-        PlacePrefabsInBeach();
+        prefabsManager.PlacePrefabsInBeach();
+        prefabsManager.PlaceExtractionZones();
+        // PlacePrefabsInBeach();
     }
 
-    public void PlacePrefabsInBeach() {
-        Vector2[,] intervals = new Vector2[,] {
-            { new Vector2(-565, 555), new Vector2(555, 565) },
-            { new Vector2(-565, 555), new Vector2(-555, -565) },
-            { new Vector2(-555, -565), new Vector2(565, -555) },
-            { new Vector2(555, -565), new Vector2(565, 555) }
-        };
-
-        for (int i = 0; i < intervals.GetLength(0); i++) {
-            for (int j = 0; j < beachPrefabs.GetLength(0); j++) {
-                PlaceGameObjectsWithMinDistance(intervals[i, 0],intervals[i, 1], 50, 5f, prng, beachPrefabs[j]);
-            }
-        }
-    }
     public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize, System.Random prng)
     {
         InitializeRandom();
@@ -208,29 +192,6 @@ public class generator : MonoBehaviourPun
         prng = new System.Random(seed);
     }
 
-    public void PlaceExtractionZones()
-    {
-        int i = 1;
-        Vector3[] cornerPositions = {
-            new Vector3(-536, 4.5f, -556),
-            new Vector3(-410, 4.5f, 556),
-            new Vector3(424, 4.5f, -557),
-            new Vector3(536, 4.5f, 557)
-        };
-
-        foreach (Vector3 position in cornerPositions)
-        {
-            GameObject zoneInstance = Instantiate(extractionZonePrefab, position, Quaternion.identity);
-            if (i % 2 != 0)
-            {
-                zoneInstance.transform.Rotate(0.0f, 180.0f, 0.0f);
-            }
-            i += 1;
-            Vector3 newPosition = zoneInstance.transform.position;
-            zoneInstance.transform.position = newPosition;
-        }
-    }
-
     public void DrawMap()
     {
       Vector2 topLeft = new Vector2(-2.5f * mapChunkSize, 2.5f * mapChunkSize);
@@ -266,57 +227,21 @@ public class generator : MonoBehaviourPun
         {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(currentMapData.Item1));
         }
-        else if (drawMode == DrawMode.colorMap)
-        {
-            // Ne rien faire pour colorMap, car la couleur a été supprimée.
-        }
-        else if (drawMode == DrawMode.mesh)
-        {
-            meshData meshdata = MeshGenerator.generateTerrainMesh(currentMapData.Item1, meshHeightMult, meshHeightCurve, levelOfDetail);
-        }
-        else if (drawMode == DrawMode.fallOfMap)
-        {
-            display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunkSize)));
-        }
+        // else if (drawMode == DrawMode.colorMap)
+        // {
+        //     // Ne rien faire pour colorMap, car la couleur a été supprimée.
+        // }
+        // else if (drawMode == DrawMode.mesh)
+        // {
+        //     meshData meshdata = MeshGenerator.generateTerrainMesh(currentMapData.Item1, meshHeightMult, meshHeightCurve, levelOfDetail);
+        // }
+        // else if (drawMode == DrawMode.fallOfMap)
+        // {
+        //     display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunkSize)));
+        // }
         PlaceBiomesGuardians();
         CurrentMapData = new MapData(currentMapData.Item1, null);
     }
-
-    public void PlaceGameObjectsWithMinDistance(Vector2 startCoord, Vector2 endCoord, int objectCount, float minDistance, System.Random prng, GameObject prefab)
-    {
-
-        GameObject beachParent = GameObject.Find("BeachObjet") ?? new GameObject("BeachObjet");
-        List<Vector3> placedObjects = new List<Vector3>();
-
-        while (placedObjects.Count < objectCount)
-        {
-            
-            float x = (float)prng.NextDouble() * (endCoord.x - startCoord.x) + startCoord.x;
-            float y = 0f;
-            float z = (float)prng.NextDouble() * (endCoord.y - startCoord.y) + startCoord.y;
-        
-            Vector3 newPosition = new Vector3(x, 0.22f, z);
-            bool isFarEnough = true;
-            foreach (var placedObject in placedObjects)
-            {
-                if (Vector3.Distance(newPosition, placedObject) < minDistance)
-                {
-                    isFarEnough = false;
-                    break;
-                }
-            }
-
-            if (isFarEnough)
-            {
-                GameObject instance = Instantiate(prefab, newPosition, Quaternion.identity);
-                instance.transform.SetParent(beachParent.transform);
-                placedObjects.Add(newPosition);
-            }
-        }
-
-        Debug.Log($"Placés {placedObjects.Count} objets avec une distance minimale de {minDistance} unités.");
-    }
-
 
     public void selectPos(float[,] colorMap)
     {
@@ -451,107 +376,6 @@ public class generator : MonoBehaviourPun
         return CurrentMapData;
     }
 
-    public void DropWeaponsInChest(GameObject prefab)
-    {
-        string[] allWeapons = { "Sword", "Gun", "Dagger" };
-        string lootPrefabName = "Prefabs/Loot";
-        Vector3[] positions = new Vector3[0];
-
-        switch(prefab.name) {
-            case("LootZone(Clone)"):
-                positions = new Vector3[] {
-                    new Vector3(11, 0, 7),
-                    new Vector3(-12, 0, 7),
-                    new Vector3(-10, 0, -1),
-                    new Vector3(7, 0, 4),
-                    new Vector3(6, 0, -14)
-                };
-                break;
-            case("DesertBiome(Clone)"):
-                positions = new Vector3[] {
-                    new Vector3(-5, 0, -17),
-                    new Vector3(-30, 0, -17),
-                    new Vector3(-12, 0, 7),
-                    new Vector3(8, 0, -6),
-                    new Vector3(9, 0, -28),
-                    new Vector3(-13, 0,-29),
-                    new Vector3(-26, 0, -26),
-                    new Vector3(26, 0, -26),
-                    new Vector3(-43, 0, 19)
-                };
-                break;
-            case("JungleBiome(Clone)"):
-                positions = new Vector3[] {
-                    new Vector3(10, 0, -5),
-                    new Vector3(27, 0, -16),
-                    new Vector3(25, 0, 3),
-                    new Vector3(13, 0, 13),
-                    new Vector3(4, 0, 3),
-                    new Vector3(-13, 0,-13),
-                    new Vector3(5, 0, -20),
-                    new Vector3(-13, 0, -27),
-                    new Vector3(31, 0, -23),
-                    new Vector3(-3, 0, -6)
-                };
-                break;
-            case("MedievalBiome(Clone)"):
-                positions = new Vector3[] {
-                    new Vector3(-117, 0, -118),
-                    new Vector3(-113, 0, -147),
-                    new Vector3(-63, 0, -140),
-                    new Vector3(-22, 0,  -152),
-                    new Vector3(-45, 0, -114),
-                    new Vector3(-5, 0, -110),
-                    new Vector3(5, 0, -20),
-                    new Vector3(-21,0 ,-52),
-                    new Vector3(-113, 0, -61),
-                    new Vector3(-138, 0, -165),
-                    new Vector3(-9, 0, -164)
-                };
-                break;
-            case("SnowBiome(Clone)"):
-                positions = new Vector3[] {
-                    new Vector3(0, 0, 3),
-                    new Vector3(10, 0, -10),
-                    new Vector3(-8,0,-6),
-                    new Vector3(14,0,4),
-                    new Vector3(15,0,-10),
-                    new Vector3(-4,0,-12),
-                    new Vector3(-9,0,2),
-                    new Vector3(1,0,10),
-                    new Vector3(15,0,4),
-                    new Vector3(21,0,-4)
-                };
-                break;
-            case("Village(Clone)"):
-                positions = new Vector3[] {
-                    new Vector3(-53,0,111),
-                    new Vector3(-72,0,124),
-                    new Vector3(-79,0,137),
-                    new Vector3(-51,0,143),
-                    new Vector3(-77,0,145)
-                };
-                break;
-            default:
-                break;
-        }
-        foreach (Vector3 pos in positions) {
-            System.Random random = new System.Random();
-            int randomWeaponIndex = random.Next(allWeapons.Length);
-            string chosenWeapon = allWeapons[randomWeaponIndex];
-
-            GameObject lootInstance = PhotonNetwork.Instantiate(lootPrefabName, prefab.transform.position, Quaternion.identity);
-
-            Inventory lootInventory = lootInstance.transform.GetChild(0).GetComponentInChildren<Inventory>();
-            lootInventory.loot = true;
-            lootInventory.DropWeapons(chosenWeapon);
-
-            lootInstance.transform.SetParent(prefab.transform, true);
-
-            lootInstance.transform.localPosition = pos;
-        }
-    }
-
     public void RequestMapData(Vector2 center, Action<MapData> callback)
     {
         ThreadStart threadStart = delegate
@@ -627,18 +451,6 @@ public class generator : MonoBehaviourPun
         if (octaves < 0)
         {
             octaves = 0;
-        }
-    }
-
-    struct MapThreadInfo<T>
-    {
-        public readonly Action<T> callback;
-        public readonly T parameter;
-
-        public MapThreadInfo(Action<T> callback, T parameter)
-        {
-            this.callback = callback;
-            this.parameter = parameter;
         }
     }
 }
