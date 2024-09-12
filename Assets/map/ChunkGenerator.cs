@@ -10,18 +10,20 @@ public class ChunkGenerator : MonoBehaviour
     public LODInfo[] detailsLevel;
     public Material mapMaterial;
     public Material grassMaterial;
-    static generator _generator;
+    static Generator _generator;
     int chunkSize;
     int chunkVisibleViewDist;
     Dictionary<Vector2, Chunk> chunkDict = new Dictionary<Vector2, Chunk>();
 
+    public const int mapChunkSize = 241;
+
 
     Vector2 placementAreaSize = new Vector2(1500, 1500);
     private void Start() {
-        _generator = FindObjectOfType<generator>();
+        _generator = FindObjectOfType<Generator>();
         StartCoroutine(SetupPrefabsAndTerrain());
         maxViewDist = detailsLevel[detailsLevel.Length - 1].visibleDstThreshold;
-        chunkSize = generator.mapChunkSize - 1;
+        chunkSize = mapChunkSize - 1;
         chunkVisibleViewDist = Mathf.RoundToInt(maxViewDist / chunkSize);
         placementAreaSize = new Vector2(chunkSize * 5, chunkSize * 5);
         GenerateAllChunks();

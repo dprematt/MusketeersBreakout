@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 using System.Collections;
 using Photon.Pun;
 
@@ -41,6 +42,9 @@ public class IsometricAiming : MonoBehaviourPun
 
     [SerializeField] public Animator anim;
 
+    [Header("UI")]
+    [SerializeField] private TMP_Text ammoCounter;
+
     #endregion
     #region Private Fields
 
@@ -70,10 +74,20 @@ public class IsometricAiming : MonoBehaviourPun
         }
 
         laserRenderer.enabled = false;
+
+        UpdateAmmoUI();
     }
 
     private void Update()
     {
+    }
+
+    public void UpdateAmmoUI()
+    {
+        if (ammoCounter != null)
+        {
+            ammoCounter.text = maxAmmo.ToString();
+        }
     }
 
     private void OnEnable()
@@ -239,6 +253,8 @@ public class IsometricAiming : MonoBehaviourPun
 
         currentAmmo = 1;
         isReloading = false;
+
+        UpdateAmmoUI();
     }
 
     private void RefreshLaser()

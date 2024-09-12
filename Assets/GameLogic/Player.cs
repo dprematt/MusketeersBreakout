@@ -478,8 +478,11 @@ public class Player : MonoBehaviourPunCallbacks
         if (col.gameObject.name == "AmmoBox")
         {
             IsometricAiming aim = gameObject.GetComponent<IsometricAiming>();
-            if (aim.maxAmmo < 1)
+            if (aim.maxAmmo < 5)
+            {
                 aim.maxAmmo++;
+                aim.UpdateAmmoUI();
+            }
         }
     }
 

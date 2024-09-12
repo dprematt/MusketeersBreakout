@@ -1465,7 +1465,6 @@ MonoBehaviour:
   LootHud_: {fileID: 0}
   autoUpdate: 0
   drawMode: 0
-  levelOfDetail: 1
   normalizeMode: 0
   scale: 25
   octaves: 5
@@ -1545,23 +1544,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  regions:
-  - name: deepwater
-    height: 0.2
-  - name: water
-    height: 0.3
-  - name: sand
-    height: 0.35
-  - name: grass
-    height: 0.4
-  - name: grass2
-    height: 0.5
-  - name: rock
-    height: 0.7
-  - name: rock2
-    height: 0.8
-  - name: snwp
-    height: 1
   prefabNature:
   - type: maison
     prefab: {fileID: 7109192342924118199, guid: a322e1c337255b5f9acd023439347a94, type: 3}

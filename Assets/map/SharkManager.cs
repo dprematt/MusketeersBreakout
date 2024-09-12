@@ -24,7 +24,7 @@ public class SharkManager : MonoBehaviour
         leftShark = Instantiate(shark, new Vector3(-580, 0.1f, 1), Quaternion.identity);
         leftShark.transform.Rotate(0.0f, -90.0f, 0.0f);
         rightShark.transform.Rotate(0.0f, -90.0f, 0.0f);
-       }
+    }
 
     void Update()
     {
