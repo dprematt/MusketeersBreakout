@@ -383,11 +383,13 @@ public class Player : MonoBehaviourPunCallbacks
         }
         else
         {
+            Debug.Log("equipWeapon in player call to set anim");
             weaponComp.setAnim();
             currentWeapon = 0;
             eventListener.weaponComp = weaponComp;
         }
         EquippedWeapon = weaponComp;
+        Debug.Log("call to equipMainWeapon end");
     }
     void OnTriggerEnter(Collider col)
     {
