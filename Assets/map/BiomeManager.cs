@@ -260,8 +260,8 @@ public class BiomeManager : MonoBehaviourPun {
             GameObject lootInstance = PhotonNetwork.Instantiate(lootPrefabName, prefab.transform.position, Quaternion.identity);
 
             Inventory lootInventory = lootInstance.transform.GetChild(0).GetComponentInChildren<Inventory>();
-            lootInventory.loot = true;
             lootInventory.DropWeapons(chosenWeapon);
+            lootInventory.loot = true;
 
             lootInstance.transform.SetParent(prefab.transform, true);
 
