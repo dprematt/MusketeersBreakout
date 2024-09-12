@@ -76,6 +76,8 @@ public class Generator : MonoBehaviourPun
         biomeManager = new BiomeManager(Biomes, this); 
         prefabsManager = new PrefabsManager(this, beachPrefabs, prefabNature, worldObjectsParent, prng);
 
+        biomesPositions = biomeManager.getBiomesPosition();
+
         Invoke("DrawMap", randomDelay);
 
         prefabsManager.PlacePrefabsInBeach();
@@ -160,6 +162,8 @@ public class Generator : MonoBehaviourPun
 
             foreach (Vector3 guardiansCoord in guardiansSpawn)
             {
+                GameObject guardians = PhotonNetwork.Instantiate(ennemyType1.name, guardiansCoord, Quaternion.identity);
+                guardians.transform.SetParent(guardians.transform);
             }
         }
     }
