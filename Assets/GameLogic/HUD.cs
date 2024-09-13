@@ -9,6 +9,7 @@ using TMPro;
 public class HUD : MonoBehaviourPunCallbacks
 {
     [Header("UI")]
+    RoomData roomData;
     private Transform selectedSlot;
     private Vector3 startPos;
     private Vector3 endPos;
@@ -168,6 +169,59 @@ public class HUD : MonoBehaviourPunCallbacks
         else
         {
             Debug.Log("HUD: stats == null");
+        }
+
+        Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
+        DisplayPlayers(players);
+
+    }
+
+    public void DisplayPlayers(Photon.Realtime.Player[] players)
+    {
+        Debug.Log("Display Players");
+        Transform Players = transform.Find("Players");
+
+        if (Players != null)
+        {
+            Debug.Log("Display Players Players found");
+            Transform RoomName = Players.Find("RoomName");
+            if (RoomName != null)
+            {
+                Debug.Log("Display Players Room name != null");
+                TextMeshProUGUI textComp = RoomName.GetComponent<TextMeshProUGUI>();
+                if (textComp != null)
+                {
+                    if (PhotonNetwork.InRoom)
+                    {
+                        Debug.Log("room name set");
+                        textComp.text = "Session de: " + PhotonNetwork.CurrentRoom.Name + "\n\n";                    }
+                }
+                else
+                {
+                    Debug.Log("HUD: textComp == null");
+                }
+            }
+
+            Transform playersUi = Players.Find("Players");
+            if (playersUi != null)
+            {
+                Debug.Log("Display Players playersui != null");
+                TextMeshProUGUI textComp = playersUi.GetComponent<TextMeshProUGUI>();
+                if (textComp != null)
+                {
+                    Debug.Log("Display Players playersui textcomp != null");
+                    textComp.text = "";
+                    foreach (Photon.Realtime.Player player in players)
+                    {
+                        Debug.Log("Display Players nickname = " + player.NickName);
+                        textComp.text += player.NickName + ",\n\n" ;
+                    }
+                }
+                else
+                {
+                    Debug.Log("HUD: textComp == null");
+                }
+            }
         }
     }
 

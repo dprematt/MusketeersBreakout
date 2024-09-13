@@ -128,8 +128,8 @@ public class BiomeManager : MonoBehaviourPun {
                     float z = center.y;
                     Vector3 position = new Vector3(x, y, z);
 
-                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 200 * 200);
-                    bool isTooCloseToSameBiomes = biomeSpecificPositions[biome.type].Any(biomePos => (position - biomePos).sqrMagnitude < 500 * 500);
+                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 100 * 100);
+                    bool isTooCloseToSameBiomes = biomeSpecificPositions[biome.type].Any(biomePos => (position - biomePos).sqrMagnitude < 400 * 400);
 
                     if (!isTooCloseToOtherBiomes && !isTooCloseToSameBiomes)
                     {
