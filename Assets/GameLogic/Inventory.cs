@@ -72,6 +72,7 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void EquipMainWeapon(string weaponName)
     {
+        Debug.Log("EquipMainWeapon func");
         GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
         if (weaponPrefab == null)
         {
@@ -181,6 +182,7 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void SwapItems(int index1, int index2)
     {
+        Debug.Log("SwapItems");
         if (index1 >= 0 && index1 < mItems.Length)
         {
             IInventoryItem item1 = mItems[index1];
@@ -205,6 +207,7 @@ public class Inventory : MonoBehaviourPunCallbacks
     }
     public void SwapItemsLoot(int index1, int index2, Inventory lootInventory)
     {
+        Debug.Log("SwapItemsLoot");
         IInventoryItem temp = mItems[index1];
         InsertAt(lootInventory.mItems[index2], index1);
         lootInventory.InsertAt(temp, index2);
@@ -228,6 +231,7 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void InsertItem(IInventoryItem item, int index)
     {
+        Debug.Log("InsertItem");
         if (Count() == 0)
             mItems = new IInventoryItem[9];
         InsertAt(item, index);
@@ -292,7 +296,7 @@ public class Inventory : MonoBehaviourPunCallbacks
         {
             Debug.Log("INVENTORY/ IN DESTROY LOOT");
             GameObject playerGo = GameObject.FindGameObjectWithTag("Player");
-            if ((playerGo != null) && (gameObject.GetComponent<PhotonView>().ViewID !=
+            /*if ((playerGo != null) && (gameObject.GetComponent<PhotonView>().ViewID !=
                 0))
             {
                 Player player = playerGo.GetComponent<Player>();
@@ -302,7 +306,7 @@ public class Inventory : MonoBehaviourPunCallbacks
             else
             {
                 Debug.Log("player == null");
-            }
+            }*/
             //mItems.Clear();
             //GameObject player = GameObject.FindGameObjectWithTag("Player");
             //player.GetComponent<Player>().DeactivateLoot();
