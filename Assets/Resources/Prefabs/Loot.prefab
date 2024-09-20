@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 8794f5fa82b3ecd4ab5aa4dc8ef508ef, type: 3}
@@ -56,6 +57,15 @@ PrefabInstance:
       value: Loot
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8164078558771037576, guid: 8794f5fa82b3ecd4ab5aa4dc8ef508ef, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2863043683092862289}
+    - targetCorrespondingSourceObject: {fileID: 8164078558771037576, guid: 8794f5fa82b3ecd4ab5aa4dc8ef508ef, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5801183605567368107}
   m_SourcePrefab: {fileID: 100100000, guid: 8794f5fa82b3ecd4ab5aa4dc8ef508ef, type: 3}
 --- !u!1 &2005009085133099833 stripped
 GameObject:
