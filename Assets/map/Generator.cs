@@ -163,7 +163,7 @@ public class Generator : MonoBehaviourPun
             foreach (Vector3 guardiansCoord in guardiansSpawn)
             {
                 GameObject guardians = PhotonNetwork.Instantiate(ennemyType1.name, guardiansCoord, Quaternion.identity);
-                guardians.transform.SetParent(guardians.transform);
+                guardians.transform.SetParent(guardiansParent.transform);
             }
         }
     }
