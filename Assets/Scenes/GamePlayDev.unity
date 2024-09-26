@@ -1468,7 +1468,7 @@ MonoBehaviour:
   normalizeMode: 0
   scale: 25
   octaves: 5
-  persistance: 0.367
+  persistance: 0.306
   lacunarity: 2
   offSet: {x: 0, y: 0}
   _spawnCoords:
@@ -1492,7 +1492,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  meshHeightMult: 8
+  meshHeightMult: 5
   meshHeightCurve:
     serializedVersion: 2
     m_Curve:
