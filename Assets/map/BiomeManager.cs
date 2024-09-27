@@ -192,7 +192,7 @@ public class BiomeManager : MonoBehaviourPun {
                     new Vector3(8, 0, -6),
                     new Vector3(9, 0, -28),
                     new Vector3(-13, 0,-29),
-                    new Vector3(-26, 0, -26),
+                    new Vector3(-27, 0, -26),
                     new Vector3(26, 0, -26),
                     new Vector3(-31, 0, 4)
                 };
