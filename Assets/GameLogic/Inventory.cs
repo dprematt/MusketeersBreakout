@@ -34,6 +34,9 @@ public class Inventory : MonoBehaviourPunCallbacks
         //GameObject weaponObject = PhotonNetwork.Instantiate(weaponPrefab.name, pos, Quaternion.identity);
         //Weapon weaponItem = weaponObject.GetComponent<Weapon>();
         //Destroy(weaponPrefab);
+        Player player = gameObject.GetComponent<Player>();
+        if (player == null)
+            return;
         if (weapon == null)
         {
             //Debug.LogError("ENEMY Weapon doesn't implement IInventoryItem interface: " + weapon);
@@ -94,9 +97,9 @@ public class Inventory : MonoBehaviourPunCallbacks
             return;
         }
 
-        //AddItem(weaponItem);
         Debug.Log("call to equipMainWeapon end and call to equipWeapon in player");
-        playerScript.EquipWeapon(weaponItem, weaponObject, false);
+        playerScript.SetWeaponEvents(weaponItem);
+        weaponItem.whenPickUp(playerScript.gameObject);
     }
 
     public int Count()
@@ -113,14 +116,102 @@ public class Inventory : MonoBehaviourPunCallbacks
         return res;
     }
 
+    public bool CheckOldWeapon(string name)
+    {
+        Debug.Log("CheckOldWeapon");
+        Player player = gameObject.GetComponent<Player>();
+
+        Transform weapon = player.FindDeepChild(gameObject.transform, name);
+        if (weapon == null)
+        {
+            Debug.Log("CheckOldWeapon: weapon == null");
+            return false;
+        }
+        Debug.Log("CheckOldWeapon: transform = " + weapon);
+        Debug.Log("CheckOldWeapon: obj name = " + weapon.name);
+        weapon.gameObject.SetActive(true);
+        return true;
+    }
+
+    public void RemoveAnimR()
+    {
+        Debug.Log("RemoveAnimR");
+        Player player = gameObject.GetComponent<Player>();
+
+        Transform weapons = player.FindDeepChild(gameObject.transform, "jointItemR");
+        if (weapons == null)
+        {
+            Debug.Log("RemoveAnim: weapons == null");
+            return;
+        }
+        foreach (Transform child in weapons.transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+    }
+
+    public void RemoveAnimL()
+    {
+        Debug.Log("RemoveAnimL");
+        Player player = gameObject.GetComponent<Player>();
+
+        Transform weapons = player.FindDeepChild(gameObject.transform, "jointItemL");
+        if (weapons == null)
+        {
+            Debug.Log("RemoveAnim: weapons == null");
+            return;
+        }
+        foreach (Transform child in weapons.transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+    }
+
+    public void ReleaseLeftArm()
+    {
+        Player player = gameObject.GetComponent<Player>();
+
+        if (player != null)
+        {
+            Weapon mainWeapon = player.RetrieveEquippedWeapon("jointItemL");
+            if (mainWeapon != null)
+            {
+                mainWeapon.resetAnim(player.gameObject);
+            }
+        }
+    }
 
     public void InsertAt(IInventoryItem item, int id)
     {
         mItems[id] = item;
-        if (!loot && id == 0 && item != null)
+        if (!loot)
         {
-            Debug.Log("call to equipMainWeapon");
-            EquipMainWeapon(item.Name);
+            if (gameObject.GetComponent<Player>() != null)
+            {
+                if (id == 0 && item != null)
+                {
+                    if (CheckOldWeapon(item.Name) == false)
+                    {
+                        ReleaseLeftArm();
+                        RemoveAnimR();
+                        RemoveAnimL();
+                        Debug.Log("INSERT AT: " + item.GameObject);
+                        EquipMainWeapon(item.Name);
+                    }
+                }
+                else if (id == 0 && item == null)
+                {
+                    Debug.Log("INSERT AT: DESEQUIP WEAPON");
+                    ReleaseLeftArm();
+                    EquipMainWeapon(null);
+                    RemoveAnimR();
+                    RemoveAnimL();
+                }
+                else if (id != 0 && item == null)
+                {
+                    return;
+                }
+            }
         }
     }
     public int Add(IInventoryItem item)

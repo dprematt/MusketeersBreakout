@@ -75,7 +75,7 @@ public class Enemy : MonoBehaviourPun
         {
             weaponList[1].gameObject.SetActive(false);
         }
-        weaponList[0].setAnim();
+        weaponList[0].setAnim(gameObject);
         eventListener.weaponComp = weaponList[0];
         Health_.text = health.ToString() + "HP";
     }
@@ -148,7 +148,7 @@ public class Enemy : MonoBehaviourPun
                     currentWeapon = currentWeapon == 0 ? 1 : 0;
 
                     weaponList[currentWeapon].gameObject.SetActive(true);
-                    weaponList[currentWeapon].setAnim();
+                    weaponList[currentWeapon].setAnim(gameObject);
                     eventListener.weaponComp = weaponList[currentWeapon];
 
                     nextAttack = Time.time + delay;

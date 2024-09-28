@@ -178,22 +178,22 @@ public class HUD : MonoBehaviourPunCallbacks
 
     public void DisplayPlayers(Photon.Realtime.Player[] players)
     {
-        Debug.Log("Display Players");
+        //Debug.Log("Display Players");
         Transform Players = transform.Find("Players");
 
         if (Players != null)
         {
-            Debug.Log("Display Players Players found");
+            //Debug.Log("Display Players Players found");
             Transform RoomName = Players.Find("RoomName");
             if (RoomName != null)
             {
-                Debug.Log("Display Players Room name != null");
+                //Debug.Log("Display Players Room name != null");
                 TextMeshProUGUI textComp = RoomName.GetComponent<TextMeshProUGUI>();
                 if (textComp != null)
                 {
                     if (PhotonNetwork.InRoom)
                     {
-                        Debug.Log("room name set");
+                        //Debug.Log("room name set");
                         textComp.text = "Session de: " + PhotonNetwork.CurrentRoom.Name + "\n\n";                    }
                 }
                 else
@@ -205,11 +205,11 @@ public class HUD : MonoBehaviourPunCallbacks
             Transform playersUi = Players.Find("Players");
             if (playersUi != null)
             {
-                Debug.Log("Display Players playersui != null");
+                //Debug.Log("Display Players playersui != null");
                 TextMeshProUGUI textComp = playersUi.GetComponent<TextMeshProUGUI>();
                 if (textComp != null)
                 {
-                    Debug.Log("Display Players playersui textcomp != null");
+                    //Debug.Log("Display Players playersui textcomp != null");
                     textComp.text = "";
                     foreach (Photon.Realtime.Player player in players)
                     {

@@ -136,7 +136,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
                 {
                     player.dmgDone += player.EquippedWeapon.damages;
                 }
-                player.EquippedWeapon.damages += 200;
                 other.gameObject.GetComponentInParent<Enemy>().TakeDamage(damages);
             }
             IsAttacking = false;
@@ -159,6 +158,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public virtual void Attack()
     {
+        Debug.Log("Attack: Start");
         if (isPlayer)
         {
             if (playerComp.hasShield && playerComp.shieldComp.isProtecting)
@@ -168,9 +168,16 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         }
 
         countAttackClick += 1;
-
+        if (isPlayer)
+        {
+            if (countAttackClick > 4)
+                ResetAttackPhase();
+            Debug.Log("Attack: countAttackClick == " + countAttackClick);
+        }
+        
         if (countAttackClick == 1)
         {
+            Debug.Log("Attack: Count Attack Click == 1");
             anim.SetInteger("intAttackPhase", 1);
             audioSource.PlayOneShot(attackSound);
             if (isPlayer) {
@@ -236,16 +243,30 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public void whenPickUp(GameObject newHolder)
     {
-        holder = newHolder;
-        isPlayer = holder.CompareTag("Player") ? true : false;
-        String hand = isPlayer ? "jointItemL" : "hand.R";
-        int holderID = newHolder.GetPhotonView().ViewID;
-        photonView.RPC("SyncPickUp", RpcTarget.All, holderID, rotationX, rotationY, rotationZ, hand);
+        Debug.Log("WHENPICKUP: start");
+        if (newHolder == null)
+        {
+            holder = null;
+            photonView.RPC("SyncPickUp", RpcTarget.All, 0, rotationX, rotationY, rotationZ, "null");
+        }
+        else {
+            holder = newHolder;
+            isPlayer = holder.CompareTag("Player") ? true : false;
+            String hand = isPlayer ? "jointItemL" : "hand.R";
+            int holderID = newHolder.GetPhotonView().ViewID;
+            photonView.RPC("SyncPickUp", RpcTarget.All, holderID, rotationX, rotationY, rotationZ, hand);
+        }
     }
 
      [PunRPC]
     private void SyncPickUp(int holderID, float rotX, float rotY, float rotZ, String hand)
     {
+        if (holderID == 0)
+        {
+            holder = null;
+            anim = null;
+            transform.parent = null;
+        }
         GameObject holderObject = PhotonView.Find(holderID).gameObject;
         holder = holderObject;
         anim = holder.GetComponentInChildren<Animator>();
@@ -259,8 +280,19 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         isLooted = true;
     }
 
-    public void setAnim()
+    public void resetAnim(GameObject newHolder)
     {
+        if (newHolder != null)
+            holder = newHolder;
+        anim = holder.GetComponentInChildren<Animator>();
+        anim.SetLayerWeight(1, 1f);
+
+    }
+    public void setAnim(GameObject newHolder)
+    {
+        Debug.Log("SetAnim: Start");
+        if (newHolder != null)
+            holder = newHolder;
         anim = holder.GetComponentInChildren<Animator>();
         if(animOverride != null)
             anim.runtimeAnimatorController = animOverride;

@@ -162,6 +162,31 @@ public class Player : MonoBehaviourPunCallbacks
         }
         //StartCoroutine(DamageOverTime());
     }
+    public Weapon RetrieveEquippedWeapon(string hand)
+    {
+        Transform weapons = FindDeepChild(gameObject.transform, hand);
+        if (weapons != null)
+        {
+            Debug.Log("RetrieveEquippedWeapon: weapons == null");
+            foreach (Transform child in weapons.transform)
+            {
+                if (child.gameObject.active == true)
+                {
+                    Weapon weapon = child.gameObject.GetComponent<Weapon>();
+                    if (weapon == null)
+                    {
+                        Debug.Log("RetrieveEquippedWeapon: weapon == null in child");
+                        return null;
+                    }
+                    return weapon;
+
+                }
+
+            }
+        }
+        return null;
+    }
+
     private void Update()
     {
         HUDFixe hudfixe2 = HUDFixe.GetComponent<HUDFixe>();
@@ -195,7 +220,7 @@ public class Player : MonoBehaviourPunCallbacks
                 EquippedWeapon = null;
             }
             EquippedWeapon = inventory.mItems[0].GameObject.GetComponent<Weapon>();
-            EquippedWeapon.setAnim();
+            EquippedWeapon.setAnim(gameObject);
             eventListener.weaponComp = EquippedWeapon;
 
             HUD.GetComponent<HUD>().Clean();
@@ -274,7 +299,7 @@ public class Player : MonoBehaviourPunCallbacks
             LootHUD.SetActive(false);
         }
 
-        if (hasShield && Input.GetMouseButton(1))
+        /*if (hasShield && Input.GetMouseButton(1))
         {
             shieldComp.setProtectionMode(true);
         }
@@ -283,14 +308,17 @@ public class Player : MonoBehaviourPunCallbacks
             shieldComp.setProtectionMode(false);
         }
 
-        if (inventory.PocketCount() > 0)
-        {
-            if (!EquippedWeapon.isLongRange && Input.GetMouseButtonDown(0))
-            {
-                EquippedWeapon.Attack();
-            }
+        */
 
-            if (EquippedWeapon.isLongRange && !Input.GetKey(sprintKey))
+        Weapon MainWeapon = RetrieveEquippedWeapon("jointItemL");
+        if (MainWeapon != null)
+        {
+            Debug.Log("MainWeapon: found");
+            if (Input.GetMouseButtonDown(0) && MainWeapon.isLongRange == false)
+            {
+                MainWeapon.Attack();
+            }
+            if (MainWeapon.isLongRange && !Input.GetKey(sprintKey))
             {
                 IsometricAiming aim = gameObject.GetComponent<IsometricAiming>();
                 if (Input.GetMouseButtonDown(1))
@@ -308,20 +336,36 @@ public class Player : MonoBehaviourPunCallbacks
                     aim.laserStartAndStop();
             }
         }
-
-        if (inventory.mItems != null)
+        /*
+        if (inventory.PocketCount() > 0)
         {
-            if (inventory.mItems[0] == null)
+            if (EquippedWeapon != null)
             {
-                EquippedWeapon = null;
+                if (!EquippedWeapon.isLongRange && Input.GetMouseButtonDown(0))
+                {
+                    EquippedWeapon.Attack();
+                }
 
-            }
+                if (EquippedWeapon.isLongRange && !Input.GetKey(sprintKey))
+                {
+                    IsometricAiming aim = gameObject.GetComponent<IsometricAiming>();
+                    if (Input.GetMouseButtonDown(1))
+                        aim.laserStartAndStop();
 
-            if (inventory.mItems[0] != null && inventory.mItems[0].GameObject != EquippedWeapon.gameObject)
-            {
-                EquippedWeapon = inventory.mItems[0].GameObject.GetComponent<Weapon>();
+                    if (Input.GetMouseButton(1))
+                    {
+                        anim.SetLayerWeight(2, Mathf.Lerp(anim.GetLayerWeight(2), 1f, Time.deltaTime * 10f));
+                        aim.Aiming();
+                    }
+                    else
+                        anim.SetLayerWeight(2, Mathf.Lerp(anim.GetLayerWeight(2), 0f, Time.deltaTime * 10f));
+
+                    if (Input.GetMouseButtonUp(1))
+                        aim.laserStartAndStop();
+                }
             }
         }
+        */
     }
 
      public void SetHUDVolume(float volume)
@@ -457,14 +501,40 @@ public class Player : MonoBehaviourPunCallbacks
     {
 
     }
+
+    public void SetWeaponEvents(Weapon weaponComp)
+    {
+        weaponComp.setAnim(gameObject);
+        currentWeapon = 0;
+        eventListener.weaponComp = weaponComp;
+    }
     public void EquipWeapon(Weapon weaponComp, GameObject weaponObject, bool toAdd)
     {
+        /*if (weaponComp == null)
+        {
+            Debug.Log("EquipWeapon: Weapon == null");
+        }
+        else
+        {
+            Debug.Log("EquipWeapon: Weapon name == " + weaponComp.name);
+        }
+        if (weaponObject == null)
+        {
+            Debug.Log("EquipWeapon: WeaponObject == null");
+        }
+        Debug.Log("EquipWeapon: toAdd = " + toAdd);
         if (weaponComp != null && toAdd == true)
             inventory.AddItem(weaponComp);
         Transform hand = FindDeepChild(transform, "jointItemR");
+        if (weaponComp == null || weaponObject == null)
+        {
+            weaponComp.whenPickUp(null);
+            return;
+        }   
         weaponComp.whenPickUp(gameObject);
         if (inventory.PocketCount() > 1 && toAdd == true)
         {
+            Debug.Log("EquipWeapon: second pocket free");
             weaponObject.SetActive(false);
         }
         else
@@ -475,31 +545,10 @@ public class Player : MonoBehaviourPunCallbacks
             eventListener.weaponComp = weaponComp;
         }
         EquippedWeapon = weaponComp;
-        Debug.Log("call to equipMainWeapon end");
+        Debug.Log("call to equipMainWeapon end");*/
     }
-    void OnTriggerEnter(Collider col)
+    public void EquipMelee(Collider col)
     {
-        Bullet bullet = col.GetComponent<Bullet>();
-        if (bullet != null && bullet.shooter != null && bullet.shooter.ActorNumber != photonView.Owner.ActorNumber)
-        {
-            if (hasShield && shieldComp.isProtecting)
-            {
-                shield.GetComponent<ParticleSystem>().Play();
-                audioSource.PlayOneShot(blockingSound);
-                anim.SetTrigger("hitted");
-                return;
-            }
-            TakeDamage(10);
-            bullet.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
-        }
-
-        if (col.CompareTag("ExtractionZone"))
-        {
-            PFInventory_.PlayerWin();
-            PhotonNetwork.LeaveRoom();
-            PhotonNetwork.LoadLevel("Menu");
-        }
-
         Weapon weaponComp = col.GetComponent<Weapon>();
         if (weaponComp != null)
         {
@@ -568,6 +617,31 @@ public class Player : MonoBehaviourPunCallbacks
                 }
             }
         }
+    }
+    void OnTriggerEnter(Collider col)
+    {
+        Bullet bullet = col.GetComponent<Bullet>();
+        if (bullet != null && bullet.shooter != null && bullet.shooter.ActorNumber != photonView.Owner.ActorNumber)
+        {
+            if (hasShield && shieldComp.isProtecting)
+            {
+                shield.GetComponent<ParticleSystem>().Play();
+                audioSource.PlayOneShot(blockingSound);
+                anim.SetTrigger("hitted");
+                return;
+            }
+            TakeDamage(10);
+            bullet.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
+        }
+
+        if (col.CompareTag("ExtractionZone"))
+        {
+            PFInventory_.PlayerWin();
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LoadLevel("Menu");
+        }
+
+        EquipMelee(col);
 
         if (col.gameObject.name == "AmmoBox")
         {
@@ -699,20 +773,25 @@ public class Player : MonoBehaviourPunCallbacks
 
     public void StartAttackSlowdown(float duration, float speedMultiplier)
     {
+        Debug.Log("StartAttackSlowDown: Start");
         if (attackSlowdownCoroutine != null)
         {
+            Debug.Log("StartAttackSlowDown: coroutine != null");
             StopCoroutine(attackSlowdownCoroutine);
         }
         attackSlowdownCoroutine = StartCoroutine(SlowdownCoroutine(duration, speedMultiplier));
     }
     private IEnumerator SlowdownCoroutine(float duration, float speedMultiplier)
     {
+        Debug.Log("SlowdownCoroutine: Start");
         isAttacking = true;
         float originalSpeed = moveSpeed;
         moveSpeed *= speedMultiplier;
+        Debug.Log("SlowdownCoroutine: duration == " + duration);
         yield return new WaitForSeconds(duration);
         moveSpeed = originalSpeed;
         isAttacking = false;
         attackSlowdownCoroutine = null;
+        Debug.Log("SlowdownCoroutine: End");
     }
 }
