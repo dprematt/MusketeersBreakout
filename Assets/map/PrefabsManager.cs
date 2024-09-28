@@ -36,10 +36,10 @@ public class PrefabsManager : MonoBehaviourPun {
         GameObject extractionZonePrefab = Resources.Load<GameObject>("ExtractionZone");
         int i = 1;
         Vector3[] cornerPositions = {
-            new Vector3(-536, 4.7f, -556),
-            new Vector3(-410, 4.7f, 556),
-            new Vector3(424, 4.7f, -557),
-            new Vector3(536, 4.7f, 557)
+            new Vector3(-536, 4.6f, -556),
+            new Vector3(-410, 4.6f, 556),
+            new Vector3(424, 4.6f, -557),
+            new Vector3(536, 4.6f, 557)
         };
 
         foreach (Vector3 position in cornerPositions)

@@ -21,6 +21,7 @@ public class ChatManager : MonoBehaviour
     public GameObject MyBMessage; 
 
     public GameObject Content;
+    public ScrollRect scrollRect;
     // Start is called before the first frame update
     public void SendMessage()
     {
@@ -59,6 +60,8 @@ public class ChatManager : MonoBehaviour
                 M = Instantiate(BMessage, Vector3.zero, Quaternion.identity, Content.transform);
             }
         }
+        M.transform.SetParent(Content.transform, false);
+        M.transform.SetAsFirstSibling();
         M.GetComponent<Chat>().Message.text = ReceiveMessage;
         M.GetComponent<Chat>().Name.text = name;
     }

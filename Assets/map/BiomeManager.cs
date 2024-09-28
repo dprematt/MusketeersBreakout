@@ -103,7 +103,7 @@ public class BiomeManager : MonoBehaviourPun {
                     Vector2 center = plateCenters[index];
                     plateCenters.RemoveAt(index);
 
-                    float biomeRadius = 30f;
+                    float biomeRadius = 50f;
                     bool isOutOfBounds = 
                         (center.x - biomeRadius < topLeft.x + borderBuffer || center.x + biomeRadius > bottomRight.x - borderBuffer ||
                         center.y - biomeRadius < bottomRight.y + borderBuffer || center.y + biomeRadius > topLeft.y - borderBuffer);
@@ -192,7 +192,7 @@ public class BiomeManager : MonoBehaviourPun {
                     new Vector3(8, 0, -6),
                     new Vector3(9, 0, -28),
                     new Vector3(-13, 0,-29),
-                    new Vector3(-26, 0, -26),
+                    new Vector3(-27, 0, -26),
                     new Vector3(26, 0, -26),
                     new Vector3(-31, 0, 4)
                 };

@@ -183,8 +183,9 @@ public class HUD : MonoBehaviourPunCallbacks
 
         if (Players != null)
         {
-            //Debug.Log("Display Players Players found");
-            Transform RoomName = Players.Find("RoomName");
+            Debug.Log("Display Players Players found");
+            Transform Image = Players.Find("Image");
+            Transform RoomName = Image.Find("RoomName");
             if (RoomName != null)
             {
                 //Debug.Log("Display Players Room name != null");
