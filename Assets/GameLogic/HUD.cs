@@ -176,55 +176,59 @@ public class HUD : MonoBehaviourPunCallbacks
 
     }
 
-    public void DisplayPlayers(Photon.Realtime.Player[] players)
-    {
-        //Debug.Log("Display Players");
-        Transform Players = transform.Find("Players");
+   public void DisplayPlayers(Photon.Realtime.Player[] players)
+{
+    //Debug.Log("Display Players");
+    Transform Players = transform.Find("Players");
 
-        if (Players != null)
+    if (Players != null)
+    {
+        Debug.Log("Display Players Players found");
+        Transform Image = Players.Find("Image");
+        Transform RoomName = Image.Find("RoomName");
+        if (RoomName != null)
         {
-            Debug.Log("Display Players Players found");
-            Transform Image = Players.Find("Image");
-            Transform RoomName = Image.Find("RoomName");
-            if (RoomName != null)
+            //Debug.Log("Display Players Room name != null");
+            TextMeshProUGUI textComp = RoomName.GetComponent<TextMeshProUGUI>();
+            if (textComp != null)
             {
-                //Debug.Log("Display Players Room name != null");
-                TextMeshProUGUI textComp = RoomName.GetComponent<TextMeshProUGUI>();
-                if (textComp != null)
+                if (PhotonNetwork.InRoom)
                 {
-                    if (PhotonNetwork.InRoom)
-                    {
-                        //Debug.Log("room name set");
-                        textComp.text = "Session de: " + PhotonNetwork.CurrentRoom.Name + "\n\n";                    }
-                }
-                else
-                {
-                    Debug.Log("HUD: textComp == null");
+                    //Debug.Log("room name set");
+                    textComp.text = "Session de: " + PhotonNetwork.CurrentRoom.Name + "\n\n";
                 }
             }
-
-            Transform playersUi = Players.Find("Players");
-            if (playersUi != null)
+            else
             {
-                //Debug.Log("Display Players playersui != null");
-                TextMeshProUGUI textComp = playersUi.GetComponent<TextMeshProUGUI>();
-                if (textComp != null)
+                Debug.Log("HUD: textComp == null");
+            }
+        }
+
+        Transform playersUi = Players.Find("Players");
+        if (playersUi != null)
+        {
+            //Debug.Log("Display Players playersui != null");
+            TextMeshProUGUI textComp = playersUi.GetComponent<TextMeshProUGUI>();
+            if (textComp != null)
+            {
+                //Debug.Log("Display Players playersui textcomp != null");
+                textComp.text = "";
+                int playerCount = 0;  // Ajout d'un compteur pour limiter à 10 joueurs
+                foreach (Photon.Realtime.Player player in players)
                 {
-                    //Debug.Log("Display Players playersui textcomp != null");
-                    textComp.text = "";
-                    foreach (Photon.Realtime.Player player in players)
-                    {
-                        Debug.Log("Display Players nickname = " + player.NickName);
-                        textComp.text += player.NickName + ",\n\n" ;
-                    }
+                    if (playerCount >= 10) break;  // Si plus de 10 joueurs, arrêter l'itération
+                    Debug.Log("Display Players nickname = " + player.NickName);
+                    textComp.text += player.NickName + ",\n\n";
+                    playerCount++;  // Incrémenter le compteur après chaque joueur
                 }
-                else
-                {
-                    Debug.Log("HUD: textComp == null");
-                }
+            }
+            else
+            {
+                Debug.Log("HUD: textComp == null");
             }
         }
     }
+}
 
     public void Clean()
     {

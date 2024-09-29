@@ -34,6 +34,8 @@ public class UIManagerCommand : MonoBehaviour
                key == playerMovements.sprintKey ||
                key == playerMovements.HUDKey ||
                key == KeyCode.Escape||
+               key == KeyCode.L||
+               key == KeyCode.P||
                key == playerMovements.dodgeKey;
     }
 
