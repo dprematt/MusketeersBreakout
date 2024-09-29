@@ -41559,11 +41559,43 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5090351679690336130}
     m_Modifications:
+    - target: {fileID: 907121002853389932, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
+      propertyPath: m_TagString
+      value: ExtractionZone
+      objectReference: {fileID: 0}
+    - target: {fileID: 1060992520350294861, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
+      propertyPath: m_TagString
+      value: ExtractionZone
+      objectReference: {fileID: 0}
+    - target: {fileID: 2725259048016834474, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
+      propertyPath: m_TagString
+      value: ExtractionZone
+      objectReference: {fileID: 0}
     - target: {fileID: 5019184048097567435, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
       propertyPath: m_Name
       value: Ship_02
       objectReference: {fileID: 0}
     - target: {fileID: 5019184048097567435, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
+      propertyPath: m_TagString
+      value: ExtractionZone
+      objectReference: {fileID: 0}
+    - target: {fileID: 6202062701636023084, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
+      propertyPath: m_TagString
+      value: ExtractionZone
+      objectReference: {fileID: 0}
+    - target: {fileID: 6563051304810367394, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
+      propertyPath: m_TagString
+      value: ExtractionZone
+      objectReference: {fileID: 0}
+    - target: {fileID: 7514377905844275433, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
+      propertyPath: m_TagString
+      value: ExtractionZone
+      objectReference: {fileID: 0}
+    - target: {fileID: 8206519650294744085, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
+      propertyPath: m_TagString
+      value: ExtractionZone
+      objectReference: {fileID: 0}
+    - target: {fileID: 8306798903365925550, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
       propertyPath: m_TagString
       value: ExtractionZone
       objectReference: {fileID: 0}
@@ -41622,6 +41654,10 @@ PrefabInstance:
     - target: {fileID: 8357801936476393688, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8764660628685619346, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
+      propertyPath: m_TagString
+      value: ExtractionZone
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 815e533d1e0df8142940dcb32056d6a5, type: 3}
