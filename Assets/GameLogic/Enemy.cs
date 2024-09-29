@@ -62,13 +62,18 @@ public class Enemy : MonoBehaviourPun
         weaponList[1].rotationZ = 180f;
 
         inventory = new Inventory(9, null, false);
-        inventory.AddEnemyWeapon(weaponList[0]);
-        inventory.AddEnemyWeapon(weaponList[1]);
+        inventory.AddEnemyWeapon(weaponList[0], gameObject);
+        inventory.AddEnemyWeapon(weaponList[1], gameObject);
 
         eventListener = GetComponent<EventListener>();
+        if (eventListener == null)
+        {
+            Debug.Log("Ennemy: eventlistener == null");
+        }
         Transform hand = FindDeepChild(transform, "hand.R");
         foreach (Weapon weapon in weaponList)
         {
+            Debug.Log("Enemy: call to whenPickUp");
             weapon.whenPickUp(gameObject);
         }
         if (weaponList.Count > 1)
@@ -149,6 +154,16 @@ public class Enemy : MonoBehaviourPun
 
                     weaponList[currentWeapon].gameObject.SetActive(true);
                     weaponList[currentWeapon].setAnim(gameObject);
+                    Debug.Log("Enemy: currentWeapon == " + currentWeapon);
+                    if (eventListener == null)
+                    {
+                        Debug.Log("Enemy: in update: eventlistener == null");
+                        eventListener = GetComponent<EventListener>();
+                        if (eventListener == null)
+                        {
+                            Debug.Log("Ennemy: after set: eventlistener == null");
+                        }
+                    }
                     eventListener.weaponComp = weaponList[currentWeapon];
 
                     nextAttack = Time.time + delay;

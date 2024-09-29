@@ -243,6 +243,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public void whenPickUp(GameObject newHolder)
     {
+        Debug.Log("name 1 = " + newHolder.transform.name);
         Debug.Log("WHENPICKUP: start");
         if (newHolder == null)
         {
@@ -250,6 +251,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             photonView.RPC("SyncPickUp", RpcTarget.All, 0, rotationX, rotationY, rotationZ, "null");
         }
         else {
+            Debug.Log("name 2 = " + newHolder.transform.name);
             holder = newHolder;
             isPlayer = holder.CompareTag("Player") ? true : false;
             String hand = isPlayer ? "jointItemL" : "hand.R";
@@ -267,6 +269,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             anim = null;
             transform.parent = null;
         }
+        Debug.Log("name 3 = " + hand);
         GameObject holderObject = PhotonView.Find(holderID).gameObject;
         holder = holderObject;
         anim = holder.GetComponentInChildren<Animator>();

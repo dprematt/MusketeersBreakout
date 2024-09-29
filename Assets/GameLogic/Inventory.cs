@@ -19,24 +19,14 @@ public class Inventory : MonoBehaviourPunCallbacks
     public event EventHandler<InventoryEventArgs> ItemInsertedAt;
     public event EventHandler<InventoryEventArgs> ItemRemoved;
 
-    public void AddEnemyWeapon(Weapon weapon)
+    public void AddEnemyWeapon(Weapon weapon, GameObject enemy)
     {
-        //GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
-        // if (weaponPrefab == null)
-        // {
-        //     Debug.LogError("ENEMY Weapon not found in folder Resources : " + weaponName);
-        //     return;
-        // }
-        // Vector3 pos;
-        // pos.z = 0;
-        // pos.y = 0;
-        // pos.x = 0;
-        //GameObject weaponObject = PhotonNetwork.Instantiate(weaponPrefab.name, pos, Quaternion.identity);
-        //Weapon weaponItem = weaponObject.GetComponent<Weapon>();
-        //Destroy(weaponPrefab);
-        Player player = gameObject.GetComponent<Player>();
-        if (player == null)
-            return;
+        if (enemy != null)
+        {
+            Player player = enemy.GetComponent<Player>();
+            if (player == null)
+                return;
+        }
         if (weapon == null)
         {
             //Debug.LogError("ENEMY Weapon doesn't implement IInventoryItem interface: " + weapon);
