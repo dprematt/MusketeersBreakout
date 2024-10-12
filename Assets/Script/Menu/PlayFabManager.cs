@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using Photon.Realtime;
 using Photon.Pun;
 using System.Text.RegularExpressions;
+using UnityEngine.EventSystems;
+using System;
 
 
 public class PlayFabManager : MonoBehaviourPunCallbacks
@@ -14,7 +16,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
 
     public InputField Email_, Username_, Password_;
 
-    public GameObject BoutonPlay_, BoutonInscription_, BoutonConnexion_, ObjectBienvenue_, BoutonDeconnexion_;
+    public GameObject BoutonPlay_, BoutonInscription_, BoutonConnexion_, ObjectBienvenue_, BoutonDeconnexion_, ErrorGO_;
 
     public GameObject Login_, Register_, Welcome_;
     public Text Bienvenue_;
@@ -22,15 +24,39 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
     public Text Error_;
 
     //Fonction qui permet de register un user
+
+    void Start()
+    {
+        // S'abonner à l'événement onValueChanged
+        Username_.onValueChanged.AddListener(OnTextChanged);
+    }
+
+    void Update()
+    {
+        // Vérifie si la touche Entrée est pressée et si un bouton est actuellement sélectionné
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            if (Login_.activeSelf) {
+                Login();
+            } else if (Register_.activeSelf) {
+                Register();
+            }
+        }
+    }
+
     public void Register()
     {
         var request = new RegisterPlayFabUserRequest
         {
             Email = Email_.text,
-            Username = Username_.text,
+            Username = Username_.text.ToLower(),
             Password = Password_.text,
             RequireBothUsernameAndEmail = false
         };
+
+        Username_.text = "";
+        Password_.text = "";
+        Email_.text = "";
 
         PlayFabClientAPI.RegisterPlayFabUser(request, result =>
         {
@@ -41,6 +67,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         }, error =>
         {
             Debug.Log("Error while registering : " + error.ErrorMessage);
+            ErrorGO_.SetActive(true);
             Error_.text = error.ErrorMessage;
         });
     }
@@ -48,12 +75,18 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
     //Fonction qui permet de login un user
     public void Login()
     {
+        String email = Email_.text;
+        String password = Password_.text;
+
+        Email_.text = "";
+        Password_.text = "";
 
         PlayFabClientAPI.LoginWithEmailAddress(new LoginWithEmailAddressRequest
         {
-            Email = Email_.text,
-            Password = Password_.text
+            Email = email,
+            Password = password
         }, OnLoginSuccess, OnLoginFailure);
+        
     }
 
     public void Login_Admin()
@@ -79,6 +112,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
 
     public void OnLoginFailure(PlayFabError error)
     {
+        ErrorGO_.SetActive(true);
         Error_.text = error.ErrorMessage;
         Debug.LogError("Login failed: " + error.GenerateErrorReport());
     }
@@ -116,6 +150,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
     private void OnGetAccountInfoFailure(PlayFabError error)
     {
         Debug.LogError("GetAccountInfo request failed: " + error.GenerateErrorReport());
+        ErrorGO_.SetActive(true);
         Error_.text = error.GenerateErrorReport();
     }
 
@@ -175,8 +210,10 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
             };
 
             PlayFabClientAPI.SendAccountRecoveryEmail(request, OnRecoveryEmailSent, OnError);
-        } else 
+        } else {
+            ErrorGO_.SetActive(true);
             Error_.text = "Error sending mail, verify that you correctly put the email address";
+        }
     }
 
     private void OnRecoveryEmailSent(SendAccountRecoveryEmailResult result)
@@ -186,8 +223,15 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
 
     private void OnError(PlayFabError error)
     {
+        ErrorGO_.SetActive(true);
         Error_.text = error.GenerateErrorReport();
         Debug.LogError("Login failed: " + error.GenerateErrorReport());
+    }
+
+    void OnTextChanged(string text)
+    {
+        // Convertir le texte en minuscules
+        Username_.text = text.ToLower();
     }
 
 }

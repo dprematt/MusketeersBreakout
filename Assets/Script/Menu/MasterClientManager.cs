@@ -73,7 +73,7 @@ public class MasterClientManager : MonoBehaviourPun
         if (PhotonNetwork.InRoom)
         {
             int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-            Debug.Log("Le nombre de joueurs dans la salle actuelle est : " + playerCount);
+            Debug.Log("Nomber of players int the room : " + playerCount);
             return playerCount;
         }
         return -1;
