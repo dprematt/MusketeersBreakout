@@ -1245,7 +1245,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &178989452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4996,7 +4996,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Inscription
+  m_text: Sign up
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 08a90542f0a4c124e9a0df8314ff24cf, type: 2}
   m_sharedMaterial: {fileID: 4205443934745913257, guid: 08a90542f0a4c124e9a0df8314ff24cf, type: 2}
@@ -9361,7 +9361,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1340002742
 MonoBehaviour:
   m_ObjectHideFlags: 0
