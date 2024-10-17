@@ -128,7 +128,7 @@ public class BiomeManager : MonoBehaviourPun {
                     float z = center.y;
                     Vector3 position = new Vector3(x, y, z);
 
-                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 100 * 100);
+                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 125 * 125);
                     bool isTooCloseToSameBiomes = biomeSpecificPositions[biome.type].Any(biomePos => (position - biomePos).sqrMagnitude < 400 * 400);
 
                     if (!isTooCloseToOtherBiomes && !isTooCloseToSameBiomes)
@@ -193,7 +193,7 @@ public class BiomeManager : MonoBehaviourPun {
                     new Vector3(9, 0, -28),
                     new Vector3(-13, 0,-29),
                     new Vector3(-27, 0, -26),
-                    new Vector3(26, 0, -26),
+                    new Vector3(18, 0, -26),
                     new Vector3(-31, 0, 4)
                 };
                 break;
@@ -219,7 +219,6 @@ public class BiomeManager : MonoBehaviourPun {
                     new Vector3(-22, 0,  -152),
                     new Vector3(-45, 0, -114),
                     new Vector3(-5, 0, -110),
-                    new Vector3(5, 0, -20),
                     new Vector3(-21,0 ,-52),
                     new Vector3(-113, 0, -61),
                     new Vector3(-138, 0, -165),
