@@ -376,32 +376,21 @@ public class Inventory : MonoBehaviourPunCallbacks
         if (Count() == 0 && loot == true)
         {
             Debug.Log("INVENTORY/ IN DESTROY LOOT");
-            GameObject playerGo = GameObject.FindGameObjectWithTag("Player");
-            /*if ((playerGo != null) && (gameObject.GetComponent<PhotonView>().ViewID !=
-                0))
-            {
-                Player player = playerGo.GetComponent<Player>();
-                player.UpdateXp(5);
-                player.CheckXp();
-            }
-            else
-            {
-                Debug.Log("player == null");
-            }*/
-            //mItems.Clear();
-            //GameObject player = GameObject.FindGameObjectWithTag("Player");
-            //player.GetComponent<Player>().DeactivateLoot();
             view = gameObject.GetComponent<PhotonView>();
             if (view != null)
             {
                 if (view.ViewID == 0)
+                {
+                    Debug.Log("destroy loot, view id == 0");
                     return;
+                }
                 Debug.Log("before loot destroyed");
                 view.RPC("DestroyObject", RpcTarget.All);
                 Debug.Log("after loot destroyed");
             }
             else
             {
+                Debug.Log("Inventory: UpdateLoot, destroy without photon");
                 Destroy(gameObject);
             }
         }
