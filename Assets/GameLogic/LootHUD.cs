@@ -33,6 +33,8 @@ public class LootHUD : MonoBehaviourPunCallbacks
     {
         if (inventory == null)
             return;
+
+        Debug.Log("CLEAN IN LOOTHUD");
         for (int i = 0; i < 9; i++)
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));

@@ -228,24 +228,27 @@ public class HUD : MonoBehaviourPunCallbacks
 
     public void Clean()
     {
-        Inventory inventory = gameObject.GetComponent<Inventory>();
+        LootHUD lootHud = transform.parent.GetComponent<LootHUD>();
+        Inventory inventory = lootHud.inventory;
+        Debug.Log("CLEAN IN HUD");
         for (int i = 0; i < 9; i++)
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
+            Debug.Log("CLEAN IN HUD 1 FOR");
         }
         for (int i = 0; i < 9; i++)
         {
             if (inventory.mItems[i] != null)
             {
                 InventoryScript_InsertItemAt(this, new InventoryEventArgs(inventory.mItems[i], i));
+                Debug.Log("CLEAN IN HUD 2 FOR");
             }
         }
     }
 
     public void init()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        Inventory inventory = player.GetComponent<Inventory>();
+        Inventory inventory = GetComponentInParent<Inventory>();
         inventory.ItemAdded += InventoryScript_ItemAdded;
         inventory.ItemRemoved += InventoryScript_ItemRemoved;
         inventory.ItemInsertedAt += InventoryScript_InsertItemAt;
