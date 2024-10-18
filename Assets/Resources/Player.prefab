@@ -13340,7 +13340,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 8788789304819895150}
   playerCamera: {fileID: 0}
-  playerIcon: {fileID: 0}
+  playerIcon: {fileID: 4535078376714388621}
   cameraHeight: 50
 --- !u!1 &8150891935468419385
 GameObject:
@@ -14172,7 +14172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerText: {fileID: 3865091705782682343}
-  totalTime: 1800
+  totalTime: 240
 --- !u!114 &9079174927090409558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16059,6 +16059,10 @@ PrefabInstance:
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4709911682697851601, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: a8db96d624c1dca4192e09feb121783e, type: 3}
     - target: {fileID: 4710603824307187762, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -16194,6 +16198,14 @@ PrefabInstance:
     - target: {fileID: 7110436774692112344, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7141857822741054351, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7141857822741054351, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7141857822741054351, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_LocalPosition.y
@@ -16337,6 +16349,11 @@ MonoBehaviour:
   subdivisions: 4
   _base: {fileID: 1220224066424271792}
   _tip: {fileID: 5846279588002690979}
+--- !u!212 &4535078376714388621 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 4709911682697851601, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
+  m_PrefabInstance: {fileID: 9201736370395493980}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &4661507371320996336 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 4540229000190281644, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
