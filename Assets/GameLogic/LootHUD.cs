@@ -21,6 +21,7 @@ public class LootHUD : MonoBehaviourPunCallbacks
         {
             photonView.RPC("KillHud", RpcTarget.Others);
         }
+        gameObject.SetActive(false);
     }
 
     [PunRPC]
