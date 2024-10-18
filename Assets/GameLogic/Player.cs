@@ -120,13 +120,12 @@ public class Player : MonoBehaviourPunCallbacks
         level = 1;
         max_xp = 20;
         health_up = 30;
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        inventory = player.GetComponent<Inventory>();
-        HUD = GameObject.FindGameObjectWithTag("InventoryHUD");
+        inventory = gameObject.GetComponent<Inventory>();
+        HUD = transform.Find("HUD").gameObject;
         HUD.GetComponent<HUD>().init();
-        HUDFixe = GameObject.FindGameObjectWithTag("InventoryHUDFixe");
+        HUDFixe = FindDeepChild(transform, "HUDFixe").gameObject;
         HUDFixe.GetComponent<HUDFixe>().init();
-        LootHUD = GameObject.FindGameObjectWithTag("LootHUD");
+        LootHUD = transform.Find("LootHUD").gameObject;
         GameObject xpProgressBarExperience = GameObject.FindWithTag("ExperienceBarDefaultTag");
         GameObject xpProgressBarLevel = GameObject.FindWithTag("ExperienceBarLevelTag");
         GameObject xpProgressBarXp = GameObject.FindWithTag("ExperienceBarXpTag");

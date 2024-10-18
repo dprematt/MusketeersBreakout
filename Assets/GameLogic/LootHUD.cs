@@ -287,14 +287,17 @@ public class LootHUD : MonoBehaviourPunCallbacks
         {
             Debug.Log("swap items in LootHUD");
             inventory.SwapItems(id_1, id_2);
+            Clean();
         }
         else
         {
             Debug.Log("swap items loot in LootHUD");
+            Debug.Log("id1 = " + id_1 + " | id2 = " + id_2);
             inventory.SwapItemsLoot(id_1, id_2, p_inventory);
-            HUD hud = gameObject.GetComponentInChildren<HUD>();
+            Transform playerTransform = transform.parent;
+            HUD hud = playerTransform.GetComponentInChildren<HUD>();
+            hud.Clean();
         }
-        Clean();
     }
 
     void Update()

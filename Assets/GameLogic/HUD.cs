@@ -478,7 +478,7 @@ public class HUD : MonoBehaviourPunCallbacks
             Debug.Log("swap items loot in HUD");
             LootHUD lootHUD = gameObject.GetComponentInChildren<LootHUD>();
             inventory.SwapItemsLoot(id_1, id_2, lootHUD.inventory);
-            lootHUD.Clean();
+            //lootHUD.Clean();
         }
         Clean();
     }

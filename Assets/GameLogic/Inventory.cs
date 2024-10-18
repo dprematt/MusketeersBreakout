@@ -76,8 +76,7 @@ public class Inventory : MonoBehaviourPunCallbacks
         pos.z = 0;
         pos.y = 0;
         pos.x = 0;
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        Player playerScript = playerObj.GetComponent<Player>();
+        Player playerScript = transform.GetComponentInParent<Player>();
         GameObject weaponObject = PhotonNetwork.Instantiate(weaponPrefab.name, pos, Quaternion.identity);
         Weapon weaponItem = weaponObject.GetComponent<Weapon>();
         //Destroy(weaponObject);
@@ -181,6 +180,7 @@ public class Inventory : MonoBehaviourPunCallbacks
             {
                 if (id == 0 && item != null)
                 {
+                    Debug.Log("checkoldweapon = " + CheckOldWeapon(item.Name));
                     if (CheckOldWeapon(item.Name) == false)
                     {
                         ReleaseLeftArm();
@@ -296,6 +296,7 @@ public class Inventory : MonoBehaviourPunCallbacks
         Debug.Log("index 2 " + index2);
         Debug.Log("lootinventory " + lootInventory.transform.name);
         IInventoryItem temp = mItems[index1];
+        Debug.Log("temp = " + temp.Name);
         InsertAt(lootInventory.mItems[index2], index1);
         lootInventory.InsertAt(temp, index2);
     }
