@@ -36,6 +36,7 @@ public class Inventory : MonoBehaviourPunCallbacks
         AddItem(weapon);
         //weaponObject.SetActive(false);
     }
+
     public void AddWeapon(string weaponName)
     {
         GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
@@ -204,6 +205,7 @@ public class Inventory : MonoBehaviourPunCallbacks
             }
         }
     }
+
     public int Add(IInventoryItem item)
     {
         for (int i = 0; i < mItems.Length; i++)
@@ -286,13 +288,18 @@ public class Inventory : MonoBehaviourPunCallbacks
         InsertAt(mItems[index2], index1);
         InsertAt(temp, index2);
     }
+
     public void SwapItemsLoot(int index1, int index2, Inventory lootInventory)
     {
         Debug.Log("SwapItemsLoot");
+        Debug.Log("index 1 " + index1);
+        Debug.Log("index 2 " + index2);
+        Debug.Log("lootinventory " + lootInventory.transform.name);
         IInventoryItem temp = mItems[index1];
         InsertAt(lootInventory.mItems[index2], index1);
         lootInventory.InsertAt(temp, index2);
     }
+
     public void Print_Inventory()
     {
         Debug.Log("PRINT INVENTORY:");
@@ -496,6 +503,7 @@ public class Inventory : MonoBehaviourPunCallbacks
             view.RPC("UpdateItems", RpcTarget.All, name);
         }
     }
+
     public void DropItem(int id)
     {
         GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
@@ -513,8 +521,8 @@ public class Inventory : MonoBehaviourPunCallbacks
         RemoveAt(id);
     }
     
-     public void DropWeapons(string name)
-     {
+    public void DropWeapons(string name)
+    {
         Debug.Log("DropTOTO 1");
         
         GameObject newItem = PhotonNetwork.Instantiate(name, transform.position, transform.rotation);

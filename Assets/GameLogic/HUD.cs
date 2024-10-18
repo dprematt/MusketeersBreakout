@@ -15,6 +15,7 @@ public class HUD : MonoBehaviourPunCallbacks
     private Vector3 endPos;
     private bool isDragging = false;
     private Vector3 offset;
+    private Image draggedImage;
 
     void Start()
     {
@@ -176,64 +177,58 @@ public class HUD : MonoBehaviourPunCallbacks
 
     }
 
-   public void DisplayPlayers(Photon.Realtime.Player[] players)
-{
-    //Debug.Log("Display Players");
-    Transform Players = transform.Find("Players");
-
-    if (Players != null)
+    public void DisplayPlayers(Photon.Realtime.Player[] players)
     {
-        Debug.Log("Display Players Players found");
-        Transform Image = Players.Find("Image");
-        Transform RoomName = Image.Find("RoomName");
-        if (RoomName != null)
-        {
-            //Debug.Log("Display Players Room name != null");
-            TextMeshProUGUI textComp = RoomName.GetComponent<TextMeshProUGUI>();
-            if (textComp != null)
-            {
-                if (PhotonNetwork.InRoom)
-                {
-                    //Debug.Log("room name set");
-                    textComp.text = "Session de: " + PhotonNetwork.CurrentRoom.Name + "\n\n";
-                }
-            }
-            else
-            {
-                Debug.Log("HUD: textComp == null");
-            }
-        }
+        Transform Players = transform.Find("Players");
 
-        Transform playersUi = Players.Find("Players");
-        if (playersUi != null)
+        if (Players != null)
         {
-            //Debug.Log("Display Players playersui != null");
-            TextMeshProUGUI textComp = playersUi.GetComponent<TextMeshProUGUI>();
-            if (textComp != null)
+            Debug.Log("Display Players Players found");
+            Transform Image = Players.Find("Image");
+            Transform RoomName = Image.Find("RoomName");
+            if (RoomName != null)
             {
-                //Debug.Log("Display Players playersui textcomp != null");
-                textComp.text = "";
-                int playerCount = 0;  // Ajout d'un compteur pour limiter à 10 joueurs
-                foreach (Photon.Realtime.Player player in players)
+                TextMeshProUGUI textComp = RoomName.GetComponent<TextMeshProUGUI>();
+                if (textComp != null)
                 {
-                    if (playerCount >= 10) break;  // Si plus de 10 joueurs, arrêter l'itération
-                    Debug.Log("Display Players nickname = " + player.NickName);
-                    textComp.text += player.NickName + ",\n\n";
-                    playerCount++;  // Incrémenter le compteur après chaque joueur
+                    if (PhotonNetwork.InRoom)
+                    {
+                        textComp.text = "Session de: " + PhotonNetwork.CurrentRoom.Name + "\n\n";
+                    }
+                }
+                else
+                {
+                    Debug.Log("HUD: textComp == null");
                 }
             }
-            else
+
+            Transform playersUi = Players.Find("Players");
+            if (playersUi != null)
             {
-                Debug.Log("HUD: textComp == null");
+                TextMeshProUGUI textComp = playersUi.GetComponent<TextMeshProUGUI>();
+                if (textComp != null)
+                {
+                    textComp.text = "";
+                    int playerCount = 0;  // Ajout d'un compteur pour limiter à 10 joueurs
+                    foreach (Photon.Realtime.Player player in players)
+                    {
+                        if (playerCount >= 10) break;  // Si plus de 10 joueurs, arrêter l'itération
+                        Debug.Log("Display Players nickname = " + player.NickName);
+                        textComp.text += player.NickName + ",\n\n";
+                        playerCount++;  // Incrémenter le compteur après chaque joueur
+                    }
+                }
+                else
+                {
+                    Debug.Log("HUD: textComp == null");
+                }
             }
         }
     }
-}
 
     public void Clean()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        Inventory inventory = player.GetComponent<Inventory>();
+        Inventory inventory = gameObject.GetComponent<Inventory>();
         for (int i = 0; i < 9; i++)
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
@@ -246,6 +241,7 @@ public class HUD : MonoBehaviourPunCallbacks
             }
         }
     }
+
     public void init()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -317,22 +313,17 @@ public class HUD : MonoBehaviourPunCallbacks
         }
         Clean();
     }
+
     private void InventoryScript_ItemRemoved(object sender, InventoryEventArgs e)
     {
         Transform inventoryPanel = transform.Find("Inventory");
-        //string tag = "Slot" + e.Index;
-        //foreach (Transform slot in inventoryPanel)
-        // {
-        //   if (slot.CompareTag(tag))
-        //{
         Image image = inventoryPanel.GetChild(e.Index).GetChild(0).GetChild(0).GetComponent<Image>();
         Button button = inventoryPanel.GetChild(e.Index).GetChild(0).GetComponent<Button>();
         image.sprite = null;
         image.enabled = false;
         button.onClick.RemoveAllListeners();
-        //  }
-        //}
     }
+
     // Update is called once per frame
     private void OnPointerClick(PointerEventData eventData)
     {
@@ -345,12 +336,21 @@ public class HUD : MonoBehaviourPunCallbacks
     private void OnBeginDrag(PointerEventData eventData)
     {
         selectedSlot = eventData.pointerPress.transform.parent;
-        offset = (Vector2)selectedSlot.position - eventData.position;
+
         if (selectedSlot != null)
         {
+            // Récupérer l'image de l'item
+            draggedImage = selectedSlot.GetChild(0).GetChild(0).GetComponent<Image>();
+
+            // Définir la position initiale de l'image pour qu'elle suive la souris
+            draggedImage.transform.position = eventData.position;
+
+            // Enregistrer l'offset pour le mouvement précis
+            offset = (Vector2)selectedSlot.position - eventData.position;
+
             startPos = selectedSlot.position;
             isDragging = true;
-            selectedSlot.GetChild(0).GetComponent<Button>().interactable = false;
+            selectedSlot.GetChild(0).GetComponent<Button>().interactable = false; // Désactiver le bouton
         }
     }
 
@@ -358,9 +358,11 @@ public class HUD : MonoBehaviourPunCallbacks
     {
         if (isDragging && selectedSlot != null)
         {
-            // Move the slot with the mouse position, considering the offset
-            selectedSlot.position = new Vector3(eventData.position.x + offset.x, eventData.position.y + offset.y, selectedSlot.position.z);
+            // Déplacez l'image de l'item avec la souris
+            draggedImage.transform.position = eventData.position; // Suivre le curseur
 
+            // Assurez-vous que l'image est toujours devant les autres slots
+            draggedImage.transform.SetAsLastSibling();
         }
     }
 
@@ -371,7 +373,7 @@ public class HUD : MonoBehaviourPunCallbacks
             selectedSlot.GetChild(0).GetComponent<Button>().interactable = true;
             isDragging = false;
 
-            // Check if the release point is over another slot
+            // Vérifiez le slot sous le curseur
             PointerEventData pointerData = new PointerEventData(EventSystem.current);
             pointerData.position = Input.mousePosition;
 
@@ -380,35 +382,33 @@ public class HUD : MonoBehaviourPunCallbacks
 
             Transform releasedSlot = FindSlotFromRaycastResults(results);
 
-            // If a slot is found, swap positions
-            if (releasedSlot == null)
-            {
-                selectedSlot.position = startPos;
-                char id_1_c = selectedSlot.tag[selectedSlot.tag.Length - 1];
-                int id_1 = int.Parse(id_1_c.ToString());
-                Inventory inventory;
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                inventory = player.GetComponent<Inventory>();
-                inventory.DropItem(id_1);
-                Clean();
-                return;
-            }
-            if (releasedSlot == selectedSlot)
-            {
-                selectedSlot.position = startPos;
-                return;
-            }
             if (releasedSlot != null && releasedSlot != selectedSlot)
             {
+                // Échangez les slots
                 SwapSlots(selectedSlot, releasedSlot);
-                selectedSlot.position = startPos;
-                return;
+
+                // Réattachez l'image au slot cible
+                draggedImage.transform.SetParent(releasedSlot.GetChild(0), false);
+                draggedImage.transform.localPosition = Vector3.zero; // Positionnez au centre du slot
+                draggedImage.transform.SetAsLastSibling(); // Assurez-vous que l'image est devant
             }
+            else
+            {
+                // Si aucun autre slot trouvé, remettre l'image à sa position d'origine
+                draggedImage.transform.SetParent(selectedSlot.GetChild(0), false);
+                draggedImage.transform.localPosition = Vector3.zero; // Réinitialisez la position
+            }
+
+            // Réactiver l'image dans le slot d'origine si elle avait été désactivée
+            selectedSlot.GetChild(0).GetChild(0).GetComponent<Image>().enabled = true;
+
+            // Réinitialisation des valeurs
+            draggedImage = null;
+            selectedSlot = null;
+            startPos.Set(0, 0, 0);
+            endPos.Set(0, 0, 0);
+            offset.Set(0, 0, 0);
         }
-        selectedSlot = null;
-        startPos.Set(0, 0, 0);
-        endPos.Set(0, 0, 0);
-        offset.Set(0, 0, 0);
     }
 
     private Transform FindSlotFromRaycastResults(List<RaycastResult> results)
@@ -443,34 +443,42 @@ public class HUD : MonoBehaviourPunCallbacks
 
     private void SwapSlots(Transform slot1, Transform slot2)
     {
-        endPos = slot2.position;
-        Inventory inventory;
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        inventory = player.GetComponent<Inventory>();
-        //
-        GameObject loot = GameObject.FindGameObjectWithTag("LootHUD");
+        // Récupération des composants Inventory
+        Inventory inventory = gameObject.GetComponentInParent<Inventory>();
 
-        //
+        // Sauvegarde les positions initiales des slots
+        Vector3 pos1 = slot1.position;
+        Vector3 pos2 = slot2.position;
+
+        // Récupération des images enfants dans chaque slot
+        Transform image1 = slot1.Find("Border/itemImage");
+        Transform image2 = slot2.Find("Border/itemImage");
+
+        // Inverse les images en changeant leur parent
+        image1.SetParent(slot2.Find("Border"), false); // On assigne l'image1 au slot2
+        image2.SetParent(slot1.Find("Border"), false); // On assigne l'image2 au slot1
+
+        // Ajuste les positions pour que les images correspondent bien aux nouveaux parents
+        image1.localPosition = Vector3.zero; // Réinitialise la position locale dans le nouveau parent
+        image2.localPosition = Vector3.zero;
+
+        bool sameParent = slot1.parent == slot2.parent;
+
         char id_1_c = slot1.tag[slot1.tag.Length - 1];
         int id_1 = int.Parse(id_1_c.ToString());
         char id_2_c = slot2.tag[slot2.tag.Length - 1];
         int id_2 = int.Parse(id_2_c.ToString());
-        if (slot2.position.y >= -30)
+        if (sameParent)
         {
+            Debug.Log("swap items in HUD");
             inventory.SwapItems(id_1, id_2);
-            //slot1.position = endPos;
-            //slot2.position = startPos;
         }
         else
         {
-            if (loot == null)
-            {
-                return;
-            }
-            LootHUD lootHUD = loot.GetComponent<LootHUD>();
+            Debug.Log("swap items loot in HUD");
+            LootHUD lootHUD = gameObject.GetComponentInChildren<LootHUD>();
             inventory.SwapItemsLoot(id_1, id_2, lootHUD.inventory);
-            //inventory.Print_Inventory();
-            //lootHUD.inventory.Print_Inventory();
+            lootHUD.Clean();
         }
         Clean();
     }
