@@ -10,6 +10,8 @@ public class PlayerTabManager : MonoBehaviourPunCallbacks
     public Text PlayerName_;
     public GameObject ExcludeButton;
 
+    public GameObject Crown_;
+
     private void Start()
     {
         PhotonNetwork.EnableCloseConnection = true;
@@ -37,6 +39,10 @@ public class PlayerTabManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("Not able to display PlayerManager because not MasterClient !");
         }
+    }
+    public void Master()
+    {
+        Crown_.SetActive(true);
     }
 
     public void ExcludePlayer()

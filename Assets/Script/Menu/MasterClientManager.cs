@@ -54,6 +54,8 @@ public class MasterClientManager : MonoBehaviourPun
             //tmp = Playertest.GetHP();
             PlayerTabManager NewPlayer_ = Instantiate(PlayerItemPrefab_, ContentObject_);
             NewPlayer_.SetPlayerName(player.NickName);
+            if (player.IsMasterClient)
+                NewPlayer_.Master();
             PlayerItemList_.Add(NewPlayer_);
         }
         UpdateWaitingMessage();

@@ -51,7 +51,7 @@ public class OnEventCallBacksPlayer : MonoBehaviourPunCallbacks
             //tmp = Playertest.GetHP();
             PlayerTabManager NewPlayer_ = Instantiate(PlayerItemPrefab_, ContentObject_);
             NewPlayer_.SetPlayerName(player.NickName);
-            NewPlayer_.SetPlayerHP();
+            
             PlayerItemList_.Add(NewPlayer_);
         }
     }
