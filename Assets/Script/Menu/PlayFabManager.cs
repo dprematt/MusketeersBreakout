@@ -141,7 +141,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
             BoutonInscription_.SetActive(false);
             BoutonPlay_.SetActive(true);
             BoutonDeconnexion_.SetActive(true);
-            Bienvenue_.text = "Bienvenue " + username + " !!!";
+            Bienvenue_.text = "Welcome " + username + " !!!";
             Debug.Log("Username: " + username);
             SavePhotonId();
         }
