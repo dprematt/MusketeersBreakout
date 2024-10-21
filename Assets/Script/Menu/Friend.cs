@@ -18,6 +18,8 @@ public class Friend : MonoBehaviour
         manager = FindObjectOfType<FriendsManager>();
     }
 
+    
+
     public void OnClickDelete()
     {
         manager.OnClickRemoveButton(usernameText.text);

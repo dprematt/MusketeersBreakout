@@ -43,6 +43,12 @@ public class FriendsManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            if (gameObject.activeSelf) {
+                OnClickAddButton();
+            }
+        }
         if (gameObject.activeSelf && !hasGottenFriendsList) {
             PlayFabClientAPI.GetFriendsList(new GetFriendsListRequest(), OnGetFriendsListSuccess, OnError);
             hasGottenFriendsList = true;

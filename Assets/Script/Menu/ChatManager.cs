@@ -23,6 +23,17 @@ public class ChatManager : MonoBehaviour
     public GameObject Content;
     public ScrollRect scrollRect;
     // Start is called before the first frame update
+
+    void Update()
+    {
+        // Vérifie si la touche Entrée est pressée et si un bouton est actuellement sélectionné
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            if (gameObject.activeSelf) {
+                SendMessage();
+            }
+        }
+    }
     public void SendMessage()
     {
         GetComponent<PhotonView>().RPC("GetMessage", RpcTarget.All, PhotonNetwork.NickName, inputField.text);
