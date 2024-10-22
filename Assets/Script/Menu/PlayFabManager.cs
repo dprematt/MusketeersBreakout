@@ -230,7 +230,6 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
 
     void OnTextChanged(string text)
     {
-        // Convertir le texte en minuscules
         Username_.text = text.ToLower();
     }
 

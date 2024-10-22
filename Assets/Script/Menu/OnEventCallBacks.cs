@@ -17,6 +17,7 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
     public float TimeUpdate_ = 5f;
     float NextUpdateTime_;
 
+
     private void Start()
     {
         Manager = GetComponent<PhotonManager>();
@@ -25,8 +26,8 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.JoinLobby();
-        LobbyPanel_.SetActive(true);
-        FriendPannel_.SetActive(true);
+        // LobbyPanel_.SetActive(true);
+        // FriendPannel_.SetActive(true);
         Debug.Log("ConnectedToMaster Photon");
     }
 
