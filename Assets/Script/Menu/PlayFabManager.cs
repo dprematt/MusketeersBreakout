@@ -143,7 +143,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
             BoutonDeconnexion_.SetActive(true);
             Bienvenue_.text = "Welcome " + username + " !!!";
             Debug.Log("Username: " + username);
-            SavePhotonId();
+            SaveStatus();
         }
     }
 
@@ -165,13 +165,13 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
         BoutonPlay_.SetActive(false);
     }
 
-    public void SavePhotonId()
+    public void SaveStatus()
     {
         var request = new UpdateUserDataRequest
         {
             Data = new System.Collections.Generic.Dictionary<string, string>
             {
-                { "PhotonID", PhotonNetwork.LocalPlayer.UserId },
+                { "Status", "online" },
 
             },
             Permission = UserDataPermission.Public
@@ -232,6 +232,23 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
     {
         // Convertir le texte en minuscules
         Username_.text = text.ToLower();
+    }
+
+    void OnApplicationQuit()
+    {
+
+        var request = new UpdateUserDataRequest
+        {
+            Data = new System.Collections.Generic.Dictionary<string, string>
+            {
+                { "Status", "offline" },
+
+            },
+            Permission = UserDataPermission.Public
+        };
+
+        PlayFabClientAPI.UpdateUserData(request, OnVariableEnregistree, OnPlayFabError);
+        
     }
 
 }
