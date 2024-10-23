@@ -21,6 +21,7 @@ public class FriendsManager : MonoBehaviourPunCallbacks
     public Text Username_;
 
     public GameObject Chat;
+    public GameObject Friend;
 
     private const byte CustomEventCode = 1;
 

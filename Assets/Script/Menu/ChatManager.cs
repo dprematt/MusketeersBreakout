@@ -8,6 +8,7 @@ public class ChatManager : MonoBehaviour
 {
 
     public GameObject Friend;
+    public GameObject Chat;
 
     public InputField inputField;
 
@@ -36,6 +37,8 @@ public class ChatManager : MonoBehaviour
     }
     public void SendMessage()
     {
+        if (inputField.text.Length <= 0)
+            return;
         GetComponent<PhotonView>().RPC("GetMessage", RpcTarget.All, PhotonNetwork.NickName, inputField.text);
         inputField.text = "";
     }
@@ -81,9 +84,9 @@ public class ChatManager : MonoBehaviour
     {
         if (Friend.activeSelf)
             Friend.SetActive(false);
-        if (gameObject.activeSelf)
-            gameObject.SetActive(false);
+        if (Chat.activeSelf)
+            Chat.SetActive(false);
         else
-            gameObject.SetActive(true);
+            Chat.SetActive(true);
     }
 }
