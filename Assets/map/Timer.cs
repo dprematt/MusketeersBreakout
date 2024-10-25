@@ -3,49 +3,57 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Photon.Pun;
-
+using Photon.Realtime;  // Nécessaire pour les méthodes sur Room
+using Hashtable = ExitGames.Client.Photon.Hashtable;
+using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
-    [Header("UI")]
-    public TextMeshProUGUI timerText;
+    public TextMeshProUGUI time;
+    public bool count;
+    public int Time;
 
-    [Header("Variables")]
-    public float totalTime;
-    private float currentTime;
-
+    ExitGames.Client.Photon.Hashtable setTime = new ExitGames.Client.Photon.Hashtable();
 
     void Start()
     {
-        currentTime = totalTime;
+        count = true;
     }
+
     void Update()
     {
-        // Mettre à jour le texte du chronomètre
-        currentTime -= Time.deltaTime;
-        if (currentTime < 0f){
-            currentTime = 0f;
-            PhotonNetwork.LoadLevel("Menu");
-        }
-        
-        UpdateTimeUI();
+            // Time = (int)PhotonNetwork.CurrentRoom.CustomProperties["Time"];
+        // Vérifiez si la salle existe pour éviter les erreurs null
+        // if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("Time"))
+        // {
+            // Récupérer la valeur actuelle de "Time" dans les propriétés de la salle
+            Time = (int)PhotonNetwork.CurrentRoom.CustomProperties["Time"];
+            Debug.Log("ZIZI " + Time);
+
+            // Calculer les minutes et secondes pour l'affichage
+            float minutes = Mathf.FloorToInt(Time / 60);
+            float seconds = Mathf.FloorToInt(Time % 60);
+
+            // Mettre à jour le texte
+            time.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            // Démarrer le timer s'il n'est pas déjà en cours
+            if (count)
+            {
+                count = false;
+                StartCoroutine(timer());
+            }
+        // }
     }
 
-    void UpdateTimeUI()
+    IEnumerator timer()
     {
-        int minutes = Mathf.FloorToInt(currentTime / 60f);
-        int secondes = Mathf.FloorToInt(currentTime % 60);
-        string timeString = string.Format("{00:00}:{01:00}", minutes, secondes);
-        timerText.text = timeString;
- 
-        if (currentTime > 900f) {
-            timerText.color = Color.green;
-            //Debug.Log(currentTime.ToString());
-        }
-        else if (currentTime < 900f && currentTime > 300f)
-            timerText.color = new Color(1.0f, 0.5f, 0.0f);
-        else if (currentTime < 300f)
-            timerText.color = Color.red;
-    }
+        yield return new WaitForSeconds(1);
+        int nextTime = Time - 1;
 
+        setTime["Time"] = nextTime;
+        PhotonNetwork.CurrentRoom.SetCustomProperties(setTime);
+
+        count = true;
+    }
 }
