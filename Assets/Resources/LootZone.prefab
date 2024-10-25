@@ -347,7 +347,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5577057275590667330, guid: 93952816048fa1242aa14c3e44caa224, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 93952816048fa1242aa14c3e44caa224, type: 3}
 --- !u!4 &7994895577614414075 stripped
 Transform:
@@ -1071,7 +1072,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6361723844060116210, guid: a0f72ac672dfb39488c1c9ac8e487459, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.76
+      value: 11.41
       objectReference: {fileID: 0}
     - target: {fileID: 6361723844060116210, guid: a0f72ac672dfb39488c1c9ac8e487459, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2277,7 +2278,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grass_05 (7)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 398057045717797765, guid: 146816c92afae514fbbe19bf89919608, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 146816c92afae514fbbe19bf89919608, type: 3}
 --- !u!4 &8177639316691840274 stripped
 Transform:
@@ -2301,7 +2303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2934090672500565014, guid: 9841c4735a0536f49b92bd2c9e098467, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 11.808966
+      value: 10.35
       objectReference: {fileID: 0}
     - target: {fileID: 2934090672500565014, guid: 9841c4735a0536f49b92bd2c9e098467, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2686,7 +2688,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mushroom_04 (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7553702072621926229, guid: d534486f552b24d40b4d58710ef7aeaf, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d534486f552b24d40b4d58710ef7aeaf, type: 3}
 --- !u!4 &211567613985135102 stripped
 Transform:
@@ -3178,7 +3181,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5577057275590667330, guid: 93952816048fa1242aa14c3e44caa224, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 93952816048fa1242aa14c3e44caa224, type: 3}
 --- !u!4 &8649330050169192516 stripped
 Transform:
@@ -3731,7 +3735,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grass_05 (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 398057045717797765, guid: 146816c92afae514fbbe19bf89919608, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 146816c92afae514fbbe19bf89919608, type: 3}
 --- !u!4 &9103817696035162549 stripped
 Transform:
@@ -3973,7 +3978,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2510404319044894989, guid: 18bf081edfc5b734388b7356a1972e2d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 18bf081edfc5b734388b7356a1972e2d, type: 3}
 --- !u!4 &2740539151397435374 stripped
 Transform:
@@ -4201,7 +4207,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grass_05 (5)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 398057045717797765, guid: 146816c92afae514fbbe19bf89919608, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 146816c92afae514fbbe19bf89919608, type: 3}
 --- !u!4 &4749383160048321927 stripped
 Transform:
@@ -4350,7 +4357,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grass_05 (4)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 398057045717797765, guid: 146816c92afae514fbbe19bf89919608, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 146816c92afae514fbbe19bf89919608, type: 3}
 --- !u!4 &4791802967839495838 stripped
 Transform:
@@ -4676,7 +4684,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grass_05 (6)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 398057045717797765, guid: 146816c92afae514fbbe19bf89919608, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 146816c92afae514fbbe19bf89919608, type: 3}
 --- !u!4 &4887960574031325786 stripped
 Transform:
@@ -4987,7 +4996,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Plant_04 (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 156585799135501360, guid: c4c99035667ad5f409c92d8ffe960506, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c4c99035667ad5f409c92d8ffe960506, type: 3}
 --- !u!4 &3239149902041805692 stripped
 Transform:
@@ -5229,7 +5239,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5577057275590667330, guid: 93952816048fa1242aa14c3e44caa224, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 93952816048fa1242aa14c3e44caa224, type: 3}
 --- !u!4 &4757503395920466232 stripped
 Transform:
@@ -5249,7 +5260,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1693916871647116434, guid: b5a8eaf725a746944bdd240de826d2c9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.01
+      value: 10.33
       objectReference: {fileID: 0}
     - target: {fileID: 1693916871647116434, guid: b5a8eaf725a746944bdd240de826d2c9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5458,7 +5469,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Plant_02 (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1827525839497068966, guid: 8ffc526b1fe274943b9a30a606a8a11a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8ffc526b1fe274943b9a30a606a8a11a, type: 3}
 --- !u!4 &6716411379298651235 stripped
 Transform:
@@ -6251,7 +6263,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grass_03
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6159763102192819709, guid: f8cfde913a10db44db1cdfc819ccd200, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f8cfde913a10db44db1cdfc819ccd200, type: 3}
 --- !u!4 &1124532916506105801 stripped
 Transform:
@@ -6451,7 +6464,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6931078508671352518, guid: 146816c92afae514fbbe19bf89919608, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.574039
+      value: 10.36
       objectReference: {fileID: 0}
     - target: {fileID: 6931078508671352518, guid: 146816c92afae514fbbe19bf89919608, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6493,7 +6506,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grass_05 (3)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 398057045717797765, guid: 146816c92afae514fbbe19bf89919608, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 146816c92afae514fbbe19bf89919608, type: 3}
 --- !u!4 &6879232084100717501 stripped
 Transform:
@@ -6555,7 +6569,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grass_05 (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 398057045717797765, guid: 146816c92afae514fbbe19bf89919608, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 146816c92afae514fbbe19bf89919608, type: 3}
 --- !u!4 &2359749407779333354 stripped
 Transform:
@@ -6617,7 +6632,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Flower_04
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5710364869268716491, guid: 5c42d9669c250fa44961d8b28f6c9e5f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5c42d9669c250fa44961d8b28f6c9e5f, type: 3}
 --- !u!4 &2796346915267038494 stripped
 Transform:
@@ -7136,7 +7152,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Plant_04
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 156585799135501360, guid: c4c99035667ad5f409c92d8ffe960506, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c4c99035667ad5f409c92d8ffe960506, type: 3}
 --- !u!4 &4869023579625465709 stripped
 Transform:
@@ -7251,7 +7268,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3685704714741571370, guid: 372d50667ed4fe4489e01bfe828b4372, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.644826
+      value: -6.07
       objectReference: {fileID: 0}
     - target: {fileID: 3685704714741571370, guid: 372d50667ed4fe4489e01bfe828b4372, type: 3}
       propertyPath: m_LocalRotation.w
@@ -7281,7 +7298,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5188872527145335858, guid: 372d50667ed4fe4489e01bfe828b4372, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 372d50667ed4fe4489e01bfe828b4372, type: 3}
 --- !u!4 &8381379127360963081 stripped
 Transform:
@@ -8345,7 +8363,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8326770890547746320, guid: 8ffc526b1fe274943b9a30a606a8a11a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.892666
+      value: -14.67
       objectReference: {fileID: 0}
     - target: {fileID: 8326770890547746320, guid: 8ffc526b1fe274943b9a30a606a8a11a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -8387,7 +8405,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Plant_02 (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1827525839497068966, guid: 8ffc526b1fe274943b9a30a606a8a11a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8ffc526b1fe274943b9a30a606a8a11a, type: 3}
 --- !u!4 &2831994328786042428 stripped
 Transform:
@@ -8449,7 +8468,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 5875732422225603424, guid: 8c09c0501d6021c44bd5a837115ba954, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 5875732422225603424, guid: 8c09c0501d6021c44bd5a837115ba954, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.26
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 2100541489097873504, guid: 8c09c0501d6021c44bd5a837115ba954, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8c09c0501d6021c44bd5a837115ba954, type: 3}
 --- !u!4 &1487423940676511100 stripped
 Transform:
@@ -9092,7 +9120,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mushroom_07
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8106172780257151019, guid: e376a0086331c01488569f282478d8d1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e376a0086331c01488569f282478d8d1, type: 3}
 --- !u!4 &3257786603962127203 stripped
 Transform:
@@ -9334,7 +9363,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grass_05
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 398057045717797765, guid: 146816c92afae514fbbe19bf89919608, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 146816c92afae514fbbe19bf89919608, type: 3}
 --- !u!4 &460656602279762484 stripped
 Transform:
@@ -9396,7 +9426,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Grass_03 (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6159763102192819709, guid: f8cfde913a10db44db1cdfc819ccd200, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f8cfde913a10db44db1cdfc819ccd200, type: 3}
 --- !u!4 &6163810344578583667 stripped
 Transform:
@@ -10596,7 +10627,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 412532600830425621, guid: c4c99035667ad5f409c92d8ffe960506, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.943671
+      value: -13.13
       objectReference: {fileID: 0}
     - target: {fileID: 412532600830425621, guid: c4c99035667ad5f409c92d8ffe960506, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10638,7 +10669,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Plant_04 (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 156585799135501360, guid: c4c99035667ad5f409c92d8ffe960506, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c4c99035667ad5f409c92d8ffe960506, type: 3}
 --- !u!4 &8188398006955431647 stripped
 Transform:
@@ -10977,7 +11009,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2510404319044894989, guid: 18bf081edfc5b734388b7356a1972e2d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 18bf081edfc5b734388b7356a1972e2d, type: 3}
 --- !u!4 &5536308292936214995 stripped
 Transform:
@@ -10991,6 +11024,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6752304828113490478}
     m_Modifications:
+    - target: {fileID: 1827525839497068966, guid: 8ffc526b1fe274943b9a30a606a8a11a, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8326770890547746320, guid: 8ffc526b1fe274943b9a30a606a8a11a, type: 3}
       propertyPath: m_RootOrder
       value: 97
@@ -11039,7 +11076,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Plant_02
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1827525839497068966, guid: 8ffc526b1fe274943b9a30a606a8a11a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8ffc526b1fe274943b9a30a606a8a11a, type: 3}
 --- !u!4 &479650952753562142 stripped
 Transform:
@@ -11101,7 +11139,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mushroom_04
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7553702072621926229, guid: d534486f552b24d40b4d58710ef7aeaf, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d534486f552b24d40b4d58710ef7aeaf, type: 3}
 --- !u!4 &7933633161604991681 stripped
 Transform:
