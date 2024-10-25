@@ -4,12 +4,14 @@ using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 using UnityEngine.UI;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PhotonManager : MonoBehaviour
 {
 
     private int Nb_max;
     public Text Players;
+    public Text Time;
 
     private void Start()
     {
@@ -46,8 +48,15 @@ public class PhotonManager : MonoBehaviour
         if (Name.Length >= 1)
         {   
             int seed = new System.Random().Next();
-            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mapSeed", seed } };
-            roomOptions.CustomRoomPropertiesForLobby = new string[] { "mapSeed" };
+            Hashtable options = new Hashtable()
+            {
+                { "mapSeed", seed },
+                { "Time", 1800 },
+            };
+
+
+            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mapSeed", seed }, {"Time", 1800}};
+            roomOptions.CustomRoomPropertiesForLobby = new string[] { "mapSeed", "Time" };
 
             PhotonNetwork.CreateRoom(Name, roomOptions);
         }
