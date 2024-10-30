@@ -111,7 +111,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-
+        if (photonView.IsMine) {
         HealthManager = GetComponent<HealthManager>();
         PFInventory_ = GetComponent<PlayFabInventory>();
         rb = GetComponent<Rigidbody>();
@@ -161,6 +161,7 @@ public class Player : MonoBehaviourPunCallbacks
             jumpSlider.value = jumpSource.volume;
         }
         //StartCoroutine(DamageOverTime());
+        }
     }
     public Weapon RetrieveEquippedWeapon(string hand)
     {
@@ -189,6 +190,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (photonView.IsMine) {
         HUDFixe hudfixe2 = HUDFixe.GetComponent<HUDFixe>();
         hudfixe2.Clean();
         if (lineRenderer == null)
@@ -366,6 +368,7 @@ public class Player : MonoBehaviourPunCallbacks
             }
         }
         */
+        }  
     }
 
      public void SetHUDVolume(float volume)
@@ -657,6 +660,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     void MyInput()
     {
+        if (photonView.IsMine) {
         horizontalMovement = Input.GetAxisRaw("Horizontal");
         verticalMovement = Input.GetAxisRaw("Vertical");
         if (horizontalMovement != 0 || verticalMovement != 0)
@@ -675,6 +679,7 @@ public class Player : MonoBehaviourPunCallbacks
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             characterModel.rotation = Quaternion.Slerp(characterModel.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             //transform.rotation = Quaternion.Slerp(characterModel.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
         }
     }
 
@@ -720,6 +725,7 @@ public class Player : MonoBehaviourPunCallbacks
     }
     private void FixedUpdate()
     {
+        if (photonView.IsMine) {
         MovePlayer();
         if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
         {
@@ -747,9 +753,11 @@ public class Player : MonoBehaviourPunCallbacks
         {
             anim.SetBool("isDodging", false);
         }
+        }
     }
     void MovePlayer()
     {
+        if (photonView.IsMine) {
         if (isGrounded)
         {
             rb.AddForce(moveDirection.normalized * moveSpeed * movementMultiplier, ForceMode.Acceleration);
@@ -757,6 +765,7 @@ public class Player : MonoBehaviourPunCallbacks
         else if (!isGrounded)
         {
             rb.AddForce(moveDirection.normalized * moveSpeed * movementMultiplier * airMultiplier, ForceMode.Acceleration);
+        }
         }
     }
     public Transform FindDeepChild(Transform parent, string name)
