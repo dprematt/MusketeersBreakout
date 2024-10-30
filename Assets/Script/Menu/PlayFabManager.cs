@@ -29,6 +29,7 @@ public class PlayFabManager : MonoBehaviourPunCallbacks
     {
         // S'abonner à l'événement onValueChanged
         Username_.onValueChanged.AddListener(OnTextChanged);
+        
     }
 
     void Update()

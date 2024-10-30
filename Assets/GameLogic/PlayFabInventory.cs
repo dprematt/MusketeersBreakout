@@ -31,6 +31,23 @@ public class PlayFabInventory : MonoBehaviour
 
     }
 
+    void OnApplicationQuit()
+    {
+
+        var request = new UpdateUserDataRequest
+        {
+            Data = new System.Collections.Generic.Dictionary<string, string>
+            {
+                { "Status", "offline" },
+
+            },
+            Permission = UserDataPermission.Public
+        };
+
+        PlayFabClientAPI.UpdateUserData(request, OnVariableEnregistree, OnPlayFabError);
+        
+    }
+
     public void PlayerWin()
     {
         //IInventoryItem[] Item = Inventory_.GetInventory();

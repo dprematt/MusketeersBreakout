@@ -229,7 +229,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &29093040
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6007,7 +6007,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0.5}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6021,13 +6021,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 3
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 140 Char MAX
+  m_Text: Enter message
 --- !u!222 &915623636
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7699,7 +7699,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10068,6 +10068,7 @@ MonoBehaviour:
   Waiting: {fileID: 860742926}
   MaxPlayersRoom: 0
   StartButton: {fileID: 2068185524}
+  Menu: {fileID: 1208311218}
   TimeUpdate_: 3
 --- !u!4 &1351457686
 Transform:
@@ -10584,7 +10585,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0.5}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10604,7 +10605,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter name
+  m_Text: Enter friend name
 --- !u!222 &1515696820
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11538,6 +11539,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Players: {fileID: 656913235}
+  Time: {fileID: 0}
+  ObjectBienvenue_: {fileID: 868381918}
+  BoutonConnexion_: {fileID: 1815831498}
+  BoutonInscription_: {fileID: 1566001519}
+  BoutonPlay_: {fileID: 1548791214}
+  BoutonDeconnexion_: {fileID: 379941434}
+  LobbyPannel_: {fileID: 695061192}
+  Welcome_: {fileID: 1208311218}
+  Bienvenue_: {fileID: 973632389}
 --- !u!1 &1742983186
 GameObject:
   m_ObjectHideFlags: 0

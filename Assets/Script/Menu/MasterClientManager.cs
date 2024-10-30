@@ -12,6 +12,7 @@ public class MasterClientManager : MonoBehaviourPun
     public Text Waiting;
     public int MaxPlayersRoom;
     public GameObject StartButton;
+    public GameObject Menu;
 
     List<PlayerTabManager> PlayerItemList_ = new List<PlayerTabManager>();
 
