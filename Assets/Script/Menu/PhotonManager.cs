@@ -45,6 +45,7 @@ public class PhotonManager : MonoBehaviour
     public void CreateRoom(string Name)
     {
         RoomOptions roomOptions = new RoomOptions { MaxPlayers = (byte)Nb_max };
+        roomOptions.CleanupCacheOnLeave = false;
         if (Name.Length >= 1)
         {   
             int seed = new System.Random().Next();

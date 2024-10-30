@@ -69,8 +69,10 @@ public class HealthManager : MonoBehaviourPunCallbacks
                 }
                 photonView.RPC("DamageInstance", RpcTarget.All, Damage);
             }
-            else
+            else {
+                TransferToNextPlayer();
                 DestroyPlayer();
+            }
         }
     }
 
@@ -81,6 +83,41 @@ public class HealthManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LoadLevel("Menu");
     }
+
+
+    public void TransferMasterClient(Photon.Realtime.Player newMasterClient)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // Vérifie si le joueur cible est bien connecté
+            if (newMasterClient != null && newMasterClient != PhotonNetwork.MasterClient)
+            {
+                PhotonNetwork.SetMasterClient(newMasterClient);
+                Debug.Log($"Le nouveau Master Client est : {newMasterClient.NickName}");
+            }
+            else
+            {
+                Debug.LogWarning("Le joueur spécifié n'est pas valide ou est déjà Master Client.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Seul le Master Client actuel peut transférer ce rôle.");
+        }
+    }
+
+    // Exemple d'utilisation pour transférer au prochain joueur de la liste
+    public void TransferToNextPlayer()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
+            int currentMasterIndex = System.Array.IndexOf(players, PhotonNetwork.MasterClient);
+            int nextPlayerIndex = (currentMasterIndex + 1) % players.Length;
+            TransferMasterClient(players[nextPlayerIndex]);
+        }
+    }
+
 
     public float GetHealth()
     {

@@ -111,6 +111,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+
         HealthManager = GetComponent<HealthManager>();
         PFInventory_ = GetComponent<PlayFabInventory>();
         rb = GetComponent<Rigidbody>();
@@ -635,6 +636,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (col.CompareTag("ExtractionZone"))
         {
+            HealthManager.TransferToNextPlayer();
             PFInventory_.PlayerWin();
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel("Menu");
