@@ -2987,6 +2987,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 0}
+  playerCamera: {fileID: 0}
+  playerIcon: {fileID: 0}
   cameraHeight: 50
 --- !u!81 &1465408788
 AudioListener:
@@ -3233,8 +3235,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88033dec46b6dba4cbbb3d76a1df8e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerText: {fileID: 0}
-  totalTime: 1800
+  time: {fileID: 0}
+  count: 0
+  Time: 0
 --- !u!1 &1676060074
 GameObject:
   m_ObjectHideFlags: 0

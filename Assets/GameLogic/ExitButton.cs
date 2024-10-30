@@ -28,15 +28,4 @@ public class ExitButton : MonoBehaviourPun
             MuteButton.text = "Mute";
         }
     }
-    public void Exit()
-    {
-        Inventory_ = GetComponent<PlayFabInventory>();
-        Debug.Log("Player Exit");
-        Inventory_.PlayerWin();
-        // Quitter la room
-        PhotonNetwork.LeaveRoom();
-
-        // Charger la nouvelle scène
-        PhotonNetwork.LoadLevel("Menu");
-    }
 }

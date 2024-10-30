@@ -14,6 +14,9 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
     public PhotonManager Manager;
     List<RoomManager> RoomItemList_ = new List<RoomManager>();
     public Transform ContentObject_;
+
+    public GameObject Error_;
+    public Transform ContentError_;
     public float TimeUpdate_ = 5f;
     float NextUpdateTime_;
 
@@ -33,11 +36,37 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        LobbyPanel_.SetActive(false);
-        RoomPanel_.SetActive(true);
+        if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("GameState", out object gameState))
+        {
+            if (gameState.ToString() == "en attente")
+            {
+                LobbyPanel_.SetActive(false);
+                RoomPanel_.SetActive(true);
+            }
+            else
+            {
+                GameObject errorObject = Instantiate(Error_, ContentError_);
+                Error errorScript = errorObject.GetComponent<Error>();
+                errorScript.SetErrorText("This room is already in game !");
+                PhotonNetwork.LeaveRoom();
+            }
+        }
+        else
+        {
+            Debug.Log("Aucune information sur l'état de la room.");
+        }
+
+
         //Room_.text = "Room name : " + PhotonNetwork.CurrentRoom.Name;
         //PhotonNetwork.LoadLevel("GamePlayDev");
         Debug.Log("Room joined : " + PhotonNetwork.CurrentRoom.Name);
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        GameObject errorObject = Instantiate(Error_, ContentError_);
+        Error errorScript = errorObject.GetComponent<Error>();
+        errorScript.SetErrorText("Room is full, try creating one !");
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> RoomList)

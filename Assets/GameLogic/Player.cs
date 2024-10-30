@@ -641,6 +641,7 @@ public class Player : MonoBehaviourPunCallbacks
         {
             HealthManager.TransferToNextPlayer();
             PFInventory_.PlayerWin();
+            PhotonNetwork.Destroy(gameObject);
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel("Menu");
         }
@@ -804,4 +805,18 @@ public class Player : MonoBehaviourPunCallbacks
         attackSlowdownCoroutine = null;
         Debug.Log("SlowdownCoroutine: End");
     }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+{
+    if (stream.IsWriting)
+    {
+        stream.SendNext(gameObject.transform.position);
+        stream.SendNext(gameObject.transform.rotation);
+    }
+    else
+    {
+        gameObject.transform.position = (Vector3)stream.ReceiveNext();
+        gameObject.transform.rotation = (Quaternion)stream.ReceiveNext();
+    }
+}
 }

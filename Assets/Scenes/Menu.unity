@@ -229,7 +229,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &29093040
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11511,6 +11511,8 @@ MonoBehaviour:
   RoomItemPrefab_: {fileID: 576080088768381598, guid: 2fa1dbb25deca46cf87d8516b894f131, type: 3}
   Manager: {fileID: 0}
   ContentObject_: {fileID: 1461825587}
+  Error_: {fileID: 7655646569995079114, guid: 7393b7b5189b84c38a66cf1fbd9eca25, type: 3}
+  ContentError_: {fileID: 1072255796}
   TimeUpdate_: 1.5
 --- !u!114 &1742416784
 MonoBehaviour:

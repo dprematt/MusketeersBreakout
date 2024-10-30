@@ -33,6 +33,7 @@ public class PhotonManager : MonoBehaviour
 
         if (PlayFabClientAPI.IsClientLoggedIn() && PhotonNetwork.IsConnected) {
             Debug.Log("Letsgooooo    " + PhotonNetwork.NickName);
+            PhotonNetwork.LeaveRoom();
             ObjectBienvenue_.SetActive(true);
             BoutonConnexion_.SetActive(false);
             BoutonInscription_.SetActive(false);
@@ -71,18 +72,20 @@ public class PhotonManager : MonoBehaviour
     {
         RoomOptions roomOptions = new RoomOptions { MaxPlayers = (byte)Nb_max };
         roomOptions.CleanupCacheOnLeave = false;
+
         if (Name.Length >= 1)
         {   
             int seed = new System.Random().Next();
             Hashtable options = new Hashtable()
-            {
-                { "mapSeed", seed },
-                { "Time", 1800 },
-            };
+        {
+            { "mapSeed", seed },
+            { "Time", 1800 },
+            { "GameState", "en attente" }
+        };
 
+        roomOptions.CustomRoomProperties = options;
+        roomOptions.CustomRoomPropertiesForLobby = new string[] { "mapSeed", "Time", "GameState" };
 
-            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mapSeed", seed }, {"Time", 1800}};
-            roomOptions.CustomRoomPropertiesForLobby = new string[] { "mapSeed", "Time" };
 
             PhotonNetwork.CreateRoom(Name, roomOptions);
         }

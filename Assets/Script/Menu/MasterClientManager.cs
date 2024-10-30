@@ -76,7 +76,7 @@ public class MasterClientManager : MonoBehaviourPun
         if (PhotonNetwork.InRoom)
         {
             int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-            Debug.Log("Nomber of players int the room : " + playerCount);
+            Debug.Log("Nomber of players in the room : " + playerCount);
             return playerCount;
         }
         return -1;
@@ -95,6 +95,8 @@ public class MasterClientManager : MonoBehaviourPun
 
     public void StartGame()
     {
+        ExitGames.Client.Photon.Hashtable roomState = new ExitGames.Client.Photon.Hashtable() { { "GameState", "in game" } };
+        PhotonNetwork.CurrentRoom.SetCustomProperties(roomState);
         photonView.RPC("RPC_StartGame", RpcTarget.All);
     }
 
