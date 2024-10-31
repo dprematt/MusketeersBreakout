@@ -1553,6 +1553,18 @@ MonoBehaviour:
     prefab: {fileID: 7283551367912861503, guid: f23a6e9954f956486a8104d9a8e80e74, type: 3}
   - type: caillou
     prefab: {fileID: 5670419878802077003, guid: b1b26022be5b9a587b77515d9a77092a, type: 3}
+  - type: herbe1
+    prefab: {fileID: 8547150190602755905, guid: bd1cd3d5b8338004b9909fd1da67a75d, type: 3}
+  - type: herbe2
+    prefab: {fileID: 8715847943462166489, guid: 00ef1e1b2ef957d478e933cbd912e07a, type: 3}
+  - type: herbe3
+    prefab: {fileID: 4078699000243893605, guid: aa854d3217ae9e14ea6b5cf737aa57d0, type: 3}
+  - type: caillou2
+    prefab: {fileID: 198933666482748135, guid: c623442f5c7cc554da8db59b13113a32, type: 3}
+  - type: buche
+    prefab: {fileID: 9014547031140825374, guid: 0c8c64d3b8cc212488a236183db4c7fd, type: 3}
+  - type: arbre2
+    prefab: {fileID: 7518195065243562810, guid: 613d6c601a9e50d45ace3e23f327661a, type: 3}
   Biomes:
   - type: "d\xE9sert"
     prefab: {fileID: 3997192538817553815, guid: 5fb8fb3cc01af44308006821f1abe929, type: 3}

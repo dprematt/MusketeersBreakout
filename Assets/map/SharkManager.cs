@@ -133,7 +133,6 @@ public class SharkManager : MonoBehaviour
         Vector3 scale = rightShark.transform.localScale;
         scale.z *= -1;
         rightShark.transform.localScale = scale;
-        // rightShark.transform.Rotate(Vector3.up, 180.0f);
     }
 
     void FlipLeftShark()
@@ -141,7 +140,6 @@ public class SharkManager : MonoBehaviour
         Vector3 scale = leftShark.transform.localScale;
         scale.z *= -1;
         leftShark.transform.localScale = scale;
-        // leftShark.transform.Rotate(Vector3.up, 180.0f);
     }
 
     void FlipUpperShark()

@@ -94,7 +94,7 @@ public class Generator : MonoBehaviourPun
             new Vector3(480, 0, -540),
             new Vector3(480, 0, 540)
         };
-        int[] prefabCounts = new int[] { 2, 5, 5, 5 };
+        int[] prefabCounts = new int[] { 7, 7, 7, 7, 7, 7, 7, 7, 7, 7};
         float chunkHalfSize = chunkSize / 2f;
 
         float mapLeftBorder = -2.5f * mapChunkSize + 100f;
@@ -134,7 +134,7 @@ public class Generator : MonoBehaviourPun
 
                     if (!isTooCloseToSameType && !isTooCloseToExtractionZone && !isTooCloseToBiome && x >= mapLeftBorder && x <= mapRightBorder && z >= mapBottomBorder && z <= mapTopBorder)
                     {
-                        if (height > 0.1f && height < 0.5f)
+                        if (height == 0.4f)
                         {
                             validPosition = true;
                             placedPrefabs[prefabType.type].Add(position);
@@ -154,6 +154,20 @@ public class Generator : MonoBehaviourPun
             }
         }
     }
+
+    // float GetPrefabHeight(string prefabType)
+    // {
+    //     switch (prefabType)
+    //     {
+    //         case "herbe1": return 0.7f;
+    //         case "herbe2": return 0.7f;
+    //         case "herbe3": return 0.8f;
+    //         case "jungle": return -0.5f;
+    //         case "village": return 0.8f;
+    //         case "loot": return 0.8f;
+    //         default: return 0f;
+    //     }
+    // }
 
     void PlaceBiomesGuardians()
     {
