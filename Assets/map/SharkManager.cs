@@ -14,7 +14,9 @@ public class SharkManager : MonoBehaviour
     private bool movingLowerShark = true;
     private bool movingRightShark = true;
     private bool movingLeftShark = true;
-
+    
+    private bool movingDown = true;
+    private bool movingDownBis = true;
 
     void Start()
     {
@@ -33,6 +35,11 @@ public class SharkManager : MonoBehaviour
         updateRightShark();
         updateLeftShark();
     }
+
+    private void RotateShark(GameObject shark)
+        {
+            shark.transform.rotation = Quaternion.Euler(0, shark.transform.rotation.eulerAngles.y + 180, 0);
+        }
 
     void updateUpperShark() {
         if (movingUpperShark)
@@ -82,66 +89,47 @@ public class SharkManager : MonoBehaviour
 
     void updateLeftShark()
     {
-        if (movingLeftShark)
+        if (movingDown)
         {
-            leftShark.transform.Translate(Vector3.left * speed * Time.deltaTime);
-
+            leftShark.transform.position += Vector3.back * speed * Time.deltaTime;
             if (leftShark.transform.position.z <= -580)
             {
-                movingLeftShark = false;
-                FlipLeftShark();
+                movingDown = false;
+                RotateShark(leftShark);
             }
         }
         else
         {
-            leftShark.transform.Translate(Vector3.right * speed * Time.deltaTime);
-
+            leftShark.transform.position += Vector3.forward * speed * Time.deltaTime;
             if (leftShark.transform.position.z >= 580)
             {
-                movingLeftShark = true;
-                FlipLeftShark();
+                movingDown = true;
+                RotateShark(leftShark);
             }
         }
     }
 
     void updateRightShark()
     {
-        if (movingRightShark)
+        if (movingDownBis)
         {
-            rightShark.transform.Translate(Vector3.left * speed * Time.deltaTime);
-
+            rightShark.transform.position += Vector3.back * speed * Time.deltaTime;
             if (rightShark.transform.position.z <= -580)
             {
-                movingRightShark = false;
-                FlipRightShark();
+                movingDownBis = false;
+                RotateShark(rightShark);
             }
         }
         else
         {
-            rightShark.transform.Translate(Vector3.right * speed * Time.deltaTime);
-
+            rightShark.transform.position += Vector3.forward * speed * Time.deltaTime;
             if (rightShark.transform.position.z >= 580)
             {
-                movingRightShark = true;
-                FlipRightShark();
+                movingDownBis = true;
+                RotateShark(rightShark);
             }
         }
     }
-
-    void FlipRightShark()
-    {
-        Vector3 scale = rightShark.transform.localScale;
-        scale.z *= -1;
-        rightShark.transform.localScale = scale;
-    }
-
-    void FlipLeftShark()
-    {
-        Vector3 scale = leftShark.transform.localScale;
-        scale.z *= -1;
-        leftShark.transform.localScale = scale;
-    }
-
     void FlipUpperShark()
     {
         Vector3 scale = upperShark.transform.localScale;
