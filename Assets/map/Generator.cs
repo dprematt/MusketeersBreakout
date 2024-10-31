@@ -94,7 +94,7 @@ public class Generator : MonoBehaviourPun
             new Vector3(480, 0, -540),
             new Vector3(480, 0, 540)
         };
-        int[] prefabCounts = new int[] { 7, 7, 7, 7, 7, 7, 7, 7, 7, 7};
+        int[] prefabCounts = new int[] { 7, 7, 7, 7, 7 , 7, 7, 7, 7, 7};
         float chunkHalfSize = chunkSize / 2f;
 
         float mapLeftBorder = -2.5f * mapChunkSize + 100f;
@@ -126,7 +126,7 @@ public class Generator : MonoBehaviourPun
                     if (xIndex < 0 || xIndex >= chunkSize || zIndex < 0 || zIndex >= chunkSize) continue;
 
                     float height = heightMap[xIndex, zIndex];
-                    position = new Vector3(x, height, z);
+                    position = new Vector3(x, GetPrefabHeight(prefabType.type), z);
 
                     bool isTooCloseToSameType = placedPrefabs[prefabType.type].Any(pos => Vector3.Distance(position, pos) < 50);
                     bool isTooCloseToExtractionZone = extractionZonePositions.Any(pos => Vector3.Distance(position, pos) < 100);
@@ -155,19 +155,24 @@ public class Generator : MonoBehaviourPun
         }
     }
 
-    // float GetPrefabHeight(string prefabType)
-    // {
-    //     switch (prefabType)
-    //     {
-    //         case "herbe1": return 0.7f;
-    //         case "herbe2": return 0.7f;
-    //         case "herbe3": return 0.8f;
-    //         case "jungle": return -0.5f;
-    //         case "village": return 0.8f;
-    //         case "loot": return 0.8f;
-    //         default: return 0f;
-    //     }
-    // }
+    float GetPrefabHeight(string prefabType)
+    {
+        switch (prefabType)
+        {
+            case "maison": return 0.7f;
+            case "buisson": return 0.7f;
+            case "arbre": return 0.8f;
+            case "arbre2": return 0.8f;
+            case "caillou": return 0.8f;
+            case "caillou2": return 0.8f;
+            case "herbe1": return 0.8f;
+            case "herbe2": return 0.7f;
+            case "herbe3": return 0.8f;
+            case "buche": return 0.3f;
+            default: return 0f;
+        }
+    }
+
 
     void PlaceBiomesGuardians()
     {
