@@ -19,7 +19,7 @@ public class ChunkGenerator : MonoBehaviour
 
     public const int mapChunkSize = 241;
 
-    Vector2 placementAreaSize = new Vector2(1500, 1500);
+    Vector2 placementAreaSize;
 
     private void Start() {
         _generator = FindObjectOfType<Generator>();
@@ -27,7 +27,7 @@ public class ChunkGenerator : MonoBehaviour
         maxViewDist = detailsLevel[detailsLevel.Length - 1].visibleDstThreshold;
         chunkSize = mapChunkSize - 1;
         chunkVisibleViewDist = Mathf.RoundToInt(maxViewDist / chunkSize);
-        placementAreaSize = new Vector2(chunkSize * 5, chunkSize * 5);
+        placementAreaSize = new Vector2(chunkSize * 4, chunkSize * 4);
         GenerateAllChunks();
     }
 
@@ -39,9 +39,9 @@ public class ChunkGenerator : MonoBehaviour
     private void GenerateAllChunks()
     {
         int startChunkX = -(int)(placementAreaSize.x / 2 / chunkSize);
-        int endChunkX = (int)(placementAreaSize.x / 2 / chunkSize);
+        int endChunkX = (int)(placementAreaSize.x / 2 / chunkSize) - 1;
         int startChunkY = -(int)(placementAreaSize.y / 2 / chunkSize);
-        int endChunkY = (int)(placementAreaSize.y / 2 / chunkSize);
+        int endChunkY = (int)(placementAreaSize.y / 2 / chunkSize) - 1;
 
         for (int yOffset = startChunkY; yOffset <= endChunkY; yOffset++)
         {

@@ -37,9 +37,9 @@ public class PrefabsManager : MonoBehaviourPun {
         int i = 1;
         Vector3[] cornerPositions = {
             new Vector3(-536, 4.6f, -556),
-            new Vector3(-410, 4.6f, 556),
-            new Vector3(424, 4.6f, -557),
-            new Vector3(536, 4.6f, 557)
+            new Vector3(-418, 4.6f, 313),
+            new Vector3(185, 4.6f, -554),
+            new Vector3(284, 4.6f, 316)
         };
 
         foreach (Vector3 position in cornerPositions)
@@ -92,10 +92,10 @@ public class PrefabsManager : MonoBehaviourPun {
 
     public void PlacePrefabsInBeach() {
         Vector2[,] intervals = new Vector2[,] {
-            { new Vector2(-565, 555), new Vector2(555, 565) },
-            { new Vector2(-565, 555), new Vector2(-555, -565) },
-            { new Vector2(-555, -565), new Vector2(565, -555) },
-            { new Vector2(555, -565), new Vector2(565, 555) }
+            { new Vector2(-565, 310), new Vector2(315, 325) },
+            { new Vector2(-565, 325), new Vector2(-555, -565) },
+            { new Vector2(-555, -565), new Vector2(325, -555) },
+            { new Vector2(310, -565), new Vector2(325, 330) }
         };
 
         for (int i = 0; i < intervals.GetLength(0); i++) {

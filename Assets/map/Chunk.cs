@@ -113,37 +113,38 @@ public class Chunk
 
         private void ApplyBeachesIfNeeded()
         {
-            float mapHalfWidth = mapChunkSize * 2.5f;
-            float mapHalfHeight = mapChunkSize * 2.5f;
+            float mapHalfWidth = mapChunkSize * 2.0f;
+            float mapHalfHeight = mapChunkSize * 2.0f;
 
             float chunkTopBorder = bounds.center.y + (bounds.size.y / 2);
             float chunkBottomBorder = bounds.center.y - (bounds.size.y / 2);
             float chunkRightBorder = bounds.center.x + (bounds.size.x / 2);
             float chunkLeftBorder = bounds.center.x - (bounds.size.x / 2);
 
-            bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - waterThickness) && bounds.center.y < mapHalfHeight;
+            // bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - waterThickness) && bounds.center.y < mapHalfHeight;
+            bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - waterThickness - mapChunkSize ) && bounds.center.y < mapHalfHeight;
+            bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - waterThickness - mapChunkSize) && bounds.center.x < mapHalfWidth;
             bool isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + waterThickness) && bounds.center.y > -mapHalfHeight;
             bool isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + waterThickness) && bounds.center.x > -mapHalfWidth;
-            bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - waterThickness) && bounds.center.x < mapHalfWidth;
 
             if (isTopBorderChunk)
-                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, false);
+                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, false); 
             if (isBottomBorderChunk)
                 ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, false);
+            // bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - waterThickness) && bounds.center.x < mapHalfWidth;
             if (isLeftBorderChunk)
                 ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, true);
             if (isRightBorderChunk)
                 ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, false);
+            if (isTopBorderChunk)
+                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, true); 
+            if (isBottomBorderChunk)
+                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, true);
 
             isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - sandThickness - waterThickness) && bounds.center.y < mapHalfHeight;
             isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + sandThickness + waterThickness) && bounds.center.y > -mapHalfHeight;
             isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + sandThickness + waterThickness) && bounds.center.x > -mapHalfWidth;
             isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - sandThickness - waterThickness) && bounds.center.x < mapHalfWidth;
-
-            if (isTopBorderChunk)
-                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, true);
-            if (isBottomBorderChunk)
-                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, true);
         }
 
         private void ApplyBeachAndSandToTopOrBottom(int waterThickness, int sandThickness, bool isTopBorder, bool isWater)
@@ -151,7 +152,7 @@ public class Chunk
             float chunkBorderStartZ = isTopBorder ? bounds.center.y - (bounds.size.y / 2) : bounds.center.y + (bounds.size.y / 2);
             float sandEndZ = chunkBorderStartZ + (isTopBorder ? waterThickness : -waterThickness);
             float beachEndZ = sandEndZ + (isTopBorder ? sandThickness : -sandThickness);
-            float mapHalfHeight = mapChunkSize * 2.5f;
+            float mapHalfHeight = mapChunkSize * 2.0f;
 
             System.Random prng = _generator.getPRNG(); // Get a random number generator
 
@@ -166,22 +167,18 @@ public class Chunk
                         continue;
                     }
 
-                    if (isWater)
-                    {
-                        float randomness = (float)prng.NextDouble() * 10f - 5f; // Adjust the range of randomness as needed
+                    float randomness = (float)prng.NextDouble() * 10f - 5f; // Adjust the range of randomness as needed
+                    if (isWater) {
                         if (isTopBorder ? (worldZ >= chunkBorderStartZ && worldZ < sandEndZ + randomness) :
                                         (worldZ <= chunkBorderStartZ && worldZ > sandEndZ + randomness))
                         {
                             mapdata.heightMap[x, z] = 0.1f;
                         }
                     }
-                    else
-                    {
-                        float randomness = (float)prng.NextDouble() * 10f - 5f; // Adjust the range of randomness as needed
+                    else {
                         if (isTopBorder ? (worldZ >= sandEndZ + randomness && worldZ < beachEndZ + randomness) :
-                                        (worldZ <= sandEndZ + randomness && worldZ > beachEndZ + randomness))
-                        {
-                            mapdata.heightMap[x, z] = 0.15f;
+                            (worldZ <= sandEndZ + randomness && worldZ > beachEndZ + randomness)) {
+                                mapdata.heightMap[x, z] = 0.15f;
                         }
                     }
                 }

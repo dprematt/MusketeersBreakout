@@ -89,18 +89,18 @@ public class Generator : MonoBehaviourPun
     {
         InitializeRandom();
         Vector3[] extractionZonePositions = {
-            new Vector3(-480, 0, -540),
-            new Vector3(-480, 0, 540),
-            new Vector3(480, 0, -540),
-            new Vector3(480, 0, 540)
+            new Vector3(-536, 4.6f, -556),
+            new Vector3(-418, 4.6f, 313),
+            new Vector3(185, 4.6f, -554),
+            new Vector3(284, 4.6f, 316)
         };
         int[] prefabCounts = new int[] { 7, 7, 7, 7, 7 , 7, 7, 7, 7, 7};
         float chunkHalfSize = chunkSize / 2f;
 
-        float mapLeftBorder = -2.5f * mapChunkSize + 100f;
-        float mapRightBorder = 2.5f * mapChunkSize - 100f;
-        float mapTopBorder = 2.5f * mapChunkSize - 100f;
-        float mapBottomBorder = -2.5f * mapChunkSize + 100f;
+        float mapLeftBorder = -2.0f * mapChunkSize + 100f;
+        float mapRightBorder = 2.0f * mapChunkSize - mapChunkSize + 50f;
+        float mapTopBorder = 2.0f * mapChunkSize - mapChunkSize + 50f;
+        float mapBottomBorder = -2.0f * mapChunkSize + 100f;
 
         Dictionary<string, List<Vector3>> placedPrefabs = new Dictionary<string, List<Vector3>>();
 
@@ -113,7 +113,7 @@ public class Generator : MonoBehaviourPun
                 Vector3 position = Vector3.zero;
                 bool validPosition = false;
                 int attempts = 0;
-                int maxAttempts = 100;
+                int maxAttempts = 500;
                 while (!validPosition && attempts < maxAttempts)
                 {
                     attempts++;
@@ -208,8 +208,8 @@ public class Generator : MonoBehaviourPun
 
     public void DrawMap()
     {
-      Vector2 topLeft = new Vector2(-2.5f * mapChunkSize, 2.5f * mapChunkSize);
-        Vector2 bottomRight = new Vector2(2.5f * mapChunkSize, -2.5f * mapChunkSize);
+        Vector2 topLeft = new Vector2(-2.0f * mapChunkSize - 100.0f, 2.0f * mapChunkSize + 100.0f);
+        Vector2 bottomRight = new Vector2(2.0f * mapChunkSize + 100.0f, -2.0f * mapChunkSize - 100.0f);
 
         List<Vector2> allPlateCenters = new List<Vector2>();
         float[,] heightMap = null;
