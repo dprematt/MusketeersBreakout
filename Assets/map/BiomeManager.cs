@@ -73,7 +73,7 @@ public class BiomeManager : MonoBehaviourPun {
         int totalBiomesNeeded = Biomes.Length * 2;
         int biomesPlaced = 0;
         float chunkSize = 241f;
-        float borderBuffer = 100f;
+        float borderBuffer = 150f;
 
         int maxAttempts = 2000;
         int attemptCount = 0;
@@ -103,7 +103,7 @@ public class BiomeManager : MonoBehaviourPun {
                     Vector2 center = plateCenters[index];
                     plateCenters.RemoveAt(index);
 
-                    float biomeRadius = 80f;
+                    float biomeRadius = 60f;
                     bool isOutOfBounds = 
                         (center.x - biomeRadius < topLeft.x + borderBuffer || center.x + biomeRadius > bottomRight.x - borderBuffer ||
                         center.y - biomeRadius < bottomRight.y + borderBuffer || center.y + biomeRadius > topLeft.y - borderBuffer);
@@ -128,7 +128,7 @@ public class BiomeManager : MonoBehaviourPun {
                     float z = center.y;
                     Vector3 position = new Vector3(x, y, z);
 
-                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 120 * 120);
+                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 100 * 100);
                     bool isTooCloseToSameBiomes = biomeSpecificPositions[biome.type].Any(biomePos => (position - biomePos).sqrMagnitude < 200 * 200);
 
                     if (!isTooCloseToOtherBiomes && !isTooCloseToSameBiomes)
