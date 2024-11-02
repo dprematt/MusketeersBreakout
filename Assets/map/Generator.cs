@@ -208,8 +208,8 @@ public class Generator : MonoBehaviourPun
 
     public void DrawMap()
     {
-        Vector2 topLeft = new Vector2(-2.0f * mapChunkSize - 130.0f, 2.0f * mapChunkSize);
-        Vector2 bottomRight = new Vector2(2.0f * mapChunkSize, -2.0f * mapChunkSize - 130.0f);
+        Vector2 topLeft = new Vector2(-2.0f * mapChunkSize - 150.0f, 2.0f * mapChunkSize - 25f);
+        Vector2 bottomRight = new Vector2(2.0f * mapChunkSize - 25f, -2.0f * mapChunkSize - 150.0f);
 
         List<Vector2> allPlateCenters = new List<Vector2>();
         float[,] heightMap = null;

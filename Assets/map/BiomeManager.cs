@@ -103,7 +103,7 @@ public class BiomeManager : MonoBehaviourPun {
                     Vector2 center = plateCenters[index];
                     plateCenters.RemoveAt(index);
 
-                    float biomeRadius = 60f;
+                    float biomeRadius = 100f;
                     bool isOutOfBounds = 
                         (center.x - biomeRadius < topLeft.x + borderBuffer || center.x + biomeRadius > bottomRight.x - borderBuffer ||
                         center.y - biomeRadius < bottomRight.y + borderBuffer || center.y + biomeRadius > topLeft.y - borderBuffer);
@@ -128,8 +128,8 @@ public class BiomeManager : MonoBehaviourPun {
                     float z = center.y;
                     Vector3 position = new Vector3(x, y, z);
 
-                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 100 * 100);
-                    bool isTooCloseToSameBiomes = biomeSpecificPositions[biome.type].Any(biomePos => (position - biomePos).sqrMagnitude < 200 * 200);
+                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 130 * 130);
+                    bool isTooCloseToSameBiomes = biomeSpecificPositions[biome.type].Any(biomePos => (position - biomePos).sqrMagnitude < 250 * 250);
 
                     if (!isTooCloseToOtherBiomes && !isTooCloseToSameBiomes)
                     {

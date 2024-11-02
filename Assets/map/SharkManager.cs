@@ -20,9 +20,9 @@ public class SharkManager : MonoBehaviour
 
     void Start()
     {
-        upperShark = Instantiate(shark, new Vector3(1, 0.1f, 580), Quaternion.identity);
+        upperShark = Instantiate(shark, new Vector3(1, 0.1f, 340), Quaternion.identity);
         lowerShark = Instantiate(shark, new Vector3(1, 0.1f, -580), Quaternion.identity);
-        rightShark = Instantiate(shark, new Vector3(580, 0.1f, 1), Quaternion.identity);
+        rightShark = Instantiate(shark, new Vector3(340, 0.1f, 1), Quaternion.identity);
         leftShark = Instantiate(shark, new Vector3(-580, 0.1f, 1), Quaternion.identity);
         leftShark.transform.Rotate(0.0f, -90.0f, 0.0f);
         rightShark.transform.Rotate(0.0f, -90.0f, 0.0f);
@@ -56,7 +56,7 @@ public class SharkManager : MonoBehaviour
         {
             upperShark.transform.Translate(Vector3.right * speed * Time.deltaTime);
 
-            if (upperShark.transform.position.x >= 580)
+            if (upperShark.transform.position.x >= 325)
             {
                 movingUpperShark = true;
                 FlipUpperShark();
@@ -79,7 +79,7 @@ public class SharkManager : MonoBehaviour
         {
             lowerShark.transform.Translate(Vector3.right * speed * Time.deltaTime);
 
-            if (lowerShark.transform.position.x >= 580)
+            if (lowerShark.transform.position.x >= 325)
             {
                 movingLowerShark = true;
                 FlipLowerShark();
@@ -101,7 +101,7 @@ public class SharkManager : MonoBehaviour
         else
         {
             leftShark.transform.position += Vector3.forward * speed * Time.deltaTime;
-            if (leftShark.transform.position.z >= 580)
+            if (leftShark.transform.position.z >= 325)
             {
                 movingDown = true;
                 RotateShark(leftShark);
@@ -123,7 +123,7 @@ public class SharkManager : MonoBehaviour
         else
         {
             rightShark.transform.position += Vector3.forward * speed * Time.deltaTime;
-            if (rightShark.transform.position.z >= 580)
+            if (rightShark.transform.position.z >= 325)
             {
                 movingDownBis = true;
                 RotateShark(rightShark);
