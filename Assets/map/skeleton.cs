@@ -80,7 +80,7 @@ public static class Skeleton
         }
 
         float flatHeight = 0.4f;
-        int numberOfPlates = 5;
+        int numberOfPlates = 6;
         List<Vector2> plateCenters = new List<Vector2>();
 
         System.Random localPrng = new System.Random(seed);
