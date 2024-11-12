@@ -128,7 +128,7 @@ public class BiomeManager : MonoBehaviourPun {
                     float z = center.y;
                     Vector3 position = new Vector3(x, y, z);
 
-                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 100 * 100);
+                    bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 120 * 120);
                     bool isTooCloseToSameBiomes = biomeSpecificPositions[biome.type].Any(biomePos => (position - biomePos).sqrMagnitude < 220 * 220);
 
                     if (!isTooCloseToOtherBiomes && !isTooCloseToSameBiomes)
@@ -190,7 +190,6 @@ public class BiomeManager : MonoBehaviourPun {
                     new Vector3(-30, 0, -17),
                     new Vector3(-12, 0, 7),
                     new Vector3(8, 0, -6),
-                    new Vector3(9, 0, -28),
                     new Vector3(-13, 0,-29),
                     new Vector3(-27, 0, -26),
                     new Vector3(18, 0, -26),
@@ -203,7 +202,6 @@ public class BiomeManager : MonoBehaviourPun {
                     new Vector3(27, 1, -16),
                     new Vector3(25, 1, 3),
                     new Vector3(13, 1, 13),
-                    new Vector3(4, 1, 3),
                     new Vector3(-13, 1,-13),
                     new Vector3(5, 1, -20),
                     new Vector3(-13, 1, -27),
@@ -213,14 +211,12 @@ public class BiomeManager : MonoBehaviourPun {
                 break;
             case("MedievalBiome(Clone)"):
                 positions = new Vector3[] {
-                    new Vector3(-117, 0, -118),
                     new Vector3(-113, 0, -147),
                     new Vector3(-63, 0, -140),
                     new Vector3(-22, 0,  -152),
                     new Vector3(-45, 0, -114),
                     new Vector3(-5, 0, -110),
                     new Vector3(-21,0 ,-52),
-                    new Vector3(-113, 0, -61),
                     new Vector3(-138, 0, -165),
                     new Vector3(-9, 0, -164)
                 };
@@ -231,11 +227,10 @@ public class BiomeManager : MonoBehaviourPun {
                     new Vector3(10, 0, -10),
                     new Vector3(-8,0,-6),
                     new Vector3(14,0,4),
-                    new Vector3(15,0,-10),
+                    new Vector3(22,0,-11),
                     new Vector3(-4,0,-12),
                     new Vector3(-9,0,2),
                     new Vector3(1,0,10),
-                    new Vector3(15,0,4),
                     new Vector3(21,0,-4)
                 };
                 break;
