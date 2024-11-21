@@ -5,7 +5,6 @@ using TMPro;
 using Photon.Pun;
 using Photon.Realtime;  // Nécessaire pour les méthodes sur Room
 using Hashtable = ExitGames.Client.Photon.Hashtable;
-using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
@@ -23,7 +22,29 @@ public class Timer : MonoBehaviour
 
     void Update()
     {
+        try
+        {
+            if (PhotonNetwork.CurrentRoom == null)
+            {
+                Debug.LogWarning("Aucune salle active (PhotonNetwork.CurrentRoom est null).");
+                return;
+            }
+
+            if (!PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("Time"))
+            {
+                Debug.LogWarning("La propriété 'Time' n'est pas définie dans CustomProperties.");
+                return;
+            }
+
             Time = (int)PhotonNetwork.CurrentRoom.CustomProperties["Time"];
+
+            if (Time <= 0)
+            {
+                Debug.Log("Le temps est écoulé, déconnexion de la salle...");
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.LoadLevel("Menu");
+                return;
+            }
 
             float minutes = Mathf.FloorToInt(Time / 60);
             float seconds = Mathf.FloorToInt(Time % 60);
@@ -33,20 +54,37 @@ public class Timer : MonoBehaviour
             if (count)
             {
                 count = false;
-                StartCoroutine(timer());
+                StartCoroutine(TimerCoroutine());
             }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"Erreur dans Update: {ex.Message}");
+        }
     }
 
-    IEnumerator timer()
+    IEnumerator TimerCoroutine()
     {
         yield return new WaitForSeconds(1);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            int nextTime = Time - 1;
-
-            setTime["Time"] = nextTime;
-            PhotonNetwork.CurrentRoom.SetCustomProperties(setTime);
-        }
+        HandleTimerUpdate();
         count = true;
+    }
+
+    void HandleTimerUpdate()
+    {
+        try
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                int nextTime = Time - 1;
+
+                setTime["Time"] = nextTime;
+                PhotonNetwork.CurrentRoom.SetCustomProperties(setTime);
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"Erreur dans HandleTimerUpdate: {ex.Message}");
+        }
     }
 }
