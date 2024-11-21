@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class ChunkGenerator : MonoBehaviour
@@ -38,22 +39,27 @@ public class ChunkGenerator : MonoBehaviour
 
     private void GenerateAllChunks()
     {
-        int startChunkX = -(int)(placementAreaSize.x / 2 / chunkSize);
-        int endChunkX = (int)(placementAreaSize.x / 2 / chunkSize) - 1;
-        int startChunkY = -(int)(placementAreaSize.y / 2 / chunkSize);
-        int endChunkY = (int)(placementAreaSize.y / 2 / chunkSize) - 1;
+        try {
+            int startChunkX = -(int)(placementAreaSize.x / 2 / chunkSize);
+            int endChunkX = (int)(placementAreaSize.x / 2 / chunkSize) - 1;
+            int startChunkY = -(int)(placementAreaSize.y / 2 / chunkSize);
+            int endChunkY = (int)(placementAreaSize.y / 2 / chunkSize) - 1;
 
-        for (int yOffset = startChunkY; yOffset <= endChunkY; yOffset++)
-        {
-            for (int xOffset = startChunkX; xOffset <= endChunkX; xOffset++)
+            for (int yOffset = startChunkY; yOffset <= endChunkY; yOffset++)
             {
-                Vector2 viewedChunkCoord = new Vector2(xOffset, yOffset);
-                if (!chunkDict.ContainsKey(viewedChunkCoord))
+                for (int xOffset = startChunkX; xOffset <= endChunkX; xOffset++)
                 {
-                    chunkDict[viewedChunkCoord] = new Chunk(viewedChunkCoord, chunkSize, detailsLevel, transform, mapMaterial, grassMaterial, _generator, instanceMeshes, instanceMaterials);
+                    Vector2 viewedChunkCoord = new Vector2(xOffset, yOffset);
+                    if (!chunkDict.ContainsKey(viewedChunkCoord))
+                    {
+                        chunkDict[viewedChunkCoord] = new Chunk(viewedChunkCoord, chunkSize, detailsLevel, transform, mapMaterial, grassMaterial, _generator, instanceMeshes, instanceMaterials);
+                    }
                 }
             }
+        } catch (Exception ex) {
+            Debug.LogError($"Erreur durant la génération de tous les chunks: {ex.Message}");
         }
+
     }
 
     private void Update()

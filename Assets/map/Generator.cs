@@ -136,13 +136,18 @@ public class Generator : MonoBehaviourPun
                     {
                         if (height == 0.4f)
                         {
-                            validPosition = true;
-                            placedPrefabs[prefabType.type].Add(position);
-                            int[] Y = new int[] { -90, 90, 180, -180, 0 };
-                            int randomIndex = prng.Next(Y.Length);
-                            GameObject instance = Instantiate(prefabType.prefab, position, Quaternion.identity);
-                            instance.transform.Rotate(0.0f, Y[randomIndex], 0.0f);
-                            instance.transform.SetParent(worldObjectsParent.transform);
+                            try {
+                                validPosition = true;
+                                placedPrefabs[prefabType.type].Add(position);
+                                int[] Y = new int[] { -90, 90, 180, -180, 0 };
+                                int randomIndex = prng.Next(Y.Length);
+                                GameObject instance = Instantiate(prefabType.prefab, position, Quaternion.identity);
+                                instance.transform.Rotate(0.0f, Y[randomIndex], 0.0f);
+                                instance.transform.SetParent(worldObjectsParent.transform);
+                            } catch (Exception ex)
+                            {
+                                Debug.LogError($"Erreur lors du placement du prefab dans le chunk: {ex.Message}");
+                            }
                         }
                     }
                 }
@@ -177,13 +182,20 @@ public class Generator : MonoBehaviourPun
     void PlaceBiomesGuardians()
     {
         GameObject guardiansParent = GameObject.Find("Guardians") ?? new GameObject("Guardians");
-
+    
         if (PhotonNetwork.IsMasterClient) {
 
             foreach (Vector3 guardiansCoord in guardiansSpawn)
             {
-                GameObject guardians = PhotonNetwork.Instantiate(ennemyType1.name, guardiansCoord, Quaternion.identity);
-                guardians.transform.SetParent(guardiansParent.transform);
+                try
+                {
+                    GameObject guardians = PhotonNetwork.Instantiate(ennemyType1.name, guardiansCoord, Quaternion.identity);
+                    guardians.transform.SetParent(guardiansParent.transform);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Erreur lors de l'instanciation du Guardian à la position {guardiansCoord}: {ex.Message}");
+                }
             }
         }
     }
@@ -229,7 +241,12 @@ public class Generator : MonoBehaviourPun
             }
         }
 
-        biomeManager.PlaceBiomesInFlatAreas(allPlateCenters, topLeft, bottomRight, prng);
+        try {
+            biomeManager.PlaceBiomesInFlatAreas(allPlateCenters, topLeft, bottomRight, prng);
+        } catch (Exception ex)
+        {
+            Debug.LogError($"Erreur lors du placement des biomes : {ex.Message}");
+        }
 
         Vector2 center = Vector2.zero + offSet;
         var currentMapData = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center, normalizeMode, seed);
@@ -241,18 +258,7 @@ public class Generator : MonoBehaviourPun
         {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(currentMapData.Item1));
         }
-        // else if (drawMode == DrawMode.colorMap)
-        // {
-        //     // Ne rien faire pour colorMap, car la couleur a été supprimée.
-        // }
-        // else if (drawMode == DrawMode.mesh)
-        // {
-        //     meshData meshdata = MeshGenerator.generateTerrainMesh(currentMapData.Item1, meshHeightMult, meshHeightCurve, levelOfDetail);
-        // }
-        // else if (drawMode == DrawMode.fallOfMap)
-        // {
-        //     display.DrawTexture(TextureGenerator.TextureFromHeightMap(FallOfGenerator.GenerateFallOfMap(mapChunkSize)));
-        // }
+    
         PlaceBiomesGuardians();
         CurrentMapData = new MapData(currentMapData.Item1, null);
     }
@@ -296,29 +302,6 @@ public class Generator : MonoBehaviourPun
             }
         }
 
-        // foreach (Vector3 vecteur in biomesPositions)
-        // {
-        //     Vector3 pos1 = new Vector3(vecteur.x + 60, vecteur.y + 10, vecteur.z);
-        //     Vector3 pos2 = new Vector3(vecteur.x + 60, vecteur.y + 10, vecteur.z + 5);
-        //     Vector3 pos3 = new Vector3(vecteur.x - 60, vecteur.y + 10, vecteur.z);
-        //     Vector3 pos4 = new Vector3(vecteur.x - 60, vecteur.y + 10, vecteur.z + 5);
-        //     Vector3 pos5 = new Vector3(vecteur.x, vecteur.y + 10, vecteur.z - 60);
-        //     Vector3 pos6 = new Vector3(vecteur.x + 5, vecteur.y + 10, vecteur.z - 60);
-        //     Vector3 pos7 = new Vector3(vecteur.x, vecteur.y + 10, vecteur.z + 60);
-        //     Vector3 pos8 = new Vector3(vecteur.x + 5, vecteur.y + 10, vecteur.z + 60);
-
-
-
-        //     guardiansSpawn.Add(pos1);
-        //     guardiansSpawn.Add(pos2);
-        //     guardiansSpawn.Add(pos3);
-        //     guardiansSpawn.Add(pos4);
-        //     guardiansSpawn.Add(pos5);
-        //     guardiansSpawn.Add(pos6);
-        //     guardiansSpawn.Add(pos7);
-        //     guardiansSpawn.Add(pos8);
-
-        // }
 
         foreach (Vector3 vecteur in biomesPositions)
         {
@@ -354,13 +337,18 @@ public class Generator : MonoBehaviourPun
 
     private void SpawnFunc()
     {
-        SpawnWeapons_ = GetComponent<SpawnWeapons>();
-        SpawnWeapons_.InstanciateWeapons(_spawnCoords[0]);
-        GameObject Player_ = PhotonNetwork.Instantiate(PlayerPrefab_.name, _spawnCoords[0], Quaternion.identity);
-        Player_.GetComponent<SetupPlayer>().IsLocalPlayer();
-        LoadScreen_.SetActive(false);
-        Hud_.SetActive(true);
-        LootHud_.SetActive(true);
+        try {
+            SpawnWeapons_ = GetComponent<SpawnWeapons>();
+            SpawnWeapons_.InstanciateWeapons(_spawnCoords[0]);
+            GameObject Player_ = PhotonNetwork.Instantiate(PlayerPrefab_.name, _spawnCoords[0], Quaternion.identity);
+            Player_.GetComponent<SetupPlayer>().IsLocalPlayer();
+            LoadScreen_.SetActive(false);
+            Hud_.SetActive(true);
+            LootHud_.SetActive(true);
+        } catch (Exception ex)
+        {
+            Debug.LogError($"Erreur lors du placement du joueur : {ex.Message}");
+        }
     }
 
     [PunRPC]
@@ -382,11 +370,16 @@ public class Generator : MonoBehaviourPun
 
     MapData SkeletonGenerator(Vector2 center)
     {
-        var (map, _) = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode, seed);
+        try {
+            var (map, _) = Skeleton.GenerateSkeleton(mapChunkSize, mapChunkSize, scale, octaves, persistance, lacunarity, center + offSet, normalizeMode, seed);
 
-        CurrentMapData = new MapData(map, colorMap);
+            CurrentMapData = new MapData(map, colorMap);
 
-        return CurrentMapData;
+            return CurrentMapData; 
+        } catch (Exception ex) {
+            Debug.LogError($"Erreur lors de la génération de la map: {ex.Message}");
+            return default(MapData);
+        }
     }
 
     public void RequestMapData(Vector2 center, Action<MapData> callback)
