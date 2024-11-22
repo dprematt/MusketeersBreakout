@@ -62,8 +62,8 @@ public class Enemy : MonoBehaviourPun
         weaponList[1].rotationZ = 180f;
 
         inventory = new Inventory(9, null, false);
-        inventory.AddEnemyWeapon(weaponList[0], gameObject);
-        inventory.AddEnemyWeapon(weaponList[1], gameObject);
+        inventory.AddEnemyWeapon(weaponList[0]);
+        inventory.AddEnemyWeapon(weaponList[1]);
 
         eventListener = GetComponent<EventListener>();
         if (eventListener == null)
@@ -222,7 +222,6 @@ public class Enemy : MonoBehaviourPun
         }
     }
 
-
     public int TakeDamage(float damageAmount)
     {
         
@@ -235,6 +234,7 @@ public class Enemy : MonoBehaviourPun
             playerMov.UpdateXp(10);
             GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
             var loot = Instantiate(LootPrefab, gameObject.transform.position, gameObject.transform.rotation);
+            Debug.Log("on crée un loot d'ennemy");
             loot.GetComponentInChildren<Inventory>().Initialize(9, inventory.mItems, true);
             PhotonNetwork.Destroy(gameObject);
             photonView.RPC("Particles", RpcTarget.All);
