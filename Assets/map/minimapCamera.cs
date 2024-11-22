@@ -12,61 +12,103 @@ public class minimapCamera : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        if (!photonView.IsMine)
+        try
         {
-            camera.gameObject.SetActive(false);
-            
-            // L'icône des autres joueurs est mise en rouge (ou autre couleur si souhaité)
-            playerIcon.color = new Color(1f, 0f, 0f); // Rouge pour les autres joueurs
-            return;
-        } 
-        else 
-        {
-            // Si c'est le joueur local, l'icône est verte
-            playerIcon.color = new Color(0f, 1f, 0f); // Vert pour le joueur local
-        }
+            if (!photonView.IsMine)
+            {
+                if (camera != null)
+                {
+                    camera.gameObject.SetActive(false);
+                }
+                else
+                {
+                    Debug.LogError("MinimapCamera non assignée pour un joueur distant.");
+                }
 
-        if (camera == null)
-        {
-            Debug.LogError("MinimapCamera n'est pas assignée.");
-        }
-        else
-        {
-            Debug.Log("MinimapCamera assignée pour " + gameObject.name);
-        }
+                // L'icône des autres joueurs est mise en rouge (ou autre couleur si souhaité)
+                if (playerIcon != null)
+                {
+                    playerIcon.color = new Color(1f, 0f, 0f); // Rouge pour les autres joueurs
+                }
+                else
+                {
+                    Debug.LogError("PlayerIcon non assignée pour un joueur distant.");
+                }
+                return;
+            }
+            else
+            {
+                // Si c'est le joueur local, l'icône est verte
+                if (playerIcon != null)
+                {
+                    playerIcon.color = new Color(0f, 1f, 0f); // Vert pour le joueur local
+                }
+                else
+                {
+                    Debug.LogError("PlayerIcon non assignée pour le joueur local.");
+                }
+            }
 
-        // Cherche la caméra principale du joueur si elle n'est pas déjà assignée
-        if (playerCamera == null)
-        {
-            playerCamera = Camera.main; // Assigne automatiquement la caméra principale
-        }
+            if (camera == null)
+            {
+                Debug.LogError("MinimapCamera n'est pas assignée.");
+            }
+            else
+            {
+                Debug.Log("MinimapCamera assignée pour " + gameObject.name);
+            }
 
-        // Activer la caméra minimap pour le joueur local
-        camera.gameObject.SetActive(true);
-        Debug.Log("MinimapCamera activée pour " + gameObject.name);
+            // Cherche la caméra principale du joueur si elle n'est pas déjà assignée
+            if (playerCamera == null)
+            {
+                playerCamera = Camera.main; // Assigne automatiquement la caméra principale
+            }
+
+            if (camera != null)
+            {
+                // Activer la caméra minimap pour le joueur local
+                camera.gameObject.SetActive(true);
+                Debug.Log("MinimapCamera activée pour " + gameObject.name);
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("Erreur dans Start : " + ex.Message);
+        }
     }
 
     void LateUpdate()
     {
-        if (!photonView.IsMine)
-            return;
-
-        if (camera != null)
+        try
         {
-            // Met à jour la position de la minimap caméra directement au-dessus du joueur
-            Vector3 newPos = transform.position;
-            newPos.y = transform.position.y + cameraHeight;
-            camera.transform.position = newPos;
+            if (!photonView.IsMine)
+                return;
 
-            // Applique la rotation de la caméra principale à la minimap caméra
-            if (playerCamera != null)
+            if (camera != null)
             {
-                camera.transform.rotation = Quaternion.Euler(90f, playerCamera.transform.eulerAngles.y, 0f);
+                // Met à jour la position de la minimap caméra directement au-dessus du joueur
+                Vector3 newPos = transform.position;
+                newPos.y = transform.position.y + cameraHeight;
+                camera.transform.position = newPos;
+
+                // Applique la rotation de la caméra principale à la minimap caméra
+                if (playerCamera != null)
+                {
+                    camera.transform.rotation = Quaternion.Euler(90f, playerCamera.transform.eulerAngles.y, 0f);
+                }
+                else
+                {
+                    Debug.LogError("PlayerCamera n'est pas assignée.");
+                }
             }
             else
             {
-                Debug.LogError("PlayerCamera n'est pas assignée.");
+                Debug.LogError("MinimapCamera non assignée dans LateUpdate.");
             }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.Log("Erreur dans LateUpdate : " + ex.Message);
         }
     }
 }
