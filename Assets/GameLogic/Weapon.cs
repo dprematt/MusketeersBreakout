@@ -158,7 +158,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public virtual void Attack()
     {
-        Debug.Log("Attack: Start");
         if (isPlayer)
         {
             if (playerComp.hasShield && playerComp.shieldComp.isProtecting)
@@ -172,12 +171,10 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         {
             if (countAttackClick > 4)
                 ResetAttackPhase();
-            Debug.Log("Attack: countAttackClick == " + countAttackClick);
         }
         
         if (countAttackClick == 1)
         {
-            Debug.Log("Attack: Count Attack Click == 1");
             anim.SetInteger("intAttackPhase", 1);
             audioSource.PlayOneShot(attackSound);
             if (isPlayer) {
@@ -243,18 +240,16 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
 
     public void whenPickUp(GameObject newHolder)
     {
-        Debug.Log("name 1 = " + newHolder.transform.name);
-        Debug.Log("WHENPICKUP: start");
         if (newHolder == null)
         {
             holder = null;
             photonView.RPC("SyncPickUp", RpcTarget.All, 0, rotationX, rotationY, rotationZ, "null");
         }
-        else {
-            Debug.Log("name 2 = " + newHolder.transform.name);
+        else
+        {
             holder = newHolder;
             isPlayer = holder.CompareTag("Player") ? true : false;
-            String hand = isPlayer ? "jointItemL" : "hand.R";
+            String hand = isPlayer ? "jointItemR" : "hand.R";
             int holderID = newHolder.GetPhotonView().ViewID;
             photonView.RPC("SyncPickUp", RpcTarget.All, holderID, rotationX, rotationY, rotationZ, hand);
         }
@@ -269,7 +264,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             anim = null;
             transform.parent = null;
         }
-        Debug.Log("name 3 = " + hand);
         GameObject holderObject = PhotonView.Find(holderID).gameObject;
         holder = holderObject;
         anim = holder.GetComponentInChildren<Animator>();
@@ -293,7 +287,6 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
     }
     public void setAnim(GameObject newHolder)
     {
-        Debug.Log("SetAnim: Start");
         if (newHolder != null)
             holder = newHolder;
         anim = holder.GetComponentInChildren<Animator>();

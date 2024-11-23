@@ -29,7 +29,6 @@ public class Inventory : MonoBehaviourPunCallbacks
         }
         if (weapon == null)
         {
-            //Debug.LogError("ENEMY Weapon doesn't implement IInventoryItem interface: " + weapon);
             // Destroy(weaponObject);
             return;
         }
@@ -39,21 +38,23 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void AddWeapon(string weaponName)
     {
+        Debug.Log("LOAD IN ADDWEAPON");
         GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
         if (weaponPrefab == null)
         {
             return;
         }
+
         Vector3 pos;
         pos.z = 0;
         pos.y = 0;
         pos.x = 0;
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+
+        GameObject playerObj = gameObject;
         Player playerScript = playerObj.GetComponent<Player>();
         GameObject weaponObject = PhotonNetwork.Instantiate(weaponPrefab.name, pos, Quaternion.identity);
         Weapon weaponItem = weaponObject.GetComponent<Weapon>();
         //Destroy(weaponObject);
-        Destroy(weaponPrefab);
         if (weaponItem == null)
         {
             Destroy(weaponObject);
@@ -64,32 +65,53 @@ public class Inventory : MonoBehaviourPunCallbacks
         playerScript.EquipWeapon(weaponItem, weaponObject, true);
     }
 
-    public void EquipMainWeapon(string weaponName)
+    public void EquipMainWeapon(string weaponName, int index)
     {
-        Debug.Log("EquipMainWeapon func");
+        if (weaponName == null)
+            return;
+
+        Debug.Log("LOAD IN EQUIPMAINWEAPON");
         GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
         if (weaponPrefab == null)
         {
             return;
         }
+
         Vector3 pos;
         pos.z = 0;
         pos.y = 0;
         pos.x = 0;
+
         Player playerScript = transform.GetComponentInParent<Player>();
         GameObject weaponObject = PhotonNetwork.Instantiate(weaponPrefab.name, pos, Quaternion.identity);
         Weapon weaponItem = weaponObject.GetComponent<Weapon>();
+
         //Destroy(weaponObject);
-        Destroy(weaponPrefab);
+
         if (weaponItem == null)
         {
             Destroy(weaponObject);
             return;
         }
 
-        Debug.Log("call to equipMainWeapon end and call to equipWeapon in player");
-        playerScript.SetWeaponEvents(weaponItem);
+        if (index == 0)
+        {
+            playerScript.SetWeaponEvents(weaponItem);
+            weaponObject.SetActive(true);
+        }
+        else
+        {
+            weaponObject.SetActive(false);
+        }
+
+        weaponObject.name = "TEST";
+        Debug.Log(weaponPrefab.name);
         weaponItem.whenPickUp(playerScript.gameObject);
+
+        for (int i = 0; i < mItems.Length; i++)
+        {
+            Debug.Log("items in inventory: " + mItems[i].GameObject.name);
+        }
     }
 
     public int Count()
@@ -108,30 +130,24 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public bool CheckOldWeapon(string name)
     {
-        Debug.Log("CheckOldWeapon");
         Player player = gameObject.GetComponent<Player>();
 
         Transform weapon = player.FindDeepChild(gameObject.transform, name);
         if (weapon == null)
         {
-            Debug.Log("CheckOldWeapon: weapon == null");
             return false;
         }
-        Debug.Log("CheckOldWeapon: transform = " + weapon);
-        Debug.Log("CheckOldWeapon: obj name = " + weapon.name);
         weapon.gameObject.SetActive(true);
         return true;
     }
 
     public void RemoveAnimR()
     {
-        Debug.Log("RemoveAnimR");
         Player player = gameObject.GetComponent<Player>();
 
         Transform weapons = player.FindDeepChild(gameObject.transform, "jointItemR");
         if (weapons == null)
         {
-            Debug.Log("RemoveAnim: weapons == null");
             return;
         }
         foreach (Transform child in weapons.transform)
@@ -142,13 +158,11 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void RemoveAnimL()
     {
-        Debug.Log("RemoveAnimL");
         Player player = gameObject.GetComponent<Player>();
 
         Transform weapons = player.FindDeepChild(gameObject.transform, "jointItemL");
         if (weapons == null)
         {
-            Debug.Log("RemoveAnim: weapons == null");
             return;
         }
         foreach (Transform child in weapons.transform)
@@ -173,34 +187,38 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void InsertAt(IInventoryItem item, int id)
     {
+        Debug.Log("INSERTAT");
         mItems[id] = item;
         if (!loot)
         {
-            if (gameObject.GetComponent<Player>() != null)
+            if (gameObject.GetComponent<Player>() != null && item != null)
             {
-                if (id == 0 && item != null)
+                Player playerScript = transform.GetComponentInParent<Player>();
+                GameObject weaponObject = item.GameObject;
+                Weapon weaponItem = weaponObject.GetComponent<Weapon>();
+
+                if (weaponItem == null)
                 {
-                    Debug.Log("checkoldweapon = " + CheckOldWeapon(item.Name));
-                    if (CheckOldWeapon(item.Name) == false)
-                    {
-                        ReleaseLeftArm();
-                        RemoveAnimR();
-                        RemoveAnimL();
-                        Debug.Log("INSERT AT: " + item.GameObject);
-                        EquipMainWeapon(item.Name);
-                    }
-                }
-                else if (id == 0 && item == null)
-                {
-                    Debug.Log("INSERT AT: DESEQUIP WEAPON");
-                    ReleaseLeftArm();
-                    EquipMainWeapon(null);
-                    RemoveAnimR();
-                    RemoveAnimL();
-                }
-                else if (id != 0 && item == null)
-                {
+                    Destroy(weaponObject);
                     return;
+                }
+
+                if (id == 0)
+                {
+                    playerScript.SetWeaponEvents(weaponItem);
+                    weaponObject.SetActive(true);
+                }
+                else
+                {
+                    weaponObject.SetActive(false);
+                }
+
+                weaponObject.name = "TEST";
+                weaponItem.whenPickUp(playerScript.gameObject);
+
+                for (int i = 0; i < mItems.Length; i++)
+                {
+                    Debug.Log("items in inventory: " + mItems[i].GameObject.name);
                 }
             }
         }
@@ -265,62 +283,56 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void SwapItems(int index1, int index2)
     {
-        Debug.Log("SwapItems");
-        if (index1 >= 0 && index1 < mItems.Length)
+        if (index1 == 0 && index2 == 1)
         {
             IInventoryItem item1 = mItems[index1];
             if (item1 != null && item1.GameObject != null)
             {
+                Debug.Log("active false item 1 " + item1.GameObject.name);
+                Debug.Log("active false item 1 before setactive " + item1.GameObject.active);
                 item1.GameObject.SetActive(false);
+                Debug.Log("active false item 1 after setactive " + item1.GameObject.active);
             }
-        }
 
-        if (index2 >= 0 && index2 < mItems.Length)
-        {
             IInventoryItem item2 = mItems[index2];
             if (item2 != null && item2.GameObject != null)
             {
+                Debug.Log("active true item 2 " + item2.GameObject.name);
+                Debug.Log("active true item 2 before setactive " + item2.GameObject.active);
                 item2.GameObject.SetActive(true);
+                Debug.Log("active true item 2 after setactive " + item2.GameObject.active);
             }
         }
 
+        Debug.Log("before swap :" + mItems[index1].GameObject.name + " | " + mItems[index2].GameObject.name);
         IInventoryItem temp = mItems[index1];
-        InsertAt(mItems[index2], index1);
-        InsertAt(temp, index2);
+        mItems[index1] = mItems[index2];
+        mItems[index2] = temp;
+        Debug.Log("after swap :" + mItems[index1].GameObject.name + " | " + mItems[index2].GameObject.name);
     }
 
     public void SwapItemsLoot(int index1, int index2, Inventory lootInventory)
     {
-        Debug.Log("SwapItemsLoot");
-        Debug.Log("index 1 " + index1);
-        Debug.Log("index 2 " + index2);
-        Debug.Log("lootinventory " + lootInventory.transform.name);
         IInventoryItem temp = mItems[index1];
-        Debug.Log("temp = " + temp.Name);
         InsertAt(lootInventory.mItems[index2], index1);
         lootInventory.InsertAt(temp, index2);
     }
 
     public void Print_Inventory()
     {
-        Debug.Log("PRINT INVENTORY:");
-        IInventoryItem[] Item = GetInventory();
+        /*IInventoryItem[] Item = GetInventory();
 
         for (int i = 0; i < mItems.Length; i++)
         {
             if (mItems[i] != null)
-                Debug.Log("Item n�" + i + " = " + mItems[i].Name);
             else
             {
-                Debug.Log("Item n�" + i + " = Null");
             }
-        }
-        Debug.Log("end of print inventory");
+        }*/
     }
 
     public void InsertItem(IInventoryItem item, int index)
     {
-        Debug.Log("InsertItem");
         if (Count() == 0)
             mItems = new IInventoryItem[9];
         InsertAt(item, index);
@@ -331,10 +343,10 @@ public class Inventory : MonoBehaviourPunCallbacks
         }
         if (!loot && index == 0)
         {
-            Debug.Log("call to equipMainWeapon");
-            EquipMainWeapon(item.Name);
+            EquipMainWeapon(item.Name, index);
         }
     }
+
     public void AddItem(IInventoryItem item)
     {
         if (loot == true)
@@ -351,6 +363,7 @@ public class Inventory : MonoBehaviourPunCallbacks
             Destroy(newItem);
             return;
         }
+
         if (Count() == 0)
         {
             mItems = new IInventoryItem[9];
@@ -363,11 +376,11 @@ public class Inventory : MonoBehaviourPunCallbacks
             }
             if (!loot)
             {
-                Debug.Log("call to equipMainWeapon");
-                EquipMainWeapon(item.Name);
+                EquipMainWeapon(item.Name, 0);
             }
             return;
         }
+
         if (Count() < SLOTS)
         {
             Add(item);
@@ -383,22 +396,17 @@ public class Inventory : MonoBehaviourPunCallbacks
     {
         if (Count() == 0 && loot == true)
         {
-            Debug.Log("INVENTORY/ IN DESTROY LOOT");
             view = gameObject.GetComponent<PhotonView>();
             if (view != null)
             {
                 if (view.ViewID == 0)
                 {
-                    Debug.Log("destroy loot, view id == 0");
                     return;
                 }
-                Debug.Log("before loot destroyed");
                 view.RPC("DestroyObject", RpcTarget.All);
-                Debug.Log("after loot destroyed");
             }
             else
             {
-                Debug.Log("Inventory: UpdateLoot, destroy without photon");
                 Destroy(gameObject);
             }
         }
@@ -410,16 +418,11 @@ public class Inventory : MonoBehaviourPunCallbacks
         {
             if (mItems[i] != null)
             {
-                if (loot == true)
-                {
-                    Debug.Log("ITEM IN LOOT id = " + i + " name = " + mItems[i].Name);
-                }
                 ItemInsertedAt(this, new InventoryEventArgs(mItems[i], i));
-                GameObject playerGo = GameObject.FindGameObjectWithTag("Player");
+                GameObject playerGo = gameObject;
 
                 if (playerGo == null)
                 {
-                    Debug.Log("player == null");
                     return;
                 }
 
@@ -435,10 +438,8 @@ public class Inventory : MonoBehaviourPunCallbacks
             Inventory playerInventory = collision.collider.GetComponent<Inventory>();
             if (playerInventory != null)
             {
-                //Debug.Log("in if 2 inventory");
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    //Debug.Log("in if 3 inventory");
                     DisplayLoot(playerInventory);
                 }
             }
@@ -450,32 +451,22 @@ public class Inventory : MonoBehaviourPunCallbacks
     {
         if (loot)
         {
-            Debug.Log("item is loot");
             GameObject weaponPrefab = GameObject.FindGameObjectWithTag("TempObjTag");
             if (weaponPrefab == null)
             {
-                Debug.Log("INVENTORY: Weapon Prefab == null");
                 return;
             }
             //Destroy(weaponPrefab);
             if (weaponPrefab.TryGetComponent(out Weapon weapon))
             {
-                Debug.Log("weapon added");
                 if (mItems == null)
                     mItems = new IInventoryItem[9];
                 Add(weapon);
                 ItemAdded?.Invoke(this, new InventoryEventArgs(weapon));
-                Debug.Log("update items: weapon added");
                 weaponPrefab.SetActive(false);
                 //Destroy(weaponPrefab);
                 //weapon.DeactivateAllObjects();
             }
-            else
-            {
-                Debug.LogWarning("New item does not have a Weapon component.");
-            }
-
-            Debug.Log("IN UPDATE ITEMS: items count = " + Count());
             //PhotonNetwork.Destroy(newItem);
         }
     }
@@ -495,18 +486,16 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void ApplyNetworkUpdate(string name)
     {
-        Debug.Log(gameObject);
-        Debug.Log(gameObject.GetComponent<PhotonView>());
         view = gameObject.GetComponent<PhotonView>();
         if (view.IsMine)
         {
-            Debug.Log("apply network update: view is mine");
             view.RPC("UpdateItems", RpcTarget.All, name);
         }
     }
 
     public void DropItem(int id)
     {
+        Debug.Log("LOAD IN DROPITEM");
         GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
         Vector3 newPos = gameObject.transform.position;
         newPos.x += 2;
@@ -514,7 +503,6 @@ public class Inventory : MonoBehaviourPunCallbacks
         loot.GetComponentInChildren<Inventory>().loot = true;
         Inventory lootInventory = loot.GetComponentInChildren<Inventory>();
         //loot.GetComponentInChildren<Inventory>().AddItem(mItems[id]);
-        Debug.Log("photon view state = " + loot.GetComponentInChildren<PhotonView>().ViewID);
         LastItemName = mItems[id].Name;
         GameObject newItem = PhotonNetwork.Instantiate(mItems[id].Name, transform.position, transform.rotation);
         newItem.GetComponent<Weapon>().RequestTagChange("TempObjTag");
@@ -524,27 +512,17 @@ public class Inventory : MonoBehaviourPunCallbacks
     
     public void DropWeapons(string name)
     {
-        Debug.Log("DropTOTO 1");
-        
         GameObject newItem = PhotonNetwork.Instantiate(name, transform.position, transform.rotation);
         // AddItem(newItem.GetComponent<Weapon>());
-        Debug.Log("DropTOTO 2");
-
-        // Debug.Log("photon view state = " + loot.GetComponentInChildren<PhotonView>().ViewID);
 
         newItem.GetComponent<Weapon>().RequestTagChange("TempObjTag");
-        Debug.Log("DropTOTO 3");
 
         ApplyNetworkUpdate("TempObjTag");
-        Debug.Log("DropTOTO 4");
-
     }
 
     [PunRPC]
     public void DestroyObject()
     {
-
-        Debug.Log("INVENTORY: in DESTROY OBJECT via punRPC");
         PhotonNetwork.Destroy(this.gameObject);
     }
 }
