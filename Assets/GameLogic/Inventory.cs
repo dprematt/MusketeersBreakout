@@ -19,21 +19,17 @@ public class Inventory : MonoBehaviourPunCallbacks
     public event EventHandler<InventoryEventArgs> ItemInsertedAt;
     public event EventHandler<InventoryEventArgs> ItemRemoved;
 
-    public void AddEnemyWeapon(Weapon weapon, GameObject enemy)
-    {
-        if (enemy != null)
+    public void AddEnemyWeapon(Weapon weapon)
+    {        
+        if (mItems == null)
+            mItems = new IInventoryItem[9];
+        Add(weapon);
+        Debug.Log("enemy weapon added = " + weapon.name);
+        if (ItemAdded != null)
         {
-            Player player = enemy.GetComponent<Player>();
-            if (player == null)
-                return;
-        }
-        if (weapon == null)
-        {
-            // Destroy(weaponObject);
-            return;
-        }
-        AddItem(weapon);
-        //weaponObject.SetActive(false);
+            ItemAdded(this, new InventoryEventArgs(weapon));
+            Debug.Log("enemy weapon item event called");
+        }  
     }
 
     public void AddWeapon(string weaponName)
@@ -255,9 +251,13 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void Initialize(int slots, IInventoryItem[] items, bool isLoot)
     {
+        Debug.Log("Inventory: initialize");
+        if (items == null)
+            Debug.Log("in init, items == null");
         SLOTS = slots;
         mItems = items;
         loot = isLoot;
+        DisplayCurrentLoot();
     }
 
     public Inventory(int slots, IInventoryItem[] items, bool isLoot)
@@ -408,6 +408,25 @@ public class Inventory : MonoBehaviourPunCallbacks
             else
             {
                 Destroy(gameObject);
+            }
+        }
+    }
+
+    public void DisplayCurrentLoot()
+    {
+        if (mItems == null)
+        {
+            Debug.Log("items == null in displaycurrentloot");
+            return;
+        }
+        for (int i = 0; i < 9; i++)
+        {
+            if (mItems[i] != null)
+            {
+                if (loot == true)
+                {
+                    Debug.Log("ITEM IN LOOT id = " + i + " name = " + mItems[i].Name);
+                }
             }
         }
     }

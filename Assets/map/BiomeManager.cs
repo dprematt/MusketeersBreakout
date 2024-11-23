@@ -31,7 +31,6 @@ public class BiomeManager : MonoBehaviourPun {
 
     public void PlaceBiomesInFlatAreas(List<Vector2> plateCenters, Vector2 topLeft, Vector2 bottomRight, System.Random prng)
     {
-        Debug.Log("Début de PlaceBiomesInFlatAreas");
         
         _generator.InitializeRandom();
         biomesPositions.Clear();
@@ -103,7 +102,7 @@ public class BiomeManager : MonoBehaviourPun {
                     Vector2 center = plateCenters[index];
                     plateCenters.RemoveAt(index);
 
-                    float biomeRadius = 100f;
+                    float biomeRadius = 110f;
                     bool isOutOfBounds = 
                         (center.x - biomeRadius < topLeft.x + borderBuffer || center.x + biomeRadius > bottomRight.x - borderBuffer ||
                         center.y - biomeRadius < bottomRight.y + borderBuffer || center.y + biomeRadius > topLeft.y - borderBuffer);
@@ -133,16 +132,20 @@ public class BiomeManager : MonoBehaviourPun {
 
                     if (!isTooCloseToOtherBiomes && !isTooCloseToSameBiomes)
                     {
-                        biomesPositions.Add(position);
-                        biomeSpecificPositions[biome.type].Add(position);
+                        try {
+                            biomesPositions.Add(position);
+                            biomeSpecificPositions[biome.type].Add(position);
 
-                        GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
-                        DropWeaponsInChest(instance);
-                        instance.transform.SetParent(biomesParent.transform);
+                            GameObject instance = Instantiate(biome.prefab, position, Quaternion.identity);
+                            DropWeaponsInChest(instance);
+                            instance.transform.SetParent(biomesParent.transform);
 
-                        biomeCount[biome.type] += 1;
-                        biomesPlaced += 1;
-                        biomePlaced = true;
+                            biomeCount[biome.type] += 1;
+                            biomesPlaced += 1;
+                            biomePlaced = true;
+                        } catch (Exception ex) {
+                            Debug.LogError($"Erreur lors du placement du biome de type {biome.type} : {ex.Message}");
+                        }
                     }
                     else
                     {
@@ -247,19 +250,23 @@ public class BiomeManager : MonoBehaviourPun {
                 break;
         }
         foreach (Vector3 pos in positions) {
-            System.Random random = new System.Random();
-            int randomWeaponIndex = random.Next(allWeapons.Length);
-            string chosenWeapon = allWeapons[randomWeaponIndex];
+            try  {
+                System.Random random = new System.Random();
+                int randomWeaponIndex = random.Next(allWeapons.Length);
+                string chosenWeapon = allWeapons[randomWeaponIndex];
 
-            GameObject lootInstance = PhotonNetwork.Instantiate(lootPrefabName, prefab.transform.position, Quaternion.identity);
+                GameObject lootInstance = PhotonNetwork.Instantiate(lootPrefabName, prefab.transform.position, Quaternion.identity);
 
-            Inventory lootInventory = lootInstance.transform.GetChild(0).GetComponentInChildren<Inventory>();
-            lootInventory.DropWeapons(chosenWeapon);
-            lootInventory.loot = true;
+                Inventory lootInventory = lootInstance.transform.GetChild(0).GetComponentInChildren<Inventory>();
+                lootInventory.DropWeapons(chosenWeapon);
+                lootInventory.loot = true;
 
-            lootInstance.transform.SetParent(prefab.transform, true);
+                lootInstance.transform.SetParent(prefab.transform, true);
 
-            lootInstance.transform.localPosition = pos;
+                lootInstance.transform.localPosition = pos;
+            } catch (Exception ex) {
+                Debug.LogError($"Erreur lors de la création d'arme dans le coffre : {ex.Message}");
+            }
         }
     }
 

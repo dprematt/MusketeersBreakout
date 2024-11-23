@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Environment.Instancing;
 
@@ -20,7 +21,6 @@ public class Chunk
 
         bool mapDataReceived;
 
-        int previousLOD;
         int previousLODIndex = -1;
 
         int waterThickness = 30;
@@ -57,29 +57,6 @@ public class Chunk
             meshObject.transform.localScale = Vector3.one * 1;
             SetVisible(false);
 
-            MeshInstancesBehaviour meshInstancesBehaviour = meshObject.AddComponent<MeshInstancesBehaviour>();
-            meshInstancesBehaviour.UseSubMesh = false;
-            meshInstancesBehaviour.SubMeshIndex = 0;
-            meshInstancesBehaviour.Density = 1000f;
-
-            meshInstancesBehaviour.InstanceConfigurations = new InstanceConfiguration[instanceMeshes.Length];
-            meshInstancesBehaviour.InstanceConfigurations[0] = new InstanceConfiguration
-            {
-                Mesh = instanceMeshes[0],
-                Material = instanceMaterials[0],
-                Probability = 1f,
-                Scale = 1f,
-                NormalOffset = 0f
-            };
-            meshInstancesBehaviour.InstanceConfigurations[1] = new InstanceConfiguration
-            {
-                Mesh = instanceMeshes[1],
-                Material = instanceMaterials[1],
-                Probability = 0.1f,
-                Scale = 1f,
-                NormalOffset = 0f
-            };
-
             lodMeshes = new LODMesh[detailsLevel.Length];
 
             for (int i = 0; i < detailsLevel.Length; i++)
@@ -88,7 +65,7 @@ public class Chunk
             }
             _generator.RequestMapData(position, OnMapDataReceived);
         }
-
+    
         bool IsPositionInChunk(Vector3 localPosition)
         {
             return bounds.Contains(new Vector3(localPosition.x, 0, localPosition.z));
@@ -96,19 +73,23 @@ public class Chunk
 
         void OnMapDataReceived(MapData mapData)
         {
-            this.mapdata = mapData;
-            mapDataReceived = true;
-            UpdateMesh();
-            Vector2 chunkCenter = this.ChunkCenter;
-            int seed = CalculateSeedForChunk(chunkCenter);
-            _generator.PlacePrefabsInChunk(chunkCenter, mapData.heightMap, 240, new System.Random(seed));
-            ApplyBeachesIfNeeded();
-            UpdateChunk();
+            try {
+                this.mapdata = mapData;
+                mapDataReceived = true;
+                UpdateMesh();
+                Vector2 chunkCenter = this.ChunkCenter;
+                int seed = CalculateSeedForChunk(chunkCenter);
+                _generator.PlacePrefabsInChunk(chunkCenter, mapData.heightMap, 240, new System.Random(seed));
+                ApplyBeachesIfNeeded();
+                UpdateChunk();
+            } catch (Exception ex) {
+                Debug.LogError($"Erreur dans l'update du chunk: {ex.Message}");
+            }
         }
 
         int CalculateSeedForChunk(Vector2 chunkCenter)
         {
-            return chunkCenter.GetHashCode(); // Ou une autre méthode déterministe pour obtenir une graine constante basée sur la position du chunk
+            return chunkCenter.GetHashCode();
         }
 
         private void ApplyBeachesIfNeeded()
@@ -121,30 +102,27 @@ public class Chunk
             float chunkRightBorder = bounds.center.x + (bounds.size.x / 2);
             float chunkLeftBorder = bounds.center.x - (bounds.size.x / 2);
 
-            // bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - waterThickness) && bounds.center.y < mapHalfHeight;
             bool isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - waterThickness - mapChunkSize ) && bounds.center.y < mapHalfHeight;
             bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - waterThickness - mapChunkSize) && bounds.center.x < mapHalfWidth;
             bool isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + waterThickness) && bounds.center.y > -mapHalfHeight;
             bool isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + waterThickness) && bounds.center.x > -mapHalfWidth;
 
-            if (isTopBorderChunk)
-                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, false); 
-            if (isBottomBorderChunk)
-                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, false);
-            // bool isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - waterThickness) && bounds.center.x < mapHalfWidth;
-            if (isLeftBorderChunk)
-                ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, true);
-            if (isRightBorderChunk)
-                ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, false);
-            if (isTopBorderChunk)
-                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, true); 
-            if (isBottomBorderChunk)
-                ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, true);
-
-            isTopBorderChunk = chunkTopBorder >= (mapHalfHeight - sandThickness - waterThickness) && bounds.center.y < mapHalfHeight;
-            isBottomBorderChunk = chunkBottomBorder <= (-mapHalfHeight + sandThickness + waterThickness) && bounds.center.y > -mapHalfHeight;
-            isLeftBorderChunk = chunkLeftBorder <= (-mapHalfWidth + sandThickness + waterThickness) && bounds.center.x > -mapHalfWidth;
-            isRightBorderChunk = chunkRightBorder >= (mapHalfWidth - sandThickness - waterThickness) && bounds.center.x < mapHalfWidth;
+            try {
+                if (isTopBorderChunk)
+                    ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, false); 
+                if (isBottomBorderChunk)
+                    ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, false);
+                if (isLeftBorderChunk)
+                    ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, true);
+                if (isRightBorderChunk)
+                    ApplyBeachAndSandToLeftOrRightBorder(waterThickness, sandThickness, false);
+                if (isTopBorderChunk)
+                    ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, true, true); 
+                if (isBottomBorderChunk)
+                    ApplyBeachAndSandToTopOrBottom(waterThickness, sandThickness, false, true);
+            } catch (Exception ex) {
+                Debug.LogError($"Erreur lors de la génération de la plage sur les chunks: {ex.Message}");
+            }
         }
 
         private void ApplyBeachAndSandToTopOrBottom(int waterThickness, int sandThickness, bool isTopBorder, bool isWater)
@@ -154,7 +132,7 @@ public class Chunk
             float beachEndZ = sandEndZ + (isTopBorder ? sandThickness : -sandThickness);
             float mapHalfHeight = mapChunkSize * 2.0f;
 
-            System.Random prng = _generator.getPRNG(); // Get a random number generator
+            System.Random prng = _generator.getPRNG();
 
             for (int x = 0; x < mapChunkSize; x++)
             {
@@ -167,7 +145,7 @@ public class Chunk
                         continue;
                     }
 
-                    float randomness = (float)prng.NextDouble() * 10f - 5f; // Adjust the range of randomness as needed
+                    float randomness = (float)prng.NextDouble() * 10f - 5f;
                     if (isWater) {
                         if (isTopBorder ? (worldZ >= chunkBorderStartZ && worldZ < sandEndZ + randomness) :
                                         (worldZ <= chunkBorderStartZ && worldZ > sandEndZ + randomness))
@@ -191,7 +169,7 @@ public class Chunk
             float sandEndX = chunkBorderStartX + (isLeftBorder ? waterThickness : -waterThickness);
             float beachEndX = sandEndX + (isLeftBorder ? sandThickness : -sandThickness);
 
-            System.Random prng = _generator.getPRNG(); // Get a random number generator
+            System.Random prng = _generator.getPRNG();
 
             for (int x = 0; x < mapChunkSize; x++)
             {
@@ -199,7 +177,7 @@ public class Chunk
                 {
                     float worldX = bounds.center.x - (bounds.size.x / 2) + x;
 
-                    float randomness = (float)prng.NextDouble() * 10f - 5f; // Adjust the range of randomness as needed
+                    float randomness = (float)prng.NextDouble() * 10f - 5f;
                     if (isLeftBorder ? (worldX >= chunkBorderStartX && worldX < sandEndX + randomness) :
                                     (worldX <= chunkBorderStartX && worldX > sandEndX + randomness))
                     {
@@ -216,11 +194,7 @@ public class Chunk
 
         private void UpdateMesh()
         {
-            _generator.RequestMeshData(mapdata, previousLOD, (meshData) => {
-                meshFilter.mesh = meshData.CreateMesh();
-                meshCollider.sharedMesh = meshData.CreateMesh();
-                SetVisible(true);
-            });
+            SetVisible(true);
         }
 
         public void UpdateChunk()
@@ -264,7 +238,6 @@ public class Chunk
                         }
                     }
                 }
-                //SetVisible(true);
             }
         }
 
