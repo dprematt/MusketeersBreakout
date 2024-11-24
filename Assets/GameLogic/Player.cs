@@ -414,12 +414,16 @@ public class Player : MonoBehaviourPunCallbacks
 
 	public void TakeDamage(float Damage)
 	{
+		Debug.Log("in player take damage before is mine check");
 		if (photonView.IsMine)
 		{
+			Debug.Log("playe take damage, is mine passed");
 			if (HealthManager.GetHealth() <= Damage)
 			{
+				Debug.Log("take dmg, get health passed, player died");
 				PFInventory_.PlayerLose();
 			}
+			Debug.Log("player take damage before health manager");
 			HealthManager.Take_Damage((int)Damage);
 			bloodParticles.Play();
 		}

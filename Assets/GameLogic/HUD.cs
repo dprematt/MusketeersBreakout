@@ -326,9 +326,11 @@ public class HUD : MonoBehaviourPunCallbacks
             }
             else
             {
+                DropItem(selectedSlot);
+                Clean();
                 // Si aucun autre slot trouvé, remettre l'image à sa position d'origine
-                draggedImage.transform.SetParent(selectedSlot.GetChild(0), false);
-                draggedImage.transform.localPosition = Vector3.zero; // Réinitialisez la position
+                //draggedImage.transform.SetParent(selectedSlot.GetChild(0), false);
+                //draggedImage.transform.localPosition = Vector3.zero; // Réinitialisez la position
             }
 
             // Réactiver l'image dans le slot d'origine si elle avait été désactivée
@@ -368,9 +370,23 @@ public class HUD : MonoBehaviourPunCallbacks
         return false;
     }
 
-    private void DropItem()
+    private void DropItem(Transform slot1)
     {
+        Inventory inventory = gameObject.GetComponentInParent<Inventory>();
 
+        // Sauvegarde les positions initiales des slots
+        Vector3 pos1 = slot1.position;
+
+        // Récupération des images enfants dans chaque slot
+        Transform image1 = slot1.Find("Border/itemImage");
+
+        // Inverse les images en changeant leur parent
+
+        // Ajuste les positions pour que les images correspondent bien aux nouveaux parents
+        image1.localPosition = Vector3.zero; // Réinitialise la position locale dans le nouveau parent
+        char id_1_c = slot1.tag[slot1.tag.Length - 1];
+        int id_1 = int.Parse(id_1_c.ToString());
+        inventory.DropItem(id_1);
     }
 
     private void SwapSlots(Transform slot1, Transform slot2)

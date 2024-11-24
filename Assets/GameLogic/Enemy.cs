@@ -238,6 +238,18 @@ public class Enemy : MonoBehaviourPun
             GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
             var loot = Instantiate(LootPrefab, gameObject.transform.position, gameObject.transform.rotation);
             loot.GetComponentInChildren<Inventory>().Initialize(9, inventory.mItems, true);
+            Vector3 newPos = gameObject.transform.position;
+            newPos.x += 2;
+            GameObject loot = PhotonNetwork.Instantiate("Prefabs/Loot", newPos, gameObject.transform.rotation);
+            Inventory lootInventory = loot.GetComponentInChildren<Inventory>();
+            loot.GetComponentInChildren<Inventory>().loot = true;
+            GameObject newItem = PhotonNetwork.Instantiate(weaponList[0].Name, transform.position, transform.rotation);
+            newItem.GetComponent<Weapon>().RequestTagChange("TempObjTag");
+            lootInventory.ApplyNetworkUpdate("TempObjTag");
+            GameObject newItem2 = PhotonNetwork.Instantiate(weaponList[1].Name, transform.position, transform.rotation);
+            newItem2.GetComponent<Weapon>().RequestTagChange("TempObjTag");
+            lootInventory.ApplyNetworkUpdate("TempObjTag");
+            Debug.Log("on cr�e un loot d'ennemy");
             PhotonNetwork.Destroy(gameObject);
             photonView.RPC("Particles", RpcTarget.All);
             return 1;

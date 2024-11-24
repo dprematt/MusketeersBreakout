@@ -189,11 +189,11 @@ public class Inventory : MonoBehaviourPunCallbacks
                 if (id == 0)
                 {
                     playerScript.SetWeaponEvents(weaponItem);
-                    weaponObject.SetActive(true);
+                    UpdateActiveWeapon(weaponObject, true);
                 }
                 else
                 {
-                    weaponObject.SetActive(false);
+                    UpdateActiveWeapon(weaponObject, false);
                 }
                 weaponItem.whenPickUp(playerScript.gameObject);
             }
@@ -267,13 +267,13 @@ public class Inventory : MonoBehaviourPunCallbacks
             IInventoryItem item1 = mItems[index1];
             if (item1 != null && item1.GameObject != null)
             {
-                item1.GameObject.SetActive(false);
+                UpdateActiveWeapon(item1.GameObject, false);
             }
 
             IInventoryItem item2 = mItems[index2];
             if (item2 != null && item2.GameObject != null)
             {
-                item2.GameObject.SetActive(true);
+                UpdateActiveWeapon(item2.GameObject, true);
             }
         }
 
@@ -372,6 +372,8 @@ public class Inventory : MonoBehaviourPunCallbacks
             {
                 if (view.ViewID == 0)
                 {
+                    Debug.Log("destroy loot, view id == 0");
+                    Debug.Log("other view id == " + gameObject.GetComponentInChildren<PhotonView>().ViewID);
                     return;
                 }
                 view.RPC("DestroyObject", RpcTarget.All);
@@ -433,6 +435,19 @@ public class Inventory : MonoBehaviourPunCallbacks
                 }
             }
         }*/
+    }
+
+    public void UpdateActiveWeapon(GameObject item, bool state)
+    {
+        PhotonView view = item.GetComponent<PhotonView>();
+        photonView.RPC("SetActiveWeapon", RpcTarget.All, view.ViewID, state);             
+    }
+
+    [PunRPC]
+    public void SetActiveWeapon(int viewID, bool state)
+    {
+        PhotonView view = PhotonView.Find(viewID);
+        view.gameObject.SetActive(state);
     }
 
     [PunRPC]
