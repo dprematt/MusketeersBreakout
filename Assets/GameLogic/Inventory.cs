@@ -202,11 +202,11 @@ public class Inventory : MonoBehaviourPunCallbacks
                 if (id == 0)
                 {
                     playerScript.SetWeaponEvents(weaponItem);
-                    weaponObject.SetActive(true);
+                    UpdateActiveWeapon(weaponObject, true);
                 }
                 else
                 {
-                    weaponObject.SetActive(false);
+                    UpdateActiveWeapon(weaponObject, false);
                 }
 
                 weaponObject.name = "TEST";
@@ -290,7 +290,7 @@ public class Inventory : MonoBehaviourPunCallbacks
             {
                 Debug.Log("active false item 1 " + item1.GameObject.name);
                 Debug.Log("active false item 1 before setactive " + item1.GameObject.active);
-                item1.GameObject.SetActive(false);
+                UpdateActiveWeapon(item1.GameObject, false);
                 Debug.Log("active false item 1 after setactive " + item1.GameObject.active);
             }
 
@@ -299,7 +299,7 @@ public class Inventory : MonoBehaviourPunCallbacks
             {
                 Debug.Log("active true item 2 " + item2.GameObject.name);
                 Debug.Log("active true item 2 before setactive " + item2.GameObject.active);
-                item2.GameObject.SetActive(true);
+                UpdateActiveWeapon(item2.GameObject, true);
                 Debug.Log("active true item 2 after setactive " + item2.GameObject.active);
             }
         }
@@ -465,6 +465,19 @@ public class Inventory : MonoBehaviourPunCallbacks
                 }
             }
         }*/
+    }
+
+    public void UpdateActiveWeapon(GameObject item, bool state)
+    {
+        PhotonView view = item.GetComponent<PhotonView>();
+        photonView.RPC("SetActiveWeapon", RpcTarget.All, view.ViewID, state);             
+    }
+
+    [PunRPC]
+    public void SetActiveWeapon(int viewID, bool state)
+    {
+        PhotonView view = PhotonView.Find(viewID);
+        view.gameObject.SetActive(state);
     }
 
     [PunRPC]
