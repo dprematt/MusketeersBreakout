@@ -40,6 +40,7 @@ public class LootHUD : MonoBehaviourPunCallbacks
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
         }
+
         for (int i = 0; i < 9; i++)
         {
             if (inventory.mItems[i] != null)
@@ -94,8 +95,6 @@ public class LootHUD : MonoBehaviourPunCallbacks
 
     private void LootInventoryScript_InsertItemAt(object sender, InventoryEventArgs e)
     {
-        Debug.Log("event item inserted hud");
-        Debug.Log(e.Item.Name);
         Transform inventoryPanel = transform.Find("Inventory");
         Image image = inventoryPanel.GetChild(e.Index).GetChild(0).GetChild(0).GetComponent<Image>();
         Button button = inventoryPanel.GetChild(e.Index).GetChild(0).GetComponent<Button>();
@@ -142,7 +141,6 @@ public class LootHUD : MonoBehaviourPunCallbacks
     // Update is called once per frame
     private void LootOnPointerClick(PointerEventData eventData)
     {
-        //Debug.Log("Store the selected slot when clicked");
         //selectedSlot = eventData.pointerPress.transform;
 
         // Calculate the offset between the mouse position and the slot position
@@ -261,7 +259,6 @@ public class LootHUD : MonoBehaviourPunCallbacks
     {
         // Récupération des composants Inventory
         Inventory p_inventory = gameObject.GetComponentInParent<Inventory>();
-        Debug.Log(p_inventory.transform.name);
 
         // Sauvegarde les positions initiales des slots
         Vector3 pos1 = slot1.position;
@@ -288,14 +285,12 @@ public class LootHUD : MonoBehaviourPunCallbacks
         int id_2 = int.Parse(id_2_c.ToString());
         if (sameParent)
         {
-            Debug.Log("swap items in LootHUD");
             inventory.SwapItems(id_1, id_2);
             Clean();
         }
         else
         {
-            Debug.Log("swap items loot in LootHUD");
-            Debug.Log("id1 = " + id_1 + " | id2 = " + id_2);
+            Debug.Log("lootHUD swap: " + id_1 + " " + id_2);
             inventory.SwapItemsLoot(id_1, id_2, p_inventory);
             Transform playerTransform = transform.parent;
             HUD hud = playerTransform.GetComponentInChildren<HUD>();

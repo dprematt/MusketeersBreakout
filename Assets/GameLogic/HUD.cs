@@ -40,7 +40,6 @@ public class HUD : MonoBehaviourPunCallbacks
 
         if (player == null)
         {
-            Debug.Log("player == null");
             return;
         }
         
@@ -55,14 +54,6 @@ public class HUD : MonoBehaviourPunCallbacks
                     if (player.EquippedWeapon != null)
                         textComp.text = "dmg = " + player.EquippedWeapon.damages;
                 }
-                else
-                {
-                    Debug.Log("HUD: textComp == null");
-                }
-            }
-            else
-            {
-                Debug.Log("AtqText == Null");
             }
             Transform HpStats = Stats.Find("HpText");
             if (AtqStats != null)
@@ -72,14 +63,6 @@ public class HUD : MonoBehaviourPunCallbacks
                 {
                     textComp.text = "HP = " + player.HealthManager.Health_;
                 }
-                else
-                {
-                    Debug.Log("HUD: textComp == null");
-                }
-            }
-            else
-            {
-                Debug.Log("hpText == Null");
             }
             Transform SpeedStats = Stats.Find("SpeedText");
             if (AtqStats != null)
@@ -89,14 +72,6 @@ public class HUD : MonoBehaviourPunCallbacks
                 {
                     textComp.text = "Speed = " + player.moveSpeed;
                 }
-                else
-                {
-                    Debug.Log("HUD: textComp == null");
-                }
-            }
-            else
-            {
-                Debug.Log("speedText == Null");
             }
             Transform KillsStats = Stats.Find("KillsText");
             if (AtqStats != null)
@@ -106,14 +81,6 @@ public class HUD : MonoBehaviourPunCallbacks
                 {
                     textComp.text = "Kills = " + player.kills;
                 }
-                else
-                {
-                    Debug.Log("HUD: textComp == null");
-                }
-            }
-            else
-            {
-                Debug.Log("KillsText == Null");
             }
             Transform LootStats = Stats.Find("LootsText");
             if (AtqStats != null)
@@ -123,14 +90,6 @@ public class HUD : MonoBehaviourPunCallbacks
                 {
                     textComp.text = "Loots = " + player.lootedChests;
                 }
-                else
-                {
-                    Debug.Log("HUD: textComp == null");
-                }
-            }
-            else
-            {
-                Debug.Log("LootsText == Null");
             }
             Transform DmgTakenStats = Stats.Find("DmgTakenText");
             if (AtqStats != null)
@@ -140,14 +99,6 @@ public class HUD : MonoBehaviourPunCallbacks
                 {
                     textComp.text = "Dmg Taken = " + player.dmgTaken;
                 }
-                else
-                {
-                    Debug.Log("HUD: textComp == null");
-                }
-            }
-            else
-            {
-                Debug.Log("DmgTakenText == Null");
             }
             Transform DmgDoneStats = Stats.Find("DmgDoneText");
             if (AtqStats != null)
@@ -157,19 +108,7 @@ public class HUD : MonoBehaviourPunCallbacks
                 {
                     textComp.text = "Dmg Done = " + player.dmgDone;
                 }
-                else
-                {
-                    Debug.Log("HUD: textComp == null");
-                }
             }
-            else
-            {
-                Debug.Log("DmgDoneText == Null");
-            }
-        }
-        else
-        {
-            Debug.Log("HUD: stats == null");
         }
 
         Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
@@ -183,7 +122,6 @@ public class HUD : MonoBehaviourPunCallbacks
 
         if (Players != null)
         {
-            Debug.Log("Display Players Players found");
             Transform Image = Players.Find("Image");
             Transform RoomName = Image.Find("RoomName");
             if (RoomName != null)
@@ -195,10 +133,6 @@ public class HUD : MonoBehaviourPunCallbacks
                     {
                         textComp.text = "Session de: " + PhotonNetwork.CurrentRoom.Name + "\n\n";
                     }
-                }
-                else
-                {
-                    Debug.Log("HUD: textComp == null");
                 }
             }
 
@@ -213,14 +147,9 @@ public class HUD : MonoBehaviourPunCallbacks
                     foreach (Photon.Realtime.Player player in players)
                     {
                         if (playerCount >= 10) break;  // Si plus de 10 joueurs, arrêter l'itération
-                        Debug.Log("Display Players nickname = " + player.NickName);
                         textComp.text += player.NickName + ",\n\n";
                         playerCount++;  // Incrémenter le compteur après chaque joueur
                     }
-                }
-                else
-                {
-                    Debug.Log("HUD: textComp == null");
                 }
             }
         }
@@ -228,20 +157,20 @@ public class HUD : MonoBehaviourPunCallbacks
 
     public void Clean()
     {
-        LootHUD lootHud = transform.parent.GetComponent<LootHUD>();
-        Inventory inventory = lootHud.inventory;
+        Inventory inventory = transform.parent.GetComponent<Inventory>();
+        if (inventory == null)
+            return;
+
         Debug.Log("CLEAN IN HUD");
         for (int i = 0; i < 9; i++)
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
-            Debug.Log("CLEAN IN HUD 1 FOR");
         }
         for (int i = 0; i < 9; i++)
         {
             if (inventory.mItems[i] != null)
             {
                 InventoryScript_InsertItemAt(this, new InventoryEventArgs(inventory.mItems[i], i));
-                Debug.Log("CLEAN IN HUD 2 FOR");
             }
         }
     }
@@ -473,12 +402,10 @@ public class HUD : MonoBehaviourPunCallbacks
         int id_2 = int.Parse(id_2_c.ToString());
         if (sameParent)
         {
-            Debug.Log("swap items in HUD");
             inventory.SwapItems(id_1, id_2);
         }
         else
         {
-            Debug.Log("swap items loot in HUD");
             LootHUD lootHUD = gameObject.GetComponentInChildren<LootHUD>();
             inventory.SwapItemsLoot(id_1, id_2, lootHUD.inventory);
             //lootHUD.Clean();

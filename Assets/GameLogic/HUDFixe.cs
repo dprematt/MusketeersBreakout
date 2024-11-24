@@ -22,6 +22,7 @@ public class HUDFixe : MonoBehaviour
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Inventory inventory = player.GetComponent<Inventory>();
+        Debug.Log("CLEAN IN HUD FIX");
         for (int i = 0; i < 2; i++)
         {
             InventoryScript_ItemRemoved(this, new InventoryEventArgs(i));
