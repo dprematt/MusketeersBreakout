@@ -58,18 +58,24 @@ public class HealthManager : MonoBehaviourPunCallbacks
 
     public void Take_Damage(int Damage)
     {
+        Debug.Log("take damage in health manager before is mine check");
         if (photonView.IsMine)
         {
+            Debug.Log("take damage in health manager");
             if (Damage < Health_)
             {
+                Debug.Log("damage < health");
                 Player player = gameObject.GetComponent<Player>();
                 if (player != null)
                 {
+                    Debug.Log("player != null");
                     player.dmgTaken += Damage;
                 }
+                Debug.Log("call to rpc damage instance");
                 photonView.RPC("DamageInstance", RpcTarget.All, Damage);
             }
             else {
+                Debug.Log("transfer to host");
                 TransferToNextPlayer();
                 DestroyPlayer();
             }
@@ -128,6 +134,7 @@ public class HealthManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void DamageInstance(int Damage)
     {
+        Debug.Log("in damage instance");
         bloodParticles.Play();
         Health_ -= Damage;
     }

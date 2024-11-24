@@ -118,6 +118,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
         {
             if (IsPlayer && other.CompareTag("Player"))
             {
+                Debug.Log("player versus player");
                 other.gameObject.GetComponentInParent<Player>().TakeDamage(damages);
                 Player player = gameObject.GetComponentInParent<Player>();
                 if (player != null)
