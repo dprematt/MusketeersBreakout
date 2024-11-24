@@ -389,6 +389,7 @@ public class Inventory : MonoBehaviourPunCallbacks
                 if (view.ViewID == 0)
                 {
                     Debug.Log("destroy loot, view id == 0");
+                    Debug.Log("other view id == " + gameObject.GetComponentInChildren<PhotonView>().ViewID);
                     return;
                 }
                 Debug.Log("before loot destroyed");
