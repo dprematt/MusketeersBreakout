@@ -73,7 +73,6 @@ public class Enemy : MonoBehaviourPun
         Transform hand = FindDeepChild(transform, "hand.R");
         foreach (Weapon weapon in weaponList)
         {
-            Debug.Log("Enemy: call to whenPickUp");
             weapon.whenPickUp(gameObject);
         }
         if (weaponList.Count > 1)
@@ -154,10 +153,8 @@ public class Enemy : MonoBehaviourPun
 
                     weaponList[currentWeapon].gameObject.SetActive(true);
                     weaponList[currentWeapon].setAnim(gameObject);
-                    Debug.Log("Enemy: currentWeapon == " + currentWeapon);
                     if (eventListener == null)
                     {
-                        Debug.Log("Enemy: in update: eventlistener == null");
                         eventListener = GetComponent<EventListener>();
                         if (eventListener == null)
                         {
@@ -208,6 +205,13 @@ public class Enemy : MonoBehaviourPun
             }
         }
 
+        Bullet bullet = other.GetComponent<Bullet>();
+        if (bullet != null)
+        {
+            TakeDamage(10);
+            bullet.GetComponent<PhotonView>().RPC("Destroy", RpcTarget.AllBuffered);
+        }
+
         if (other.gameObject.CompareTag("Player"))
         {
             target = other.transform;
@@ -224,7 +228,6 @@ public class Enemy : MonoBehaviourPun
 
     public int TakeDamage(float damageAmount)
     {
-        
         bloodParticles.Play();
         photonView.RPC("Damage_instance", RpcTarget.All, damageAmount);
         if (health <= 0)
@@ -234,7 +237,6 @@ public class Enemy : MonoBehaviourPun
             playerMov.UpdateXp(10);
             GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
             var loot = Instantiate(LootPrefab, gameObject.transform.position, gameObject.transform.rotation);
-            Debug.Log("on crée un loot d'ennemy");
             loot.GetComponentInChildren<Inventory>().Initialize(9, inventory.mItems, true);
             PhotonNetwork.Destroy(gameObject);
             photonView.RPC("Particles", RpcTarget.All);
@@ -246,7 +248,7 @@ public class Enemy : MonoBehaviourPun
     [PunRPC]
     public void Damage_instance(float damageAmount) // ADD
     {
-        health -= 2;
+        health -= damageAmount;
         Health_.text = health.ToString() + "HP";
         if (health <= 0)
             Destroy(gameObject);

@@ -24,17 +24,14 @@ public class Inventory : MonoBehaviourPunCallbacks
         if (mItems == null)
             mItems = new IInventoryItem[9];
         Add(weapon);
-        Debug.Log("enemy weapon added = " + weapon.name);
         if (ItemAdded != null)
         {
             ItemAdded(this, new InventoryEventArgs(weapon));
-            Debug.Log("enemy weapon item event called");
         }  
     }
 
     public void AddWeapon(string weaponName)
     {
-        Debug.Log("LOAD IN ADDWEAPON");
         GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
         if (weaponPrefab == null)
         {
@@ -66,7 +63,6 @@ public class Inventory : MonoBehaviourPunCallbacks
         if (weaponName == null)
             return;
 
-        Debug.Log("LOAD IN EQUIPMAINWEAPON");
         GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
         if (weaponPrefab == null)
         {
@@ -99,15 +95,7 @@ public class Inventory : MonoBehaviourPunCallbacks
         {
             weaponObject.SetActive(false);
         }
-
-        weaponObject.name = "TEST";
-        Debug.Log(weaponPrefab.name);
         weaponItem.whenPickUp(playerScript.gameObject);
-
-        for (int i = 0; i < mItems.Length; i++)
-        {
-            Debug.Log("items in inventory: " + mItems[i].GameObject.name);
-        }
     }
 
     public int Count()
@@ -183,7 +171,6 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void InsertAt(IInventoryItem item, int id)
     {
-        Debug.Log("INSERTAT");
         mItems[id] = item;
         if (!loot)
         {
@@ -208,14 +195,7 @@ public class Inventory : MonoBehaviourPunCallbacks
                 {
                     weaponObject.SetActive(false);
                 }
-
-                weaponObject.name = "TEST";
                 weaponItem.whenPickUp(playerScript.gameObject);
-
-                for (int i = 0; i < mItems.Length; i++)
-                {
-                    Debug.Log("items in inventory: " + mItems[i].GameObject.name);
-                }
             }
         }
     }
@@ -251,7 +231,6 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void Initialize(int slots, IInventoryItem[] items, bool isLoot)
     {
-        Debug.Log("Inventory: initialize");
         if (items == null)
             Debug.Log("in init, items == null");
         SLOTS = slots;
@@ -288,27 +267,19 @@ public class Inventory : MonoBehaviourPunCallbacks
             IInventoryItem item1 = mItems[index1];
             if (item1 != null && item1.GameObject != null)
             {
-                Debug.Log("active false item 1 " + item1.GameObject.name);
-                Debug.Log("active false item 1 before setactive " + item1.GameObject.active);
                 item1.GameObject.SetActive(false);
-                Debug.Log("active false item 1 after setactive " + item1.GameObject.active);
             }
 
             IInventoryItem item2 = mItems[index2];
             if (item2 != null && item2.GameObject != null)
             {
-                Debug.Log("active true item 2 " + item2.GameObject.name);
-                Debug.Log("active true item 2 before setactive " + item2.GameObject.active);
                 item2.GameObject.SetActive(true);
-                Debug.Log("active true item 2 after setactive " + item2.GameObject.active);
             }
         }
 
-        Debug.Log("before swap :" + mItems[index1].GameObject.name + " | " + mItems[index2].GameObject.name);
         IInventoryItem temp = mItems[index1];
         mItems[index1] = mItems[index2];
         mItems[index2] = temp;
-        Debug.Log("after swap :" + mItems[index1].GameObject.name + " | " + mItems[index2].GameObject.name);
     }
 
     public void SwapItemsLoot(int index1, int index2, Inventory lootInventory)
@@ -416,7 +387,6 @@ public class Inventory : MonoBehaviourPunCallbacks
     {
         if (mItems == null)
         {
-            Debug.Log("items == null in displaycurrentloot");
             return;
         }
         for (int i = 0; i < 9; i++)
@@ -514,7 +484,6 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void DropItem(int id)
     {
-        Debug.Log("LOAD IN DROPITEM");
         GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
         Vector3 newPos = gameObject.transform.position;
         newPos.x += 2;
