@@ -181,6 +181,21 @@ public class Inventory : MonoBehaviourPunCallbacks
         }
     }
 
+    public void ResetWeapon(IInventoryItem item)
+    {
+        if (item != null)
+        {
+            Debug.Log("item name in reset weapon = " + item.Name);
+            Player playerScript = transform.GetComponentInParent<Player>();
+            GameObject weaponObject = item.GameObject;
+            Weapon weaponItem = weaponObject.GetComponent<Weapon>();
+            playerScript.SetWeaponEvents(weaponItem);
+        }
+        else
+        {
+            Debug.Log("item == null in resetweapon");
+        }
+    }
     public void InsertAt(IInventoryItem item, int id)
     {
         Debug.Log("INSERTAT");
@@ -212,10 +227,10 @@ public class Inventory : MonoBehaviourPunCallbacks
                 weaponObject.name = "TEST";
                 weaponItem.whenPickUp(playerScript.gameObject);
 
-                for (int i = 0; i < mItems.Length; i++)
+               /* for (int i = 0; i < mItems.Length; i++)
                 {
                     Debug.Log("items in inventory: " + mItems[i].GameObject.name);
-                }
+                }*/
             }
         }
     }
@@ -283,32 +298,45 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void SwapItems(int index1, int index2)
     {
-        if (index1 == 0 && index2 == 1)
+        Debug.Log("index1 ==" + index1);
+        Debug.Log("index2 ==" + index2);
+        if (index1 == 0 || index2 == 0)
         {
             IInventoryItem item1 = mItems[index1];
-            if (item1 != null && item1.GameObject != null)
+            IInventoryItem item2 = mItems[index2];
+
+            //index2 position d'arrivée
+            if (index2 == 0)
             {
-                Debug.Log("active false item 1 " + item1.GameObject.name);
-                Debug.Log("active false item 1 before setactive " + item1.GameObject.active);
-                UpdateActiveWeapon(item1.GameObject, false);
-                Debug.Log("active false item 1 after setactive " + item1.GameObject.active);
+                Debug.Log("active false item 1 ");
+                Debug.Log("active false item 1 before setactive ");
+                if (item1 != null) 
+                    UpdateActiveWeapon(item1.GameObject, true);
+                if (item2 != null)
+                    UpdateActiveWeapon(item2.GameObject, false);
+                ResetWeapon(mItems[0]);
+                Debug.Log("active false item 1 after setactive ");
             }
 
-            IInventoryItem item2 = mItems[index2];
-            if (item2 != null && item2.GameObject != null)
+            //index1 position d'arrivée
+            if (index1 == 0)
             {
-                Debug.Log("active true item 2 " + item2.GameObject.name);
-                Debug.Log("active true item 2 before setactive " + item2.GameObject.active);
-                UpdateActiveWeapon(item2.GameObject, true);
-                Debug.Log("active true item 2 after setactive " + item2.GameObject.active);
+                Debug.Log("active true item 2 ");
+                Debug.Log("active true item 2 before setactive ");
+                if (item1 != null)
+                    UpdateActiveWeapon(item1.GameObject, false);
+                if (item2 != null)
+                    UpdateActiveWeapon(item2.GameObject, true);
+                ResetWeapon(mItems[0]);
+                Debug.Log("active true item 2 after setactive ");
             }
         }
 
-        Debug.Log("before swap :" + mItems[index1].GameObject.name + " | " + mItems[index2].GameObject.name);
+        //Debug.Log("before swap :" + mItems[index1].GameObject.name + " | " + mItems[index2].GameObject.name);
         IInventoryItem temp = mItems[index1];
         mItems[index1] = mItems[index2];
         mItems[index2] = temp;
-        Debug.Log("after swap :" + mItems[index1].GameObject.name + " | " + mItems[index2].GameObject.name);
+        //Debug.Log("after swap :" + mItems[index1].GameObject.name + " | " + mItems[index2].GameObject.name);
     }
 
     public void SwapItemsLoot(int index1, int index2, Inventory lootInventory)
