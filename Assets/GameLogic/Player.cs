@@ -300,23 +300,22 @@ public class Player : MonoBehaviourPunCallbacks
 			LootHUD.SetActive(false);
 		}
 
-		/*if (hasShield && Input.GetMouseButton(1))
+		if (hasShield && Input.GetMouseButton(1))
 		{
-			shieldComp.setProtectionMode(true);
+			if (shieldComp != null)
+				shieldComp.setProtectionMode(true);
 		}
 		else if (hasShield && Input.GetMouseButtonUp(1))
 		{
-			shieldComp.setProtectionMode(false);
+			if (shieldComp != null)
+				shieldComp.setProtectionMode(false);
 		}
-
-		*/
 
 		//Weapon MainWeapon = RetrieveEquippedWeapon("jointItemR");
 		if (EquippedWeapon != null)
 		{
 			if (Input.GetMouseButtonDown(0) && EquippedWeapon.isLongRange == false)
 			{
-				Debug.Log("attack !!!!");
 				EquippedWeapon.Attack();
 			}
 			if (EquippedWeapon.isLongRange && !Input.GetKey(sprintKey))
@@ -414,16 +413,12 @@ public class Player : MonoBehaviourPunCallbacks
 
 	public void TakeDamage(float Damage)
 	{
-		Debug.Log("in player take damage before is mine check");
 		if (photonView.IsMine)
 		{
-			Debug.Log("playe take damage, is mine passed");
 			if (HealthManager.GetHealth() <= Damage)
 			{
-				Debug.Log("take dmg, get health passed, player died");
 				PFInventory_.PlayerLose();
 			}
-			Debug.Log("player take damage before health manager");
 			HealthManager.Take_Damage((int)Damage);
 			bloodParticles.Play();
 		}
@@ -540,78 +535,6 @@ public class Player : MonoBehaviourPunCallbacks
 		EquippedWeapon = weaponComp;*/
 	}
 
-	public void EquipMelee(Collider col)
-	{
-		Weapon weaponComp = col.GetComponent<Weapon>();
-		if (weaponComp != null)
-		{
-			if (weaponComp.isLooted && weaponComp.holder != gameObject && weaponComp.IsAttacking)
-			{
-				if (hasShield && shieldComp.isProtecting)
-				{
-					shield.GetComponent<ParticleSystem>().Play();
-					audioSource.PlayOneShot(blockingSound);
-					anim.SetTrigger("hitted");
-					return;
-				}
-				TakeDamage(weaponComp.damages);
-			}
-
-			if (hasShield && (weaponComp.tag == "WeaponSpear"
-			|| weaponComp.tag == "WeaponHalberd"
-			|| weaponComp.tag == "WeaponCrossBow"))
-			{
-				return;
-			}
-			if (inventory == null)
-				return;
-			if (inventory.PocketCount() < 2)
-			{
-				GameObject weapon = col.gameObject;
-				if (!weaponComp.isLooted)
-				{
-					EquipWeapon(weaponComp, weapon, true);
-				}
-			}
-			else
-			{
-				GameObject weapon = col.gameObject;
-				if (inventory.Count() < 9 && (!weaponComp.isLooted))
-				{
-					inventory.AddItem(weaponComp);
-					weapon.SetActive(false);
-				}
-			}
-		}
-
-		if (!hasShield)
-		{
-			if (inventory.PocketCount() > 0 && (inventory.mItems[currentWeapon].Name == "WeaponSpear"
-			|| inventory.mItems[currentWeapon].Name == "WeaponHalberd"
-			|| inventory.mItems[currentWeapon].Name == "WeaponCrossBow"))
-			{
-				return;
-			}
-
-			shieldComp = col.GetComponent<Shield>();
-			if (shieldComp != null)
-			{
-				shield = col.gameObject;
-				if (!shieldComp.isLooted)
-				{
-					hasShield = true;
-					shieldComp.whenPickUp(gameObject);
-					//EquippedWeapon = weaponComp; a demander a mathis pr le  shield;
-					if (inventory.PocketCount() > 0)
-					{
-						anim.SetLayerWeight(1, 0f);
-						anim.SetLayerWeight(4, 1f);
-					}
-				}
-			}
-		}
-	}
-
 	void OnTriggerEnter(Collider col)
 	{
 		Bullet bullet = col.GetComponent<Bullet>();
@@ -637,7 +560,23 @@ public class Player : MonoBehaviourPunCallbacks
 			PhotonNetwork.LoadLevel("Menu");
 		}
 
-		EquipMelee(col);
+		Weapon weaponComp = col.GetComponent<Weapon>();
+		if (weaponComp != null)
+		{
+			if (weaponComp.isLooted && weaponComp.holder != gameObject && weaponComp.IsAttacking)
+			{
+				if (hasShield && shieldComp.isProtecting)
+				{
+					Debug.Log("HAS SHIELD");
+					shieldComp.gameObject.GetComponent<ParticleSystem>().Play();
+					audioSource.PlayOneShot(blockingSound);
+					anim.SetTrigger("hitted");
+					return;
+				}
+				Debug.Log("HIIIIIIIIIIIIIIT");
+				TakeDamage(weaponComp.damages);
+			}
+		}
 
 		if (col.gameObject.name == "AmmoBox")
 		{

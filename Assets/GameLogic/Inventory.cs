@@ -177,25 +177,50 @@ public class Inventory : MonoBehaviourPunCallbacks
             if (gameObject.GetComponent<Player>() != null && item != null)
             {
                 Player playerScript = transform.GetComponentInParent<Player>();
-                GameObject weaponObject = item.GameObject;
-                Weapon weaponItem = weaponObject.GetComponent<Weapon>();
 
-                if (weaponItem == null)
+                Shield shieldComp = item.GameObject.GetComponent<Shield>();
+                if (shieldComp != null)
                 {
-                    Destroy(weaponObject);
-                    return;
+                    GameObject shield = item.GameObject;
+
+                    if (id == 0)
+                    {
+                        playerScript.anim.SetLayerWeight(1, 0f);
+                        playerScript.anim.SetLayerWeight(4, 1f);
+                        playerScript.hasShield = true;
+                        playerScript.shieldComp = shieldComp;
+                        UpdateActiveWeapon(shield, true);
+                    }
+                    else
+                    {
+                        playerScript.shieldComp = null;
+                        UpdateActiveWeapon(shield, false);
+                    }
+                    shieldComp.whenPickUp(gameObject);
                 }
 
-                if (id == 0)
+                Weapon weaponItem = item.GameObject.GetComponent<Weapon>();
+                if (weaponItem != null)
                 {
-                    playerScript.SetWeaponEvents(weaponItem);
-                    UpdateActiveWeapon(weaponObject, true);
+                    GameObject weaponObject = item.GameObject;
+
+                    if (weaponItem == null)
+                    {
+                        Destroy(weaponObject);
+                        return;
+                    }
+
+                    if (id == 0)
+                    {
+                        playerScript.SetWeaponEvents(weaponItem);
+                        UpdateActiveWeapon(weaponObject, true);
+                    }
+                    else
+                    {
+                        UpdateActiveWeapon(weaponObject, false);
+                    }
+                    weaponItem.whenPickUp(playerScript.gameObject);
                 }
-                else
-                {
-                    UpdateActiveWeapon(weaponObject, false);
-                }
-                weaponItem.whenPickUp(playerScript.gameObject);
             }
         }
     }
@@ -268,12 +293,28 @@ public class Inventory : MonoBehaviourPunCallbacks
             if (item1 != null && item1.GameObject != null)
             {
                 UpdateActiveWeapon(item1.GameObject, false);
+
+                Shield shieldComp = item1.GameObject.GetComponent<Shield>();
+                if (shieldComp != null)
+                {
+                    Player playerComp = gameObject.GetComponent<Player>();
+                    playerComp.shieldComp = null;
+                    gameObject.GetComponent<Player>().hasShield = false;
+                }
             }
 
             IInventoryItem item2 = mItems[index2];
             if (item2 != null && item2.GameObject != null)
             {
                 UpdateActiveWeapon(item2.GameObject, true);
+
+                Shield shieldComp = item2.GameObject.GetComponent<Shield>();
+                if (shieldComp != null)
+                {
+                    Player playerComp = gameObject.GetComponent<Player>();
+                    playerComp.shieldComp = shieldComp;
+                    gameObject.GetComponent<Player>().hasShield = true;
+                }
             }
         }
 
@@ -372,8 +413,6 @@ public class Inventory : MonoBehaviourPunCallbacks
             {
                 if (view.ViewID == 0)
                 {
-                    Debug.Log("destroy loot, view id == 0");
-                    Debug.Log("other view id == " + gameObject.GetComponentInChildren<PhotonView>().ViewID);
                     return;
                 }
                 view.RPC("DestroyObject", RpcTarget.All);
@@ -471,10 +510,20 @@ public class Inventory : MonoBehaviourPunCallbacks
                 //Destroy(weaponPrefab);
                 //weapon.DeactivateAllObjects();
             }
+
+            if (weaponPrefab.TryGetComponent(out Shield shield))
+            {
+                if (mItems == null)
+                    mItems = new IInventoryItem[9];
+                Add(shield);
+                ItemAdded?.Invoke(this, new InventoryEventArgs(shield));
+                weaponPrefab.SetActive(false);
+                //Destroy(weaponPrefab);
+                //weapon.DeactivateAllObjects();
+            }
             //PhotonNetwork.Destroy(newItem);
         }
     }
-
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -508,7 +557,15 @@ public class Inventory : MonoBehaviourPunCallbacks
         //loot.GetComponentInChildren<Inventory>().AddItem(mItems[id]);
         LastItemName = mItems[id].Name;
         GameObject newItem = PhotonNetwork.Instantiate(mItems[id].Name, transform.position, transform.rotation);
-        newItem.GetComponent<Weapon>().RequestTagChange("TempObjTag");
+
+        if (newItem.GetComponent<Weapon>() != null)
+        {
+            newItem.GetComponent<Weapon>().RequestTagChange("TempObjTag");
+        }
+        else if (newItem.GetComponent<Shield>() != null)
+        {
+            newItem.GetComponent<Shield>().RequestTagChange("TempObjTag");
+        }
         lootInventory.ApplyNetworkUpdate("TempObjTag");
         RemoveAt(id);
     }
@@ -518,8 +575,14 @@ public class Inventory : MonoBehaviourPunCallbacks
         GameObject newItem = PhotonNetwork.Instantiate(name, transform.position, transform.rotation);
         // AddItem(newItem.GetComponent<Weapon>());
 
-        newItem.GetComponent<Weapon>().RequestTagChange("TempObjTag");
-
+        if (name == "Shield")
+        {
+            newItem.GetComponent<Shield>().RequestTagChange("TempObjTag");
+        }
+        else
+        {
+            newItem.GetComponent<Weapon>().RequestTagChange("TempObjTag");
+        }
         ApplyNetworkUpdate("TempObjTag");
     }
 

@@ -114,11 +114,11 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
             }
         }*/
 
-        if (/*anim.GetInteger("intAttackPhase") > 0 && */other.gameObject != holder && IsAttacking)
+/*        if (*//*anim.GetInteger("intAttackPhase") > 0 && *//*other.gameObject != holder && IsAttacking)
         {
             if (IsPlayer && other.CompareTag("Player"))
             {
-                Debug.Log("player versus player");
+                Debug.Log("HIT IN WEAPON");
                 other.gameObject.GetComponentInParent<Player>().TakeDamage(damages);
                 Player player = gameObject.GetComponentInParent<Player>();
                 if (player != null)
@@ -140,7 +140,7 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
                 other.gameObject.GetComponentInParent<Enemy>().TakeDamage(damages);
             }
             IsAttacking = false;
-        }
+        }*/
     }
 
     Transform FindDeepChild(Transform parent, string nom)
@@ -290,9 +290,12 @@ public class Weapon : MonoBehaviourPun, IInventoryItem
     {
         if (newHolder != null)
             holder = newHolder;
+
         anim = holder.GetComponentInChildren<Animator>();
+
         if(animOverride != null)
             anim.runtimeAnimatorController = animOverride;
+
         if (!isLongRange)
         {
             if (isPlayer)

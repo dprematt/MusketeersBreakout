@@ -133,7 +133,7 @@ public class Shield : MonoBehaviourPun, IInventoryItem
     [PunRPC]
     public void setProtectionModeSync(bool mode)
     {
-        if (mode != isProtecting && anim.GetInteger("intAttackPhase") == 0)
+        if (mode != isProtecting)
         {
             isProtecting = mode;
             if (mode)
@@ -184,5 +184,27 @@ public class Shield : MonoBehaviourPun, IInventoryItem
         }
 
         transform.localRotation = targetQuaternion;
+    }
+
+    // Public method to request tag change, called by any client
+    public void RequestTagChange(string newTag)
+    {
+        // Ensure the request is only made by the owner
+        if (photonView.IsMine)
+        {
+            photonView.RPC("SyncTag", RpcTarget.All, newTag);
+        }
+    }
+
+    // RPC method to synchronize the tag across all clients
+    [PunRPC]
+    public void SyncTag(string newTag)
+    {
+        SetTag(newTag);
+    }
+
+    private void SetTag(string newTag)
+    {
+        this.gameObject.tag = newTag;
     }
 }
