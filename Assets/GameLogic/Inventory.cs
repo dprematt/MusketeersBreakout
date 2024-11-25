@@ -174,11 +174,12 @@ public class Inventory : MonoBehaviourPunCallbacks
     {
         if (item != null)
         {
-            Debug.Log("item name in reset weapon = " + item.Name);
-            Player playerScript = transform.GetComponentInParent<Player>();
-            GameObject weaponObject = item.GameObject;
-            Weapon weaponItem = weaponObject.GetComponent<Weapon>();
-            playerScript.SetWeaponEvents(weaponItem);
+            Weapon weaponItem = item.GameObject.GetComponent<Weapon>();
+            if (weaponItem != null)
+            {
+                Player playerScript = transform.GetComponentInParent<Player>();
+                playerScript.SetWeaponEvents(weaponItem);
+            }
         }
         else
         {
@@ -221,12 +222,6 @@ public class Inventory : MonoBehaviourPunCallbacks
                 {
                     GameObject weaponObject = item.GameObject;
 
-                    if (weaponItem == null)
-                    {
-                        Destroy(weaponObject);
-                        return;
-                    }
-
                     if (id == 0)
                     {
                         playerScript.SetWeaponEvents(weaponItem);
@@ -238,12 +233,6 @@ public class Inventory : MonoBehaviourPunCallbacks
                     }
                     weaponItem.whenPickUp(playerScript.gameObject);
                 }
-                else
-                {
-                    UpdateActiveWeapon(weaponObject, false);
-                }
-                weaponItem.whenPickUp(playerScript.gameObject);
-
             }
         }
     }
@@ -320,20 +309,26 @@ public class Inventory : MonoBehaviourPunCallbacks
             //index2 position d'arriv�e
             if (index2 == 0)
             {
+                Debug.Log("In index2 == 0");
                 if (item1 != null)
                 {
+                    Debug.Log("In item1 != null");
                     shieldComp = item1.GameObject.GetComponent<Shield>();
                     if (shieldComp != null)
                     {
+                        Debug.Log("In Shield comp != null");
                         Player playerComp = gameObject.GetComponent<Player>();
                         playerComp.shieldComp = shieldComp;
-                        gameObject.GetComponent<Player>().hasShield = true;
+                        playerComp.hasShield = true;
+                        playerComp.anim.SetLayerWeight(1, 0f);
+                        playerComp.anim.SetLayerWeight(4, 1f);
                     }
                     UpdateActiveWeapon(item1.GameObject, true);
                 }
                 if (item2 != null)
                 {
-                    shieldComp = item1.GameObject.GetComponent<Shield>();
+                    Debug.Log("In item2 != null");
+                    shieldComp = item2.GameObject.GetComponent<Shield>();
                     if (shieldComp != null)
                     {
                         Player playerComp = gameObject.GetComponent<Player>();
@@ -349,11 +344,14 @@ public class Inventory : MonoBehaviourPunCallbacks
             //index1 position d'arriv�e
             if (index1 == 0)
             {
+                Debug.Log("In index1 == 0");
                 if (item1 != null)
                 {
+                    Debug.Log("In item1 != null");
                     shieldComp = item1.GameObject.GetComponent<Shield>();
                     if (shieldComp != null)
                     {
+                        Debug.Log("In Shield comp != null");
                         Player playerComp = gameObject.GetComponent<Player>();
                         playerComp.shieldComp = null;
                         gameObject.GetComponent<Player>().hasShield = false;
@@ -363,12 +361,16 @@ public class Inventory : MonoBehaviourPunCallbacks
                 }
                 if (item2 != null)
                 {
-                    shieldComp = item1.GameObject.GetComponent<Shield>();
+                    Debug.Log("In item2 != null");
+                    shieldComp = item2.GameObject.GetComponent<Shield>();
                     if (shieldComp != null)
                     {
+                        Debug.Log("In Shield comp != null");
                         Player playerComp = gameObject.GetComponent<Player>();
                         playerComp.shieldComp = shieldComp;
                         gameObject.GetComponent<Player>().hasShield = true;
+                        playerComp.anim.SetLayerWeight(1, 0f);
+                        playerComp.anim.SetLayerWeight(4, 1f);
                     }
                     UpdateActiveWeapon(item2.GameObject, true);
                 }
@@ -379,14 +381,6 @@ public class Inventory : MonoBehaviourPunCallbacks
         IInventoryItem temp = mItems[index1];
         mItems[index1] = mItems[index2];
         mItems[index2] = temp;
-
-        shieldComp = item2.GameObject.GetComponent<Shield>();
-        if (shieldComp != null)
-        {
-            Player playerComp = gameObject.GetComponent<Player>();
-            playerComp.shieldComp = shieldComp;
-            gameObject.GetComponent<Player>().hasShield = true;
-        }
     }
 
     public void SwapItemsLoot(int index1, int index2, Inventory lootInventory)

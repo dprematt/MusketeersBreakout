@@ -217,7 +217,7 @@ public class Player : MonoBehaviourPunCallbacks
 			{
 				EquippedWeapon = null;
 			}
-			else
+			else if (inventory.mItems[0].GameObject.GetComponent<Weapon>() != null)
             {
 				EquippedWeapon = inventory.mItems[0].GameObject.GetComponent<Weapon>();
 				EquippedWeapon.setAnim(gameObject);
@@ -567,13 +567,11 @@ public class Player : MonoBehaviourPunCallbacks
 			{
 				if (hasShield && shieldComp.isProtecting)
 				{
-					Debug.Log("HAS SHIELD");
 					shieldComp.gameObject.GetComponent<ParticleSystem>().Play();
 					audioSource.PlayOneShot(blockingSound);
 					anim.SetTrigger("hitted");
 					return;
 				}
-				Debug.Log("HIIIIIIIIIIIIIIT");
 				TakeDamage(weaponComp.damages);
 			}
 		}
