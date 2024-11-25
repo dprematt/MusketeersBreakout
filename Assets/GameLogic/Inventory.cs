@@ -136,6 +136,7 @@ public class Inventory : MonoBehaviourPunCallbacks
         }
         foreach (Transform child in weapons.transform)
         {
+            //gameObject.GetComponent<Weapon>().resetAnim();
             child.gameObject.SetActive(false);
         }
     }
@@ -169,6 +170,22 @@ public class Inventory : MonoBehaviourPunCallbacks
         }
     }
 
+    public void ResetWeapon(IInventoryItem item)
+    {
+        if (item != null)
+        {
+            Debug.Log("item name in reset weapon = " + item.Name);
+            Player playerScript = transform.GetComponentInParent<Player>();
+            GameObject weaponObject = item.GameObject;
+            Weapon weaponItem = weaponObject.GetComponent<Weapon>();
+            playerScript.SetWeaponEvents(weaponItem);
+        }
+        else
+        {
+            Debug.Log("item == null in resetweapon");
+            //RemoveAnimR();
+        }
+    }
     public void InsertAt(IInventoryItem item, int id)
     {
         mItems[id] = item;
@@ -221,6 +238,12 @@ public class Inventory : MonoBehaviourPunCallbacks
                     }
                     weaponItem.whenPickUp(playerScript.gameObject);
                 }
+                else
+                {
+                    UpdateActiveWeapon(weaponObject, false);
+                }
+                weaponItem.whenPickUp(playerScript.gameObject);
+
             }
         }
     }
@@ -287,40 +310,83 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void SwapItems(int index1, int index2)
     {
-        if (index1 == 0 && index2 == 1)
+        Shield shieldComp;
+
+        if (index1 == 0 || index2 == 0)
         {
             IInventoryItem item1 = mItems[index1];
-            if (item1 != null && item1.GameObject != null)
-            {
-                UpdateActiveWeapon(item1.GameObject, false);
+            IInventoryItem item2 = mItems[index2];
 
-                Shield shieldComp = item1.GameObject.GetComponent<Shield>();
-                if (shieldComp != null)
+            //index2 position d'arriv�e
+            if (index2 == 0)
+            {
+                if (item1 != null)
                 {
-                    Player playerComp = gameObject.GetComponent<Player>();
-                    playerComp.shieldComp = null;
-                    gameObject.GetComponent<Player>().hasShield = false;
+                    shieldComp = item1.GameObject.GetComponent<Shield>();
+                    if (shieldComp != null)
+                    {
+                        Player playerComp = gameObject.GetComponent<Player>();
+                        playerComp.shieldComp = shieldComp;
+                        gameObject.GetComponent<Player>().hasShield = true;
+                    }
+                    UpdateActiveWeapon(item1.GameObject, true);
                 }
+                if (item2 != null)
+                {
+                    shieldComp = item1.GameObject.GetComponent<Shield>();
+                    if (shieldComp != null)
+                    {
+                        Player playerComp = gameObject.GetComponent<Player>();
+                        playerComp.shieldComp = null;
+                        gameObject.GetComponent<Player>().hasShield = false;
+                    }
+                    UpdateActiveWeapon(item2.GameObject, false);
+                    //item2.GameObject.GetComponent<Weapon>().resetAnim(GameObject.FindGameObjectWithTag("Player"));
+                }
+                ResetWeapon(mItems[0]);
             }
 
-            IInventoryItem item2 = mItems[index2];
-            if (item2 != null && item2.GameObject != null)
+            //index1 position d'arriv�e
+            if (index1 == 0)
             {
-                UpdateActiveWeapon(item2.GameObject, true);
-
-                Shield shieldComp = item2.GameObject.GetComponent<Shield>();
-                if (shieldComp != null)
+                if (item1 != null)
                 {
-                    Player playerComp = gameObject.GetComponent<Player>();
-                    playerComp.shieldComp = shieldComp;
-                    gameObject.GetComponent<Player>().hasShield = true;
+                    shieldComp = item1.GameObject.GetComponent<Shield>();
+                    if (shieldComp != null)
+                    {
+                        Player playerComp = gameObject.GetComponent<Player>();
+                        playerComp.shieldComp = null;
+                        gameObject.GetComponent<Player>().hasShield = false;
+                    }
+                    UpdateActiveWeapon(item1.GameObject, false);
+                    //item1.GameObject.GetComponent<Weapon>().resetAnim(GameObject.FindGameObjectWithTag("Player"));
                 }
+                if (item2 != null)
+                {
+                    shieldComp = item1.GameObject.GetComponent<Shield>();
+                    if (shieldComp != null)
+                    {
+                        Player playerComp = gameObject.GetComponent<Player>();
+                        playerComp.shieldComp = shieldComp;
+                        gameObject.GetComponent<Player>().hasShield = true;
+                    }
+                    UpdateActiveWeapon(item2.GameObject, true);
+                }
+                ResetWeapon(mItems[0]);
             }
         }
 
         IInventoryItem temp = mItems[index1];
         mItems[index1] = mItems[index2];
         mItems[index2] = temp;
+
+        shieldComp = item2.GameObject.GetComponent<Shield>();
+        if (shieldComp != null)
+        {
+            Player playerComp = gameObject.GetComponent<Player>();
+            playerComp.shieldComp = shieldComp;
+            gameObject.GetComponent<Player>().hasShield = true;
+        }
     }
 
     public void SwapItemsLoot(int index1, int index2, Inventory lootInventory)
@@ -548,13 +614,11 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void DropItem(int id)
     {
-        GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
         Vector3 newPos = gameObject.transform.position;
         newPos.x += 2;
         GameObject loot = PhotonNetwork.Instantiate("Prefabs/Loot", newPos, gameObject.transform.rotation);
         loot.GetComponentInChildren<Inventory>().loot = true;
         Inventory lootInventory = loot.GetComponentInChildren<Inventory>();
-        //loot.GetComponentInChildren<Inventory>().AddItem(mItems[id]);
         LastItemName = mItems[id].Name;
         GameObject newItem = PhotonNetwork.Instantiate(mItems[id].Name, transform.position, transform.rotation);
 
@@ -568,6 +632,9 @@ public class Inventory : MonoBehaviourPunCallbacks
         }
         lootInventory.ApplyNetworkUpdate("TempObjTag");
         RemoveAt(id);
+
+        if (id == 0)
+            RemoveAnimR();
     }
     
     public void DropWeapons(string name)
