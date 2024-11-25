@@ -212,27 +212,18 @@ public class Player : MonoBehaviourPunCallbacks
 		float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
 		if ((scrollDelta > 0f || scrollDelta < 0f) && inventory.PocketCount() > 1 && anim.GetInteger("intAttackPhase") == 0)
 		{
-			Debug.Log("SWAP");
-
-			Debug.Log("mItems[0]: " + inventory.mItems[0].GameObject.name + " | mItems[1]: " + inventory.mItems[1].GameObject.name);
 			inventory.SwapItems(0, 1);
-
-			Debug.Log("mItems[0]: " + inventory.mItems[0].GameObject.name);
 			if (inventory.mItems[0].GameObject == null)
 			{
 				EquippedWeapon = null;
 			}
 			else
             {
-				Debug.Log("In Else");
 				EquippedWeapon = inventory.mItems[0].GameObject.GetComponent<Weapon>();
 				EquippedWeapon.setAnim(gameObject);
 				eventListener.weaponComp = EquippedWeapon;
 				EquippedWeapon.whenPickUp(gameObject);
 			}
-
-			Debug.Log("equipped weapon: " + EquippedWeapon);
-
 			HUD.GetComponent<HUD>().Clean();
 			HUDFixe.GetComponent<HUDFixe>().Clean();
 		}

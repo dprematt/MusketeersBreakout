@@ -5,10 +5,6 @@ using Photon.Pun;
 
 public class IsometricAiming : MonoBehaviourPun
 {
-    #region Datamembers
-
-    #region Editor Settings
-
     [Header("Aim")]
     [SerializeField] private bool aim;
     [SerializeField] private LayerMask groundMask;
@@ -46,19 +42,7 @@ public class IsometricAiming : MonoBehaviourPun
     [Header("UI")]
     [SerializeField] private TMP_Text ammoCounter;
 
-    #endregion
-    #region Private Fields
-
     private Camera mainCamera;
-
-    #endregion
-
-    #endregion
-
-
-    #region Methods
-
-    #region Unity Callbacks
 
     private void Start()
     {
@@ -149,8 +133,6 @@ public class IsometricAiming : MonoBehaviourPun
             }
         }
     }
-
-    #endregion
 
     private void Aim()
     {
@@ -310,6 +292,4 @@ public class IsometricAiming : MonoBehaviourPun
     {
         laserRenderer.enabled = !laserRenderer.enabled;
     }
-
-    #endregion
 }

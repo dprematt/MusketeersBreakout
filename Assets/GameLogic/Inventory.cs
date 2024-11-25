@@ -24,17 +24,14 @@ public class Inventory : MonoBehaviourPunCallbacks
         if (mItems == null)
             mItems = new IInventoryItem[9];
         Add(weapon);
-        Debug.Log("enemy weapon added = " + weapon.name);
         if (ItemAdded != null)
         {
             ItemAdded(this, new InventoryEventArgs(weapon));
-            Debug.Log("enemy weapon item event called");
         }  
     }
 
     public void AddWeapon(string weaponName)
     {
-        Debug.Log("LOAD IN ADDWEAPON");
         GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
         if (weaponPrefab == null)
         {
@@ -66,7 +63,6 @@ public class Inventory : MonoBehaviourPunCallbacks
         if (weaponName == null)
             return;
 
-        Debug.Log("LOAD IN EQUIPMAINWEAPON");
         GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
         if (weaponPrefab == null)
         {
@@ -99,15 +95,7 @@ public class Inventory : MonoBehaviourPunCallbacks
         {
             weaponObject.SetActive(false);
         }
-
-        weaponObject.name = "TEST";
-        Debug.Log(weaponPrefab.name);
         weaponItem.whenPickUp(playerScript.gameObject);
-
-        for (int i = 0; i < mItems.Length; i++)
-        {
-            Debug.Log("items in inventory: " + mItems[i].GameObject.name);
-        }
     }
 
     public int Count()
@@ -148,6 +136,7 @@ public class Inventory : MonoBehaviourPunCallbacks
         }
         foreach (Transform child in weapons.transform)
         {
+            //gameObject.GetComponent<Weapon>().resetAnim();
             child.gameObject.SetActive(false);
         }
     }
@@ -194,11 +183,11 @@ public class Inventory : MonoBehaviourPunCallbacks
         else
         {
             Debug.Log("item == null in resetweapon");
+            //RemoveAnimR();
         }
     }
     public void InsertAt(IInventoryItem item, int id)
     {
-        Debug.Log("INSERTAT");
         mItems[id] = item;
         if (!loot)
         {
@@ -223,14 +212,8 @@ public class Inventory : MonoBehaviourPunCallbacks
                 {
                     UpdateActiveWeapon(weaponObject, false);
                 }
-
-                weaponObject.name = "TEST";
                 weaponItem.whenPickUp(playerScript.gameObject);
 
-               /* for (int i = 0; i < mItems.Length; i++)
-                {
-                    Debug.Log("items in inventory: " + mItems[i].GameObject.name);
-                }*/
             }
         }
     }
@@ -266,7 +249,6 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void Initialize(int slots, IInventoryItem[] items, bool isLoot)
     {
-        Debug.Log("Inventory: initialize");
         if (items == null)
             Debug.Log("in init, items == null");
         SLOTS = slots;
@@ -313,7 +295,10 @@ public class Inventory : MonoBehaviourPunCallbacks
                 if (item1 != null) 
                     UpdateActiveWeapon(item1.GameObject, true);
                 if (item2 != null)
+                {
                     UpdateActiveWeapon(item2.GameObject, false);
+                    item2.GameObject.GetComponent<Weapon>().resetAnim(GameObject.FindGameObjectWithTag("Player"));
+                }
                 ResetWeapon(mItems[0]);
                 Debug.Log("active false item 1 after setactive ");
             }
@@ -324,7 +309,10 @@ public class Inventory : MonoBehaviourPunCallbacks
                 Debug.Log("active true item 2 ");
                 Debug.Log("active true item 2 before setactive ");
                 if (item1 != null)
+                {
                     UpdateActiveWeapon(item1.GameObject, false);
+                    item1.GameObject.GetComponent<Weapon>().resetAnim(GameObject.FindGameObjectWithTag("Player"));
+                }
                 if (item2 != null)
                     UpdateActiveWeapon(item2.GameObject, true);
                 ResetWeapon(mItems[0]);
@@ -332,11 +320,9 @@ public class Inventory : MonoBehaviourPunCallbacks
             }
         }
 
-        //Debug.Log("before swap :" + mItems[index1].GameObject.name + " | " + mItems[index2].GameObject.name);
         IInventoryItem temp = mItems[index1];
         mItems[index1] = mItems[index2];
         mItems[index2] = temp;
-        //Debug.Log("after swap :" + mItems[index1].GameObject.name + " | " + mItems[index2].GameObject.name);
     }
 
     public void SwapItemsLoot(int index1, int index2, Inventory lootInventory)
@@ -446,7 +432,6 @@ public class Inventory : MonoBehaviourPunCallbacks
     {
         if (mItems == null)
         {
-            Debug.Log("items == null in displaycurrentloot");
             return;
         }
         for (int i = 0; i < 9; i++)
@@ -557,19 +542,19 @@ public class Inventory : MonoBehaviourPunCallbacks
 
     public void DropItem(int id)
     {
-        Debug.Log("LOAD IN DROPITEM");
-        GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
         Vector3 newPos = gameObject.transform.position;
         newPos.x += 2;
         GameObject loot = PhotonNetwork.Instantiate("Prefabs/Loot", newPos, gameObject.transform.rotation);
         loot.GetComponentInChildren<Inventory>().loot = true;
         Inventory lootInventory = loot.GetComponentInChildren<Inventory>();
-        //loot.GetComponentInChildren<Inventory>().AddItem(mItems[id]);
         LastItemName = mItems[id].Name;
         GameObject newItem = PhotonNetwork.Instantiate(mItems[id].Name, transform.position, transform.rotation);
         newItem.GetComponent<Weapon>().RequestTagChange("TempObjTag");
         lootInventory.ApplyNetworkUpdate("TempObjTag");
         RemoveAt(id);
+
+        if (id == 0)
+            RemoveAnimR();
     }
     
     public void DropWeapons(string name)
