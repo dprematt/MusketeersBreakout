@@ -235,9 +235,6 @@ public class Enemy : MonoBehaviourPun
             GameObject player = GameObject.FindWithTag("Player");
             Player playerMov = player.GetComponent<Player>();
             playerMov.UpdateXp(10);
-            GameObject LootPrefab = Resources.Load<GameObject>("Prefabs/Loot");
-            var loot = Instantiate(LootPrefab, gameObject.transform.position, gameObject.transform.rotation);
-            loot.GetComponentInChildren<Inventory>().Initialize(9, inventory.mItems, true);
             Vector3 newPos = gameObject.transform.position;
             newPos.x += 2;
             GameObject loot = PhotonNetwork.Instantiate("Prefabs/Loot", newPos, gameObject.transform.rotation);
