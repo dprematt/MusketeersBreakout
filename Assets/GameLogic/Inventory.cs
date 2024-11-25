@@ -297,7 +297,7 @@ public class Inventory : MonoBehaviourPunCallbacks
                 if (item2 != null)
                 {
                     UpdateActiveWeapon(item2.GameObject, false);
-                    item2.GameObject.GetComponent<Weapon>().resetAnim(GameObject.FindGameObjectWithTag("Player"));
+                    //item2.GameObject.GetComponent<Weapon>().resetAnim(GameObject.FindGameObjectWithTag("Player"));
                 }
                 ResetWeapon(mItems[0]);
                 Debug.Log("active false item 1 after setactive ");
@@ -311,7 +311,7 @@ public class Inventory : MonoBehaviourPunCallbacks
                 if (item1 != null)
                 {
                     UpdateActiveWeapon(item1.GameObject, false);
-                    item1.GameObject.GetComponent<Weapon>().resetAnim(GameObject.FindGameObjectWithTag("Player"));
+                    //item1.GameObject.GetComponent<Weapon>().resetAnim(GameObject.FindGameObjectWithTag("Player"));
                 }
                 if (item2 != null)
                     UpdateActiveWeapon(item2.GameObject, true);
