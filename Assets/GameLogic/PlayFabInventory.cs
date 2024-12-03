@@ -12,7 +12,7 @@ public class PlayFabInventory : MonoBehaviour
 
     private void Start()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Player player = gameObject.GetComponentInParent<Player>();
         Inventory_ = player.GetComponent<Inventory>();
         //Inventory_ = GetComponent<Inventory>();
         PlayFabID_ = PlayerPrefs.GetString("playfabID");

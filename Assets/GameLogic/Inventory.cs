@@ -20,42 +20,21 @@ public class Inventory : MonoBehaviourPunCallbacks
     public event EventHandler<InventoryEventArgs> ItemRemoved;
 
     public void AddEnemyWeapon(Weapon weapon)
-    {        
+    {
         if (mItems == null)
             mItems = new IInventoryItem[9];
         Add(weapon);
         if (ItemAdded != null)
         {
             ItemAdded(this, new InventoryEventArgs(weapon));
-        }  
+        }
     }
 
     public void AddWeapon(string weaponName)
     {
-        GameObject weaponPrefab = Resources.Load<GameObject>(weaponName);
-        if (weaponPrefab == null)
-        {
-            return;
-        }
-
-        Vector3 pos;
-        pos.z = 0;
-        pos.y = 0;
-        pos.x = 0;
-
-        GameObject playerObj = gameObject;
-        Player playerScript = playerObj.GetComponent<Player>();
-        GameObject weaponObject = PhotonNetwork.Instantiate(weaponPrefab.name, pos, Quaternion.identity);
-        Weapon weaponItem = weaponObject.GetComponent<Weapon>();
-        //Destroy(weaponObject);
-        if (weaponItem == null)
-        {
-            Destroy(weaponObject);
-            return;
-        }
-
-        //AddItem(weaponItem);
-        playerScript.EquipWeapon(weaponItem, weaponObject, true);
+        Debug.Log("Add Weapon : " + weaponName);
+        DropWeapons(weaponName);
+        loot = false;
     }
 
     public void EquipMainWeapon(string weaponName, int index)
@@ -243,7 +222,10 @@ public class Inventory : MonoBehaviourPunCallbacks
         {
             if (mItems[i] == null)
             {
-                mItems[i] = item;
+                //mItems[i] = item;
+                InsertAt(item, i);
+                if (i == 0)
+                    UpdateActiveWeapon(item.GameObject, true);
                 return 0;
             }
         }
@@ -539,7 +521,7 @@ public class Inventory : MonoBehaviourPunCallbacks
     public void UpdateActiveWeapon(GameObject item, bool state)
     {
         PhotonView view = item.GetComponent<PhotonView>();
-        photonView.RPC("SetActiveWeapon", RpcTarget.All, view.ViewID, state);             
+        photonView.RPC("SetActiveWeapon", RpcTarget.All, view.ViewID, state);
     }
 
     [PunRPC]
@@ -552,37 +534,36 @@ public class Inventory : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateItems(string name)
     {
-        if (loot)
-        {
-            GameObject weaponPrefab = GameObject.FindGameObjectWithTag("TempObjTag");
-            if (weaponPrefab == null)
-            {
-                return;
-            }
-            //Destroy(weaponPrefab);
-            if (weaponPrefab.TryGetComponent(out Weapon weapon))
-            {
-                if (mItems == null)
-                    mItems = new IInventoryItem[9];
-                Add(weapon);
-                ItemAdded?.Invoke(this, new InventoryEventArgs(weapon));
-                weaponPrefab.SetActive(false);
-                //Destroy(weaponPrefab);
-                //weapon.DeactivateAllObjects();
-            }
 
-            if (weaponPrefab.TryGetComponent(out Shield shield))
-            {
-                if (mItems == null)
-                    mItems = new IInventoryItem[9];
-                Add(shield);
-                ItemAdded?.Invoke(this, new InventoryEventArgs(shield));
-                weaponPrefab.SetActive(false);
-                //Destroy(weaponPrefab);
-                //weapon.DeactivateAllObjects();
-            }
-            //PhotonNetwork.Destroy(newItem);
+        GameObject weaponPrefab = GameObject.FindGameObjectWithTag("TempObjTag");
+        if (weaponPrefab == null)
+        {
+            return;
         }
+        //Destroy(weaponPrefab);
+        if (weaponPrefab.TryGetComponent(out Weapon weapon))
+        {
+            if (mItems == null)
+                mItems = new IInventoryItem[9];
+            Add(weapon);
+            ItemAdded?.Invoke(this, new InventoryEventArgs(weapon));
+            weaponPrefab.SetActive(false);
+            //Destroy(weaponPrefab);
+            //weapon.DeactivateAllObjects();
+        }
+
+        if (weaponPrefab.TryGetComponent(out Shield shield))
+        {
+            if (mItems == null)
+                mItems = new IInventoryItem[9];
+            Add(shield);
+            ItemAdded?.Invoke(this, new InventoryEventArgs(shield));
+            weaponPrefab.SetActive(false);
+            //Destroy(weaponPrefab);
+            //weapon.DeactivateAllObjects();
+        }
+        //PhotonNetwork.Destroy(newItem);
+
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -630,7 +611,7 @@ public class Inventory : MonoBehaviourPunCallbacks
         if (id == 0)
             RemoveAnimR();
     }
-    
+
     public void DropWeapons(string name)
     {
         GameObject newItem = PhotonNetwork.Instantiate(name, transform.position, transform.rotation);
