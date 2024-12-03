@@ -112,7 +112,8 @@ public class OnEventCallBacks : MonoBehaviourPunCallbacks
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         Debug.Log("No random room available, creating new room...");
-        Manager.CreateRoom("Baguette");
-        Manager.JoinRandomRoom();
+        string rand = "Baguette" + Random.Range(0, 10000000).ToString();
+        Manager.CreateRoom(rand);
+        Manager.JoinRoom(rand);
     }
 }

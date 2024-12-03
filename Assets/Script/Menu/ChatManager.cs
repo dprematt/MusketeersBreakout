@@ -34,6 +34,11 @@ public class ChatManager : MonoBehaviour
                 SendMessage();
             }
         }
+        if (!PhotonNetwork.InRoom) {
+            if (Chat.activeSelf)
+                Chat.SetActive(false);
+        }
+
     }
     public void SendMessage()
     {

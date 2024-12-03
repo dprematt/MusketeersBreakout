@@ -68,33 +68,41 @@ public class PhotonManager : MonoBehaviour
         PhotonNetwork.LeaveRoom();
     }
 
-    public void CreateRoom(string Name)
-    {
-        RoomOptions roomOptions = new RoomOptions { MaxPlayers = (byte)Nb_max };
-        roomOptions.CleanupCacheOnLeave = false;
+public void CreateRoom(string Name)
+{
+    RoomOptions roomOptions = new RoomOptions { MaxPlayers = (byte)Nb_max };
+    roomOptions.CleanupCacheOnLeave = false;
 
-        if (Name.Length >= 1)
-        {   
-            int seed = new System.Random().Next();
-            Hashtable options = new Hashtable()
+    if (Name.Length >= 1)
+    {   
+        int seed = new System.Random().Next();
+        Hashtable options = new Hashtable()
         {
             { "mapSeed", seed },
             { "Time", 1800 },
-            { "GameState", "en attente" }
+            { "GameState", "en attente" },
+            { "MaxPlayers", Nb_max } // Ajout de MaxPlayers comme propriété custom
         };
 
         roomOptions.CustomRoomProperties = options;
-        roomOptions.CustomRoomPropertiesForLobby = new string[] { "mapSeed", "Time", "GameState" };
+        roomOptions.CustomRoomPropertiesForLobby = new string[] { "mapSeed", "Time", "GameState", "MaxPlayers" };
 
-
-            PhotonNetwork.CreateRoom(Name, roomOptions);
-        }
+        PhotonNetwork.CreateRoom(Name, roomOptions);
     }
+}
 
-    public void JoinRandomRoom()
+
+public void JoinRandomRoom()
+{
+    Hashtable expectedCustomRoomProperties = new Hashtable()
     {
-        PhotonNetwork.JoinRandomRoom();
-    }
+        { "MaxPlayers", Nb_max },
+        { "GameState", "en attente" } // Filtrer uniquement les rooms en attente
+    };
+
+    PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, (byte)Nb_max);
+}
+
 
 
 
