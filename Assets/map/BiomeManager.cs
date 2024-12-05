@@ -72,7 +72,7 @@ public class BiomeManager : MonoBehaviourPun {
         int totalBiomesNeeded = Biomes.Length * 2;
         int biomesPlaced = 0;
         float chunkSize = 241f;
-        float borderBuffer = 150f;
+        float borderBuffer = 100f;
 
         int maxAttempts = 2000;
         int attemptCount = 0;
@@ -102,7 +102,7 @@ public class BiomeManager : MonoBehaviourPun {
                     Vector2 center = plateCenters[index];
                     plateCenters.RemoveAt(index);
 
-                    float biomeRadius = 110f;
+                    float biomeRadius = 150f;
                     bool isOutOfBounds = 
                         (center.x - biomeRadius < topLeft.x + borderBuffer || center.x + biomeRadius > bottomRight.x - borderBuffer ||
                         center.y - biomeRadius < bottomRight.y + borderBuffer || center.y + biomeRadius > topLeft.y - borderBuffer);
@@ -128,7 +128,7 @@ public class BiomeManager : MonoBehaviourPun {
                     Vector3 position = new Vector3(x, y, z);
 
                     bool isTooCloseToOtherBiomes = biomesPositions.Any(biomePos => (position - biomePos).sqrMagnitude < 120 * 120);
-                    bool isTooCloseToSameBiomes = biomeSpecificPositions[biome.type].Any(biomePos => (position - biomePos).sqrMagnitude < 220 * 220);
+                    bool isTooCloseToSameBiomes = biomeSpecificPositions[biome.type].Any(biomePos => (position - biomePos).sqrMagnitude < 200 * 200);
 
                     if (!isTooCloseToOtherBiomes && !isTooCloseToSameBiomes)
                     {
@@ -180,7 +180,6 @@ public class BiomeManager : MonoBehaviourPun {
         switch(prefab.name) {
             case("LootZone(Clone)"):
                 positions = new Vector3[] {
-                    new Vector3(11, 0, 7),
                     new Vector3(-12, 0, 7),
                     new Vector3(-10, 0, -1),
                     new Vector3(7, 0, 4),
@@ -189,7 +188,6 @@ public class BiomeManager : MonoBehaviourPun {
                 break;
             case("DesertBiome(Clone)"):
                 positions = new Vector3[] {
-                    new Vector3(-5, 0, -17),
                     new Vector3(-30, 0, -17),
                     new Vector3(-12, 0, 7),
                     new Vector3(8, 0, -6),
@@ -205,23 +203,18 @@ public class BiomeManager : MonoBehaviourPun {
                     new Vector3(27, 1, -16),
                     new Vector3(25, 1, 3),
                     new Vector3(13, 1, 13),
-                    new Vector3(-13, 1,-13),
-                    new Vector3(5, 1, -20),
                     new Vector3(-13, 1, -27),
-                    new Vector3(31, 1, -23),
                     new Vector3(-3, 1, -6)
                 };
                 break;
             case("MedievalBiome(Clone)"):
                 positions = new Vector3[] {
                     new Vector3(-113, 0, -147),
-                    new Vector3(-63, 0, -140),
                     new Vector3(-22, 0,  -152),
                     new Vector3(-45, 0, -114),
                     new Vector3(-5, 0, -110),
                     new Vector3(-21,0 ,-52),
-                    new Vector3(-138, 0, -165),
-                    new Vector3(-9, 0, -164)
+                    new Vector3(-138, 0, -165)
                 };
                 break;
             case("SnowBiome(Clone)"):
@@ -231,10 +224,7 @@ public class BiomeManager : MonoBehaviourPun {
                     new Vector3(-8,0,-6),
                     new Vector3(14,0,4),
                     new Vector3(22,0,-11),
-                    new Vector3(-4,0,-12),
-                    new Vector3(-9,0,2),
-                    new Vector3(1,0,10),
-                    new Vector3(21,0,-4)
+                    new Vector3(1,0,10)
                 };
                 break;
             case("Village(Clone)"):

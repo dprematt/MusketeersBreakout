@@ -85,6 +85,30 @@ public class Generator : MonoBehaviourPun
         prefabsManager.PlaceExtractionZones();
     }
 
+    // private void OnDrawGizmos()
+    //     {
+    //         // Définir la couleur des gizmos
+    //         Gizmos.color = Color.red;
+
+    //         // Calcul des limites
+    //         float mapLeftBorder = -2.0f * mapChunkSize;
+    //         float mapRightBorder = 2.0f * mapChunkSize - mapChunkSize;
+    //         float mapTopBorder = 2.0f * mapChunkSize - mapChunkSize;
+    //         float mapBottomBorder = -2.0f * mapChunkSize;
+
+    //         // Dessiner les lignes des bordures
+    //         Vector3 topLeft = new Vector3(mapLeftBorder, 0, mapTopBorder);
+    //         Vector3 topRight = new Vector3(mapRightBorder, 0, mapTopBorder);
+    //         Vector3 bottomLeft = new Vector3(mapLeftBorder, 0, mapBottomBorder);
+    //         Vector3 bottomRight = new Vector3(mapRightBorder, 0, mapBottomBorder);
+
+    //         // Lignes reliant les points
+    //         Gizmos.DrawLine(topLeft, topRight);
+    //         Gizmos.DrawLine(topRight, bottomRight);
+    //         Gizmos.DrawLine(bottomRight, bottomLeft);
+    //         Gizmos.DrawLine(bottomLeft, topLeft);
+    //     }
+
     public void PlacePrefabsInChunk(Vector2 chunkCenter, float[,] heightMap, int chunkSize, System.Random prng)
     {
         InitializeRandom();
@@ -97,10 +121,11 @@ public class Generator : MonoBehaviourPun
         int[] prefabCounts = new int[] { 7, 7, 7, 7, 7 , 7, 7, 7, 7, 7};
         float chunkHalfSize = chunkSize / 2f;
 
-        float mapLeftBorder = -2.0f * mapChunkSize + 100f;
-        float mapRightBorder = 2.0f * mapChunkSize - mapChunkSize + 50f;
-        float mapTopBorder = 2.0f * mapChunkSize - mapChunkSize + 50f;
-        float mapBottomBorder = -2.0f * mapChunkSize + 100f;
+        float mapLeftBorder = -2.0f * mapChunkSize;
+        float mapRightBorder = 2.0f * mapChunkSize - mapChunkSize;
+        float mapTopBorder = 2.0f * mapChunkSize - mapChunkSize;
+        float mapBottomBorder = -2.0f * mapChunkSize;
+
 
         Dictionary<string, List<Vector3>> placedPrefabs = new Dictionary<string, List<Vector3>>();
 
