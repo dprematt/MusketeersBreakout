@@ -241,7 +241,23 @@ public class BiomeManager : MonoBehaviourPun {
         }
         foreach (Vector3 pos in positions) {
             try  {
-                System.Random random = new System.Random();
+                // System.Random random = new System.Random();
+                // int randomWeaponIndex = random.Next(allWeapons.Length);
+                // string chosenWeapon = allWeapons[randomWeaponIndex];
+
+                // GameObject lootInstance = PhotonNetwork.Instantiate(lootPrefabName, prefab.transform.position, Quaternion.identity);
+
+                // Inventory lootInventory = lootInstance.transform.GetChild(0).GetComponentInChildren<Inventory>();
+                // lootInventory.DropWeapons(chosenWeapon);
+                // lootInventory.loot = true;
+
+                // lootInstance.transform.SetParent(prefab.transform, true);
+
+                // lootInstance.transform.localPosition = pos;
+
+                int seed = Mathf.FloorToInt(prefab.transform.position.x + prefab.transform.position.y + prefab.transform.position.z + pos.x + pos.z);
+                System.Random random = new System.Random(seed);
+
                 int randomWeaponIndex = random.Next(allWeapons.Length);
                 string chosenWeapon = allWeapons[randomWeaponIndex];
 
@@ -252,7 +268,6 @@ public class BiomeManager : MonoBehaviourPun {
                 lootInventory.loot = true;
 
                 lootInstance.transform.SetParent(prefab.transform, true);
-
                 lootInstance.transform.localPosition = pos;
             } catch (Exception ex) {
                 Debug.LogError($"Erreur lors de la création d'arme dans le coffre : {ex.Message}");
