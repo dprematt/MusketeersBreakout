@@ -563,6 +563,8 @@ public class Inventory : MonoBehaviourPunCallbacks
             //weapon.DeactivateAllObjects();
         }
         //PhotonNetwork.Destroy(newItem);
+        int viewID = weaponPrefab.GetComponent<PhotonView>().ViewID;
+        photonView.RPC("ResetTag", RpcTarget.AllBuffered, viewID, "Untagged");
 
     }
 
@@ -612,21 +614,47 @@ public class Inventory : MonoBehaviourPunCallbacks
             RemoveAnimR();
     }
 
-    public void DropWeapons(string name)
+[PunRPC]
+public void UpdateTag(int viewID, string newTag)
+{
+    PhotonView view = PhotonView.Find(viewID);
+    if (view != null)
     {
-        GameObject newItem = PhotonNetwork.Instantiate(name, transform.position, transform.rotation);
-        // AddItem(newItem.GetComponent<Weapon>());
-
-        if (name == "Shield")
-        {
-            newItem.GetComponent<Shield>().RequestTagChange("TempObjTag");
-        }
-        else
-        {
-            newItem.GetComponent<Weapon>().RequestTagChange("TempObjTag");
-        }
-        ApplyNetworkUpdate("TempObjTag");
+        view.gameObject.tag = newTag;
     }
+}
+[PunRPC]
+public void ResetTag(int viewID, string defaultTag)
+{
+    PhotonView view = PhotonView.Find(viewID);
+    if (view != null)
+    {
+        view.gameObject.tag = defaultTag;
+    }
+}
+
+public void DropWeapons(string name)
+{
+    GameObject newItem = PhotonNetwork.Instantiate(name, transform.position, transform.rotation);
+    Debug.Log("DropWeapons : " + name);
+
+    string newTag = "TempObjTag";
+    if (name == "Shield")
+    {
+        newItem.GetComponent<Shield>().RequestTagChange(newTag);
+    }
+    else
+    {
+        newItem.GetComponent<Weapon>().RequestTagChange(newTag);
+    }
+
+    // Synchroniser le tag avec tous les joueurs
+    int viewID = newItem.GetComponent<PhotonView>().ViewID;
+    photonView.RPC("UpdateTag", RpcTarget.AllBuffered, viewID, newTag);
+
+    ApplyNetworkUpdate(newTag);
+}
+
 
     [PunRPC]
     public void DestroyObject()
