@@ -173,7 +173,8 @@ public class BiomeManager : MonoBehaviourPun {
 
     public void DropWeaponsInChest(GameObject prefab, System.Random prng)
     {
-        string[] allWeapons = { "Sword", "Gun", "Dagger", "Shield" };
+        // string[] allWeapons = { "Sword", "Gun", "Dagger", "Shield" };
+        string[] allWeapons = { "Sword", "Gun", "Dagger"};
         string lootPrefabName = "Prefabs/Loot";
         Vector3[] positions = new Vector3[0];
 
