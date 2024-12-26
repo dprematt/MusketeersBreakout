@@ -62,7 +62,6 @@ public class Generator : MonoBehaviourPun
     private BiomeManager biomeManager;
     private PrefabsManager prefabsManager;
 
-
     private bool hasSpawn = false;
 
     void Start()
@@ -118,7 +117,7 @@ public class Generator : MonoBehaviourPun
             new Vector3(185, 4.6f, -554),
             new Vector3(284, 4.6f, 316)
         };
-        int[] prefabCounts = new int[] { 7, 7, 7, 7, 7 , 7, 7, 7, 7, 7};
+        int[] prefabCounts = new int[] { 7, 7, 7, 7, 7 , 7, 7, 7, 7, 7, 7};
         float chunkHalfSize = chunkSize / 2f;
 
         float mapLeftBorder = -2.0f * mapChunkSize;
@@ -193,6 +192,7 @@ public class Generator : MonoBehaviourPun
             case "buisson": return 0.7f;
             case "arbre": return 0.8f;
             case "arbre2": return 0.8f;
+            case "arbre3": return 0.8f;
             case "caillou": return 0.8f;
             case "caillou2": return 0.8f;
             case "herbe1": return 0.8f;
