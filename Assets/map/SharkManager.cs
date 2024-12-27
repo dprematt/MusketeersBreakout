@@ -12,8 +12,6 @@ public class SharkManager : MonoBehaviour
     public float speed = 15.0f;
     private bool movingUpperShark = true;
     private bool movingLowerShark = true;
-    private bool movingRightShark = true;
-    private bool movingLeftShark = true;
     
     private bool movingDown = true;
     private bool movingDownBis = true;

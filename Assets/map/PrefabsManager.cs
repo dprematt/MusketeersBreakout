@@ -65,7 +65,6 @@ public class PrefabsManager : MonoBehaviourPun {
         {
             
             float x = (float)prng.NextDouble() * (endCoord.x - startCoord.x) + startCoord.x;
-            float y = 0f;
             float z = (float)prng.NextDouble() * (endCoord.y - startCoord.y) + startCoord.y;
         
             Vector3 newPosition = new Vector3(x, 0.22f, z);

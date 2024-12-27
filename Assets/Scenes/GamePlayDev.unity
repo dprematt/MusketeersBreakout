@@ -1577,10 +1577,16 @@ MonoBehaviour:
     prefab: {fileID: 9014547031140825374, guid: 0c8c64d3b8cc212488a236183db4c7fd, type: 3}
   - type: arbre2
     prefab: {fileID: 7518195065243562810, guid: 613d6c601a9e50d45ace3e23f327661a, type: 3}
-  - type: arbre3
-    prefab: {fileID: 2684435661883040563, guid: f5703f24f86a40bf0bad7970199ffccf, type: 3}
   - type: os
     prefab: {fileID: 1800302967012367656, guid: b7d11f0c2c5d6af88bb3d937f0238735, type: 3}
+  - type: herbe4
+    prefab: {fileID: 8209635679132067455, guid: 4ec14cb3aca15ebed8c77df8b594882d, type: 3}
+  - type: herbe5
+    prefab: {fileID: 6799530254393600061, guid: 7a7fb7789be5c25a39c0974089116e56, type: 3}
+  - type: herbe6
+    prefab: {fileID: 8011673447539343122, guid: 8a150c913b486dc3cbd177c82a0e1b37, type: 3}
+  - type: herbe7
+    prefab: {fileID: 7733464786554477995, guid: 133c35bfbfc68e8f29c60b066f507730, type: 3}
   Biomes:
   - type: "d\xE9sert"
     prefab: {fileID: 3997192538817553815, guid: 5fb8fb3cc01af44308006821f1abe929, type: 3}

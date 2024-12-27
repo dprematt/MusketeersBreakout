@@ -62,17 +62,11 @@ public static class Skeleton
 
         normalizeMode = NormalizeMode.Global;
 
-        if (normalizeMode == NormalizeMode.Local) {
-            for (int y = 0; y < mapHeight; y++) {
-                for (int x = 0; x < mapWidth; x++) {
+        for (int y = 0; y < mapHeight; y++) {
+            for (int x = 0; x < mapWidth; x++) {
+                if (normalizeMode == NormalizeMode.Local) {
                     skeleton[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, skeleton[y, x]);
-                }
-            } 
-        }
-        else {
-            for (int y = 0; y < mapHeight; y++) {
-                for (int x = 0; x < mapWidth; x++)
-                {
+                } else {
                     float normalizeHeight = (skeleton[x, y] + 1) / (2 * maxPossibleHeight / 1.5f);
                     skeleton[x, y] = Mathf.Clamp(normalizeHeight, 0, int.MaxValue);
                 }
@@ -96,12 +90,35 @@ public static class Skeleton
                 for (int x = 0; x < mapWidth; x++) {
                     float distance = Vector2.Distance(new Vector2(x + offset.x, y + offset.y), center);
                     float perlinNoise = Mathf.PerlinNoise((x + offset.x) * 0.1f, (y + offset.y) * 0.1f) * 20f;
-                    if (distance <= 60 + perlinNoise) { 
+
+                    if (distance <= 60 + perlinNoise) {
                         skeleton[x, y] = flatHeight;
+                    } 
+                    else if (distance > 60 + perlinNoise && distance <= 90 + perlinNoise) {
+                        float transition = Mathf.InverseLerp(90 + perlinNoise, 60 + perlinNoise, distance);
+
+                        float blendedHeight = Mathf.Lerp(flatHeight, skeleton[x, y], transition);
+                        
+                        float averageHeight = 0;
+                        int count = 0;
+
+                        for (int offsetY = -1; offsetY <= 1; offsetY++) {
+                            for (int offsetX = -1; offsetX <= 1; offsetX++) {
+                                int neighborX = Mathf.Clamp(x + offsetX, 0, mapWidth - 1);
+                                int neighborY = Mathf.Clamp(y + offsetY, 0, mapHeight - 1);
+                                averageHeight += skeleton[neighborX, neighborY];
+                                count++;
+                            }
+                        }
+
+                        averageHeight /= count;
+
+                        skeleton[x, y] = Mathf.Lerp(blendedHeight, averageHeight, 0.5f);
                     }
                 }
             }
         }
+
         Debug.Log($"Total des zones plates -> {plateCenters}");
         return (skeleton, plateCenters);
     }
