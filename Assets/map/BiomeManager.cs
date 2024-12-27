@@ -72,7 +72,7 @@ public class BiomeManager : MonoBehaviourPun {
         int totalBiomesNeeded = Biomes.Length * 2;
         int biomesPlaced = 0;
         float chunkSize = 241f;
-        float borderBuffer = 100f;
+        float borderBuffer = 120f;
 
         int maxAttempts = 2000;
         int attemptCount = 0;

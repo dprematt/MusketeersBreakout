@@ -117,7 +117,7 @@ public class Generator : MonoBehaviourPun
             new Vector3(185, 4.6f, -554),
             new Vector3(284, 4.6f, 316)
         };
-        int[] prefabCounts = new int[] { 7, 10, 7, 10, 7 , 15, 15, 10, 10, 7, 7, 7, 15, 15, 15, 15};
+        int[] prefabCounts = new int[] { 8, 8, 8, 8, 12, 12, 12, 8, 8, 8, 8, 8, 12, 12, 12, 12, 12, 8, 8};
         float chunkHalfSize = chunkSize / 2f;
 
         float mapLeftBorder = -2.0f * mapChunkSize;
@@ -203,6 +203,7 @@ public class Generator : MonoBehaviourPun
             case "herbe6": return 0.7f;
             case "buche": return 0.3f;
             case "os": return 0.6f;
+            case "feu": return 0.8f;
             default: return 0f;
         }
     }

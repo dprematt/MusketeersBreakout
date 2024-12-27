@@ -1587,6 +1587,12 @@ MonoBehaviour:
     prefab: {fileID: 8011673447539343122, guid: 8a150c913b486dc3cbd177c82a0e1b37, type: 3}
   - type: herbe7
     prefab: {fileID: 7733464786554477995, guid: 133c35bfbfc68e8f29c60b066f507730, type: 3}
+  - type: caillou3
+    prefab: {fileID: 4208617807690936424, guid: ae490b632c6ec1c39a5fd1ac1f914e3e, type: 3}
+  - type: caillou4
+    prefab: {fileID: 7484805911130332545, guid: abd4d5efecf0099408b48cea355541b5, type: 3}
+  - type: feu
+    prefab: {fileID: 2937672411430007064, guid: 0020ca014a1b3c72ea1262bbf07ad0e2, type: 3}
   Biomes:
   - type: "d\xE9sert"
     prefab: {fileID: 3997192538817553815, guid: 5fb8fb3cc01af44308006821f1abe929, type: 3}
