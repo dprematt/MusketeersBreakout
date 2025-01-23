@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using Environment.Instancing;
 
 public class ChunkGenerator : MonoBehaviour
 {
@@ -10,7 +11,6 @@ public class ChunkGenerator : MonoBehaviour
 
     public LODInfo[] detailsLevel;
     public Material mapMaterial;
-    public Material grassMaterial;
     public Mesh[] instanceMeshes;
     public Material[] instanceMaterials;
     static Generator _generator;
@@ -52,7 +52,7 @@ public class ChunkGenerator : MonoBehaviour
                     Vector2 viewedChunkCoord = new Vector2(xOffset, yOffset);
                     if (!chunkDict.ContainsKey(viewedChunkCoord))
                     {
-                        chunkDict[viewedChunkCoord] = new Chunk(viewedChunkCoord, chunkSize, detailsLevel, transform, mapMaterial, grassMaterial, _generator, instanceMeshes, instanceMaterials);
+                        chunkDict[viewedChunkCoord] = new Chunk(viewedChunkCoord, chunkSize, detailsLevel, transform, mapMaterial, _generator, instanceMeshes, instanceMaterials);
                     }
                 }
             }

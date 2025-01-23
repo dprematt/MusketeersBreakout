@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using System.Collections;
 using System;
@@ -10,6 +9,7 @@ using PlayFab;
 using UnityEngine.UI;
 using static System.Random;
 using System.Linq;
+using Environment.Instancing;
 
 
 public class Generator : MonoBehaviourPun
@@ -63,6 +63,9 @@ public class Generator : MonoBehaviourPun
     private PrefabsManager prefabsManager;
 
     private bool hasSpawn = false;
+
+    public Mesh[] instanceMeshes;
+    public Material[] instanceMaterials;
 
     void Start()
     {
@@ -288,9 +291,47 @@ public class Generator : MonoBehaviourPun
         {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(currentMapData.Item1));
         }
-    
+
+        Transform[] children = GetComponentsInChildren<Transform>();
+        foreach (Transform child in children)
+        {
+            if (child.name.Contains("Chunk"))
+            {
+                Debug.Log("Enfant trouvé avec le nom contenant 'Chunk': " + child.name);
+                MeshFilter meshFilter = child.GetComponent<MeshFilter>();
+                if (meshFilter != null)
+                {
+                    Debug.Log(child.name + " got a mesh");
+                    child.gameObject.SetActive(false);
+                    MeshInstancesBehaviour meshInstancesBehaviour = child.gameObject.AddComponent<MeshInstancesBehaviour>();
+
+                    meshInstancesBehaviour.Density = 1f;
+                    meshInstancesBehaviour.InstanceConfigurations = GenerateInstanceConfigurations(instanceMeshes, instanceMaterials);
+
+                    child.gameObject.SetActive(true);
+                }
+            }
+        }
+
         PlaceBiomesGuardians();
         CurrentMapData = new MapData(currentMapData.Item1, null);
+    }
+
+    private InstanceConfiguration[] GenerateInstanceConfigurations(Mesh[] _instanceMeshes, Material[] _instanceMaterials)
+    {
+        InstanceConfiguration[] configurations = new InstanceConfiguration[_instanceMeshes.Length];
+        for (int i = 0; i < _instanceMeshes.Length; i++)
+        {
+            configurations[i] = new InstanceConfiguration
+            {
+                Mesh = _instanceMeshes[i],
+                Material = _instanceMaterials[i],
+                Probability = i == 1 ? 100 : 1,
+                Scale = 0.5f,
+                NormalOffset = 0
+            };
+        }
+        return configurations;
     }
 
     public void selectPos(float[,] colorMap)
